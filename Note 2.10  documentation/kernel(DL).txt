@@ -1,6 +1,6 @@
 Use kernel to train neural network. First, you should write a neural network class that include method object and Instance object.
 method object:
-#method object need to use above Tensorflow 2.0 version to write.
+#method object need to use Tensorflow 2.0 version and above to write.
 1. fp(data) Receive data to forward propagation then output result.
 2. loss(output,labels) Receive output and labels output loss.
 3. opt() If you want to write optimizer by yourself.
@@ -13,11 +13,12 @@ instance object:
 ----------------------------------------------------------------------------------------
 If you done your neural network.
 simple example:
-#import kernel
+#start kernel
 import Note.create.kernel as k
 kernel=k.kernel(your neural network object)
 
 #input you data,if you have test data can transfer to kernel API data()
+#data can be a list,[data1,data2,...,datan]
 kernel.data(train_data,train_labels,test_data=None,test_labels=None)
 
 #if you have your optimizer
