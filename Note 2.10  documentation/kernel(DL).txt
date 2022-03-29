@@ -72,4 +72,6 @@ kernel.PO=2
 
 
 -----------------------------------------------------------------------------------------
+self.nn: neural network object
+self.PO: parallel optimization
 self.nn.km: kernel mode
