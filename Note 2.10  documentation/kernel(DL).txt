@@ -69,3 +69,7 @@ kernel.thread_lock=your thread lock
 kernel.PO=1
 #the second kind of parallel optimization(parallel computing gradient and optimizing)
 kernel.PO=2
+
+
+-----------------------------------------------------------------------------------------
+self.nn.km: kernel mode
