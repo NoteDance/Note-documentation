@@ -73,5 +73,7 @@ kernel.PO=2
 
 -----------------------------------------------------------------------------------------
 self.nn: neural network object
+self.thread: thread sum
+self.thread_lock: thread lock
 self.PO: parallel optimization
 self.nn.km: kernel mode
