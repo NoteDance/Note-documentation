@@ -3,10 +3,10 @@ method object:
 #method object need to use Tensorflow 2.0 version and above to write.
 1. fp(data) Receive data to forward propagation then output result.
 2. loss(output,labels) Receive output and labels output loss.
-3. opt() If you want to write optimizer by yourself.
+3. oopt() If you want to write optimizer by yourself.
 
 instance object:
-1.If you don't want to write optimizer by yourself,assign opt as tensorflow's optimizer
+1.If you don't want to write optimizer by yourself,assign opt as optimizer of tensorflow
 2.instance include parameter and hyper-parameter,where parameter must be named param, instance can include anything you need.
 
 
@@ -20,9 +20,6 @@ kernel=k.kernel(your neural network object)
 #input you data,if you have test data can transfer to kernel API data()
 #data can be a list,[data1,data2,...,datan]
 kernel.data(train_data,train_labels,test_data=None,test_labels=None)
-
-#if you have your optimizer
-kernel.optf=True
 
 #train neural network
 #batch: data batch
