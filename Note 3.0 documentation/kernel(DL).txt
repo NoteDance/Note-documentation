@@ -58,7 +58,7 @@ kernel.train_visual()
 -----------------------------------------------------------------------------------------
 Parallel optimization:
 Use multithreading to optimize.
-kernel have two parallel optimization type.
+Note have two types of parallel optimization.
 You can use parallel optimization as follow.
 #first transfer thread lock to kernel
 kernel.thread_lock=your thread lock
