@@ -1,5 +1,5 @@
 Pool net:
-Pool net use multithreading parallel and random add episode in pool,which this would make data being uncorrelated in pool,
+Pool net use multithreading parallel and random add episode in pool,which would make data being uncorrelated in pool,
 then pools would be used parallel training agent.
 Each thread have a pool.
 Note have two types of pool net.
