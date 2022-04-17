@@ -28,3 +28,6 @@ import Note.create.nc as nc
 nc=nc.compiler(filename.n)
 nc.Compile()
 #then you will get filename.py.
+
+Macro:
+define. string macro name
