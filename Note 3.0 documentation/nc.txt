@@ -30,4 +30,4 @@ nc.Compile()
 #then you will get filename.py.
 
 Macro:
-define. string macro name
+define. macro name string
