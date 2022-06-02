@@ -19,12 +19,12 @@ kernel=k.kernel(your neural network object)
 
 #input you data,if you have test data can transfer to kernel API data()
 #data can be a list,[data1,data2,...,datan]
-kernel.data(train_data,train_labels,test_data=None,test_labels=None)
+kernel.data(train_data,train_labels)
 
 #train neural network
 #batch: data batch
 #epoch: train epoch
-kernel.train(batch=None,epoch=None)
+kernel.train(batch,epoch)
 
 
 ----------------------------------------------------------------------------------------
@@ -68,8 +68,23 @@ kernel.PO=1
 #the second kind of parallel optimization(parallel computing gradient and optimizing)
 kernel.PO=2
 
-add_threads(self,thread)
 #add threads
+add_threads(self,thread)
+
+#multithreading：
+simple example:
+import threading
+kernel.thread=thread count
+kernel.PO=1 or kernel.PO=2
+kernel.thread_lock=threading.Lock()
+class thread(threading.Thread):
+	def run(self):
+		kernel.train(batch,epoch)
+for _ in range(thread count):
+	_thread=thread()
+	_thread.start()
+for _ in range(thread count):
+	_thread.join()
 
 
 -----------------------------------------------------------------------------------------
