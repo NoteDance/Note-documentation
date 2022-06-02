@@ -73,7 +73,12 @@ add_threads(self,thread)
 
 #multithreading：
 simple example:
+#start kernel
+import Note.create.kernel as k
 import threading
+kernel=k.kernel(your neural network object)
+#input you data
+kernel.data(train_data,train_labels)
 kernel.thread=thread count
 kernel.PO=1 or kernel.PO=2
 kernel.thread_lock=threading.Lock()
