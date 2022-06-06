@@ -13,9 +13,13 @@ instance object:
 ----------------------------------------------------------------------------------------
 If you done your neural network.
 simple example:
+#import your class's python file
+import cnn as c
+#create class object
+cnn=c.cnn()
 #start kernel
 import Note.create.kernel as k
-kernel=k.kernel(your neural network object)
+kernel=k.kernel(cnn)
 
 #input you data,if you have test data can transfer to kernel API data()
 #data can be a list,[data1,data2,...,datan]
