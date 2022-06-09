@@ -1,7 +1,7 @@
 import tensorflow as tf
 
 
-class nn:               #a simple example
+class nn:               #a simple example,a neural network class
     def __init__(self):
         self.weight1=tf.Variable(tf.random.normal([784,64]))
         self.bias1=tf.Variable(tf.random.normal([64]))
