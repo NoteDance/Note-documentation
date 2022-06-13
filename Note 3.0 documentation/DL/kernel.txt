@@ -97,6 +97,7 @@ for _ in range(thread count):
 
 
 -----------------------------------------------------------------------------------------
+kernel's instance object:
 self.nn: neural network object
 self.thread: thread sum
 self.thread_lock: thread lock
