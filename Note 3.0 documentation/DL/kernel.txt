@@ -99,7 +99,13 @@ for _ in range(thread count):
 -----------------------------------------------------------------------------------------
 kernel's instance object:
 self.nn: neural network object
-self.thread: thread sum
-self.thread_lock: thread lock
-self.PO: parallel optimization
 self.nn.km: kernel mode
+self.PO: parallel optimization
+self.thread_lock: thread lock
+self.thread: thread sum
+self.batch:batch size
+self.epoch:epoch
+self.train_loss:train loss
+self.total_epoch:total epoch
+self.time:train time
+self.total_time:total train time
