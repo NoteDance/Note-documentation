@@ -107,6 +107,7 @@ self.ol: online training function be used for kernel to oniline train
 self.batch: batch size
 self.epoch: epoch
 self.train_loss: train loss
+self.train_loss_list: self.train_visual() use this instance to visualize train loss's curve
 self.test: test flag if you want test,make self.test=True
 self.total_epoch: total epoch
 self.time: train time
