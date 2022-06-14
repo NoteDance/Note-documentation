@@ -103,9 +103,13 @@ self.nn.km: kernel mode
 self.PO: parallel optimization
 self.thread_lock: thread lock
 self.thread: thread sum
-self.batch:batch size
-self.epoch:epoch
-self.train_loss:train loss
-self.total_epoch:total epoch
-self.time:train time
+self.batch: batch size
+self.epoch: epoch
+self.train_loss: train loss
+self.test: test flag if you want test,make self.test=True
+self.total_epoch: total epoch
+self.time: train time
 self.total_time:total train time
+self.train_data: train data
+self.train_labels: train labels
+self.nn.param: neural network object's param list
