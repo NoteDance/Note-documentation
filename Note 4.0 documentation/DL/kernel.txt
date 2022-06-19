@@ -87,6 +87,7 @@ for _ in range(thread count):
 
 
 -----------------------------------------------------------------------------------------
+Kernel support suspending training
 Kernel support replacing core in running.
 
 
