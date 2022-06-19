@@ -1,0 +1,111 @@
+Use kernel to train neural network. First, you should write a neural network class that include method object and Instance object.
+Method object:
+#method object need to use Tensorflow 2.0 version and above to write.
+1. fp(data) Receive data to forward propagation then output result.
+2. loss(output,labels) Receive output and labels output loss.
+3. oopt() If you want to write optimizer by yourself.
+
+Instance object:
+1.If you don't want to write optimizer by yourself,assign opt as optimizer of tensorflow
+2.instance include parameter and hyper-parameter,where parameter must be named param, instance can include anything you need.
+
+
+----------------------------------------------------------------------------------------
+If you done your neural network,you can use kernel to train.
+simple example:
+import Note.create.kernel as k   #import kernel
+import tensorflow as tf              #import core
+import cnn as c                          #import your class's python file
+cnn=c.cnn()                                #create class object
+kernel=k.kernel(cnn)                 #start kernel
+kernel.core=tf                           #use core
+kernel.data(train_data,train_labels)   #input you data,if you have test data can transfer to kernel API data()
+                                                          #data can be a list,[data1,data2,...,datan]
+kernel.train(batch,epoch)         #train neural network
+                                                #batch: batch data
+                                                #epoch: train epoch
+
+
+----------------------------------------------------------------------------------------
+Save:
+#this kernel API can save you neural network and param as a file.
+kernel.save(path)
+
+
+----------------------------------------------------------------------------------------
+Restore:
+If you want to train your neural network again.
+import Note.create.kernel as k
+kernel=k.kernel()   #don't need neural network object.
+kernel.restore(s_path,p_path)   #use this API to restore your neural network and param file.
+
+
+-----------------------------------------------------------------------------------------
+set_end(self,end_loss=None,end_acc=None,end_test_loss=None,end_test_acc=None)
+#this kernel API can set end condition for training
+kernel.set_end(end condition)   #use set_end() by kernel
+
+
+-----------------------------------------------------------------------------------------
+train_visual(self)
+#this kernel API can visualize your taining
+kernel.train_visual()   #use train_visual() by kernel
+
+
+-----------------------------------------------------------------------------------------
+Parallel optimization:
+Use multithreading to optimize.
+Note have two types of parallel optimization.
+You can use parallel optimization as follow.
+kernel.thread_lock=your thread lock   #first transfer thread lock to kernel
+kernel.PO=1   #then set kernel's data PO
+                      #the first kind of parallel optimization(not parallel computing gradient and optimizing)
+kernel.PO=2  #the second kind of parallel optimization(parallel computing gradient and optimizing)
+
+#add threads
+add_threads(self,thread)
+
+Multithreading：
+simple example:
+import Note.create.kernel as k   #import kernel
+import tensorflow as tf              #import core
+import threading
+kernel=k.kernel(your neural network object)   #start kernel
+kernel.core=tf                            #use core
+kernel.thread=thread count
+kernel.data(train_data,train_labels)   #input you data
+kernel.PO=1 or kernel.PO=2
+kernel.thread_lock=threading.Lock()
+class thread(threading.Thread):
+	def run(self):
+		kernel.train(batch,epoch)
+for _ in range(thread count):
+	_thread=thread()
+	_thread.start()
+for _ in range(thread count):
+	_thread.join()
+
+
+-----------------------------------------------------------------------------------------
+Kernel's instance object:
+self.nn: neural network object
+self.nn.km: kernel mode
+self.PO: parallel optimization
+self.thread_lock: thread lock
+self.thread: thread sum
+self.ol: online training function be used for kernel to oniline train
+self.suspend: if you want to suspend your training,you can assign self.suspend to True
+self.save_epoch: if you want to save your neural network,you can assign self.save_epoch to an epoch
+self.batch: batch size
+self.epoch: epoch
+self.train_loss: train loss
+self.train_loss_list: self.train_visual() use this instance to visualize train loss's curve
+self.test_flag: test flag if you want test,make self.test_flag=True
+self.total_epoch: total epoch
+self.time: train time
+self.total_time:total train time
+self.train_data: train data
+self.train_labels: train labels
+self.nn.param: neural network object's param list
+self.param: this instance be used for the second kind of parallel optimization,for reduce memory consumption
+self.flag: if you have continued training,it will be assigned True
