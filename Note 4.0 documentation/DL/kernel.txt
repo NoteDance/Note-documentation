@@ -94,7 +94,7 @@ self.PO: parallel optimization
 self.thread_lock: thread lock
 self.thread: thread sum
 self.ol: online training function be used for kernel to oniline train
-self.suspend: if you want to suspend your training,you can assign self.suspend to True
+self.suspend: if you want to suspend training,you can assign self.suspend to True
 self.save_epoch: if you want to save your neural network,you can assign self.save_epoch to an epoch
 self.batch: batch size
 self.epoch: epoch
