@@ -87,6 +87,10 @@ for _ in range(thread count):
 
 
 -----------------------------------------------------------------------------------------
+Kernel support replacing core in running.
+
+
+-----------------------------------------------------------------------------------------
 Kernel's instance object:
 self.nn: neural network object
 self.nn.km: kernel mode
