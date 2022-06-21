@@ -104,3 +104,22 @@ self.nn.param: neural network object's param list
 self.param: this instance be used for the second kind of parallel optimization,for reduce memory consumption
 self.gradient: this instance be used for the second kind of parallel optimization,for reduce memory consumption
 self.flag: if you have continued training,it will be assigned True
+
+
+-----------------------------------------------------------------------------------------
+Kernel's methon object:
+data(self,train_data,train_labels,test_data=None,test_labels=None): assign data for self.train_data,self.train_labels,self.test_data,self.test_labels
+init(self,param=None): initialize some kernel's instance
+add_threads(self,thread): add thread count
+set_end(self,end_loss=None,end_acc=None,end_test_loss=None,end_test_acc=None): set end condition
+apply_gradient(self,tape,opt,loss,parameter): optimize neural network
+loss_acc(self,output=None,labels_batch=None,loss=None,test_batch=None,total_loss=None,total_acc=None,t=None): compute loss and acc
+core_opt(self,output,loss,t=None): optimize neural network
+core_opt_t(self,data,labels,t): optimize neural network by multithreading
+train(self,batch=None,epoch=None,test_batch=None,file_path=None,one=True,p=None,s=None): train neural network
+test(self,test_data,test_labels,batch=None,t=None): output test loss and test acc
+suspend_func(self): be used to suspend training
+train_visual(self): visualize train loss and train acc by matplotlib
+save_p(self,path): save neural network's parameter
+save(self,path,i=None,one=True): save neural network and neural network's parameter
+restore(self,s_path,p_path): restore neural network and neural network's parameter
