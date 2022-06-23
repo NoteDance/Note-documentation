@@ -87,8 +87,10 @@ for _ in range(thread count):
 
 
 -----------------------------------------------------------------------------------------
-Kernel support suspending training
-Kernel support replacing core in running.
+System support suspending training
+System support replacing core in running.
+System support stop and save in training
+System support stop and save in multithreading training
 
 
 -----------------------------------------------------------------------------------------
@@ -100,6 +102,7 @@ self.thread_lock: thread lock
 self.thread: thread sum
 self.ol: online training function be used for kernel to oniline train
 self.suspend: if you want to suspend training,you can assign self.suspend to True
+self.stop: if you want to stop training,you can assign self.stop to True
 self.save_epoch: if you want to save your neural network,you can assign self.save_epoch to an epoch
 self.batch: batch size
 self.epoch: epoch
