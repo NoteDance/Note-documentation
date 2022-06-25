@@ -72,14 +72,14 @@ import tensorflow as tf              #import core
 import threading
 kernel=k.kernel(your neural network object)   #start kernel
 kernel.core=tf                            #use core
-kernel.thread=thread count
+kernel.thread=7(thread count)
 kernel.data(train_data,train_labels)   #input you data
 kernel.PO=1 or kernel.PO=2
 kernel.thread_lock=threading.Lock()
 class thread(threading.Thread):
 	def run(self):
 		kernel.train(batch,epoch)
-for _ in range(thread count):
+for _ in range(7):
 	_thread=thread()
 	_thread.start()
 for _ in range(thread count):
