@@ -20,8 +20,8 @@ kernel=k.kernel(cnn)                 #start kernel
 kernel.data(train_data,train_labels)   #input you data,if you have test data can transfer to kernel API data()
                                                           #data can be a list,[data1,data2,...,datan]
 kernel.train(batch,epoch)         #train neural network
-                                                #batch: batch data
-                                                #epoch: train epoch
+                                                #batch: batch
+                                                #epoch: epoch
 
 
 ----------------------------------------------------------------------------------------
@@ -68,14 +68,14 @@ simple example:
 import Note.create.kernel as k   #import kernel
 import threading
 kernel=k.kernel(your neural network object)   #start kernel
-kernel.thread=thread count
+kernel.thread=7(thread count)
 kernel.data(train_data,train_labels)   #input you data
 kernel.PO=1 or kernel.PO=2
 kernel.thread_lock=threading.Lock()
 class thread(threading.Thread):
 	def run(self):
 		kernel.train(batch,epoch)
-for _ in range(thread count):
+for _ in range(7):
 	_thread=thread()
 	_thread.start()
 for _ in range(thread count):
