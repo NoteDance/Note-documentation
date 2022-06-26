@@ -85,6 +85,30 @@ for _ in range(7):
 for _ in range(thread count):
 	_thread.join()
 
+#support stop and save in multithreading training
+simple example:
+import Note.create.kernel as k   #import kernel
+import tensorflow as tf              #import core
+import threading
+kernel=k.kernel(your neural network object)   #start kernel
+kernel.core=tf                            #use core
+kernel.stop=True
+kernel.file_path='example'
+kernel.end_loss=0.7
+kernel.end_flag=True
+kernel.thread=7(thread count)
+kernel.data(train_data,train_labels)   #input you data
+kernel.PO=1 or kernel.PO=2
+kernel.thread_lock=threading.Lock()
+class thread(threading.Thread):
+	def run(self):
+		kernel.train(batch,epoch)
+for _ in range(7):
+	_thread=thread()
+	_thread.start()
+for _ in range(thread count):
+	_thread.join()
+
 
 -----------------------------------------------------------------------------------------
 System support suspending training
