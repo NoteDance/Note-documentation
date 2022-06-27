@@ -7,7 +7,7 @@ Method object:
 
 Instance object:
 1.If you don't want to write optimizer by yourself,assign opt as optimizer of tensorflow
-2.instance include parameter and hyper-parameter,where parameter must be named param, instance can include anything you need.
+2.Instance include parameter and hyper-parameter,where parameter must be named param, instance can include anything you need.
 
 
 ----------------------------------------------------------------------------------------
