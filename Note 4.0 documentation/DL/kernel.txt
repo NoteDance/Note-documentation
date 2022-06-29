@@ -72,7 +72,7 @@ import tensorflow as tf              #import core
 import threading
 kernel=k.kernel(your neural network object)   #start kernel
 kernel.core=tf                            #use core
-kernel.thread=7(thread count)
+kernel.thread=7                        #thread count
 kernel.data(train_data,train_labels)   #input you data
 kernel.PO=1 or kernel.PO=2
 kernel.thread_lock=threading.Lock()
@@ -96,7 +96,7 @@ kernel.stop=True
 kernel.file_path='example'
 kernel.end_loss=0.7
 kernel.end_flag=True
-kernel.thread=7(thread count)
+kernel.thread=7                        #thread count
 kernel.data(train_data,train_labels)   #input you data
 kernel.PO=1 or kernel.PO=2
 kernel.thread_lock=threading.Lock()
