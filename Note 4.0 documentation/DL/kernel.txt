@@ -29,32 +29,6 @@ kernel.train(32,5)         #train neural network
                                                 #epoch:epoch
 
 
-----------------------------------------------------------------------------------------
-Save:
-#this kernel API can save you neural network and param as a file.
-kernel.save(path)
-
-
-----------------------------------------------------------------------------------------
-Restore:
-If you want to train your neural network again.
-import Note.create.kernel as k
-kernel=k.kernel()   #don't need neural network object.
-kernel.restore(s_path,p_path)   #use this API to restore your neural network and param file.
-
-
------------------------------------------------------------------------------------------
-set_end(self,end_loss=None,end_acc=None,end_test_loss=None,end_test_acc=None)
-#this kernel API can set end condition for training
-kernel.set_end(end condition)   #use set_end() by kernel
-
-
------------------------------------------------------------------------------------------
-train_visual(self)
-#this kernel API can visualize your taining
-kernel.train_visual()   #use train_visual() by kernel
-
-
 -----------------------------------------------------------------------------------------
 Parallel optimization:
 Use multithreading to optimize.
@@ -65,8 +39,6 @@ kernel.PO=1   #then set kernel's data PO
                       #the first kind of parallel optimization(not parallel computing gradient and optimizing)
 kernel.PO=2  #the second kind of parallel optimization(parallel computing gradient and optimizing)
 
-#add threads
-add_threads(self,thread)
 
 Multithreading：
 simple example:
@@ -90,6 +62,7 @@ for _ in range(7):
 	_thread.start()
 for _ in range(thread count):
 	_thread.join()
+
 
 #support stop and save in multithreading training
 simple example:
@@ -117,6 +90,37 @@ for _ in range(7):
 	_thread.start()
 for _ in range(thread count):
 	_thread.join()
+
+
+----------------------------------------------------------------------------------------
+#add threads
+add_threads(self,thread)
+
+
+----------------------------------------------------------------------------------------
+Save:
+#this kernel API can save you neural network and param as a file.
+kernel.save(path)
+
+
+----------------------------------------------------------------------------------------
+Restore:
+If you want to train your neural network again.
+import Note.create.kernel as k
+kernel=k.kernel()   #don't need neural network object.
+kernel.restore(s_path,p_path)   #use this API to restore your neural network and param file.
+
+
+-----------------------------------------------------------------------------------------
+set_end(self,end_loss=None,end_acc=None,end_test_loss=None,end_test_acc=None)
+#this kernel API can set end condition for training
+kernel.set_end(end condition)   #use set_end() by kernel
+
+
+-----------------------------------------------------------------------------------------
+train_visual(self)
+#this kernel API can visualize your taining
+kernel.train_visual()   #use train_visual() by kernel
 
 
 -----------------------------------------------------------------------------------------
