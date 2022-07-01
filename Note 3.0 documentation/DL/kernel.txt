@@ -38,6 +38,7 @@ kernel.PO=1   #then set kernel's data PO
                       #the first kind of parallel optimization(not parallel computing gradient and optimizing)
 kernel.PO=2  #the second kind of parallel optimization(parallel computing gradient and optimizing)
 
+
 Multithreading：
 simple example:
 import tensorflow as tf
