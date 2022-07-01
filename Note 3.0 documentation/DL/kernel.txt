@@ -28,6 +28,44 @@ kernel.train(32,5)         #train neural network
                                     #epoch:epoch
 
 
+-----------------------------------------------------------------------------------------
+Parallel optimization:
+Use multithreading to optimize.
+Note have two types of parallel optimization.
+You can use parallel optimization as follow.
+kernel.thread_lock=your thread lock   #first transfer thread lock to kernel
+kernel.PO=1   #then set kernel's data PO
+                      #the first kind of parallel optimization(not parallel computing gradient and optimizing)
+kernel.PO=2  #the second kind of parallel optimization(parallel computing gradient and optimizing)
+
+Multithreading：
+simple example:
+import tensorflow as tf
+import Note.create.kernel as k   #import kernel
+import threading
+mnist=tf.keras.datasets.mnist
+(x_train,y_train),(x_test,y_test)=mnist.load_data()
+x_train,x_test=x_train/255.0,x_test/255.0
+kernel=k.kernel(your neural network object)   #start kernel
+kernel.thread=7                                 #thread count
+kernel.data(x_train,y_train)   #input you data
+kernel.PO=1 or kernel.PO=2
+kernel.thread_lock=threading.Lock()
+class thread(threading.Thread):
+	def run(self):
+		kernel.train(32,5)
+for _ in range(7):
+	_thread=thread()
+	_thread.start()
+for _ in range(thread count):
+	_thread.join()
+
+
+----------------------------------------------------------------------------------------
+#add threads
+add_threads(self,thread)
+
+
 ----------------------------------------------------------------------------------------
 Save:
 #this kernel API can save you neural network and param as a file.
@@ -52,42 +90,6 @@ kernel.set_end(end condition)   #use set_end() by kernel
 train_visual(self)
 this kernel API can visualize your taining
 kernel.train_visual()   #use train_visual() by kernel
-
-
------------------------------------------------------------------------------------------
-Parallel optimization:
-Use multithreading to optimize.
-Note have two types of parallel optimization.
-You can use parallel optimization as follow.
-kernel.thread_lock=your thread lock   #first transfer thread lock to kernel
-kernel.PO=1   #then set kernel's data PO
-                      #the first kind of parallel optimization(not parallel computing gradient and optimizing)
-kernel.PO=2  #the second kind of parallel optimization(parallel computing gradient and optimizing)
-
-#add threads
-add_threads(self,thread)
-
-Multithreading：
-simple example:
-import tensorflow as tf
-import Note.create.kernel as k   #import kernel
-import threading
-mnist=tf.keras.datasets.mnist
-(x_train,y_train),(x_test,y_test)=mnist.load_data()
-x_train,x_test=x_train/255.0,x_test/255.0
-kernel=k.kernel(your neural network object)   #start kernel
-kernel.thread=7                                 #thread count
-kernel.data(x_train,y_train)   #input you data
-kernel.PO=1 or kernel.PO=2
-kernel.thread_lock=threading.Lock()
-class thread(threading.Thread):
-	def run(self):
-		kernel.train(32,5)
-for _ in range(7):
-	_thread=thread()
-	_thread.start()
-for _ in range(thread count):
-	_thread.join()
 
 
 -----------------------------------------------------------------------------------------
