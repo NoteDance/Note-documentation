@@ -1,6 +1,6 @@
 Use kernel to train neural network. First, you should write a neural network class that include method object and Instance object.
 Method object:
-#method object need to use Tensorflow 2.0 version and above to write.
+method object need to use Tensorflow 2.0 version and above to write.
 1. fp(data) Receive data to forward propagation then output result.
 2. loss(output,labels) Receive output and labels output loss.
 3. oopt(gradient,param) and gradient(tape,loss,param) If you want to write optimizer by yourself.
@@ -63,13 +63,13 @@ for _ in range(thread count):
 
 
 ----------------------------------------------------------------------------------------
-#add threads
+Add threads:
 add_threads(self,thread)
 
 
 ----------------------------------------------------------------------------------------
 Save:
-#this kernel API can save you neural network and param as a file.
+This kernel API can save you neural network and param as a file.
 kernel.save(path)
 
 
@@ -82,14 +82,14 @@ kernel.restore(s_path,p_path)   #use this API to restore your neural network and
 
 
 -----------------------------------------------------------------------------------------
+This kernel API can set end condition for training.
 set_end(self,end_loss=None,end_acc=None,end_test_loss=None,end_test_acc=None)
-this kernel API can set end condition for training
-kernel.set_end(end condition)   #use set_end() by kernel
+kernel.set_end(0.7)   #use set_end() by kernel
 
 
 -----------------------------------------------------------------------------------------
+This kernel API can visualize your taining.
 train_visual(self)
-this kernel API can visualize your taining
 kernel.train_visual()   #use train_visual() by kernel
 
 
