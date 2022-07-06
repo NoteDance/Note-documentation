@@ -19,6 +19,7 @@ import cnn as c                          #import your class's python file
 mnist=tf.keras.datasets.mnist
 (x_train,y_train),(x_test,y_test)=mnist.load_data()
 x_train,x_test =x_train/255.0,x_test/255.0
+y_train=tf.one_hot(y_train,10).numpy()
 cnn=c.cnn()                                #create class object
 kernel=k.kernel(cnn)                 #start kernel
 kernel.data(x_train,y_train)   #input you data,if you have test data can transfer to kernel API data()
@@ -40,11 +41,14 @@ Multithreading：
 simple example:
 import tensorflow as tf
 import Note.create.kernel as k   #import kernel
+import cnn as c                          #import your class's python file
 import threading
 mnist=tf.keras.datasets.mnist
 (x_train,y_train),(x_test,y_test)=mnist.load_data()
 x_train,x_test=x_train/255.0,x_test/255.0
-kernel=k.kernel(your neural network object)   #start kernel
+y_train=tf.one_hot(y_train,10).numpy()
+cnn=c.cnn()                                #create class object
+kernel=k.kernel(cnn)   #start kernel
 kernel.thread=7                                 #thread count
 kernel.data(x_train,y_train)   #input you data
 kernel.PO=1 or kernel.PO=2
