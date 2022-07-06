@@ -20,4 +20,4 @@ class cnn:
     
     def loss(self,output,labels):
         loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-        return loss(output,labels)
+        return loss(labels,output)
