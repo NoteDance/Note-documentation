@@ -14,7 +14,6 @@ class nn:               #a simple example,a neural network class
         self.info='example'
     
     
-    @tf.function
     def fp(self,data):
         with tf.device('GPU:0'):
             layer1=tf.nn.relu(tf.matmul(data,self.weight1)+self.bias1)
