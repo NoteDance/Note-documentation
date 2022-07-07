@@ -13,10 +13,11 @@ class cnn:
         self.opt=tf.keras.optimizers.Adam()
     
     
-    @tf.function
     def fp(self,data):
-        return self.model(data)
+        with tf.device('GPU:0'):
+            output=self.model(data)
+        return output
     
     
     def loss(self,output,labels):
-        return tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=output,labels=labels))
+        return tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=output,labels=labels))        
