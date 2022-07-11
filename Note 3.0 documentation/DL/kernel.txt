@@ -19,7 +19,7 @@ import cnn as c                          #import your class's python file
 mnist=tf.keras.datasets.mnist
 (x_train,y_train),(x_test,y_test)=mnist.load_data()
 x_train,x_test =x_train/255.0,x_test/255.0
-y_train=tf.one_hot(y_train,10).numpy()
+y_train=tf.one_hot(y_train,10)
 cnn=c.cnn()                                #create class object
 kernel=k.kernel(cnn)                 #start kernel
 kernel.data(x_train,y_train)   #input you data,if you have test data can transfer to kernel API data()
@@ -46,20 +46,20 @@ import threading
 mnist=tf.keras.datasets.mnist
 (x_train,y_train),(x_test,y_test)=mnist.load_data()
 x_train,x_test=x_train/255.0,x_test/255.0
-y_train=tf.one_hot(y_train,10).numpy()
+y_train=tf.one_hot(y_train,10)
 cnn=c.cnn()                                #create class object
 kernel=k.kernel(cnn)   #start kernel
 kernel.thread=2                                 #thread count
 kernel.data(x_train,y_train)   #input you data
 kernel.PO=1 or kernel.PO=2
-kernel.thread_lock=threading.Lock()
+kernel.thread_lock=threading.Lock() or kernel.thread_lock=[threading.Lock(),threading.Lock()]
 class thread(threading.Thread):
 	def run(self):
 		kernel.train(32,3)
-for _ in range(2):
+for _ in range(7):
 	_thread=thread()
 	_thread.start()
-for _ in range(2):
+for _ in range(7):
 	_thread.join()
 
 
