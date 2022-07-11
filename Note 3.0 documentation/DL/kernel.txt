@@ -56,10 +56,10 @@ kernel.thread_lock=threading.Lock() or kernel.thread_lock=[threading.Lock(),thre
 class thread(threading.Thread):
 	def run(self):
 		kernel.train(32,3)
-for _ in range(7):
+for _ in range(2):
 	_thread=thread()
 	_thread.start()
-for _ in range(7):
+for _ in range(2):
 	_thread.join()
 
 
