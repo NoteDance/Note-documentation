@@ -54,7 +54,7 @@ kernel.core=tf                            #use core
 kernel.thread=2                        #thread count
 kernel.data(x_train,y_train)   #input you data
 kernel.PO=1 or kernel.PO=2
-kernel.thread_lock=threading.Lock() or kernel.thread_lock=[threading.Lock(),threading.Lock(),threading.Lock()]
+kernel.thread_lock=threading.Lock() or kernel.thread_lock=[threading.Lock(),threading.Lock()]
 class thread(threading.Thread):
 	def run(self):
 		kernel.train(32,3)
@@ -63,6 +63,7 @@ for _ in range(2):
 	_thread.start()
 for _ in range(2):
 	_thread.join()
+kernel.train_loss_list or kernel.train_loss       #view training loss
 
 
 Support stop and save in multithreading training.
@@ -85,7 +86,7 @@ kernel.end_flag=True
 kernel.thread=2                        #thread count
 kernel.data(x_train,y_train)   #input you data
 kernel.PO=1 or kernel.PO=2
-kernel.thread_lock=threading.Lock() or kernel.thread_lock=[threading.Lock(),threading.Lock(),threading.Lock()]
+kernel.thread_lock=threading.Lock() or kernel.thread_lock=[threading.Lock(),threading.Lock()]
 class thread(threading.Thread):
 	def run(self):
 		kernel.train(32,3)
@@ -94,6 +95,7 @@ for _ in range(2):
 	_thread.start()
 for _ in range(2):
 	_thread.join()
+kernel.train_loss_list or kernel.train_loss       #view training loss
 
 
 ----------------------------------------------------------------------------------------
