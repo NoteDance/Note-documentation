@@ -4,8 +4,9 @@ import tensorflow_hub as hub
 
 class bert:
     def __init__(self):
-        self.opt=None
-        self.param=None
+        self.model=self.build_classifier_model()
+        self.param=self.model.weights
+        self.opt=tf.keras.optimizers.Adam()
     
     
     def build_classifier_model(self):
@@ -21,7 +22,7 @@ class bert:
     
     
     def fp(self,data):
-        return self.build_classifier_model(data)
+        return self.model(data)
     
     
     def loss(self,output,labels):
