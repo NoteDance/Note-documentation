@@ -1,7 +1,7 @@
 import tensorflow as tf
 import tensorflow_hub as hub
 
-
+#You can refer to this link https://tensorflow.google.cn/text/tutorials/classify_text_with_bert
 class bert:
     def __init__(self):
         text_input=tf.keras.layers.Input(shape=(),dtype=tf.string,name='text')
