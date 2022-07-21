@@ -4,12 +4,6 @@ import tensorflow_hub as hub
 
 class bert:
     def __init__(self):
-        self.model=self.build_classifier_model()
-        self.param=self.model.weights
-        self.opt=tf.keras.optimizers.Adam()
-    
-    
-    def build_classifier_model(self):
         text_input=tf.keras.layers.Input(shape=(),dtype=tf.string,name='text')
         preprocessing_layer=hub.KerasLayer(tfhub_handle_preprocess,name='preprocessing')
         encoder_inputs=preprocessing_layer(text_input)
@@ -18,7 +12,9 @@ class bert:
         net=outputs['pooled_output']
         net=tf.keras.layers.Dropout(0.1)(net)
         net=tf.keras.layers.Dense(1,activation=None,name='classifier')(net)
-        return tf.keras.Model(text_input,net)
+        self.model=tf.keras.Model(text_input,net)
+        self.param=self.model.weights
+        self.opt=tf.keras.optimizers.Adam()
     
     
     def fp(self,data):
