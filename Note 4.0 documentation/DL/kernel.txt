@@ -1,11 +1,11 @@
 Use kernel to train neural network. First, you should write a neural network class that include method object and Instance object.
 Method object:
 Method object need to use Tensorflow 2.0 version and above to write.
-1. fp(data) Receive data,return output.
-2. loss(output,labels) Receive output and labels output loss.
+1. fp(data) forward propagation function,it receive data,return output.
+2. loss(output,labels) loss function,it receive output and labels output loss.
 3. oopt(gradient,param) and gradient(output,loss,param) If you want to write optimizer by yourself.
 You can also do.
-1. fp(data,labels) Receive data and labels,return output and loss.
+1. fp(data,labels) forward propagation function,it receive data and labels,return output and loss.
 2. oopt(gradient,param) and gradient(output,loss,param) If you want to write optimizer by yourself.
 
 Instance object:
