@@ -1,12 +1,15 @@
 Use kernel to train neural network. First, you should write a neural network class that include method object and Instance object.
 Method object:
 Method object need to use Tensorflow 2.0 version and above to write.
-1. fp(data) Receive data to forward propagation then output result.
+1. fp(data) Receive data,return output.
 2. loss(output,labels) Receive output and labels output loss.
-3. oopt(gradient,param) and gradient(tape,loss,param) If you want to write optimizer by yourself.
+3. oopt(gradient,param) and gradient(output,loss,param) If you want to write optimizer by yourself.
+You can also do.
+1. fp(data,labels) Receive data and labels,return output and loss.
+2. oopt(gradient,param) and gradient(output,loss,param) If you want to write optimizer by yourself.
 
 Instance object:
-1.If you don't want to write optimizer by yourself,assign opt as optimizer of tensorflow
+1.If you don't want to write optimizer by yourself,assign opt as optimizer of tensorflow.
 2.Instance include parameter and hyper-parameter,where parameter must be named param, instance can include anything you need.
 
 
@@ -54,7 +57,7 @@ kernel.core=tf                            #use core
 kernel.thread=2                        #thread count
 kernel.data(x_train,y_train)   #input you data
 kernel.PO=1 or kernel.PO=2
-kernel.thread_lock=threading.Lock() or kernel.thread_lock=[threading.Lock(),threading.Lock(),threading.Lock()]
+kernel.thread_lock=threading.Lock() or kernel.thread_lock=[threading.Lock(),threading.Lock()]
 class thread(threading.Thread):
 	def run(self):
 		kernel.train(32,3)
@@ -63,7 +66,6 @@ for _ in range(2):
 	_thread.start()
 for _ in range(2):
 	_thread.join()
-kernel.train_loss_list or kernel.train_loss       #view training loss
 
 
 Support stop and save in multithreading training.
@@ -80,13 +82,13 @@ cnn=c.cnn()                                #create class object
 kernel=k.kernel(cnn)   #start kernel
 kernel.core=tf                            #use core
 kernel.stop=True
-kernel.save_flag=True
+kernel.file_path='example'
 kernel.end_loss=0.7
 kernel.end_flag=True
 kernel.thread=2                        #thread count
 kernel.data(x_train,y_train)   #input you data
 kernel.PO=1 or kernel.PO=2
-kernel.thread_lock=threading.Lock() or kernel.thread_lock=[threading.Lock(),threading.Lock(),threading.Lock()]
+kernel.thread_lock=threading.Lock() or kernel.thread_lock=[threading.Lock(),threading.Lock()]
 class thread(threading.Thread):
 	def run(self):
 		kernel.train(32,3)
@@ -95,7 +97,6 @@ for _ in range(2):
 	_thread.start()
 for _ in range(2):
 	_thread.join()
-kernel.train_loss_list or kernel.train_loss       #view training loss
 
 
 ----------------------------------------------------------------------------------------
