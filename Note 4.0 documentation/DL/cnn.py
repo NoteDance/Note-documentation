@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-
+#https://tensorflow.google.cn/tutorials/quickstart/beginner
 class cnn:
     def __init__(self):
         self.model=tf.keras.models.Sequential([
