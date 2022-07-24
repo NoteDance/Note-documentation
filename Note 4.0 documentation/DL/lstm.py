@@ -12,6 +12,8 @@ class lstm:
         tf.keras.layers.Dropout(0.5),
         tf.keras.layers.Dense(1)
         ])
+        self.param=self.model.weights
+        self.opt=tf.keras.optimizers.Adam()
     
     
     def fp(self,data):
