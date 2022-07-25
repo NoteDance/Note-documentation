@@ -17,9 +17,11 @@ class lstm:
     
     
     def fp(self,data):
-        return self.model(data)
+        with tf.device('GPU:0'):
+            output=self.model(data)
+        return output
     
     
     def loss(self,output,labels):
         bce=tf.keras.losses.BinaryCrossentropy(from_logits=True)
-        return bce(output,labels)
+        return bce(labels,output)
