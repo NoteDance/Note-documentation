@@ -132,7 +132,6 @@ kernel.train_visual()   #use train_visual() by kernel
 
 -----------------------------------------------------------------------------------------
 System support suspending training.
-System support replacing core in running.
 System support stop and save in training.
 System support stop and save in multithreading training.
 
