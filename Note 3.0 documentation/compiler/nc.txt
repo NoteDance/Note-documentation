@@ -25,7 +25,7 @@ return oint32. [3,4]->return tf.ones([3,4],dtype=tf.int32)
 
 Using example:
 import Note.create.nc as nc
-c=nc.compiler(filename.n)
+c=nc.compiler('nn.n')
 c.Compile()
 #then you will get filename.py.
 
