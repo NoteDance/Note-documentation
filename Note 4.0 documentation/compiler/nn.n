@@ -1,5 +1,5 @@
 import tensorflow as tf
-
+define. Pi 3.14
 
 class nn:               #a simple example,a neural network class
     def __init__(self):
@@ -18,7 +18,7 @@ class nn:               #a simple example,a neural network class
         with tf.device('GPU:0'):
             layer1=tf.nn.relu((data.*self.weight1)+self.bias1)
             layer2=tf.nn.relu((layer1.*self.weight2)+self.bias2)
-            output=(layer2.*self.weight3)+self.bias3
+            output=(layer2.*self.weight3)+self.bias3+Pi
         return output
     
     
