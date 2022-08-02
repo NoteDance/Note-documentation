@@ -3,6 +3,12 @@ import tensorflow as tf
 
 class nn:               #a simple example,a neural network class
     def __init__(self):
+        self.param=None
+        self.opt=tf.keras.optimizers.Adam()
+        self.info='example'
+    
+    
+    def param_init(self):
         self.weight1=tf.Variable(tf.random.normal([784,64]))
         self.bias1=tf.Variable(tf.random.normal([64]))
         self.weight2=tf.Variable(tf.random.normal([64,64]))
@@ -10,8 +16,7 @@ class nn:               #a simple example,a neural network class
         self.weight3=tf.Variable(tf.random.normal([64,10]))
         self.bias3=tf.Variable(tf.random.normal([10]))
         self.param=[self.weight1,self.weight2,self.weight3,self.bias1,self.bias2,self.bias3]
-        self.opt=tf.keras.optimizers.Adam()
-        self.info='example'
+        return
     
     
     def fp(self,data):
