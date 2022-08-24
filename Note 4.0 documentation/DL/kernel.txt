@@ -18,12 +18,12 @@ If you done your neural network,you can use kernel to train.
 simple example:
 import Note.create.kernel as k   #import kernel
 import tensorflow as tf              #import core
-import cnn as c                          #import your class's python file
+import cnn as c                          #import neural network
 mnist=tf.keras.datasets.mnist
 (x_train,y_train),(x_test,y_test)=mnist.load_data()
 x_train,x_test =x_train/255.0,x_test/255.0
 y_train=tf.one_hot(y_train,10)
-cnn=c.cnn()                                #create class object
+cnn=c.cnn()                                #create neural network object
 kernel=k.kernel(cnn)                 #start kernel
 kernel.core=tf                           #use core
 kernel.data(x_train,y_train)   #input you data,if you have test data can transfer to kernel API data()
@@ -45,13 +45,13 @@ Multithreading：
 simple example:
 import Note.create.kernel as k   #import kernel
 import tensorflow as tf              #import core
-import cnn as c                          #import your class's python file
+import cnn as c                          #import neural network
 import threading
 mnist=tf.keras.datasets.mnist
 (x_train,y_train),(x_test,y_test)=mnist.load_data()
 x_train,x_test =x_train/255.0,x_test/255.0
 y_train=tf.one_hot(y_train,10)
-cnn=c.cnn()                                #create class object
+cnn=c.cnn()                                #create neural network object
 kernel=k.kernel(cnn)   #start kernel
 kernel.core=tf                            #use core
 kernel.thread=2                        #thread count
@@ -72,13 +72,13 @@ Support stop and save in multithreading training.
 simple example:
 import Note.create.kernel as k   #import kernel
 import tensorflow as tf              #import core
-import cnn as c                          #import your class's python file
+import cnn as c                          #import neural network
 import threading
 mnist=tf.keras.datasets.mnist
 (x_train,y_train),(x_test,y_test)=mnist.load_data()
 x_train,x_test =x_train/255.0,x_test/255.0
 y_train=tf.one_hot(y_train,10)
-cnn=c.cnn()                                #create class object
+cnn=c.cnn()                                #create neural network object
 kernel=k.kernel(cnn)   #start kernel
 kernel.core=tf                            #use core
 kernel.stop=True
