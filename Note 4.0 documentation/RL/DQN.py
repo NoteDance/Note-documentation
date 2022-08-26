@@ -16,12 +16,16 @@ class Qnet(torch.nn.Module):
     
     
 class DQN:
-    def __init__(self,state_dim,hidden_dim,action_dim,device):
-        self.nn=Qnet(state_dim,hidden_dim,action_dim).to(device)
-        self.target_q_net(state_dim,hidden_dim,action_dim).to(device)
+    def __init__(self,state_dim,hidden_dim,action_dim):
+        if torch.cuda.is_available():
+            self.device=torch.device('cuda')
+        else:
+            self.device=torch.device('cpu')
+        self.nn=Qnet(state_dim,hidden_dim,action_dim).to(self.device)
+        self.target_q_net(state_dim,hidden_dim,action_dim).to(self.device)
         self.optimizer=torch.optim.Adam(self.q_net.parameters(),lr=2e-3)
         self.env=gym.make('CartPole-v0')
-        self.device=device
+
     
     
     def explore(self,a=None,init=None):
