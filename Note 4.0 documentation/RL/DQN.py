@@ -40,15 +40,15 @@ class DQN:
             return next_state,reward,done
     
     
-    def loss(self,s_batch,a_batch,next_s_batch,r_batch,d_batch):
-        s_batch=torch.tensor(s_batch,dtype=torch.float).to(self.device)
-        a_batch=torch.tensor(a_batch,dtype=torch.float).view(-1,1).to(self.device)
-        next_s_batch=torch.tensor(next_s_batch,dtype=torch.float).to(self.device)
-        r_batch=torch.tensor(r_batch,dtype=torch.float.view(-1,1)).to(self.device)
-        d_batch=torch.tensor(d_batch,dtype=torch.float.view(-1,1)).to(self.device)
-        q_value=self.nn(s_batch).gather(1,a_batch)
-        next_q_value=self.target_q_net(next_s_batch).max(1)[0].view(-1,1)
-        target=r_batch+0.98*next_q_value*(1-d_batch)
+    def loss(self,s,a,next_s,r,d):
+        s=torch.tensor(s,dtype=torch.float).to(self.device)
+        a=torch.tensor(a,dtype=torch.float).view(-1,1).to(self.device)
+        next_s=torch.tensor(next_s,dtype=torch.float).to(self.device)
+        r=torch.tensor(r,dtype=torch.float.view(-1,1)).to(self.device)
+        d=torch.tensor(d,dtype=torch.float.view(-1,1)).to(self.device)
+        q_value=self.nn(s).gather(1,a)
+        next_q_value=self.target_q_net(next_s).max(1)[0].view(-1,1)
+        target=r+0.98*next_q_value*(1-d)
         return torch.mean(F.mse_loss(q_value,target))
     
     
