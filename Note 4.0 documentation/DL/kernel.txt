@@ -15,7 +15,7 @@ Instance object:
 
 ----------------------------------------------------------------------------------------
 If you done your neural network,you can use kernel to train.
-simple example:
+example:
 import Note.create.kernel as k   #import kernel
 import tensorflow as tf              #import core
 import cnn as c                          #import neural network
@@ -42,7 +42,7 @@ Note have two types of parallel optimization:
 
 
 Multithreading：
-simple example:
+example:
 import Note.create.kernel as k   #import kernel
 import tensorflow as tf              #import core
 import cnn as c                          #import neural network
@@ -68,8 +68,8 @@ for _ in range(2):
 	_thread.join()
 
 
-Support stop and save in multithreading training.
-simple example:
+Stop multithreading training and saving when condition is met.
+example:
 import Note.create.kernel as k   #import kernel
 import tensorflow as tf              #import core
 import cnn as c                          #import neural network
