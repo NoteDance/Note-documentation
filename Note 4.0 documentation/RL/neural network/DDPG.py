@@ -1,5 +1,6 @@
 import torch
 import torch.nn.functional as F
+import numpy as np
 
 
 class actor(torch.nn.Module):
@@ -29,7 +30,7 @@ class critic(torch.nn.Module):
 
 
 class DDPG:
-    def __init__(self,state_dim,hidden_dim,action_dim,action_bound,gamma,tau,actor_lr,critic_lr):
+    def __init__(self,state_dim,hidden_dim,action_dim,action_bound,sigma,gamma,tau,actor_lr,critic_lr):
         if torch.cuda.is_available():
             self.device=torch.device('cuda')
         else:
@@ -40,11 +41,16 @@ class DDPG:
         self.target_critic=critic(state_dim,hidden_dim,action_dim).to(self.device)
         self.target_actor.load_state_dict(self.actor.state_dict())
         self.target_critic.load_state_dict(self.critic.state_dict())
+        self.sigma=sigma
         self.gamma=gamma
         self.tau=tau
         self.actor_opt=torch.optim.Adam(self.actor.parameters(),lr=actor_lr)
         self.critic_opt=torch.optim.Adam(self.critic.parameters(),lr=critic_lr)
         self.env=None
+    
+    
+    def noise(self):
+        return np.random.normal(scale=self.sigma)
     
     
     def explore(self,a=None,init=None):
