@@ -86,7 +86,7 @@ kernel.end_loss=0.7
 kernel.thread=2                        #thread count
 kernel.PO=1 or kernel.PO=2
 kernel.data(x_train,y_train)   #input you data
-kernel.thread_lock=[threading.Lock(),threading.Lock()] or kernel.thread_lock=[threading.Lock(),threading.Lock()]
+kernel.thread_lock=[threading.Lock(),threading.Lock(),threading.Lock(),threading.Lock()]
 class thread(threading.Thread):
 	def run(self):
 		kernel.train(32,3)
