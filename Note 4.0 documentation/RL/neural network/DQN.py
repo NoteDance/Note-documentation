@@ -28,8 +28,8 @@ class DQN:
 
     
     
-    def explore(self,a=None,init=None):
-        if init==True:
+    def env(self,a=None,initial=None):
+        if initial==True:
             self.env.action_space.seed(0)
             state,info=self.env.reset(seed=0,return_info=True)
             return state
