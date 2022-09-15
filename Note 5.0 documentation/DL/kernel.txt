@@ -17,7 +17,7 @@ Instance object:
 If you done your neural network,you can use kernel to train.
 example:
 import Note.create.kernel as k   #import kernel
-import tensorflow as tf              #import core
+import tensorflow as tf              #import platform
 import cnn as c                          #import neural network
 mnist=tf.keras.datasets.mnist
 (x_train,y_train),(x_test,y_test)=mnist.load_data()
@@ -25,7 +25,7 @@ x_train,x_test =x_train/255.0,x_test/255.0
 y_train=tf.one_hot(y_train,10)
 cnn=c.cnn()                                #create neural network object
 kernel=k.kernel(cnn)                 #start kernel
-kernel.core=tf                           #use core
+kernel.platform=tf                           #use platform
 kernel.data(x_train,y_train)   #input you data,if you have test data can transfer to kernel API data()
                                                           #data can be a list,[data1,data2,...,datan]
 kernel.train(32,5)         #train neural network
@@ -44,7 +44,7 @@ Note have two types of parallel optimization:
 Multithreading：
 example:
 import Note.create.kernel as k   #import kernel
-import tensorflow as tf              #import core
+import tensorflow as tf              #import platform
 import cnn as c                          #import neural network
 import threading
 mnist=tf.keras.datasets.mnist
@@ -53,7 +53,7 @@ x_train,x_test =x_train/255.0,x_test/255.0
 y_train=tf.one_hot(y_train,10)
 cnn=c.cnn()                                #create neural network object
 kernel=k.kernel(cnn)   #start kernel
-kernel.core=tf                            #use core
+kernel.platform=tf                            #use platform
 kernel.thread=2                        #thread count
 kernel.PO=1 or kernel.PO=2
 kernel.data(x_train,y_train)   #input you data
@@ -71,7 +71,7 @@ for _ in range(2):
 Stop multithreading training and saving when condition is met.
 example:
 import Note.create.kernel as k   #import kernel
-import tensorflow as tf              #import core
+import tensorflow as tf              #import platform
 import cnn as c                          #import neural network
 import threading
 mnist=tf.keras.datasets.mnist
@@ -80,7 +80,7 @@ x_train,x_test =x_train/255.0,x_test/255.0
 y_train=tf.one_hot(y_train,10)
 cnn=c.cnn()                                #create neural network object
 kernel=k.kernel(cnn)   #start kernel
-kernel.core=tf                            #use core
+kernel.platform=tf                            #use platform
 kernel.stop=True
 kernel.end_loss=0.7
 kernel.thread=2                        #thread count
