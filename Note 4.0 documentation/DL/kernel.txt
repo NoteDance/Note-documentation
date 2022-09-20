@@ -124,8 +124,8 @@ kernel.set_end(end condition)   #use set_end() by kernel
 
 -----------------------------------------------------------------------------------------
 This kernel API can visualize your taining.
-train_visual(self)
-kernel.train_visual()   #use train_visual() by kernel
+visualize_train(self)
+kernel.visualize_train()   #use train_visual() by kernel
 
 
 -----------------------------------------------------------------------------------------
