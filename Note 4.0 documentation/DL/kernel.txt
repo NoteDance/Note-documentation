@@ -16,9 +16,9 @@ Instance object:
 ----------------------------------------------------------------------------------------
 If you done your neural network,you can use kernel to train.
 example:
-import Note.create.kernel as k   #import kernel
-import tensorflow as tf              #import platform
-import cnn as c                          #import neural network
+import Note.create.DL.kernel as k   #import kernel
+import tensorflow as tf                   #import platform
+import cnn as c                               #import neural network
 mnist=tf.keras.datasets.mnist
 (x_train,y_train),(x_test,y_test)=mnist.load_data()
 x_train,x_test =x_train/255.0,x_test/255.0
@@ -43,7 +43,7 @@ Note have two types of parallel optimization:
 
 Multithreading：
 example:
-import Note.create.kernel as k   #import kernel
+import Note.create.DL.kernel as k   #import kernel
 import tensorflow as tf              #import platform
 import cnn as c                          #import neural network
 import threading
@@ -70,7 +70,7 @@ for _ in range(2):
 
 Stop multithreading training and saving when condition is met.
 example:
-import Note.create.kernel as k   #import kernel
+import Note.create.DL.kernel as k   #import kernel
 import tensorflow as tf              #import platform
 import cnn as c                          #import neural network
 import threading
@@ -111,7 +111,7 @@ kernel.save(path)
 ----------------------------------------------------------------------------------------
 Restore:
 If you want to train your neural network again.
-import Note.create.kernel as k
+import Note.create.DL.kernel as k
 kernel=k.kernel()   #don't need neural network object.
 kernel.restore(s_path,p_path)   #use this API to restore your neural network and param file.
 
