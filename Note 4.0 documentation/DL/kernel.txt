@@ -44,8 +44,8 @@ Note have two types of parallel optimization:
 Multithreading：
 example:
 import Note.create.DL.kernel as k   #import kernel
-import tensorflow as tf              #import platform
-import cnn as c                          #import neural network
+import tensorflow as tf                   #import platform
+import cnn as c                               #import neural network
 import threading
 mnist=tf.keras.datasets.mnist
 (x_train,y_train),(x_test,y_test)=mnist.load_data()
@@ -71,8 +71,8 @@ for _ in range(2):
 Stop multithreading training and saving when condition is met.
 example:
 import Note.create.DL.kernel as k   #import kernel
-import tensorflow as tf              #import platform
-import cnn as c                          #import neural network
+import tensorflow as tf                   #import platform
+import cnn as c                               #import neural network
 import threading
 mnist=tf.keras.datasets.mnist
 (x_train,y_train),(x_test,y_test)=mnist.load_data()
