@@ -24,19 +24,19 @@ class DoubleDQN:
         self.nn=Qnet(state_dim,hidden_dim,action_dim).to(self.device)
         self.target_q_net(state_dim,hidden_dim,action_dim).to(self.device)
         self.optimizer=torch.optim.Adam(self.q_net.parameters(),lr=2e-3)
-        self.env=gym.make('CartPole-v0')
+        self.genv=gym.make('CartPole-v0')
 
     
     
     def env(self,a=None,initial=None):
         if initial==True:
-            self.env.action_space.seed(0)
-            state,info=self.env.reset(seed=0,return_info=True)
+            self.genv.action_space.seed(0)
+            state,info=self.genv.reset(seed=0,return_info=True)
             return state
         else:
-            next_state,reward,done,_=self.env.step(a)
+            next_state,reward,done,_=self.genv.step(a)
             if done:
-                next_state,info=self.env.reset(return_info=True)
+                next_state,info=self.genv.reset(return_info=True)
             return next_state,reward,done
     
     
