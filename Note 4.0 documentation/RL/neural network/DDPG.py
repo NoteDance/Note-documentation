@@ -46,7 +46,7 @@ class DDPG:
         self.tau=tau
         self.actor_opt=torch.optim.Adam(self.actor.parameters(),lr=actor_lr)
         self.critic_opt=torch.optim.Adam(self.critic.parameters(),lr=critic_lr)
-        self.env=None
+        self.genv=None
     
     
     def noise(self):
@@ -55,13 +55,13 @@ class DDPG:
     
     def env(self,a=None,initial=None):
         if initial==True:
-            self.env.action_space.seed(0)
-            state,info=self.env.reset(seed=0,return_info=True)
+            self.genv.action_space.seed(0)
+            state,info=self.genv.reset(seed=0,return_info=True)
             return state
         else:
-            next_state,reward,done,_=self.env.step(a)
+            next_state,reward,done,_=self.genv.step(a)
             if done:
-                next_state,info=self.env.reset(return_info=True)
+                next_state,info=self.genv.reset(return_info=True)
             return next_state,reward,done
     
     
