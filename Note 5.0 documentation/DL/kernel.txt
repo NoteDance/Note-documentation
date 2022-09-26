@@ -132,6 +132,7 @@ kernel.visualize_train()   #use train_visual() by kernel
 System support suspending training.
 System support stop and save in training.
 System support stop and save in multithreading training.
+Stop mechanism has been perfected.(PO1,PO2)
 
 
 -----------------------------------------------------------------------------------------
