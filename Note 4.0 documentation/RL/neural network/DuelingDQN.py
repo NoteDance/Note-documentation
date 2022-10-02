@@ -52,7 +52,7 @@ class DuelingDQN:
         q_value=self.nn(s).gather(1,a)
         next_q_value=self.target_q_net(next_s).max(1)[0].view(-1,1)
         target=r+0.98*next_q_value*(1-d)
-        return torch.mean(F.mse_loss(q_value,target))
+        return F.mse_loss(q_value,target)
     
     
     def opt(self,loss):
