@@ -50,7 +50,7 @@ class DoubleDQN:
         max_action=self.nn(next_s).max(1)[1].view(-1,1)
         next_q_value=self.target_q_net(next_s).gather(1,max_action)
         target=r+0.98*next_q_value*(1-d)
-        return torch.mean(F.mse_loss(q_value,target))
+        return F.mse_loss(q_value,target)
     
     
     def opt(self,loss):
