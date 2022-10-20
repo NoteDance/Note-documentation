@@ -17,3 +17,5 @@ Stop mechanism has been perfected.(PO1)
 Support prioritized replay.
 
 Support pool parallelism.
+
+Support gradient attenuation.
