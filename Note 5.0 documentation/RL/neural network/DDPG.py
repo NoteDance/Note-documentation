@@ -37,7 +37,7 @@ class DDPG:
             self.device=torch.device('cpu')
         self.actor=actor(state_dim,hidden_dim,action_dim,action_bound).to(self.device)
         self.critic=critic(state_dim,hidden_dim,action_dim).to(self.device)
-        self.target_actor(state_dim,hidden_dim,action_dim,action_bound).to(self.device)
+        self.target_actor=actor(state_dim,hidden_dim,action_dim,action_bound).to(self.device)
         self.target_critic=critic(state_dim,hidden_dim,action_dim).to(self.device)
         self.target_actor.load_state_dict(self.actor.state_dict())
         self.target_critic.load_state_dict(self.critic.state_dict())
