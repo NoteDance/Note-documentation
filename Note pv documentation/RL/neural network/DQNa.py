@@ -60,7 +60,7 @@ class DQN:
     def opt(self,loss,t):
         self.optimizer.zero_grad()
         loss.backward()
-        attenuate([self.nn],t)
+        attenuate(self.attenuate,self.nn,t)
         self.optimizer.step()
         
     
