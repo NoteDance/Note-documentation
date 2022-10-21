@@ -23,7 +23,7 @@ class DQN:
         else:
             self.device=torch.device('cpu')
         self.nn=Qnet(state_dim,hidden_dim,action_dim).to(self.device)
-        self.target_q_net(state_dim,hidden_dim,action_dim).to(self.device)
+        self.target_q_net=Qnet(state_dim,hidden_dim,action_dim).to(self.device)
         self.pr=pr()
         self.initial_TD=7
         self._epsilon=0.0007
