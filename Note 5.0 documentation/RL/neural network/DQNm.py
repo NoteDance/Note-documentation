@@ -22,7 +22,7 @@ class DQN:
         else:
             self.device=torch.device('cpu')
         self.nn=Qnet(state_dim,hidden_dim,action_dim).to(self.device)
-        self.target_q_net(state_dim,hidden_dim,action_dim).to(self.device)
+        self.target_q_net=Qnet(state_dim,hidden_dim,action_dim).to(self.device)
         self.optimizer=torch.optim.Adam(self.q_net.parameters(),lr=2e-3)
         self.genv=gym.make('CartPole-v0')
         self.row=2
