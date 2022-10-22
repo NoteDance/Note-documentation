@@ -53,14 +53,14 @@ class DQN:
         return F.mse_loss(q_value,target)
     
     
-    def attenuate(self,t):
+    def attenuate(self,oc):
         #complete attenuation function
     
     
-    def opt(self,loss,t):
+    def opt(self,loss,oc):
         self.optimizer.zero_grad()
         loss.backward()
-        attenuate(self.attenuate,self.nn,t)
+        attenuate(self.attenuate,self.nn,oc)
         self.optimizer.step()
         
     
