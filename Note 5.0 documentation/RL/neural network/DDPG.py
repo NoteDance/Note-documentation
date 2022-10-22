@@ -85,6 +85,7 @@ class DDPG:
         self.critic_opt.zero_grad()
         loss[1].backward()
         self.critic_opt.step()
+        return
         
     
     def update_param(self):
@@ -92,3 +93,4 @@ class DDPG:
             target_param.data.copy_(target_param.data*(1.0-self.tau)+param.data*self.tau)
         for target_param,param in zip(self.target_critic.parameters(),self.critic.parameters()):
             target_param.data.copy_(target_param.data*(1.0-self.tau)+param.data*self.tau)
+        return
