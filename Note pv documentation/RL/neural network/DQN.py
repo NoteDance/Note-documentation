@@ -56,7 +56,9 @@ class DQN:
         self.optimizer.zero_grad()
         loss.backward()
         self.optimizer.step()
+        return
         
     
     def update_param(self):
         self.target_q_net.load_state_dict(self.q_net.state_dict())
+        return
