@@ -62,7 +62,9 @@ class DQN:
         loss.backward()
         attenuate(self.attenuate,self.nn,oc)
         self.optimizer.step()
+        return
         
     
     def update_param(self):
         self.target_q_net.load_state_dict(self.q_net.state_dict())
+        return
