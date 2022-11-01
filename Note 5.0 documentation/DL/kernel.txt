@@ -156,7 +156,6 @@ self.total_time:total train time
 self.train_data: train data
 self.train_labels: train labels
 self.nn.param: neural network object's param list
-self.param: this instance be used for the second kind of parallel optimization,for reduce memory consumption
 self.gradient: this instance be used for the second kind of parallel optimization,for reduce memory consumption
 self.nn.ec: epoch counter
 self.nn.bc: batch counter
