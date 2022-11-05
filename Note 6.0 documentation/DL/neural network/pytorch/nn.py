@@ -13,6 +13,12 @@ class NeuralNetwork(nn.Module):
             nn.ReLU(),
             nn.Linear(512,10)
         )
+    
+    
+    def forward(self, x):
+        x=self.flatten(x)
+        logits=self.linear_relu_stack(x)
+        return logits
 
 
 class nn:
@@ -27,9 +33,8 @@ class nn:
     
     
     def fp(self,x):
-        x=self.flatten(x)
-        logits=self.linear_relu_stack(x)
-        return logits
+        pred=self.model(x)
+        return pred
     
     
     def loss(self,output,labels):
