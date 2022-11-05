@@ -33,10 +33,10 @@ class nn:
     
     
     def fp(self,x):
-        pred=self.model(x)
+        pred=self.model(x.to(self.device))
         return pred
     
     
     def loss(self,output,labels):
-        loss=self.loss_fn(output,labels)
+        loss=self.loss_fn(output,labels.to(self.device))
         return loss
