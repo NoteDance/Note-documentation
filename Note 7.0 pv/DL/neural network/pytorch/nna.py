@@ -1,6 +1,6 @@
 import torch
 from torch import nn
-import Note.create.DL.dl.attenuate as attenuate
+import Note.create.DL.dl.assign_a as assign_a
 
 #https://pytorch.org/tutorials/beginner/basics/quickstart_tutorial.html
 class NeuralNetwork(nn.Module):
@@ -14,6 +14,12 @@ class NeuralNetwork(nn.Module):
             nn.ReLU(),
             nn.Linear(512,10)
         )
+    
+    
+    def forward(self, x):
+        x=self.flatten(x)
+        logits=self.linear_relu_stack(x)
+        return logits
 
 
 class nn:
@@ -28,9 +34,8 @@ class nn:
     
     
     def fp(self,x):
-        x=self.flatten(x)
-        logits=self.linear_relu_stack(x)
-        return logits
+        pred=self.model(x)
+        return pred
     
     
     def loss(self,output,labels):
@@ -40,11 +45,11 @@ class nn:
     
     def attenuate(self,oc):
         #complete attenuation function
+        assign_a(self.model,oc)
     
     
     def opt(self,loss,oc):
         self.optim.zero_grad()
         loss.backward()
-        attenuate(self.attenuate,self.model,oc)
         self.optim.step()
         return
