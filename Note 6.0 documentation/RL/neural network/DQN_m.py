@@ -2,7 +2,7 @@ import torch
 import gym
 import torch.nn.functional as F
 
-
+#pool net(matrix) example
 class Qnet(torch.nn.Module):
     def __init__(self,state_dim,hidden_dim,action_dim):
         super(Qnet,self).__init__()
