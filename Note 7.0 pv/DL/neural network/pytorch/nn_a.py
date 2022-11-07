@@ -3,6 +3,7 @@ from torch import nn
 import Note.create.DL.dl.assign_a as assign_a
 
 #https://pytorch.org/tutorials/beginner/basics/quickstart_tutorial.html
+#gradient attenuation example
 class NeuralNetwork(nn.Module):
     def __init__(self):
         super(NeuralNetwork,self).__init__()
