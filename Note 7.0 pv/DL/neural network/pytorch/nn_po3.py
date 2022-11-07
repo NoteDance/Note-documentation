@@ -5,6 +5,7 @@ import Note.create.DL.dl.assign as assign
 
 
 #https://pytorch.org/tutorials/beginner/basics/quickstart_tutorial.html
+#PO3 example
 class NeuralNetwork(nn.Module):
     def __init__(self):
         super(NeuralNetwork,self).__init__()
