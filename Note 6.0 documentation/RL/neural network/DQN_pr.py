@@ -1,9 +1,9 @@
 import torch
 import gym
 import torch.nn.functional as F
-import Note.RL.rl.prioritized_replay.pr as pr
+import Note.create.RL.rl.prioritized_replay.pr as pr
 
-
+#prioritized replay example
 class Qnet(torch.nn.Module):
     def __init__(self,state_dim,hidden_dim,action_dim):
         super(Qnet,self).__init__()
