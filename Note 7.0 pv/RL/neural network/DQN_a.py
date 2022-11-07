@@ -1,9 +1,9 @@
 import torch
 import gym
 import torch.nn.functional as F
-import Note.RL.rl.attenuate as attenuate
+import Note.create.RL.rl.assign_a as assign_a
 
-
+#gradient attenuation example
 class Qnet(torch.nn.Module):
     def __init__(self,state_dim,hidden_dim,action_dim):
         super(Qnet,self).__init__()
@@ -55,6 +55,7 @@ class DQN:
     
     def attenuate(self,oc):
         #complete attenuation function
+        assign_a(self.model,oc)
     
     
     def opt(self,loss,oc):
