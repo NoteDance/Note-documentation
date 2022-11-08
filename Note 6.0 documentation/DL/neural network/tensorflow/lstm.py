@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-#https://tensorflow.google.cn/text/tutorials/text_classification_rnn
+
 class lstm:
     def __init__(self,encoder):
         self.model=tf.keras.Sequential([
