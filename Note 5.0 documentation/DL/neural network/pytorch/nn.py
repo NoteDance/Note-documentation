@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 
-#https://pytorch.org/tutorials/beginner/basics/quickstart_tutorial.html
+
 class NeuralNetwork(nn.Module):
     def __init__(self):
         super(NeuralNetwork,self).__init__()
@@ -15,7 +15,7 @@ class NeuralNetwork(nn.Module):
         )
     
     
-    def forward(self, x):
+    def forward(self,x):
         x=self.flatten(x)
         logits=self.linear_relu_stack(x)
         return logits
