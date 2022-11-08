@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 
-#https://pytorch.org/tutorials/beginner/basics/quickstart_tutorial.html
+
 class NeuralNetwork(nn.Module):
     def __init__(self):
         super(NeuralNetwork,self).__init__()
