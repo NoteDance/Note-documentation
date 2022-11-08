@@ -1,7 +1,7 @@
 import tensorflow as tf
 from tensorflow.keras import layers,models
 
-#https://tensorflow.google.cn/tutorials/images/cnn
+
 class cifar:
     def __init__(self):
         self.model=models.Sequential()
