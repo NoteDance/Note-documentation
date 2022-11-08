@@ -4,7 +4,6 @@ import Note.create.DL.dl.grad as grad
 import Note.create.DL.dl.assign as assign
 
 
-#https://pytorch.org/tutorials/beginner/basics/quickstart_tutorial.html
 #PO3 example
 class NeuralNetwork(nn.Module):
     def __init__(self):
@@ -19,7 +18,7 @@ class NeuralNetwork(nn.Module):
         )
     
     
-    def forward(self, x):
+    def forward(self,x):
         x=self.flatten(x)
         logits=self.linear_relu_stack(x)
         return logits
