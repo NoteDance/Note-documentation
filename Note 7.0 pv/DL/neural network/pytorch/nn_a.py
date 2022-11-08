@@ -2,7 +2,6 @@ import torch
 from torch import nn
 import Note.create.DL.dl.assign_a as assign_a
 
-#https://pytorch.org/tutorials/beginner/basics/quickstart_tutorial.html
 #gradient attenuation example
 class NeuralNetwork(nn.Module):
     def __init__(self):
@@ -17,7 +16,7 @@ class NeuralNetwork(nn.Module):
         )
     
     
-    def forward(self, x):
+    def forward(self,x):
         x=self.flatten(x)
         logits=self.linear_relu_stack(x)
         return logits
