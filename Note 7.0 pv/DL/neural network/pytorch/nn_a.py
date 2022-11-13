@@ -45,11 +45,12 @@ class nn:
     
     def attenuate(self,oc):
         #complete attenuation function
-        assign_a(self.model,oc)
+        assign_a.assign(self.model,oc)
     
     
     def opt(self,loss,oc):
         self.optim.zero_grad()
         loss.backward()
+        self.attenuate(self.model,oc)
         self.optim.step()
         return
