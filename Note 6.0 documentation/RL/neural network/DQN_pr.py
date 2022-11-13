@@ -1,7 +1,7 @@
 import torch
 import gym
 import torch.nn.functional as F
-import Note.create.RL.rl.prioritized_replay.pr as pr
+import Note.create.RL.rl.prioritized_replay as pr
 
 #prioritized replay example
 class Qnet(torch.nn.Module):
@@ -24,7 +24,7 @@ class DQN:
             self.device=torch.device('cpu')
         self.nn=Qnet(state_dim,hidden_dim,action_dim).to(self.device)
         self.target_q_net=Qnet(state_dim,hidden_dim,action_dim).to(self.device)
-        self.pr=pr()
+        self.pr=pr.pr()
         self.initial_TD=7
         self._epsilon=0.0007
         self.alpha=0.7
