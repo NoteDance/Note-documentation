@@ -46,7 +46,7 @@ class nn:
     
     
     def grad(self):
-        gradient=grad(self.model)
+        gradient=grad.get_list(self.model)
         return gradient
     
     
@@ -56,6 +56,6 @@ class nn:
     
     
     def opt(self,gradient):
-        assign(self.model,gradient)
+        assign.assign(self.model,gradient)
         self.optim.step()
         return
