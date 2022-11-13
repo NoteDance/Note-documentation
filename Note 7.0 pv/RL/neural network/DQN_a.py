@@ -55,13 +55,13 @@ class DQN:
     
     def attenuate(self,oc):
         #complete attenuation function
-        assign_a(self.model,oc)
+        assign_a.assign(self.model,oc)
     
     
     def opt(self,loss,oc):
         self.optimizer.zero_grad()
         loss.backward()
-        attenuate(self.attenuate,self.nn,oc)
+        self.attenuate(self.nn,oc)
         self.optimizer.step()
         return
         
