@@ -26,6 +26,8 @@ class DQN:
         self.target_q_net=Qnet(state_dim,hidden_dim,action_dim).to(self.device)
         self.optimizer=torch.optim.Adam(self.q_net.parameters(),lr=2e-3)
         self.genv=gym.make('CartPole-v0')
+        self.oc={}
+        self.grad={}
 
     
     
@@ -53,15 +55,19 @@ class DQN:
         return F.mse_loss(q_value,target)
     
     
-    def attenuate(self,oc):
+    def attenuate(self,model,oc,grad):
         #complete attenuation function
-        assign_a.assign(self.model,oc)
+        assign_a.assign(model,ac,grad)
+        
     
-    
-    def opt(self,loss,oc):
+    def backward(self,loss):
         self.optimizer.zero_grad()
         loss.backward()
-        self.attenuate(self.nn,oc)
+        return
+    
+    
+    def opt(self,t):
+        self.attenuate(self.nn,self.oc[t],self.grad[t])
         self.optimizer.step()
         return
         
