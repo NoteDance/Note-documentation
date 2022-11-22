@@ -78,12 +78,16 @@ class DDPG:
         return [actor_loss,critic_loss]
     
     
-    def opt(self,loss):
+    def backward(self,loss):
         self.actor_opt.zero_grad()
         loss[0].backward()
-        self.actor_opt.step()
         self.critic_opt.zero_grad()
         loss[1].backward()
+        return
+    
+    
+    def opt(self):
+        self.actor_opt.step()
         self.critic_opt.step()
         return
         
