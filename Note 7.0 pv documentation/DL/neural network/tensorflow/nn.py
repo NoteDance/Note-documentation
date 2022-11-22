@@ -10,7 +10,7 @@ class nn:               #a simple example,a neural network class
         self.weight3=tf.Variable(tf.random.normal([64,10]))
         self.bias3=tf.Variable(tf.random.normal([10]))
         self.param=[self.weight1,self.weight2,self.weight3,self.bias1,self.bias2,self.bias3]
-        self.opt=tf.keras.optimizers.Adam()
+        self.optimizer=tf.keras.optimizers.Adam()
         self.info='example'
     
     
@@ -23,4 +23,9 @@ class nn:               #a simple example,a neural network class
     
     
     def loss(self,output,labels):
-        return tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=output,labels=labels))        
+        return tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=output,labels=labels))
+    
+
+    def opt(self,gradient,param):
+        self.optimizer.apply_gradients(zip(gradient,param))
+        return
