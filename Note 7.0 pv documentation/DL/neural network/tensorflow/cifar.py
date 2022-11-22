@@ -14,7 +14,7 @@ class cifar:
         self.model.add(layers.Dense(64,activation='relu'))
         self.model.add(layers.Dense(10))
         self.param=self.model.weights
-        self.opt=tf.keras.optimizers.Adam()
+        self.optimizer=tf.keras.optimizers.Adam()
     
     
     def fp(self,data):
@@ -26,3 +26,8 @@ class cifar:
     def loss(self,output,labels):
         loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
         return loss(labels,output)
+    
+    
+    def opt(self,gradient,param):
+        self.optimizer.apply_gradients(zip(gradient,param))
+        return
