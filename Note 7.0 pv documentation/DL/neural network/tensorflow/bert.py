@@ -14,7 +14,7 @@ class bert:
         net=tf.keras.layers.Dense(1,activation=None,name='classifier')(net)
         self.model=tf.keras.Model(text_input,net)
         self.param=self.model.weights
-        self.opt=tf.keras.optimizers.Adam()
+        self.optimizer=tf.keras.optimizers.Adam()
     
     
     def fp(self,data):
@@ -24,6 +24,11 @@ class bert:
     def loss(self,output,labels):
         bce=tf.keras.losses.BinaryCrossentropy(from_logits=True)
         return bce(output,labels)
+    
+    
+    def opt(self,gradient,param):
+        self.optimizer.apply_gradients(zip(gradient,param))
+        return
     
     
 bert_model_name = 'small_bert/bert_en_uncased_L-4_H-512_A-8' 
