@@ -53,9 +53,13 @@ class DoubleDQN:
         return F.mse_loss(q_value,target)
     
     
-    def opt(self,loss):
+    def backward(self,loss):
         self.optimizer.zero_grad()
         loss.backward()
+        return
+    
+    
+    def opt(self):
         self.optimizer.step()
         return
         
