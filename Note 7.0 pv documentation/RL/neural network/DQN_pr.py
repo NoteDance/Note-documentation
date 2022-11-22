@@ -64,9 +64,13 @@ class DQN:
         return torch.mean(TD**2)
     
     
-    def opt(self,loss):
+    def backward(self,loss):
         self.optimizer.zero_grad()
         loss.backward()
+        return
+    
+    
+    def opt(self):
         self.optimizer.step()
         return
         
