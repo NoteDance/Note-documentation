@@ -33,6 +33,7 @@ class nn:
         self.model=NeuralNetwork().to(self.device)
         self.loss_fn=nn.CrossEntropyLoss()
         self.optim=torch.optim.SGD(self.model.parameters(),lr=1e-3)
+        self.grad={}
     
     
     def fp(self,x):
@@ -53,9 +54,10 @@ class nn:
     def backward(self,loss):
         self.optim.zero_grad()
         loss.backward()
+        return
     
     
-    def opt(self,gradient):
-        assign.assign(self.model,gradient)
+    def opt(self,t):
+        assign.assign(self.model,self.grad[t])
         self.optim.step()
         return
