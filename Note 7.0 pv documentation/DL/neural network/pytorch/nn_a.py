@@ -31,6 +31,8 @@ class nn:
         self.model=NeuralNetwork().to(self.device)
         self.loss_fn=nn.CrossEntropyLoss()
         self.optim=torch.optim.SGD(self.model.parameters(),lr=1e-3)
+        self.oc={}
+        self.grad={}
     
     
     def fp(self,x):
@@ -43,14 +45,18 @@ class nn:
         return loss
     
     
-    def attenuate(self,oc):
+    def attenuate(self,model,oc,grad):
         #complete attenuation function
-        assign_a.assign(self.model,oc)
+        assign_a.assign(model,ac,grad)
     
     
-    def opt(self,loss,oc):
+    def backward(self,loss):
         self.optim.zero_grad()
         loss.backward()
-        self.attenuate(self.model,oc)
+        return
+    
+    
+    def opt(self,t):
+        self.attenuate(self.model,self.oc[t],self.grad[t])
         self.optim.step()
         return
