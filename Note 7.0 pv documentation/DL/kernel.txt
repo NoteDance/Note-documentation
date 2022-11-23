@@ -183,3 +183,4 @@ Support stop and save in multithreading training.
 Support stop mechanism.
 Support gradient attenuation.
 Support memory protection mechanism.
+Support training priority and memory priority.
