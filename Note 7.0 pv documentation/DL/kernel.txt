@@ -3,10 +3,10 @@ Method object:
 Method object need to use Tensorflow 2.0 version and above to write.
 1. fp(data) forward propagation function,it receive data,return output.
 2. loss(output,labels) loss function,it receive output and labels output loss.
-3. oopt(gradient,param) and gradient(output,loss,param) If you want to write optimizer by yourself.
+3. opt(gradient,param).
 You can also do.
 1. fp(data,labels) forward propagation function,it receive data and labels,return output and loss.
-2. oopt(gradient,param) and gradient(output,loss,param) If you want to write optimizer by yourself.
+2. opt(gradient,param).
 
 Instance object:
 1.If you don't want to write optimizer by yourself,assign opt as optimizer of tensorflow.
@@ -37,8 +37,9 @@ kernel.train(32,5)         #train neural network
 Parallel optimization:
 You can use parallel optimization to speed up your training,parallel optimization speed up training by multithreading.
 Note have two types of parallel optimization:
-1. not parallel computing gradient and optimizing.
-2. parallel computing gradient and optimizing.
+1. parallel forward propagation and optimizing.
+2. parallel forward propagation and calculate a gradient and optimizing.
+3. parallel forward propagation and calculate multiple gradients and optimizing.
 
 
 Multithreading：
