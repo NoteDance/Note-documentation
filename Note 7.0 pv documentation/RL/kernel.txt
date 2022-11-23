@@ -17,3 +17,4 @@ Support prioritized replay.
 Support pool parallelism.
 Support gradient attenuation.
 Support memory protection mechanism.
+Support training priority and memory priority.
