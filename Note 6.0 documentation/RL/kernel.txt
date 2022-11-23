@@ -12,6 +12,6 @@ Each thread number would save in matrix that is abstract.
 
 It also can be realized by higher dimension,but i haven't realized.
 
-Stop mechanism has been perfected.(PO1)
+Support stop mechanism.
 
 Support prioritized replay.
