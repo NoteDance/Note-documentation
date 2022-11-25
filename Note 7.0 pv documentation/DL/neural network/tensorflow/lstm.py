@@ -13,7 +13,7 @@ class lstm:
         tf.keras.layers.Dense(1)
         ])
         self.param=self.model.weights
-        self.optimizer=tf.keras.optimizers.Adam()
+        self.opt=tf.keras.optimizers.Adam()
     
     
     def fp(self,data):
@@ -25,8 +25,3 @@ class lstm:
     def loss(self,output,labels):
         bce=tf.keras.losses.BinaryCrossentropy(from_logits=True)
         return bce(labels,output)
-    
-    
-    def opt(self,gradient,param):
-        self.optimizer.apply_gradients(zip(gradient,param))
-        return
