@@ -3,7 +3,6 @@ Method object:
 Method object need to use Tensorflow 2.0 version and above to write.
 1. fp(data) forward propagation function,it receive data,return output.
 2. loss(output,labels) loss function,it receive output and labels output loss.
-3. opt(gradient,param).
 You can also do.
 1. fp(data,labels) forward propagation function,it receive data and labels,return output and loss.
 2. opt(gradient,param).
