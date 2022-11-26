@@ -1,4 +1,22 @@
 import tensorflow as tf
+from tensorflow.python.ops import state_ops
+
+
+class Momentum:
+    def __init__(self,lr,gamma):
+        self.lr=lr
+        self.gamma=gamma
+        self.v=[]
+        self.flag=0
+    
+    
+    def opt(self,gradient,parameter):
+        if self.flag==0:
+            self.v=[0 for x in range(len(gradient))]
+        for i in range(len(gradient)):
+            self.v[i]=self.gamma*self.v[i]+self.lr*gradient[i]
+            state_ops.assign(parameter[i],parameter[i]-self.v[i])
+        return
 
 
 class nn:               #a simple example,a neural network class
@@ -10,7 +28,7 @@ class nn:               #a simple example,a neural network class
         self.weight3=tf.Variable(tf.random.normal([64,10]))
         self.bias3=tf.Variable(tf.random.normal([10]))
         self.param=[self.weight1,self.weight2,self.weight3,self.bias1,self.bias2,self.bias3]
-        self.optimizer=tf.keras.optimizers.Adam()
+        self.optimizer=Momentum(0.07,0.7)
         self.info='example'
     
     
@@ -27,5 +45,5 @@ class nn:               #a simple example,a neural network class
     
 
     def opt(self,gradient,param):
-        self.optimizer.apply_gradients(zip(gradient,param))
+        self.optimizer.opt(gradient,param)
         return
