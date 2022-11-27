@@ -34,7 +34,7 @@ class Adam:
         return
 
 
-class nn:               #a simple example,a neural network class
+class nn:               #A neural network class example,use the optimizer written by oneself.
     def __init__(self):
         self.weight1=tf.Variable(tf.random.normal([784,64]))
         self.bias1=tf.Variable(tf.random.normal([64]))
