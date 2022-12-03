@@ -13,7 +13,7 @@ Instance object:
 
 
 ----------------------------------------------------------------------------------------
-If you done your neural network,you can use kernel to train.
+If you accomplish your neural network,you can use kernel to train.
 example:
 import Note.create.DL.kernel as k   #import kernel
 import tensorflow as tf                   #import platform
