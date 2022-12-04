@@ -32,13 +32,15 @@ class critic(torch.nn.Module):
 class DDPG:
     def __init__(self,state_dim,hidden_dim,action_dim,action_bound,sigma,gamma,tau,actor_lr,critic_lr):
         if torch.cuda.is_available():
-            self.device=torch.device('cuda')
+            self.device_d=torch.device('cuda')
+            self.device_n=torch.device('cuda')
         else:
-            self.device=torch.device('cpu')
-        self.actor=actor(state_dim,hidden_dim,action_dim,action_bound).to(self.device)
-        self.critic=critic(state_dim,hidden_dim,action_dim).to(self.device)
-        self.target_actor=actor(state_dim,hidden_dim,action_dim,action_bound).to(self.device)
-        self.target_critic=critic(state_dim,hidden_dim,action_dim).to(self.device)
+            self.device_d=torch.device('cpu')
+            self.device_n=torch.device('cpu')
+        self.actor=actor(state_dim,hidden_dim,action_dim,action_bound).to(self.device_n)
+        self.critic=critic(state_dim,hidden_dim,action_dim).to(self.device_n)
+        self.target_actor=actor(state_dim,hidden_dim,action_dim,action_bound).to(self.device_n)
+        self.target_critic=critic(state_dim,hidden_dim,action_dim).to(self.device_n)
         self.target_actor.load_state_dict(self.actor.state_dict())
         self.target_critic.load_state_dict(self.critic.state_dict())
         self.sigma=sigma
@@ -55,22 +57,19 @@ class DDPG:
     
     def env(self,a=None,initial=None):
         if initial==True:
-            self.genv.action_space.seed(0)
-            state,info=self.genv.reset(seed=0,return_info=True)
+            state=self.genv.reset(seed=0)
             return state
         else:
             next_state,reward,done,_=self.genv.step(a)
-            if done:
-                next_state,info=self.genv.reset(return_info=True)
             return next_state,reward,done
     
     
     def loss(self,s,a,next_s,r,d):
-        s=torch.tensor(s,dtype=torch.float).to(self.device)
-        a=torch.tensor(a,dtype=torch.float).view(-1,1).to(self.device)
-        next_s=torch.tensor(next_s,dtype=torch.float).to(self.device)
-        r=torch.tensor(r,dtype=torch.float).view(-1,1).to(self.device)
-        d=torch.tensor(d,dtype=torch.float).view(-1,1).to(self.device)
+        s=torch.tensor(s,dtype=torch.float).to(self.device_d)
+        a=torch.tensor(a,dtype=torch.float).view(-1,1).to(self.device_d)
+        next_s=torch.tensor(next_s,dtype=torch.float).to(self.device_d)
+        r=torch.tensor(r,dtype=torch.float).view(-1,1).to(self.device_d)
+        d=torch.tensor(d,dtype=torch.float).view(-1,1).to(self.device_d)
         next_q_value=self.target_critic(torch.cat([next_s,self.target_actor(next_s)],dim=1))
         q_target=r+self.gamma*next_q_value*(1-d)
         actor_loss=-torch.mean(self.critic(torch.cat([s,self.actor(s)],dim=1)))
