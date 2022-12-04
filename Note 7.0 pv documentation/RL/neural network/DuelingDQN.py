@@ -35,13 +35,10 @@ class DuelingDQN:
     
     def env(self,a=None,initial=None):
         if initial==True:
-            self.genv.action_space.seed(0)
-            state,info=self.genv.reset(seed=0,return_info=True)
+            state=self.genv.reset(seed=0)
             return state
         else:
             next_state,reward,done,_=self.genv.step(a)
-            if done:
-                next_state,info=self.genv.reset(return_info=True)
             return next_state,reward,done
     
     
