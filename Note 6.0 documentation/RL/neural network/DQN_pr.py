@@ -19,11 +19,13 @@ class Qnet(torch.nn.Module):
 class DQN:
     def __init__(self,state_dim,hidden_dim,action_dim):
         if torch.cuda.is_available():
-            self.device=torch.device('cuda')
+            self.device_d=torch.device('cuda')
+            self.device_n=torch.device('cuda')
         else:
-            self.device=torch.device('cpu')
-        self.nn=Qnet(state_dim,hidden_dim,action_dim).to(self.device)
-        self.target_q_net=Qnet(state_dim,hidden_dim,action_dim).to(self.device)
+            self.device_d=torch.device('cpu')
+            self.device_n=torch.device('cpu')
+        self.nn=Qnet(state_dim,hidden_dim,action_dim).to(self.device_n)
+        self.target_q_net=Qnet(state_dim,hidden_dim,action_dim).to(self.device_n)
         self.pr=pr.pr()
         self.initial_TD=7
         self._epsilon=0.0007
@@ -35,13 +37,10 @@ class DQN:
     
     def env(self,a=None,initial=None):
         if initial==True:
-            self.genv.action_space.seed(0)
-            state,info=self.genv.reset(seed=0,return_info=True)
+            state=self.genv.reset(seed=0)
             return state
         else:
             next_state,reward,done,_=self.genv.step(a)
-            if done:
-                next_state,info=self.genv.reset(return_info=True)
             return next_state,reward,done
     
     
@@ -51,11 +50,11 @@ class DQN:
         
     
     def loss(self,s,a,next_s,r,d):
-        s=torch.tensor(s,dtype=torch.float).to(self.device)
-        a=torch.tensor(a).view(-1,1).to(self.device)
-        next_s=torch.tensor(next_s,dtype=torch.float).to(self.device)
-        r=torch.tensor(r,dtype=torch.float).view(-1,1).to(self.device)
-        d=torch.tensor(d,dtype=torch.float).view(-1,1).to(self.device)
+        s=torch.tensor(s,dtype=torch.float).to(self.device_d)
+        a=torch.tensor(a).view(-1,1).to(self.device_d)
+        next_s=torch.tensor(next_s,dtype=torch.float).to(self.device_d)
+        r=torch.tensor(r,dtype=torch.float).view(-1,1).to(self.device_d)
+        d=torch.tensor(d,dtype=torch.float).view(-1,1).to(self.device_d)
         q_value=self.nn(s).gather(1,a)
         next_q_value=self.target_q_net(next_s).max(1)[0].view(-1,1)
         target=r+0.98*next_q_value*(1-d)
@@ -72,5 +71,5 @@ class DQN:
         
     
     def update_param(self):
-        self.target_q_net.load_state_dict(self.q_net.state_dict())
+        self.target_q_net.load_state_dict(self.nn.state_dict())
         return
