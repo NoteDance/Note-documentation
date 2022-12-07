@@ -65,10 +65,10 @@ class DDPG:
     
     
     def loss(self,s,a,next_s,r,d):
-        next_q_value=self.target_critic(next_s,self.target_actor(next_s))
+        next_q_value=self.target_critic.fp(next_s,self.target_actor.fp(next_s))
         q_target=r+self.gamma*next_q_value*(1-d)
-        actor_loss=-tf.reduce_mean(s,self.actor(s))
-        critic_loss=tf.reduce_mean((self.critic(s,a)-q_target)**2)
+        actor_loss=-tf.reduce_mean(s,self.actor.fp(s))
+        critic_loss=tf.reduce_mean((self.critic.fp(s,a)-q_target)**2)
         return [actor_loss,critic_loss]
         
     
