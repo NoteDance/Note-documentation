@@ -70,19 +70,23 @@ class DDPG:
         next_s=torch.tensor(next_s,dtype=torch.float).to(self.device_d)
         r=torch.tensor(r,dtype=torch.float).view(-1,1).to(self.device_d)
         d=torch.tensor(d,dtype=torch.float).view(-1,1).to(self.device_d)
-        next_q_value=self.target_critic(torch.cat([next_s,self.target_actor(next_s)],dim=1))
+        next_q_value=self.target_critic(next_s,self.target_actor(next_s))
         q_target=r+self.gamma*next_q_value*(1-d)
-        actor_loss=-torch.mean(self.critic(torch.cat([s,self.actor(s)],dim=1)))
-        critic_loss=F.mse_loss(self.critic(torch.cat([s,a],dim=1)),q_target)
+        actor_loss=-torch.mean(self.critic(s,self.actor(s)))
+        critic_loss=F.mse_loss(self.critic(s,a),q_target)
         return [actor_loss,critic_loss]
     
     
-    def opt(self,loss):
+    def backward(self,loss):
         self.actor_opt.zero_grad()
         loss[0].backward()
-        self.actor_opt.step()
         self.critic_opt.zero_grad()
         loss[1].backward()
+        return
+    
+    
+    def opt(self):
+        self.actor_opt.step()
         self.critic_opt.step()
         return
         
