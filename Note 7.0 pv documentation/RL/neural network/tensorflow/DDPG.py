@@ -65,6 +65,7 @@ class DDPG:
     
     
     def loss(self,s,a,next_s,r,d):
+        a=tf.expand_dims(a,axis=1)
         next_q_value=self.target_critic.fp(next_s,self.target_actor.fp(next_s))
         q_target=r+self.gamma*next_q_value*(1-d)
         actor_loss=-tf.reduce_mean(s,self.actor.fp(s))
