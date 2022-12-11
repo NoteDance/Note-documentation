@@ -5,7 +5,7 @@ Method object need to use Tensorflow 2.0 version and above to write.
 2. loss(output,labels) loss function,it receive output and labels output loss.
 You can also do.
 1. fp(data,labels) forward propagation function,it receive data and labels,return output and loss.
-2. opt(gradient,param).
+2. opt(gradient).
 
 Instance object:
 1.If you don't want to write optimizer by yourself,assign opt as optimizer of tensorflow.
