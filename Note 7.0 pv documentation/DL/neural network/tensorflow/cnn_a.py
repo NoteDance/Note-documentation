@@ -1,6 +1,7 @@
 import tensorflow as tf
 
 
+#gradient attenuation example
 class cnn:
     def __init__(self):
         self.model=tf.keras.models.Sequential([
