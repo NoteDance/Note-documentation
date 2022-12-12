@@ -11,6 +11,9 @@ class cnn:
           tf.keras.layers.Dense(10)
           ])
         self.param=self.model.weights
+        self.ac=7
+        self.alpha=1
+        self.epsilon=0.0007
         self.opt=tf.keras.optimizers.Adam()
     
     
@@ -24,5 +27,8 @@ class cnn:
         return tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=output,labels=labels))
     
     
-    def attenuate(self,gradient,oc):
-        #complete attenuation function
+    def attenuate(self,gradient,oc,t):
+        ac=(1-(oc[t]+self.epsilon)**self.alpha/tf.reduce_sum(oc+self.epsilon)**self.alpha)*self.ac
+        for i in range(len(gradient)):
+            gradient[i]=ac*gradient[i]
+        return gradient
