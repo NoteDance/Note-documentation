@@ -33,10 +33,9 @@ class nn:               #A neural network class example,use the optimizer writte
     
     
     def fp(self,data):
-        with tf.device('GPU:0'):
-            layer1=tf.nn.relu(tf.matmul(data,self.param[0])+self.param[3])
-            layer2=tf.nn.relu(tf.matmul(layer1,self.param[1])+self.param[4])
-            output=tf.matmul(layer2,self.param[2])+self.param[5]
+        layer1=tf.nn.relu(tf.matmul(data,self.param[0])+self.param[3])
+        layer2=tf.nn.relu(tf.matmul(layer1,self.param[1])+self.param[4])
+        output=tf.matmul(layer2,self.param[2])+self.param[5]
         return output
     
     
