@@ -17,8 +17,7 @@ class lstm:
     
     
     def fp(self,data):
-        with tf.device('GPU:0'):
-            output=self.model(data)
+        output=self.model(data)
         return output
     
     
