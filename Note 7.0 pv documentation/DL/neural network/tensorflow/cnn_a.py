@@ -27,7 +27,8 @@ class cnn:
     
     
     def attenuate(self,gradient,oc,t):
-        ac=(1-(oc[t]+self.epsilon)**self.alpha/tf.reduce_sum(oc+self.epsilon)**self.alpha)*self.ac
+        #complete attenuation function
+        ac=
         for i in range(len(gradient)):
             gradient[i]=ac*gradient[i]
         return gradient
