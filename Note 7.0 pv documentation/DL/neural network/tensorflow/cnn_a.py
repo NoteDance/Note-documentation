@@ -11,10 +11,7 @@ class cnn:
           tf.keras.layers.Dense(10)
           ])
         self.param=self.model.weights
-        self.ac=7
-        self.alpha=1
-        self.epsilon=0.0007
-        self.opt=tf.keras.optimizers.Adam()
+        self.opt=tf.keras.optimizers.Adam(learning_rate=0.001)
     
     
     def fp(self,data):
@@ -27,8 +24,7 @@ class cnn:
     
     
     def attenuate(self,gradient,oc,t):
-        #complete attenuation function
-        ac=
+        ac=0.9**oc[t]
         for i in range(len(gradient)):
             gradient[i]=ac*gradient[i]
         return gradient
