@@ -1,1 +1,1 @@
-Note is an AI system for deep learning and reinforcement learning.
+Note is a system for deep learning and reinforcement learning.
