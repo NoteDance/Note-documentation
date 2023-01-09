@@ -41,7 +41,7 @@ class DoubleDQN:
     
     def loss(self,s,a,next_s,r,d):
         s=torch.tensor(s,dtype=torch.float).to(self.device_d)
-        a=torch.tensor(a).view(-1,1).to(self.device_d)
+        a=torch.tensor(a,dtype=torch.int64).view(-1,1).to(self.device_d)
         next_s=torch.tensor(next_s,dtype=torch.float).to(self.device_d)
         r=torch.tensor(r,dtype=torch.float).view(-1,1).to(self.device_d)
         d=torch.tensor(d,dtype=torch.float).view(-1,1).to(self.device_d)
