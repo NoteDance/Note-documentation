@@ -33,13 +33,11 @@ class neuralnetwork:
     
     
     def fp(self,x):
-        x=torch.tensor(x,dtype=torch.float)
         pred=self.model(x.to(self.device))
         return pred
     
     
     def loss(self,output,labels):
-        labels=torch.tensor(labels,dtype=torch.long)
         loss=self.loss_fn(output,labels.to(self.device))
         return loss
     
