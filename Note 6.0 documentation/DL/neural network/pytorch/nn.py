@@ -21,7 +21,7 @@ class NeuralNetwork(nn.Module):
         return logits
 
 
-class nn:
+class neuralnetwork:
     def __init__(self,device):
         if torch.cuda.is_available():
             self.device=torch.device('cuda')
