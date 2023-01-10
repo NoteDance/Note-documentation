@@ -21,7 +21,7 @@ class NeuralNetwork(nn.Module):
         return logits
 
 
-class nn:
+class neuralnetwork:
     def __init__(self,device):
         if torch.cuda.is_available():
             self.device=torch.device('cuda')
@@ -33,10 +33,10 @@ class nn:
     
     
     def fp(self,x):
-        pred=self.model(x)
+        pred=self.model(x.to(self.device))
         return pred
     
     
     def loss(self,output,labels):
-        loss=self.loss_fn(output,labels)
+        loss=self.loss_fn(output,labels.to(self.device))
         return loss
