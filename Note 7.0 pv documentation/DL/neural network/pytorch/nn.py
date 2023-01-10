@@ -4,14 +4,14 @@ from torch import nn
 
 class NeuralNetwork(nn.Module):
     def __init__(self):
-        super(NeuralNetwork,self).__init__()
+        super().__init__()
         self.flatten=nn.Flatten()
         self.linear_relu_stack=nn.Sequential(
-            nn.Linear(28*28,512),
+            nn.Linear(28*28, 512),
             nn.ReLU(),
-            nn.Linear(512,512),
+            nn.Linear(512, 512),
             nn.ReLU(),
-            nn.Linear(512,10)
+            nn.Linear(512, 10)
         )
     
     
@@ -21,8 +21,8 @@ class NeuralNetwork(nn.Module):
         return logits
 
 
-class nn:
-    def __init__(self,device):
+class neuralnetwork:
+    def __init__(self):
         if torch.cuda.is_available():
             self.device=torch.device('cuda')
         else:
@@ -33,11 +33,13 @@ class nn:
     
     
     def fp(self,x):
+        x=torch.tensor(x,dtype=torch.float)
         pred=self.model(x.to(self.device))
         return pred
     
     
     def loss(self,output,labels):
+        labels=torch.tensor(labels,dtype=torch.long)
         loss=self.loss_fn(output,labels.to(self.device))
         return loss
     
