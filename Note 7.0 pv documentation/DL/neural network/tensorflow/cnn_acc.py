@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-
+#An example with accuracy function.
 class cnn:
     def __init__(self):
         self.model=tf.keras.models.Sequential([
