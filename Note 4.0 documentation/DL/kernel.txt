@@ -122,7 +122,6 @@ Kernel's methon object:
 data(self,train_data,train_labels,test_data=None,test_labels=None): assign data for self.train_data,self.train_labels,self.test_data,self.test_labels
 init(self,param=None): initialize some kernel's instance
 add_threads(self,thread): add thread count
-set_end(self,end_loss=None,end_acc=None,end_test_loss=None,end_test_acc=None): set end condition
 apply_gradient(self,tape,opt,loss,parameter): optimize neural network
 loss_acc(self,output=None,labels_batch=None,loss=None,test_batch=None,total_loss=None,total_acc=None,t=None): compute loss and acc
 core_opt(self,output,loss,t=None): optimize neural network
