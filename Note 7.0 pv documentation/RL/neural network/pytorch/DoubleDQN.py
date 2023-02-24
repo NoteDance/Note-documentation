@@ -27,7 +27,6 @@ class DoubleDQN:
         self.target_q_net=Qnet(state_dim,hidden_dim,action_dim).to(self.device_n)
         self.optimizer=torch.optim.Adam(self.nn.parameters(),lr=2e-3)
         self.genv=gym.make('CartPole-v0')
-
     
     
     def env(self,a=None,initial=None):
