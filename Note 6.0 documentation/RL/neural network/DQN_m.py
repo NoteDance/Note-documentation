@@ -29,7 +29,6 @@ class DQN:
         self.genv=gym.make('CartPole-v0')
         self.row=2
         self.rank=3
-
     
     
     def env(self,a=None,initial=None):
