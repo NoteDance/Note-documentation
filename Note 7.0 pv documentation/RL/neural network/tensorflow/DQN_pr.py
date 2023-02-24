@@ -48,6 +48,7 @@ class DQN:
         q_value=tf.gather(self.nn.fp(s),a,axis=1,batch_dims=1)
         next_q_value=tf.reduce_max(self.target_q_net.fp(next_s),axis=1)
         target=r+0.98*next_q_value*(1-d)
+        target=tf.expand_dims(target,axis=1)
         TD=target-q_value
         self.pr.update_TD(TD)
         return tf.reduce_mean(TD**2)
