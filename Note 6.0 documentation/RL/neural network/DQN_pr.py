@@ -32,7 +32,6 @@ class DQN:
         self.alpha=0.7
         self.optimizer=torch.optim.Adam(self.q_net.parameters(),lr=2e-3)
         self.genv=gym.make('CartPole-v0')
-
     
     
     def env(self,a=None,initial=None):
