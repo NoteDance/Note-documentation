@@ -14,7 +14,6 @@ It also can be realized by higher dimension,but i haven't realized.
 
 Support stop mechanism.
 Support prioritized replay.
-Support pool parallelism.
 Support gradient attenuation.
 Support memory protection mechanism.
 Support training priority and memory priority.
