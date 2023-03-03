@@ -23,8 +23,8 @@ class cnn:
         return tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=output,labels=labels))
     
     
-    def attenuate(self,gradient,oc,t):
-        ac=0.9**oc[t]
-        for i in range(len(gradient)):
-            gradient[i]=ac*gradient[i]
-        return gradient
+    def attenuate(self,gradient,oc,t):  #gradient attenuation function,kernel uses this to calculate attenuation coefficient.
+        ac=0.9**oc[t]                   #ac:attenuation coefficient
+        for i in range(len(gradient)):  #oc:optimizing counter
+            gradient[i]=ac*gradient[i]  #t:thread number
+        return gradient                              
