@@ -9,20 +9,20 @@ class cnn:
           tf.keras.layers.Dropout(0.2),
           tf.keras.layers.Dense(10)
           ])
-        self.param=self.model.weights
+        self.param=self.model.weights      #parameter list
         self.loss_object=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
         self.train_accuracy=tf.keras.metrics.SparseCategoricalAccuracy(name='train_accuracy')
-        self.opt=tf.keras.optimizers.Adam()
+        self.opt=tf.keras.optimizers.Adam() #optimizer
     
     
-    def fp(self,data):
+    def fp(self,data):         #forward propagation function
         output=self.model(data)
         return output
     
     
-    def loss(self,output,labels):
+    def loss(self,output,labels): #loss functino
         return self.loss_object(labels,output)
     
     
-    def accuracy(self,output,labels):
+    def accuracy(self,output,labels): #accuracy function
         return self.train_accuracy(labels,output)
