@@ -10,7 +10,7 @@ class Qnet:
         self.bias2=tf.Variable(tf.random.normal([action_dim]))
         self.param=[self.weight1,self.bias1,self.weight2,self.bias2]    
     
-    def fp(self,x):
+    def fp(self,x):            #forward propagation function
         x=tf.nn.relu(tf.matmul(x,self.weight1)+self.bias1)
         return tf.matmul(x,self.weight2)+self.bias2
     
@@ -19,12 +19,12 @@ class DQN:
     def __init__(self,state_dim,hidden_dim,action_dim):
         self.nn=Qnet(state_dim,hidden_dim,action_dim)
         self.target_q_net=Qnet(state_dim,hidden_dim,action_dim)
-        self.param=self.nn.param
-        self.opt=tf.keras.optimizers.Adam()
-        self.genv=gym.make('CartPole-v0')
+        self.param=self.nn.param      #parameter list
+        self.opt=tf.keras.optimizers.Adam() #optimizer
+        self.genv=gym.make('CartPole-v0') #create environment
     
     
-    def env(self,a=None,initial=None):
+    def env(self,a=None,initial=None): #environment function
         if initial==True:
             state=self.genv.reset(seed=0)
             return state
@@ -33,7 +33,7 @@ class DQN:
             return next_state,reward,done
     
     
-    def loss(self,s,a,next_s,r,d):
+    def loss(self,s,a,next_s,r,d): #loss function
         a=tf.expand_dims(a,axis=1)
         q_value=tf.gather(self.nn.fp(s),a,axis=1,batch_dims=1)
         next_q_value=tf.reduce_max(self.target_q_net.fp(next_s),axis=1)
@@ -41,6 +41,6 @@ class DQN:
         return tf.reduce_mean((q_value-target)**2)
         
     
-    def update_param(self):
+    def update_param(self): #update function
         self.target_q_net.param=self.param.copy()
         return
