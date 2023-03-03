@@ -9,20 +9,20 @@ class cnn:
           tf.keras.layers.Dropout(0.2),
           tf.keras.layers.Dense(10)
           ])
-        self.param=self.model.weights #parameter list,kernel needs to use this list for backpropagation.
+        self.param=self.model.weights #parameter list,kernel uses this list for backpropagation.
         self.loss_object=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
         self.train_accuracy=tf.keras.metrics.SparseCategoricalAccuracy(name='train_accuracy')
-        self.opt=tf.keras.optimizers.Adam() #optimizer,kernel needs to use this to optimize.
+        self.opt=tf.keras.optimizers.Adam() #optimizer,kernel uses this to optimize.
     
     
-    def fp(self,data):  #forward propagation function,kernel needs to use this for forward propagation.
+    def fp(self,data):  #forward propagation function,kernel uses this for forward propagation.
         output=self.model(data)
         return output
     
     
-    def loss(self,output,labels): #loss functino,kernel needs to use this to calculate loss.
+    def loss(self,output,labels): #loss functino,kernel uses this to calculate loss.
         return self.loss_object(labels,output)
     
     
-    def accuracy(self,output,labels): #accuracy function,kernel needs to use this to calculate accuracy.
+    def accuracy(self,output,labels): #accuracy function,kernel uses this to calculate accuracy.
         return self.train_accuracy(labels,output)
