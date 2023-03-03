@@ -25,11 +25,11 @@ class DQN:
             self.device_n=torch.device('cpu')
         self.nn=Qnet(state_dim,hidden_dim,action_dim).to(self.device_n)
         self.target_q_net=Qnet(state_dim,hidden_dim,action_dim).to(self.device_n)
-        self.optimizer=torch.optim.Adam(self.nn.parameters(),lr=2e-3)
-        self.genv=gym.make('CartPole-v0')
+        self.optimizer=torch.optim.Adam(self.nn.parameters(),lr=2e-3) #optimizer
+        self.genv=gym.make('CartPole-v0') #create environment
     
     
-    def env(self,a=None,initial=None):
+    def env(self,a=None,initial=None): #environment function
         if initial==True:
             state=self.genv.reset()
             return state
@@ -38,7 +38,7 @@ class DQN:
             return next_state,reward,done
     
     
-    def loss(self,s,a,next_s,r,d):
+    def loss(self,s,a,next_s,r,d): #loss function
         s=torch.tensor(s,dtype=torch.float).to(self.device_d)
         a=torch.tensor(a,dtype=torch.int64).view(-1,1).to(self.device_d)
         next_s=torch.tensor(next_s,dtype=torch.float).to(self.device_d)
@@ -50,17 +50,17 @@ class DQN:
         return F.mse_loss(q_value,target)
     
     
-    def backward(self,loss):
+    def backward(self,loss): #backward function
         self.optimizer.zero_grad()
         loss.backward()
         return
     
     
-    def opt(self):
+    def opt(self): #opt function
         self.optimizer.step()
         return
         
     
-    def update_param(self):
+    def update_param(self): #update function
         self.target_q_net.load_state_dict(self.nn.state_dict())
         return
