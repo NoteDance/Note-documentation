@@ -9,14 +9,14 @@ class cnn:
           tf.keras.layers.Dropout(0.2),
           tf.keras.layers.Dense(10)
           ])
-        self.param=self.model.weights #parameter list,kernel uses this list for backpropagation.
-        self.opt=tf.keras.optimizers.Adam() #optimizer,kernel uses this to optimize.
+        self.param=self.model.weights #parameter list,kernel uses it list for backpropagation.
+        self.opt=tf.keras.optimizers.Adam() #optimizer,kernel uses it to optimize.
     
     
-    def fp(self,data):  #forward propagation function,kernel uses this for forward propagation.
+    def fp(self,data):  #forward propagation function,kernel uses it for forward propagation.
         output=self.model(data)
         return output
     
     
-    def loss(self,output,labels): #loss functino,kernel uses this to calculate loss.
+    def loss(self,output,labels): #loss functino,kernel uses it to calculate loss.
         return tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=output,labels=labels))
