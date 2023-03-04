@@ -29,25 +29,25 @@ class neuralnetwork:
             self.device=torch.device('cpu')
         self.model=NeuralNetwork().to(self.device)
         self.loss_fn=nn.CrossEntropyLoss()
-        self.opt=torch.optim.SGD(self.model.parameters(),lr=1e-3) #optimizer,kernel uses this to optimize.
+        self.opt=torch.optim.SGD(self.model.parameters(),lr=1e-3) #optimizer,kernel uses it to optimize.
     
     
-    def fp(self,x):   #forward propagation function,kernel uses this for forward propagation.
+    def fp(self,x):   #forward propagation function,kernel uses it for forward propagation.
         pred=self.model(x.to(self.device))
         return pred
     
     
-    def loss(self,output,labels):  #loss functino,kernel uses this to calculate loss.
+    def loss(self,output,labels):  #loss functino,kernel uses it to calculate loss.
         loss=self.loss_fn(output,labels.to(self.device))
         return loss
     
     
-    def backward(self,loss): #backward function,kernel uses this for backpropagation.
+    def backward(self,loss): #backward function,kernel uses it for backpropagation.
         self.optim.zero_grad()
         loss.backward()
         return
     
     
-    def opt(self): #opt function,kernel uses this to optimize.
+    def opt(self): #opt function,kernel uses it to optimize.
         self.optim.step()
         return
