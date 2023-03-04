@@ -25,11 +25,11 @@ class DQN:
             self.device_n=torch.device('cpu')
         self.nn=Qnet(state_dim,hidden_dim,action_dim).to(self.device_n)
         self.target_q_net=Qnet(state_dim,hidden_dim,action_dim).to(self.device_n)
-        self.optimizer=torch.optim.Adam(self.nn.parameters(),lr=2e-3) #optimizer,kernel uses this to optimize.
+        self.optimizer=torch.optim.Adam(self.nn.parameters(),lr=2e-3) #optimizer,kernel uses it to optimize.
         self.genv=gym.make('CartPole-v0') #create environment
     
     
-    def env(self,a=None,initial=None): #environment function,kernel uses this to interact with the environment.
+    def env(self,a=None,initial=None): #environment function,kernel uses it to interact with the environment.
         if initial==True:
             state=self.genv.reset()
             return state
@@ -38,7 +38,7 @@ class DQN:
             return next_state,reward,done
     
     
-    def loss(self,s,a,next_s,r,d): #loss function,kernel uses this to calculate loss.
+    def loss(self,s,a,next_s,r,d): #loss function,kernel uses it to calculate loss.
         s=torch.tensor(s,dtype=torch.float).to(self.device_d)
         a=torch.tensor(a,dtype=torch.int64).view(-1,1).to(self.device_d)
         next_s=torch.tensor(next_s,dtype=torch.float).to(self.device_d)
@@ -50,17 +50,17 @@ class DQN:
         return F.mse_loss(q_value,target)
     
     
-    def backward(self,loss): #backward function,kernel uses this for backpropagation.
+    def backward(self,loss): #backward function,kernel uses it for backpropagation.
         self.optimizer.zero_grad()
         loss.backward()
         return
     
     
-    def opt(self): #opt function,kernel uses this to optimize.
+    def opt(self): #opt function,kernel uses it to optimize.
         self.optimizer.step()
         return
         
     
-    def update_param(self): #update function,kernel uses this to update parameter.
+    def update_param(self): #update function,kernel uses it to update parameter.
         self.target_q_net.load_state_dict(self.nn.state_dict())
         return
