@@ -11,6 +11,7 @@ class cnn:
           tf.keras.layers.Dense(10)
           ])
         self.param=self.model.weights
+        self.loss_object=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
         self.opt=tf.keras.optimizers.Adam(learning_rate=0.001)
     
     
@@ -20,7 +21,7 @@ class cnn:
     
     
     def loss(self,output,labels):
-        return tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=output,labels=labels))
+        return self.loss_object(labels,output)
     
     
     def attenuate(self,gradient,oc,t):  #gradient attenuation function,kernel uses it to calculate attenuation coefficient.
