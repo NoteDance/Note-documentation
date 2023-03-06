@@ -18,13 +18,11 @@ class Qnet(torch.nn.Module):
 class DoubleDQN:
     def __init__(self,state_dim,hidden_dim,action_dim):
         if torch.cuda.is_available():
-            self.device_d=torch.device('cuda')
-            self.device_n=torch.device('cuda')
+            self.device=torch.device('cuda')
         else:
-            self.device_d=torch.device('cpu')
-            self.device_n=torch.device('cpu')
-        self.nn=Qnet(state_dim,hidden_dim,action_dim).to(self.device_n)
-        self.target_q_net=Qnet(state_dim,hidden_dim,action_dim).to(self.device_n)
+            self.device=torch.device('cpu')
+        self.nn=Qnet(state_dim,hidden_dim,action_dim).to(self.device)
+        self.target_q_net=Qnet(state_dim,hidden_dim,action_dim).to(self.device)
         self.optimizer=torch.optim.Adam(self.nn.parameters(),lr=2e-3)
         self.genv=gym.make('CartPole-v0')
     
@@ -39,11 +37,11 @@ class DoubleDQN:
     
     
     def loss(self,s,a,next_s,r,d):
-        s=torch.tensor(s,dtype=torch.float).to(self.device_d)
-        a=torch.tensor(a).view(-1,1).to(self.device_d)
-        next_s=torch.tensor(next_s,dtype=torch.float).to(self.device_d)
-        r=torch.tensor(r,dtype=torch.float).view(-1,1).to(self.device_d)
-        d=torch.tensor(d,dtype=torch.float).view(-1,1).to(self.device_d)
+        s=torch.tensor(s,dtype=torch.float).to(self.device)
+        a=torch.tensor(a).view(-1,1).to(self.device)
+        next_s=torch.tensor(next_s,dtype=torch.float).to(self.device)
+        r=torch.tensor(r,dtype=torch.float).view(-1,1).to(self.device)
+        d=torch.tensor(d,dtype=torch.float).view(-1,1).to(self.device)
         q_value=self.nn(s).gather(1,a)
         max_action=self.nn(next_s).max(1)[1].view(-1,1)
         next_q_value=self.target_q_net(next_s).gather(1,max_action)
