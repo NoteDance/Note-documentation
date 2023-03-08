@@ -34,7 +34,11 @@ class critic:
 
 
 class DDPG:
-    def __init__(self,state_dim,hidden_dim,action_dim,action_bound,sigma,gamma,tau,actor_lr,critic_lr):
+    def __init__(self,hidden_dim,sigma,gamma,tau,actor_lr,critic_lr):
+        self.genv=gym.make('Pendulum-v0')
+        state_dim=self.genv.observation_space.shape[0]
+        action_dim=self.genv.action_space.shape[0]
+        action_bound=self.genv.action_space.high[0]
         self.actor=actor(state_dim,hidden_dim,action_dim,action_bound)
         self.critic=critic(state_dim,hidden_dim,action_dim)
         self.target_actor=actor(state_dim,hidden_dim,action_dim,action_bound)
@@ -48,7 +52,6 @@ class DDPG:
         self.gamma=gamma
         self.tau=tau
         self.opt=tf.keras.optimizers.Adam()
-        self.genv=gym.make('Pendulum-v0')
     
     
     def noise(self):
