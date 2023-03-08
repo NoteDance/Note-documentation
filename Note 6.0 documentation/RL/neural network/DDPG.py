@@ -1,6 +1,7 @@
 import torch
 import torch.nn.functional as F
 import numpy as np
+import gym
 
 
 class actor(torch.nn.Module):
@@ -30,11 +31,15 @@ class critic(torch.nn.Module):
 
 
 class DDPG:
-    def __init__(self,state_dim,hidden_dim,action_dim,action_bound,sigma,gamma,tau,actor_lr,critic_lr):
+    def __init__(self,hidden_dim,sigma,gamma,tau,actor_lr,critic_lr):
         if torch.cuda.is_available():
             self.device=torch.device('cuda')
         else:
             self.device=torch.device('cpu')
+        self.genv=gym.make('Pendulum-v0')
+        state_dim=self.genv.observation_space.shape[0]
+        action_dim=self.genv.action_space.shape[0]
+        action_bound=self.genv.action_space.high[0]
         self.actor=actor(state_dim,hidden_dim,action_dim,action_bound).to(self.device)
         self.critic=critic(state_dim,hidden_dim,action_dim).to(self.device)
         self.target_actor=actor(state_dim,hidden_dim,action_dim,action_bound).to(self.device)
@@ -46,7 +51,6 @@ class DDPG:
         self.tau=tau
         self.actor_opt=torch.optim.Adam(self.actor.parameters(),lr=actor_lr)
         self.critic_opt=torch.optim.Adam(self.critic.parameters(),lr=critic_lr)
-        self.genv=None
     
     
     def noise(self):
