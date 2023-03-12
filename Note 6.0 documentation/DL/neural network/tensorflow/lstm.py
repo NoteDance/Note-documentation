@@ -12,7 +12,7 @@ class lstm:
         tf.keras.layers.Dropout(0.5),
         tf.keras.layers.Dense(1)
         ])
-        self.param=self.model.weights
+        self.param=self.model.weights[1:]
         self.opt=tf.keras.optimizers.Adam()
     
     
