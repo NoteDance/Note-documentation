@@ -2,7 +2,7 @@ import tensorflow as tf
 from tensorflow.python.ops import state_ops
 
 
-class Momentum: #You can also realize the optimizer yourself
+class Momentum: #You can also realize optimizer by yourself
     def __init__(self,lr,gamma):
         self.lr=lr
         self.gamma=gamma
@@ -19,7 +19,7 @@ class Momentum: #You can also realize the optimizer yourself
         return
 
 
-class nn:               #A neural network class example,use the optimizer written by oneself.
+class nn:               #A neural network class example,use optimizer written by yourself.
     def __init__(self):
         self.weight1=tf.Variable(tf.random.normal([784,64])) #You can also customize parameters.
         self.bias1=tf.Variable(tf.random.normal([64]))
