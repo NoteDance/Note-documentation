@@ -2,7 +2,7 @@ import tensorflow as tf
 
 
 #gradient attenuation example
-class cnn:
+class nn:
     def __init__(self):
         self.model=tf.keras.models.Sequential([
           tf.keras.layers.Flatten(input_shape=(28, 28)),
