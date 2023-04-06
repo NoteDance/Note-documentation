@@ -4,12 +4,12 @@
 ```python
 import Note.DL.kernel as k   #import kernel
 import tensorflow as tf              #import platform
-import cnn as c                          #import neural network
+import nn as n                          #import neural network
 mnist=tf.keras.datasets.mnist
 (x_train,y_train),(x_test,y_test)=mnist.load_data()
 x_train,x_test =x_train/255.0,x_test/255.0
-cnn=c.cnn()                                #create neural network object
-kernel=k.kernel(cnn)                 #start kernel
+nn=n.nn()                                #create neural network object
+kernel=k.kernel(nn)                 #start kernel
 kernel.platform=tf                       #use platform
 kernel.stop=True
 kernel.end_loss=0.7
@@ -23,13 +23,13 @@ kernel.train(32,5)         #train neural network
 ```python
 import Note.DL.kernel as k   #import kernel
 import tensorflow as tf              #import platform
-import cnn as c                          #import neural network
+import nn as n                          #import neural network
 import threading
 mnist=tf.keras.datasets.mnist
 (x_train,y_train),(x_test,y_test)=mnist.load_data()
 x_train,x_test =x_train/255.0,x_test/255.0
-cnn=c.cnn()                                #create neural network object
-kernel=k.kernel(cnn)   #start kernel
+nn=n.nn()                                #create neural network object
+kernel=k.kernel(nn)   #start kernel
 kernel.platform=tf                            #use platform
 kernel.stop=True
 kernel.end_loss=0.7                           #stop condition
@@ -100,13 +100,13 @@ kernel.visualize_reward()
 ```python
 import Note.DL.kernel as k   #import kernel
 import tensorflow as tf              #import platform
-import cnn as c                          #import neural network
+import nn as n                          #import neural network
 import threading
 mnist=tf.keras.datasets.mnist
 (x_train,y_train),(x_test,y_test)=mnist.load_data()
 x_train,x_test =x_train/255.0,x_test/255.0
-cnn=c.cnn()                                #create neural network object
-kernel=k.kernel(cnn)   #start kernel
+nn=n.nn()                                #create neural network object
+kernel=k.kernel(nn)   #start kernel
 kernel.platform=tf                            #use platform
 kernel.process_thread=7                        #thread count,use 7 threads to train
 kernel.PO=3                    #use PO3
@@ -130,13 +130,13 @@ for _ in range(7):
 ```python
 import Note.DL.kernel as k   #import kernel
 import tensorflow as tf              #import platform
-import cnn as c                          #import neural network
+import nn as n                          #import neural network
 import threading
 mnist=tf.keras.datasets.mnist
 (x_train,y_train),(x_test,y_test)=mnist.load_data()
 x_train,x_test =x_train/255.0,x_test/255.0
-cnn=c.cnn()                                #create neural network object
-kernel=k.kernel(cnn)   #start kernel
+nn=n.nn()                                #create neural network object
+kernel=k.kernel(nn)   #start kernel
 kernel.platform=tf                            #use platform
 kernel.process_thread=7                        #thread count,use 7 threads to train
 kernel.data_segment_flag=True
@@ -162,13 +162,13 @@ kernel.visualize_train()
 ```python
 import Note.DL.kernel as k   #import kernel
 import tensorflow as tf              #import platform
-import cnn_acc as c                          #import neural network
+import nn_acc as n                          #import neural network
 import threading
 mnist=tf.keras.datasets.mnist
 (x_train,y_train),(x_test,y_test)=mnist.load_data()
 x_train,x_test =x_train/255.0,x_test/255.0
-cnn=c.cnn()                                #create neural network object
-kernel=k.kernel(cnn)                 #start kernel
+nn=n.nn()                                #create neural network object
+kernel=k.kernel(nn)                 #start kernel
 kernel.multiprocessing_threading=threading
 kernel.process_thread_t=6                #test thread count
 kernel.platform=tf                       #use platform
@@ -184,13 +184,13 @@ kernel.save()              #save neural network
 ```python
 import Note.DL.kernel as k   #import kernel
 import tensorflow as tf              #import platform
-import cnn as c                          #import neural network
+import nn as n                          #import neural network
 import threading
 mnist=tf.keras.datasets.mnist
 (x_train,y_train),(x_test,y_test)=mnist.load_data()
 x_train,x_test =x_train/255.0,x_test/255.0
-cnn=c.cnn()                                #create neural network object
-kernel=k.kernel(cnn)   #start kernel
+nn=n.nn()                                #create neural network object
+kernel=k.kernel(nn)   #start kernel
 kernel.platform=tf                            #use platform
 kernel.multiprocessing_threading=threading
 kernel.process_thread=7                        #thread count,use 7 threads to train
@@ -217,11 +217,11 @@ You can test it before using the kernel training neural network.
 ```python
 import Note.DL.dl.test_nn as t
 import tensorflow as tf              #import platform
-import cnn as c                          #import neural network
+import nn as n                          #import neural network
 mnist=tf.keras.datasets.mnist
 (x_train,y_train),(x_test,y_test)=mnist.load_data()
 x_train,x_test =x_train/255.0,x_test/255.0
-cnn=c.cnn()
+nn=n.nn()
 t.test(cnn,tf,x_train[:32],y_train[:32])
 ```
 
@@ -243,12 +243,12 @@ https://github.com/NoteDancing/Note-documentation/blob/Note-7.0-pv/Note%207.0%20
 **example:**
 ```python
 import Note.DL.kernel as k   #import kernel #import platform
-import cnn_ol as c                          #import neural network
+import nn_ol as n                          #import neural network
 mnist=tf.keras.datasets.mnist
 (x_train,y_train),(x_test,y_test)=mnist.load_data()
 x_train,x_test =x_train/255.0,x_test/255.0
-cnn=c.cnn(x_train,y_train)                                #create neural network object
-kernel=k.kernel(cnn)                 #start kernel
+nn=n.nn(x_train,y_train)                                #create neural network object
+kernel=k.kernel(nn)                 #start kernel
 kernel.platform=tf                       #use platform
 kernel.data(x_train,y_train)   #input you data
 kernel.train_ol()         #train neural network
@@ -260,13 +260,13 @@ https://github.com/NoteDancing/Note-documentation/blob/Note-7.0-pv/Note%207.0%20
 ```python
 import Note.DL.kernel as k   #import kernel
 import tensorflow as tf              #import platform
-import cnn_ol_p as c                          #import neural network
+import nn_ol_p as n                          #import neural network
 import threading
 mnist=tf.keras.datasets.mnist
 (x_train,y_train),(x_test,y_test)=mnist.load_data()
 x_train,x_test =x_train/255.0,x_test/255.0
-cnn=c.cnn(x_train,y_train)                                #create neural network object
-kernel=k.kernel(cnn)   #start kernel
+nn=n.nn(x_train,y_train)                                #create neural network object
+kernel=k.kernel(nn)   #start kernel
 kernel.platform=tf                            #use platform
 kernel.process_thread=7                        #thread count,use 7 thread to train
 kernel.PO=2
@@ -288,13 +288,13 @@ for _ in range(7):
 
 https://github.com/NoteDancing/Note-documentation/blob/Note-7.0-pv/Note%207.0%20pv%20documentation/DL/neural%20network/tensorflow/cnn_acc.py
 ```python
-import cnn_acc as c
+import nn_acc as n
 import Note.DL.dl.test as t
 import threading
 mnist=tf.keras.datasets.mnist
 (x_train,y_train),(x_test,y_test)=mnist.load_data()
 x_train,x_test =x_train/255.0,x_test/255.0
-test=t.test_pt(cnn,x_test,y_test,6,32)
+test=t.test_pt(nn,x_test,y_test,6,32)
 class thread(threading.Thread):     
 	def run(self):              
 		test.test()
