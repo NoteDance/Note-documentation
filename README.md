@@ -239,7 +239,7 @@ t.test(dqn,tf,2)
 #  Online training:
 **You can download neural network example in this link,and then you can import neural network and train with kernel,link and example code are below.**
 
-https://github.com/NoteDancing/Note-documentation/blob/Note-7.0-pv/Note%207.0%20pv%20documentation/DL/neural%20network/tensorflow/cnn_ol.py
+https://github.com/NoteDancing/Note-documentation/blob/Note-7.0-pv/Note%207.0%20pv%20documentation/DL/neural%20network/tensorflow/nn_ol.py
 **example:**
 ```python
 import Note.DL.kernel as k   #import kernel #import platform
@@ -255,7 +255,7 @@ kernel.train_ol()         #train neural network
 ```
 **You can download neural network example in this link,and then you can import neural network and train with kernel,link and example code are below.**
 
-https://github.com/NoteDancing/Note-documentation/blob/Note-7.0-pv/Note%207.0%20pv%20documentation/DL/neural%20network/tensorflow/cnn_ol_p.py
+https://github.com/NoteDancing/Note-documentation/blob/Note-7.0-pv/Note%207.0%20pv%20documentation/DL/neural%20network/tensorflow/nn_ol_p.py
 **multithreading example:**
 ```python
 import Note.DL.kernel as k   #import kernel
@@ -286,7 +286,7 @@ for _ in range(7):
 # Parallel test:
 **You can download neural network example in this link,and then you can import neural network and train with kernel,link and example code are below.**
 
-https://github.com/NoteDancing/Note-documentation/blob/Note-7.0-pv/Note%207.0%20pv%20documentation/DL/neural%20network/tensorflow/cnn_acc.py
+https://github.com/NoteDancing/Note-documentation/blob/Note-7.0-pv/Note%207.0%20pv%20documentation/DL/neural%20network/tensorflow/nn_acc.py
 ```python
 import nn_acc as n
 import Note.DL.dl.test as t
