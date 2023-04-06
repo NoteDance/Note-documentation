@@ -2,7 +2,7 @@ import tensorflow as tf
 import numpy as np
 
 #This is an example of online training.
-class cnn:
+class nn:
     def __init__(self,data,labels):
         self.train_data=data
         self.train_labels=labels
