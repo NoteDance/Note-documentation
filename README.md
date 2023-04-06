@@ -109,7 +109,7 @@ cnn=c.cnn()                                #create neural network object
 kernel=k.kernel(cnn)   #start kernel
 kernel.platform=tf                            #use platform
 kernel.process_thread=7                        #thread count,use 7 threads to train
-kernel.PO=3
+kernel.PO=3                    #use PO3
 kernel.multiprocessing_threading=threading
 kernel.max_lock=7
 kernel.data(x_train,y_train)   #input you data
