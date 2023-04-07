@@ -9,7 +9,7 @@ class nn:
         self.opt=tf.keras.optimizers.Adam()
     
     
-    def init(self):
+    def build(self):
         self.layer1=d.dense([784,128],weight_func=['uniform',0,0.01],activation='relu')
         self.layer2=d.dense([128,10],weight_func=['uniform',0,0.01])
         self.param=[self.layer1.weight,self.layer1.bias,self.layer2.weight,self.layer2.bias]
