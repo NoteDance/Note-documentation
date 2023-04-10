@@ -311,6 +311,7 @@ loss,acc=test.loss_acc()
 **You can download neural network example in this link,and then you can import neural network and train with kernel,link and example code are below.**
 
 https://github.com/NoteDancing/Note-documentation/blob/Note-7.0-pv/Note%207.0%20pv%20documentation/DL/neural%20network/tensorflow/nn_layer.py
+```python
 import Note.DL.kernel as k   #import kernel
 import tensorflow as tf              #import platform
 import nn_layer as n                          #import neural network
@@ -324,3 +325,4 @@ kernel=k.kernel(nn)                 #start kernel
 kernel.platform=tf                       #use platform
 kernel.data(x_train,y_train)   #input you data
 kernel.train(32,5)         #train neural network
+```
