@@ -1,5 +1,5 @@
 import tensorflow as tf
-import Note.layer.dense as d
+import Note.nn.layer.dense as d
 
 
 class nn:
