@@ -210,6 +210,29 @@ for _ in range(7):
 kernel.visualize_train()
 ```
 
+**You can download neural network example in this link,and then you can import neural network and train with kernel,link and example code are below.**
+
+https://github.com/NoteDancing/Note-documentation/blob/Note-7.0-pv/Note%207.0%20pv%20documentation/DL/neural%20network/tensorflow/nn_acc.py
+```python
+import nn_acc as n
+import Note.DL.dl.test as t
+import threading
+mnist=tf.keras.datasets.mnist
+(x_train,y_train),(x_test,y_test)=mnist.load_data()
+x_train,x_test =x_train/255.0,x_test/255.0
+nn=n.nn()
+test=t.parallel_test(nn,x_test,y_test,6,32)
+class thread(threading.Thread):     
+	def run(self):              
+		test.test()
+for _ in range(6):
+	_thread=thread()
+	_thread.start()
+for _ in range(6):
+	_thread.join()
+loss,acc=test.loss_acc()
+```
+
 
 # Test neural network:
 ## DL:
@@ -280,30 +303,6 @@ for _ in range(7):
 	_thread.start()
 for _ in range(7):
 	_thread.join()
-```
-
-
-# Parallel test:
-**You can download neural network example in this link,and then you can import neural network and train with kernel,link and example code are below.**
-
-https://github.com/NoteDancing/Note-documentation/blob/Note-7.0-pv/Note%207.0%20pv%20documentation/DL/neural%20network/tensorflow/nn_acc.py
-```python
-import nn_acc as n
-import Note.DL.dl.test as t
-import threading
-mnist=tf.keras.datasets.mnist
-(x_train,y_train),(x_test,y_test)=mnist.load_data()
-x_train,x_test =x_train/255.0,x_test/255.0
-test=t.test_pt(nn,x_test,y_test,6,32)
-class thread(threading.Thread):     
-	def run(self):              
-		test.test()
-for _ in range(6):
-	_thread=thread()
-	_thread.start()
-for _ in range(6):
-	_thread.join()
-loss,acc=test.loss_acc()
 ```
 
 
