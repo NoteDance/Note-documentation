@@ -158,6 +158,10 @@ kernel.visualize_train()
 
 
 # Parallel test:
+**You can download neural network example in this link,and then you can import neural network and train with kernel,link and example code are below.**
+
+https://github.com/NoteDancing/Note-documentation/blob/Note-7.0-pv/Note%207.0%20pv%20documentation/DL/neural%20network/tensorflow/nn_acc.py
+
 **example(parallel test):**
 ```python
 import Note.DL.kernel as k   #import kernel
@@ -184,7 +188,7 @@ kernel.save()              #save neural network
 ```python
 import Note.DL.kernel as k   #import kernel
 import tensorflow as tf              #import platform
-import nn as n                          #import neural network
+import nn_acc as n                          #import neural network
 import threading
 mnist=tf.keras.datasets.mnist
 (x_train,y_train),(x_test,y_test)=mnist.load_data()
@@ -210,9 +214,7 @@ for _ in range(7):
 kernel.visualize_train()
 ```
 
-**You can download neural network example in this link,and then you can import neural network and train with kernel,link and example code are below.**
-
-https://github.com/NoteDancing/Note-documentation/blob/Note-7.0-pv/Note%207.0%20pv%20documentation/DL/neural%20network/tensorflow/nn_acc.py
+**example(test module):**
 ```python
 import nn_acc as n
 import Note.DL.dl.test as t
