@@ -222,6 +222,7 @@ mnist=tf.keras.datasets.mnist
 x_train,x_test =x_train/255.0,x_test/255.0
 nn=n.nn()
 test=t.parallel_test(nn,x_test,y_test,6,32)
+test.segment_data()
 class thread(threading.Thread):     
 	def run(self):              
 		test.test()
