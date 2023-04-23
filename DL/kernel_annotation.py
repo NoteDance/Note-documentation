@@ -11,10 +11,10 @@ import time
 class kernel:
     def __init__(self,nn=None):
         self.nn=nn
-        try:
-            self.nn.km=1
-        except AttributeError:
-            pass
+#        try:
+#            self.nn.km=1
+#        except AttributeError:
+#            pass
         self.platform=None
         self.PO=None
         self.lock=None
@@ -2032,10 +2032,10 @@ class kernel:
     def restore(self,s_path):
         input_file=open(s_path,'rb')
         self.nn=pickle.load(input_file)
-        try:
-            self.nn.km=1
-        except AttributeError:
-            pass
+#        try:
+#            self.nn.km=1
+#        except AttributeError:
+#            pass
         opt_serialized=pickle.load(input_file)
         try:
             self.nn.opt=self.platform.keras.optimizers.deserialize(opt_serialized)
