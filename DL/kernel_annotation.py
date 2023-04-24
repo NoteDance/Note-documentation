@@ -187,29 +187,29 @@ class kernel:
             return data,labels
                 
     
-    def init(self):
-        if self.process_thread!=None:
-            self.process_thread_num=np.arange(self.process_thread)
-            self.process_thread_num=list(self.process_thread_num)
-            if self.epoch_!=None:
-                self.batch_counter=np.zeros(self.process_thread,dtype=np.int32)
-                self.total_loss=np.zeros(self.process_thread,dtype=np.float32)
-                try:
-                    if self.nn.accuracy!=None:
-                        self.total_acc=np.zeros(self.process_thread,dtype=np.float32)
-                except AttributeError:
-                    pass
-            try:
-                self.nn.bc=np.zeros(self.process_thread,dtype=np.float32)
-            except AttributeError:
-                pass
+#    def init(self):
+#        if self.process_thread!=None:
+#            self.process_thread_num=np.arange(self.process_thread)
+#            self.process_thread_num=list(self.process_thread_num)
+#            if self.epoch_!=None:
+#                self.batch_counter=np.zeros(self.process_thread,dtype=np.int32)
+#                self.total_loss=np.zeros(self.process_thread,dtype=np.float32)
+#                try:
+#                    if self.nn.accuracy!=None:
+#                        self.total_acc=np.zeros(self.process_thread,dtype=np.float32)
+#                except AttributeError:
+#                    pass
+#            try:
+#                self.nn.bc=np.zeros(self.process_thread,dtype=np.float32)
+#            except AttributeError:
+#                pass
 #        self.suspend=False
 #        self.suspend_list=[]
 #        self.suspended_list=[]
 #        self.stop=False
 #        self.stop_list=[]
 #        self.stopped_list=[]
-        self.save_flag=False
+#        self.save_flag=False
 #        self.stop_flag=False
 #        self.memory_flag=False
 #        self.data_memory=None
@@ -217,26 +217,26 @@ class kernel:
 #        self.grad_memory=0
 #        self.c_memory=0
 #        self.max_memory=0
-        self.save_epoch=None
-        self.end_loss=None
-        self.end_acc=None
-        self.end_test_loss=None
-        self.end_test_acc=None
-        self.train_loss=None
-        self.train_acc=None
-        self.test_loss=None
-        self.test_acc=None
-        self.train_loss_list.clear()
-        self.train_acc_list.clear()
-        self.test_loss_list.clear()
-        self.test_acc_list.clear()
-        self.test_flag=False
-        self.train_counter=0
-        self.epoch=0
-        self.total_epoch=0
-        self.time=0
-        self.total_time=0
-        return
+#        self.save_epoch=None
+#        self.end_loss=None
+#        self.end_acc=None
+#        self.end_test_loss=None
+#        self.end_test_acc=None
+#        self.train_loss=None
+#        self.train_acc=None
+#        self.test_loss=None
+#        self.test_acc=None
+#        self.train_loss_list.clear()
+#        self.train_acc_list.clear()
+#        self.test_loss_list.clear()
+#        self.test_acc_list.clear()
+#        self.test_flag=False
+#        self.train_counter=0
+#        self.epoch=0
+#        self.total_epoch=0
+#        self.time=0
+#        self.total_time=0
+#        return
     
     
 #    def create_pt_num(self,process_thread=None):
