@@ -130,41 +130,6 @@ class kernel:
                 data=np.concatenate((data,np.expand_dims(self.train_data[index1:index2],axis=0)))
                 labels=np.concatenate((labels,np.expand_dims(self.train_labels[index1:index2],axis=0)))
             return data,labels
-                
-    
-    def init(self):
-        if self.process_thread!=None:
-            self.process_thread_num=np.arange(self.process_thread)
-            self.process_thread_num=list(self.process_thread_num)
-            if self.epoch_!=None:
-                self.batch_counter=np.zeros(self.process_thread,dtype=np.int32)
-                self.total_loss=np.zeros(self.process_thread,dtype=np.float32)
-                try:
-                    if self.nn.accuracy!=None:
-                        self.total_acc=np.zeros(self.process_thread,dtype=np.float32)
-                except AttributeError:
-                    pass
-            try:
-                self.nn.bc=np.zeros(self.process_thread,dtype=np.float32)
-            except AttributeError:
-                pass
-        self.save_flag=False
-        self.save_epoch=None
-        self.train_loss=None
-        self.train_acc=None
-        self.test_loss=None
-        self.test_acc=None
-        self.train_loss_list.clear()
-        self.train_acc_list.clear()
-        self.test_loss_list.clear()
-        self.test_acc_list.clear()
-        self.test_flag=False
-        self.train_counter=0
-        self.epoch=0
-        self.total_epoch=0
-        self.time=0
-        self.total_time=0
-        return
     
     
     def loss_acc(self,output=None,labels_batch=None,loss=None,test_batch=None,total_loss=None,total_acc=None):
