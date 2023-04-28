@@ -2,7 +2,7 @@ from tensorflow import function
 import numpy as np
 import matplotlib.pyplot as plt
 
-#Keep only parallel part,and saving in parallel is not supported.
+#Keep only parallel part.
 class kernel:
     def __init__(self,nn=None):
         self.nn=nn
