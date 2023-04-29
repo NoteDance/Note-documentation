@@ -9,6 +9,7 @@ import time
 
 
 '''
+example:
 import nspn.kernel_reduced as k   #import kernel
 import tensorflow as tf
 import DQN as d
