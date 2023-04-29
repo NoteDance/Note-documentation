@@ -5,6 +5,30 @@ import matplotlib.pyplot as plt
 import statistics
 
 
+'''
+import kernel_reduced as k   #import kernel
+import DQN as d
+import threading
+dqn=d.DQN(4,128,2)                               #create neural network object
+kernel=k.kernel(dqn,5)   #start kernel,use 5 thread to train
+kernel.action_count=2
+kernel.set_up(epsilon=0.01,pool_size=10000,batch=64,update_step=10)
+kernel.PO=1                    #use PO1
+kernel.multiprocessing_threading=threading
+kernel.lock=[threading.Lock(),threading.Lock(),threading.Lock()]
+class thread(threading.Thread):
+	def run(self):
+		kernel.train(100)
+for _ in range(5):
+	_thread=thread()
+	_thread.start()
+for _ in range(5):
+	_thread.join()
+kernel.loss_list or kernel.loss       #view training loss
+kernel.visualize_train()
+kernel.reward                         #view reward
+kernel.visualize_reward()
+'''
 class kernel:
     def __init__(self,nn=None,process_thread=None,save_episode=False):
         self.nn=nn
