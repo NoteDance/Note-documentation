@@ -3,8 +3,6 @@ from tensorflow import data as tf_data
 import numpy as np
 import matplotlib.pyplot as plt
 import statistics
-import pickle
-import os
 
 
 class kernel:
@@ -32,7 +30,6 @@ class kernel:
         self.episode=0
         self.update_step=None
         self.trial_count=None
-        self.save_flag=False
         self.process_thread=process_thread
         self.process_thread_counter=0
         self.lock=None
@@ -257,105 +254,6 @@ class kernel:
                         self.nn.opt(gradient)
                     except TypeError:
                         self.nn.opt(gradient,t)
-            except AttributeError:
-                try:
-                    if self.nn.nn!=None:
-                        gradient=tape.gradient(loss,self.nn.param)
-                        try:
-                            if self.nn.attenuate!=None:
-                                gradient=self.nn.attenuate(gradient,self.opt_counter,t)
-                        except AttributeError:
-                            pass
-                        self.nn.opt.apply_gradients(zip(gradient,self.nn.param))
-                except AttributeError:
-                        actor_gradient=tape.gradient(loss[0],self.nn.param[0])
-                        critic_gradient=tape.gradient(loss[1],self.nn.param[1])
-                        try:
-                            if self.nn.attenuate!=None:
-                                actor_gradient=self.nn.attenuate(actor_gradient,self.opt_counter,t)
-                                critic_gradient=self.nn.attenuate(critic_gradient,self.opt_counter,t)
-                        except AttributeError:
-                            pass
-                        self.nn.opt.apply_gradients(zip(actor_gradient,self.nn.param[0]))
-                        self.nn.opt.apply_gradients(zip(critic_gradient,self.nn.param[1]))
-            try:
-                if self.nn.attenuate!=None:
-                    self.opt_counter+=1
-            except AttributeError:
-                pass
-            self.lock[0].release()
-        elif self.PO==2:
-            self.lock[0].acquire()
-            try:
-                gradient=self.nn.gradient(tape,loss)
-            except AttributeError:
-                try:
-                    if self.nn.nn!=None:
-                        gradient=tape.gradient(loss,self.nn.param)
-                except AttributeError:
-                    actor_gradient=tape.gradient(loss[0],self.nn.param[0])
-                    critic_gradient=tape.gradient(loss[1],self.nn.param[1])
-            self.lock[0].release()
-            self.lock[1].acquire()
-            try:
-                if self.nn.attenuate!=None:
-                    try:
-                        gradient=self.nn.attenuate(gradient,self.opt_counter,t)
-                    except NameError:
-                        actor_gradient=self.nn.attenuate(actor_gradient,self.opt_counter,t)
-                        critic_gradient=self.nn.attenuate(critic_gradient,self.opt_counter,t)
-            except AttributeError:
-                pass
-            try:
-                if self.nn.gradient!=None:
-                    try:
-                        self.nn.opt.apply_gradients(zip(gradient,self.nn.param))
-                    except AttributeError:
-                        try:
-                            self.nn.opt(gradient)
-                        except TypeError:
-                            self.nn.opt(gradient,t)
-            except AttributeError:
-                try:
-                    if self.nn.nn!=None:
-                        self.nn.opt.apply_gradients(zip(gradient,self.nn.param))
-                except AttributeError:
-                    self.nn.opt.apply_gradients(zip(actor_gradient,self.nn.param[0]))
-                    self.nn.opt.apply_gradients(zip(critic_gradient,self.nn.param[1]))
-            try:
-                if self.nn.attenuate!=None:
-                    self.opt_counter+=1
-            except AttributeError:
-                pass
-            self.lock[1].release()
-        return loss
-    
-    
-    @tf.function(jit_compile=True)
-    def opt_ol(self,data,t=None,ln=None):
-        with tf.GradientTape(persistent=True) as tape:
-            try:
-                loss=self.nn.loss(data)
-            except:
-                loss=self.nn.loss(data,t)
-        try:
-            if self.nn.attenuate!=None:
-                self.opt_counter[t]=0
-        except AttributeError:
-            pass
-        if self.PO==1:
-            self.lock[0].acquire()
-            try:
-                gradient=self.nn.gradient(tape,loss)
-                try:
-                    if self.nn.attenuate!=None:
-                        gradient=self.nn.attenuate(gradient,self.opt_counter,t)
-                except AttributeError:
-                    pass
-                try:
-                    self.nn.opt.apply_gradients(zip(gradient,self.nn.param))
-                except:
-                    self.nn.opt(gradient)
             except AttributeError:
                 try:
                     if self.nn.nn!=None:
@@ -690,56 +588,6 @@ class kernel:
         return
     
     
-    def train_ol(self):
-        if self.PO==1 or self.PO==3:
-            self.lock[1].acquire()
-        else:
-            self.lock[2].acquire()
-        t=self.process_thread_num.pop(0)
-        if self.PO==1 or self.PO==3:
-            self.lock[1].release()
-        else:
-            self.lock[2].release()
-        while True:
-            if self.stop_flag==True:
-                return
-            if self.save_flag==True:
-                if self.PO==1 or self.PO==3:
-                    self.lock[1].acquire()
-                else:
-                    self.lock[2].acquire()
-                self.save()
-                if self.PO==1 or self.PO==3:
-                    self.lock[1].release()
-                else:
-                    self.lock[2].release()
-            try:
-                data=self.nn.ol()
-            except:
-                continue
-            try:
-                loss=self.opt_ol(data,t)
-            except:
-                continue
-            if self.PO==1 or self.PO==3:
-                self.lock[1].acquire()
-            else:
-                self.lock[2].acquire()
-            loss=loss.numpy()
-            self.nn.train_loss_list.append(loss)
-            if len(self.nn.train_acc_list)==self.nn.max_length:
-                del self.nn.train_acc_list[0]
-            try:
-                self.nn.c+=1
-            except AttributeError:
-                pass
-            if self.PO==1 or self.PO==3:
-                self.lock[1].release()
-            else:
-                self.lock[2].release()
-        return
-    
-    
     def visualize_reward(self):
         print()
         plt.figure(1)
@@ -768,102 +616,4 @@ class kernel:
         plt.plot(np.arange(len(self.loss_list)),self.loss_list,'b-',label='train loss')
         plt.xlabel('epoch')
         plt.ylabel('reward and loss')
-        return
-    
-    
-    def save_e(self):
-        episode_file=open('episode.dat','wb')
-        pickle.dump(self.episode_set,episode_file)
-        episode_file.close()
-        return
-    
-    
-    def save(self,i=None,one=True):
-        if one==True:
-            output_file=open(self.filename,'wb')
-            if self.save_episode==True:
-                episode_file=open('episode.dat','wb')
-                pickle.dump(self.episode_set,episode_file)
-                episode_file.close()
-        else:
-            filename=self.filename.replace(self.filename[self.filename.find('.'):],'-{0}.dat'.format(i))
-            output_file=open(filename,'wb')
-            self.file_list.append([filename])
-            if self.save_episode==True:
-                episode_file=open('episode-{0}.dat'.format(i),'wb')
-                pickle.dump(self.episode_set,episode_file)
-                episode_file.close()
-            if self.save_episode==True:
-                self.file_list.append([filename,'episode-{0}.dat'])
-                if len(self.file_list)>self.s+1:
-                    os.remove(self.file_list[0][0])
-                    os.remove(self.file_list[0][1])
-                    del self.file_list[0]
-            else:
-                self.file_list.append([filename])
-                if len(self.file_list)>self.s+1:
-                    os.remove(self.file_list[0][0])
-                    del self.file_list[0]
-        try:
-            if self.platform.DType!=None:
-                try:
-                    pickle.dump(self.nn,output_file)
-                except:
-                    opt=self.nn.opt
-                    self.nn.opt=None
-                    pickle.dump(self.nn,output_file)
-                    self.nn.opt=opt
-        except AttributeError:
-            pass
-        try:
-            pickle.dump(self.platform.keras.optimizers.serialize(opt),output_file)
-        except:
-            pickle.dump(self.nn.serialize(),output_file)
-        else:
-            pickle.dump(None,output_file)
-        pickle.dump(self.epsilon,output_file)
-        pickle.dump(self.episode_step,output_file)
-        pickle.dump(self.pool_size,output_file)
-        pickle.dump(self.batch,output_file)
-        pickle.dump(self.sc,output_file)
-        pickle.dump(self.update_step,output_file)
-        pickle.dump(self.PN,output_file)
-        pickle.dump(self.max_episode_count,output_file)
-        pickle.dump(self.save_episode,output_file)
-        pickle.dump(self.reward_list,output_file)
-        pickle.dump(self.loss_list,output_file)
-        pickle.dump(self.total_episode,output_file)
-        pickle.dump(self.total_time,output_file)
-        output_file.close()
-        return
-    
-    
-    def restore(self,s_path,e_path=None):
-        input_file=open(s_path,'rb')
-        if e_path!=None:
-            episode_file=open(e_path,'rb')
-            self.episode_set=pickle.load(episode_file)
-            episode_file.close()
-        self.nn=pickle.load(input_file)
-        opt_serialized=pickle.load(input_file)
-        try:
-            self.nn.opt=self.platform.keras.optimizers.deserialize(opt_serialized)
-        except:
-            self.nn.deserialize(opt_serialized)
-        else:
-            pass
-        self.epsilon=pickle.load(input_file)
-        self.episode_step=pickle.load(input_file)
-        self.pool_size=pickle.load(input_file)
-        self.batch=pickle.load(input_file)
-        self.sc=pickle.load(input_file)
-        self.update_step=pickle.load(input_file)
-        self.PN=pickle.load(input_file)
-        self.max_episode_count=pickle.load(input_file)
-        self.save_episode=pickle.load(input_file)
-        self.reward_list=pickle.load(input_file)
-        self.loss_list=pickle.load(input_file)
-        self.total_episode=pickle.load(input_file)
-        self.total_time=pickle.load(input_file)
-        input_file.close()
         return
