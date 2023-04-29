@@ -8,6 +8,17 @@ import os
 import time
 
 
+'''
+import nspn.kernel_reduced as k   #import kernel
+import tensorflow as tf
+import DQN as d
+dqn=d.DQN(4,128,2)                               #create neural network object
+kernel=k.kernel(dqn)   #start kernel
+kernel.platform=tf
+kernel.action_count=2
+kernel.set_up(epsilon=0.01,pool_size=10000,batch=64,update_step=10)
+kernel.train(500)
+'''
 class kernel:
     def __init__(self,nn=None,save_episode=False):
         self.nn=nn
