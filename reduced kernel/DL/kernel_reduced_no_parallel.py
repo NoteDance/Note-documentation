@@ -5,7 +5,24 @@ import pickle
 import os
 import time
 
+
 #Doesn't support parallelism
+'''
+example:
+import kernel_reduced as k   #import kernel
+import tensorflow as tf              #import platform
+import nn as n                          #import neural network
+mnist=tf.keras.datasets.mnist
+(x_train,y_train),(x_test,y_test)=mnist.load_data()
+x_train,x_test =x_train/255.0,x_test/255.0
+nn=n.nn()                                #create neural network object
+kernel=k.kernel(nn)                 #start kernel
+kernel.platform=tf                       #use platform
+kernel.data(x_train,y_train)   #input you data
+kernel.train(32,5)         #train neural network
+                           #batch size:32
+                           #epoch:5
+'''
 class kernel:
     def __init__(self,nn=None):
         self.nn=nn
