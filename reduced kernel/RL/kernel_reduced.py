@@ -6,6 +6,7 @@ import statistics
 
 
 '''
+multithreading example:
 import kernel_reduced as k   #import kernel
 import DQN as d
 import threading
