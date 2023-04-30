@@ -57,10 +57,6 @@ class kernel:
         self.train_labels=train_labels
         self.train_dataset=train_dataset
         self.test_dataset=test_dataset
-        if type(train_data)==list:
-            self.data_batch=[x for x in range(len(train_data))]
-        if type(train_labels)==list:
-            self.labels_batch=[x for x in range(len(train_labels))]
         self.test_data=test_data
         self.test_labels=test_labels
         try:
@@ -69,10 +65,7 @@ class kernel:
         except ValueError:
             self.test_flag=True
         if self.train_dataset==None:
-            if type(self.train_data)==list:
-                self.shape0=train_data[0].shape[0]
-            else:
-                self.shape0=train_data.shape[0]
+            self.shape0=train_data.shape[0]
         return
     
     
@@ -111,51 +104,21 @@ class kernel:
     
     def data_func(self,data_batch=None,labels_batch=None,batch=None,index1=None,index2=None,j=None,flag=None):
         if flag==None:
-            if type(self.train_data)==list:
-                for i in range(len(self.train_data)):
-                    if batch!=1:
-                        data_batch[i]=self.train_data[i][index1:index2]
-                    else:
-                        data_batch[i]=self.train_data[i][j]
+            if batch!=1:
+                data_batch=self.train_data[index1:index2]
             else:
-                if batch!=1:
-                    data_batch=self.train_data[index1:index2]
-                else:
-                    data_batch=self.train_data[j]
-            if type(self.train_labels)==list:
-                for i in range(len(self.train_data)):
-                    if batch!=1:
-                        labels_batch[i]=self.train_labels[i][index1:index2]
-                    else:
-                        labels_batch[i]=self.train_labels[i][j]
+                data_batch=self.train_data[j]
+            if batch!=1:
+                labels_batch=self.train_labels[index1:index2]
             else:
-                if batch!=1:
-                    labels_batch=self.train_labels[index1:index2]
-                else:
-                    labels_batch=self.train_labels[j]
+                labels_batch=self.train_labels[j]
         else:
             try:
-                if type(self.train_data)==list:
-                    for i in range(len(self.train_data)):
-                        data_batch[i]=self.platform.concat([self.train_data[i][index1:],self.train_data[i][:index2]],0)
-                else:
-                    data_batch=self.platform.concat([self.train_data[index1:],self.train_data[:index2]],0)
-                if type(self.train_labels)==list:
-                    for i in range(len(self.train_data)):
-                        labels_batch[i]=self.platform.concat([self.train_labels[i][index1:],self.train_labels[i][:index2]],0)
-                else:
-                    labels_batch=self.platform.concat([self.train_labels[index1:],self.train_labels[:index2]],0)
+                data_batch=self.platform.concat([self.train_data[index1:],self.train_data[:index2]],0)
+                labels_batch=self.platform.concat([self.train_labels[index1:],self.train_labels[:index2]],0)
             except:
-                if type(self.train_data)==list:
-                    for i in range(len(self.train_data)):
-                        data_batch[i]=np.concatenate([self.train_data[i][index1:],self.train_data[i][:index2]],0)
-                else:
-                    data_batch=np.concatenate([self.train_data[index1:],self.train_data[:index2]],0)
-                if type(self.train_labels)==list:
-                    for i in range(len(self.train_data)):
-                        labels_batch[i]=np.concatenate([self.train_labels[i][index1:],self.train_labels[i][:index2]],0)
-                else:
-                    labels_batch=np.concatenate([self.train_labels[index1:],self.train_labels[:index2]],0)
+                data_batch=np.concatenate([self.train_data[index1:],self.train_data[:index2]],0)
+                labels_batch=np.concatenate([self.train_labels[index1:],self.train_labels[:index2]],0)
         return data_batch,labels_batch
     
     
@@ -282,14 +245,8 @@ class kernel:
         else:
             self.s=s-1
             self.file_list=[]
-        if self.epoch_==None and type(self.train_data)==list:
-            data_batch=[x for x in range(len(self.train_data))]
-        else:
-            data_batch=None
-        if self.epoch_==None and type(self.train_labels)==list:
-            labels_batch=[x for x in range(len(self.train_labels))]
-        else:
-            labels_batch=None
+        data_batch=None
+        labels_batch=None
         if epoch!=None:
             for i in range(epoch):
                 t1=time.time()
