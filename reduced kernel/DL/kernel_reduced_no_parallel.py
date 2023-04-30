@@ -9,7 +9,7 @@ import time
 #Doesn't support parallelism
 '''
 example:
-import kernel_reduced as k   #import kernel
+import kernel_reduced_no_parallel as k   #import kernel
 import tensorflow as tf              #import platform
 import nn as n                          #import neural network
 mnist=tf.keras.datasets.mnist
