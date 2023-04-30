@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 #Keep only parallel part.
 '''
 multithreading example:
-import kernel_reduced as k   #import kernel
+import kernel_reduced_parallel as k   #import kernel
 import tensorflow as tf              #import platform
 import nn as n                          #import neural network
 import threading
@@ -32,7 +32,7 @@ for _ in range(7):
     
 
 multiprocessing example:
-import kernel_reduced as k   #import kernel
+import kernel_reduced_parallel as k   #import kernel
 import tensorflow as tf              #import platform
 import nn as n                          #import neural network
 from multiprocessing import Process,Lock
