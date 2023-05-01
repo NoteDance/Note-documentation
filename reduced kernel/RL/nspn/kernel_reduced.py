@@ -8,6 +8,7 @@ import os
 import time
 
 
+#You can analyze kernel by example.
 '''
 example:
 import nspn.kernel_reduced as k   #import kernel
