@@ -7,6 +7,7 @@ import time
 
 
 #Doesn't support parallelism
+#You can analyze kernel by example.
 '''
 example:
 import kernel_reduced_no_parallel as k   #import kernel
