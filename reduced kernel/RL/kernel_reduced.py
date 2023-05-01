@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import statistics
 
 
+#You can analyze kernel by example.
 '''
 multithreading example:
 import kernel_reduced as k   #import kernel
