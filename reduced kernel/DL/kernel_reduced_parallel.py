@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 
 
 #Keep only parallel part.
+#You can analyze kernel by example.
 '''
 multithreading example:
 import kernel_reduced_parallel as k   #import kernel
