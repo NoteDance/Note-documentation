@@ -94,10 +94,6 @@ class kernel:
         self.test_dataset=test_dataset
         if self.data_segment_flag==True:
             self.train_data,self.train_labels=self.segment_data()
-        if type(train_data)==list:
-            self.data_batch=[x for x in range(len(train_data))]
-        if type(train_labels)==list:
-            self.labels_batch=[x for x in range(len(train_labels))]
         self.test_data=test_data
         self.test_labels=test_labels
         try:
