@@ -6,6 +6,7 @@ import os
 import time
 
 
+#You can analyze kernel by example.
 '''
 example:
 import kernel_reduced as k   #import kernel
