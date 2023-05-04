@@ -56,18 +56,18 @@ for _ in range(7):
 '''
 class kernel:
     def __init__(self,nn=None):
-        self.nn=nn
-        self.platform=None
-        self.PO=None
-        self.lock=None
-        self.process_thread=None
+        self.nn=nn  #Neural network object.
+        self.platform=None  #Platform object,kernel use it to distinguish platform you use.
+        self.PO=None  #PO object,three parallel optimization methods correspond to three numbers.
+        self.lock=None  #External incoming lock.
+        self.process_thread=None  #Process thread object,threads or processes count you use.
         self.multiprocessing_threading=None
         self.process_thread_counter=0
         self.train_ds=None
         self.data_segment_flag=False
         self.batches=None
         self.buffer_size=None
-        self.epoch_=None
+        self.epoch_=None  #Training epoch count.
         self.epoch_counter=0
         self.batch=None
         self.epoch=0
@@ -88,15 +88,16 @@ class kernel:
         self.total_time=0
     
     
+    #Turn training data into kernel's instance object.
     def data(self,train_data=None,train_labels=None,test_data=None,test_labels=None,train_dataset=None,test_dataset=None):
         self.train_data=train_data
         self.train_labels=train_labels
         self.train_dataset=train_dataset
-        self.test_dataset=test_dataset
         if self.data_segment_flag==True:
             self.train_data,self.train_labels=self.segment_data()
         self.test_data=test_data
         self.test_labels=test_labels
+        self.test_dataset=test_dataset
         try:
             if test_data==None:
                 self.test_flag=False
@@ -173,6 +174,7 @@ class kernel:
             return data,labels
     
     
+    #data_func functin be used for returning batch data and concatenating data.
     def data_func(self,data_batch=None,labels_batch=None,batch=None,index1=None,index2=None,j=None,flag=None):
         if flag==None:
             if batch!=1:
@@ -193,32 +195,10 @@ class kernel:
         return data_batch,labels_batch
     
     
-    @function(jit_compile=True)
-    def tf_opt(self,data,labels):
-        try:
-            if self.nn.GradientTape!=None:
-                tape,output,loss=self.nn.GradientTape(data,labels)
-        except AttributeError:
-            with self.platform.GradientTape(persistent=True) as tape:
-                try:
-                    output=self.nn.fp(data)
-                    loss=self.nn.loss(output,labels)
-                except TypeError:
-                    output,loss=self.nn.fp(data,labels)
-        try:
-            gradient=self.nn.gradient(tape,loss)
-        except AttributeError:
-            gradient=tape.gradient(loss,self.nn.param)
-        try:
-            self.nn.opt.apply_gradients(zip(gradient,self.nn.param))
-        except AttributeError:
-            self.nn.opt(gradient)
-        return output,loss
-    
-    
+    #Optimization subfunction,it be used for opt function,it used optimization function of tensorflow platform and parallel optimization.
     @function(jit_compile=True)
     def tf_opt_t(self,data,labels,t=None,ln=None,u=None):
-        try:
+        try:  #If neural network object have GradientTape function,kernel will use it or else use other.
             if self.nn.GradientTape!=None:
                 if type(self.process_thread)==list:
                     tape,output,loss=self.nn.GradientTape(data,labels,u)
@@ -254,7 +234,7 @@ class kernel:
             pass
         if self.PO==1:
             self.lock[0].acquire()
-            try:
+            try:  #If neural network object have gradient function,kernel will use it otherwise or else use other.
                 gradient=self.nn.gradient(tape,loss)
             except AttributeError:
                 gradient=tape.gradient(loss,self.nn.param)
@@ -281,7 +261,7 @@ class kernel:
             self.lock[0].release()
         elif self.PO==2:
             self.lock[0].acquire()
-            try:
+            try:  #If neural network object have gradient function,kernel will use it otherwise or else use other.
                 gradient=self.nn.gradient(tape,loss)
             except AttributeError:
                 gradient=tape.gradient(loss,self.nn.param)
@@ -311,6 +291,7 @@ class kernel:
         return output,loss
     
     
+    #Optimization subfunction,it be used for opt function,it used optimization function of pytorch platform.
     def pytorch_opt(self,data,labels):
         output=self.nn.fp(data)
         loss=self.nn.loss(output,labels)
@@ -323,6 +304,7 @@ class kernel:
         return output,loss
     
     
+    #Main optimization function.
     def opt(self,data,labels):
         try:
             if self.platform.DType!=None:
@@ -332,6 +314,7 @@ class kernel:
         return output,loss
     
     
+    #Main optimization function,it be used for parallel optimization.
     def opt_t(self,data,labels,t=None,u=None):
         if type(self.process_thread)==list:
             output,loss=self.tf_opt_t(data,labels,u=int(u))
@@ -340,6 +323,7 @@ class kernel:
         return output,loss
     
     
+    #Training subfunction,it be used for _train_ function and parallel training.
     def train_(self,_data_batch=None,_labels_batch=None,batch=None,batches=None,test_batch=None,index1=None,index2=None,j=None,t=None):
         if batch!=None:
             if index1==batches*batch:
@@ -424,6 +408,7 @@ class kernel:
             return
     
     
+    #Training subfunction,it be used for train function and parallel training.
     def _train_(self,batch=None,data_batch=None,labels_batch=None,test_batch=None,t=None):
         total_loss=0
         total_acc=0
@@ -492,8 +477,9 @@ class kernel:
         else:
             batch_loss,batch_acc=self.train_(data_batch,labels_batch,batch,batches,test_batch,index1,index2,j,t)
             return
+        
     
-    
+    #Training subfunction,it be used for train function and parallel training.
     def train7(self,train_ds,t,test_batch):
         if type(self.process_thread)==list:
             if self.PO==1 or self.PO==3:
@@ -599,6 +585,7 @@ class kernel:
                     return
     
     
+    #Main training function.
     def train(self,batch=None,epoch=None,test_batch=None):
         if self.process_thread!=None:
             if self.PO==1 or self.PO==3:
