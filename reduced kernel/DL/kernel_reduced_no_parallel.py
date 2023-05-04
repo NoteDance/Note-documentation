@@ -26,8 +26,8 @@ kernel.train(32,5)         #train neural network
 '''
 class kernel:
     def __init__(self,nn=None):
-        self.nn=nn
-        self.platform=None
+        self.nn=nn  #Neural network object.
+        self.platform=None  #Platform object,kernel use it to distinguish platform you use.
         self.batches=None
         self.epoch_=None
         self.epoch_counter=0
@@ -53,13 +53,14 @@ class kernel:
         self.total_time=0
     
     
+    #Turn training data into kernel's instance object.
     def data(self,train_data=None,train_labels=None,test_data=None,test_labels=None,train_dataset=None,test_dataset=None):
         self.train_data=train_data
         self.train_labels=train_labels
         self.train_dataset=train_dataset
-        self.test_dataset=test_dataset
         self.test_data=test_data
         self.test_labels=test_labels
+        self.test_dataset=test_dataset
         try:
             if test_data==None:
                 self.test_flag=False
@@ -70,6 +71,7 @@ class kernel:
         return
     
     
+    #loss_acc function be used for calculating total loss and total acc.
     def loss_acc(self,output=None,labels_batch=None,loss=None,test_batch=None,total_loss=None,total_acc=None):
         if self.batch!=None:
             total_loss+=loss
@@ -103,6 +105,7 @@ class kernel:
             return
     
     
+    #data_func functin be used for returning batch data and concatenating data.
     def data_func(self,data_batch=None,labels_batch=None,batch=None,index1=None,index2=None,j=None,flag=None):
         if flag==None:
             if batch!=1:
@@ -123,9 +126,10 @@ class kernel:
         return data_batch,labels_batch
     
     
+    #Optimization subfunction,it be used for opt function,it used optimization function of tensorflow platform.
     @function(jit_compile=True)
     def tf_opt(self,data,labels):
-        try:
+        try:  #If neural network object have GradientTape function,kernel will use it or else use other.
             if self.nn.GradientTape!=None:
                 tape,output,loss=self.nn.GradientTape(data,labels)
         except AttributeError:
@@ -135,7 +139,7 @@ class kernel:
                     loss=self.nn.loss(output,labels)
                 except TypeError:
                     output,loss=self.nn.fp(data,labels)
-        try:
+        try:  #If neural network object have gradient function,kernel will use it otherwise or else use other.
             gradient=self.nn.gradient(tape,loss)
         except AttributeError:
             gradient=tape.gradient(loss,self.nn.param)
@@ -146,6 +150,7 @@ class kernel:
         return output,loss
     
     
+    #Optimization subfunction,it be used for opt function,it used optimization function of pytorch platform.
     def pytorch_opt(self,data,labels):
         output=self.nn.fp(data)
         loss=self.nn.loss(output,labels)
@@ -158,6 +163,7 @@ class kernel:
         return output,loss
     
     
+    #Main optimization function.
     def opt(self,data,labels):
         try:
             if self.platform.DType!=None:
@@ -167,6 +173,7 @@ class kernel:
         return output,loss
     
     
+    #Training subfunction,it be used for train function and no parallel training.
     def _train(self,batch=None,_data_batch=None,_labels_batch=None,test_batch=None):
         if batch!=None:
             total_loss=0
@@ -232,6 +239,7 @@ class kernel:
         return
     
     
+    #Main training function.
     def train(self,batch=None,epoch=None,test_batch=None,save=None,one=True,p=None,s=None):
         self.batch=batch
         self.epoch=0
