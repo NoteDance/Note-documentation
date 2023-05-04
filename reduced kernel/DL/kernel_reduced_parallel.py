@@ -71,18 +71,18 @@ class kernel:
         self.epoch_counter=0
         self.batch=None
         self.epoch=0
-        self.acc_flag='%'
+        self.acc_flag='%'  #This object be used for acc printing.
         self.train_counter=0
         self.opt_counter=None
         self.train_loss=None
         self.train_acc=None
-        self.train_loss_list=[]
-        self.train_acc_list=[]
+        self.train_loss_list=[]  #This object be used for visualization function. 
+        self.train_acc_list=[]  #This object be used for visualization function. 
         self.test_loss=None
         self.test_acc=None
-        self.test_loss_list=[]
-        self.test_acc_list=[]
-        self.test_flag=False
+        self.test_loss_list=[]  #This object be used for visualization function. 
+        self.test_acc_list=[]  #This object be used for visualization function. 
+        self.test_flag=False  #If you have test data,kernel will set it to True.
         self.total_epoch=0
         self.time=0
         self.total_time=0
@@ -98,7 +98,7 @@ class kernel:
         self.test_data=test_data
         self.test_labels=test_labels
         self.test_dataset=test_dataset
-        try:
+        try:  #Because have test data,kernel set test_flag=True.
             if test_data==None:
                 self.test_flag=False
         except ValueError:
@@ -415,8 +415,8 @@ class kernel:
         batches=int((self.shape0-self.shape0%batch)/batch)
         if batch!=None:
             for j in range(batches):
-                index1=j*batch
-                index2=(j+1)*batch
+                index1=j*batch  #Use for index of batch data
+                index2=(j+1)*batch  #Use for index of batch data
                 batch_loss,batch_acc=self.train_(data_batch,labels_batch,batch,batches,test_batch,index1,index2,j,t)
                 try:
                     if self.nn.accuracy!=None:
@@ -426,8 +426,8 @@ class kernel:
                     total_loss+=batch_loss
             if self.shape0%batch!=0:
                 batches+=1
-                index1=batches*batch
-                index2=batch-(self.shape0-batches*batch)
+                index1=batches*batch  #Use for index of batch data
+                index2=batch-(self.shape0-batches*batch)  #Use for index of batch data
                 batch_loss,batch_acc=self.train_(data_batch,labels_batch,batch,batches,test_batch,index1,index2,None,t)
                 try:
                     if self.nn.accuracy!=None:
