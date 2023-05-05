@@ -207,20 +207,20 @@ class kernel:
                     loss=total_loss.numpy()/batches
             except AttributeError:
                 loss=total_loss.detach().numpy()/batches
-            try:
+            try:  #If neural network object define accuracy function,kernel will calculate mean accuracy.
                 if self.nn.accuracy!=None:
                     train_acc=total_acc.numpy()/batches
             except AttributeError:
                 pass
             self.train_loss=loss
             self.train_loss_list.append(loss)
-            try:
+            try:  #If neural network object define accuracy function,kernel append mean accuracy to acc list.
                 if self.nn.accuracy!=None:
                     self.train_acc=train_acc
                     self.train_acc_list.append(train_acc)
             except AttributeError:
                 pass
-            if self.test_flag==True:
+            if self.test_flag==True:  #If test_flag=True,kernel call test function.
                 self.test_loss,self.test_acc=self.test(self.test_data,self.test_labels,test_batch)
                 self.test_loss_list.append(self.test_loss)
                 try:
