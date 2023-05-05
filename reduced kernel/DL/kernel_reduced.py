@@ -119,7 +119,7 @@ class kernel:
         self.test_data=test_data
         self.test_labels=test_labels
         self.test_dataset=test_dataset
-        try:  #Because have test data,kernel set test_flag=True.
+        try:  #If have test data,kernel set test_flag=True.
             if test_data==None:
                 self.test_flag=False
         except ValueError:
@@ -155,7 +155,7 @@ class kernel:
                 except AttributeError:
                     pass
             try:
-                if self.nn.attenuate!=None:
+                if self.nn.attenuate!=None:  #If neural network object defining attenuate function,kernel will initialize opt_counter.
                     if type(self.process_thread)==list:
                         self.opt_counter=np.zeros([self.process_thread[0]*self.process_thread[1]],dtype=np.float32)
                     else:
@@ -199,7 +199,7 @@ class kernel:
     def loss_acc(self,output=None,labels_batch=None,loss=None,test_batch=None,total_loss=None,total_acc=None):
         if self.batch!=None:
             total_loss+=loss
-            try:  #If neural network object have accuracy function,kernel will use it to calculate accuracy.
+            try:  #If neural network object defining accuracy function,kernel will use it to calculate accuracy.
                 if self.nn.accuracy!=None:
                     batch_acc=self.nn.accuracy(output,labels_batch)
                     total_acc+=batch_acc
@@ -210,7 +210,7 @@ class kernel:
             loss=loss.numpy()
             self.train_loss=loss
             self.train_loss_list.append(loss)
-            try:  #If neural network object have accuracy function,kernel will use it to calculate accuracy.
+            try:  #If neural network object defining accuracy function,kernel will use it to calculate accuracy.
                 if self.nn.accuracy!=None:
                     acc=self.nn.accuracy(output,self.train_labels)
                     acc=acc.numpy()
@@ -218,7 +218,7 @@ class kernel:
                     self.train_acc_list.append(acc)
             except AttributeError:
                 pass
-            if self.test_flag==True:  #Because test_flag=True,kernel call test function.
+            if self.test_flag==True:  #If test_flag=True,kernel call test function.
                 if self.process_thread_t==None:
                     self.test_loss,self.test_acc=self.test(self.test_data,self.test_labels,test_batch)
                 else:
@@ -256,17 +256,17 @@ class kernel:
     #Optimization subfunction,it be used for opt function,it used optimization function of tensorflow platform.
     @function(jit_compile=True)
     def tf_opt(self,data,labels):
-        try:  #If neural network object have GradientTape function,kernel will use it or else use other.
+        try:  #If neural network object defining GradientTape function,kernel will use it or else use other.
             if self.nn.GradientTape!=None:
                 tape,output,loss=self.nn.GradientTape(data,labels)
         except AttributeError:
             with self.platform.GradientTape(persistent=True) as tape:
-                try:
+                try:  #If neural network object defining one argument value fp function,kernel will use it or else use other.
                     output=self.nn.fp(data)
                     loss=self.nn.loss(output,labels)
                 except TypeError:
                     output,loss=self.nn.fp(data,labels)
-        try:  #If neural network object have gradient function,kernel will use it otherwise or else use other.
+        try:  #If neural network object defining gradient function,kernel will use it or else use other.
             gradient=self.nn.gradient(tape,loss)
         except AttributeError:
             gradient=tape.gradient(loss,self.nn.param)
@@ -280,7 +280,7 @@ class kernel:
     #Optimization subfunction,it be used for opt function,it used optimization function of tensorflow platform and parallel optimization.
     @function(jit_compile=True)
     def tf_opt_t(self,data,labels,t=None,ln=None,u=None):
-        try:  #If neural network object have GradientTape function,kernel will use it or else use other.
+        try:  #If neural network object defining GradientTape function,kernel will use it or else use other.
             if self.nn.GradientTape!=None:
                 if type(self.process_thread)==list:
                     tape,output,loss=self.nn.GradientTape(data,labels,u)
@@ -289,7 +289,7 @@ class kernel:
         except AttributeError:
             with self.platform.GradientTape(persistent=True) as tape:
                 try:
-                    try:
+                    try:  #If neural network object defining one argument value fp function,kernel will use it or else use other.
                         output=self.nn.fp(data)
                         loss=self.nn.loss(output,labels)
                     except TypeError:
@@ -316,7 +316,7 @@ class kernel:
             pass
         if self.PO==1:
             self.lock[0].acquire()
-            try:  #If neural network object have gradient function,kernel will use it otherwise or else use other.
+            try:  #If neural network object defining gradient function,kernel will use it or else use other.
                 gradient=self.nn.gradient(tape,loss)
             except AttributeError:
                 gradient=tape.gradient(loss,self.nn.param)
@@ -343,7 +343,7 @@ class kernel:
             self.lock[0].release()
         elif self.PO==2:
             self.lock[0].acquire()
-            try:  #If neural network object have gradient function,kernel will use it otherwise or else use other.
+            try:  #If neural network object defining gradient function,kernel will use it or else use other.
                 gradient=self.nn.gradient(tape,loss)
             except AttributeError:
                 gradient=tape.gradient(loss,self.nn.param)
@@ -434,7 +434,7 @@ class kernel:
                 for j in range(batches):
                     index1=j*batch  #Use for batch data's index
                     index2=(j+1)*batch  #Use for batch data's index
-                    data_batch,labels_batch=self.data_func(_data_batch,_labels_batch,batch,index1,index2,j)
+                    data_batch,labels_batch=self.data_func(_data_batch,_labels_batch,batch,index1,index2,j)  #Return batch data.
                     output,batch_loss=self.opt(data_batch,labels_batch)
                     total_loss,total_acc=self.loss_acc(output=output,labels_batch=labels_batch,loss=batch_loss,total_loss=total_loss,total_acc=total_acc)
                     try:
@@ -445,7 +445,7 @@ class kernel:
                     batches+=1
                     index1=batches*batch  #Use for batch data's index
                     index2=batch-(self.shape0-batches*batch)  #Use for batch data's index
-                    data_batch,labels_batch=self.data_func(_data_batch,_labels_batch,batch,index1,index2,flag=True)
+                    data_batch,labels_batch=self.data_func(_data_batch,_labels_batch,batch,index1,index2,flag=True)  #Return batch data after concatenating.
                     output,batch_loss=self.opt(data_batch,labels_batch)
                     total_loss,total_acc=self.loss_acc(output=output,labels_batch=labels_batch,loss=batch_loss,total_loss=total_loss,total_acc=total_acc)
                     try:
@@ -491,7 +491,7 @@ class kernel:
     def train_(self,_data_batch=None,_labels_batch=None,batch=None,batches=None,test_batch=None,index1=None,index2=None,j=None,t=None):
         if batch!=None:
             if index1==batches*batch:
-                data_batch,labels_batch=self.data_func(_data_batch,_labels_batch,batch,index1,index2,j,True)
+                data_batch,labels_batch=self.data_func(_data_batch,_labels_batch,batch,index1,index2,j,True)  #Return batch data after concatenating.
                 output,batch_loss=self.opt_t(data_batch,labels_batch,t)
                 try:
                     self.nn.bc[t]+=1
@@ -503,7 +503,7 @@ class kernel:
                         return batch_loss,batch_acc
                 except AttributeError:
                     return batch_loss,None
-            data_batch,labels_batch=self.data_func(_data_batch,_labels_batch,batch,index1,index2,j)
+            data_batch,labels_batch=self.data_func(_data_batch,_labels_batch,batch,index1,index2,j)  #Return batch data.
             output,batch_loss=self.opt_t(data_batch,labels_batch,t)
             try:
                 self.nn.bc[t]=j
