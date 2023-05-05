@@ -124,17 +124,17 @@ class kernel:
     #Optimization subfunction,it be used for opt function,it used optimization function of tensorflow platform.
     @function(jit_compile=True)
     def tf_opt(self,data,labels):
-        try:  #If neural network object define GradientTape function,kernel will use it or else use other.
+        try:  #If neural network object define GradientTape function,kernel will use it or else use other,this design allow you to implement more complicated operations.
             if self.nn.GradientTape!=None:
                 tape,output,loss=self.nn.GradientTape(data,labels)
         except AttributeError:
             with self.platform.GradientTape(persistent=True) as tape:
-                try:  #If neural network object define one argument value fp function,kernel will use it or else use other.
+                try:  #If neural network object define one argument value fp function,kernel will use it or else use other,this design allow you to implement more complicated operations.
                     output=self.nn.fp(data)
                     loss=self.nn.loss(output,labels)
                 except TypeError:
                     output,loss=self.nn.fp(data,labels)
-        try:  #If neural network object define gradient function,kernel will use it or else use other.
+        try:  #If neural network object define gradient function,kernel will use it or else use other,this design allow you to implement more complicated operations.
             gradient=self.nn.gradient(tape,loss)
         except AttributeError:
             gradient=tape.gradient(loss,self.nn.param)
