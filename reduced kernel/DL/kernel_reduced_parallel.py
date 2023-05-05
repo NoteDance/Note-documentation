@@ -333,7 +333,7 @@ class kernel:
                     self.nn.bc[t]+=1
                 except AttributeError:
                     pass
-                try:
+                try:  #If neural network object define accuracy function,kernel will use it to calculate accuracy.
                     if self.nn.accuracy!=None:
                         batch_acc=self.nn.accuracy(output,labels_batch)
                         return batch_loss,batch_acc
@@ -345,7 +345,7 @@ class kernel:
                 self.nn.bc[t]=j
             except AttributeError:
                 pass
-            try:
+            try:  #If neural network object define accuracy function,kernel will use it to calculate accuracy.
                 if self.nn.accuracy!=None:
                     batch_acc=self.nn.accuracy(output,labels_batch)
                     return batch_loss,batch_acc
@@ -359,7 +359,7 @@ class kernel:
                 train_loss=train_loss.numpy()
                 self.train_loss=train_loss
                 self.train_loss_list.append(train_loss)
-                try:
+                try:  #If neural network object define accuracy function,kernel will use it to calculate accuracy.
                     if self.nn.accuracy!=None:
                         acc=self.nn.accuracy(output,self.train_labels)
                         acc=acc.numpy()
@@ -385,7 +385,7 @@ class kernel:
                 train_loss=train_loss.numpy()
                 self.train_loss=train_loss
                 self.train_loss_list.append(train_loss)
-                try:
+                try:  #If neural network object define accuracy function,kernel will use it to calculate accuracy.
                     if self.nn.accuracy!=None:
                         acc=self.nn.accuracy(output,self.train_labels)
                         acc=acc.numpy()
@@ -393,7 +393,7 @@ class kernel:
                         self.train_acc_list.append(acc)
                 except AttributeError:
                     pass
-                if self.test_flag==True:
+                if self.test_flag==True:  #If test_flag=True,kernel call test function.
                     if self.process_thread_t==None:
                         self.test_loss,self.test_acc=self.test(self.test_data,self.test_labels,test_batch,t)
                     else:
@@ -436,7 +436,7 @@ class kernel:
                 except AttributeError:
                     total_loss+=batch_loss
             loss=total_loss.numpy()/batches
-            try:
+            try:  #If neural network object define accuracy function,kernel will calculate mean accuracy.
                 if self.nn.accuracy!=None:
                     train_acc=total_acc.numpy()/batches
             except AttributeError:
@@ -448,13 +448,13 @@ class kernel:
             self.total_epoch+=1
             self.train_loss=loss
             self.train_loss_list.append(loss)
-            try:
+            try:  #If neural network object define accuracy function,kernel append mean accuracy to acc list.
                 if self.nn.accuracy!=None:
                     self.train_acc=train_acc
                     self.train_acc_list.append(train_acc)
             except AttributeError:
                 pass
-            if self.test_flag==True:
+            if self.test_flag==True:  #If test_flag=True,kernel call test function.
                 if self.process_thread_t==None:
                     self.test_loss,self.test_acc=self.test(self.test_data,self.test_labels,test_batch,t)
                 else:
