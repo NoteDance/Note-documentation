@@ -98,7 +98,7 @@ class kernel:
         self.test_data=test_data
         self.test_labels=test_labels
         self.test_dataset=test_dataset
-        try:  #Because have test data,kernel set test_flag=True.
+        try:  #If have test data,kernel set test_flag=True.
             if test_data==None:
                 self.test_flag=False
         except ValueError:
@@ -133,7 +133,7 @@ class kernel:
                             self.total_acc=np.zeros(self.process_thread,dtype=np.float32)
                 except AttributeError:
                     pass
-            try:
+            try:  #If neural network object defining attenuate function,kernel will initialize opt_counter.
                 if self.nn.attenuate!=None:
                     if type(self.process_thread)==list:
                         self.opt_counter=np.zeros([self.process_thread[0]*self.process_thread[1]],dtype=np.float32)
@@ -198,7 +198,7 @@ class kernel:
     #Optimization subfunction,it be used for opt function,it used optimization function of tensorflow platform and parallel optimization.
     @function(jit_compile=True)
     def tf_opt_t(self,data,labels,t=None,ln=None,u=None):
-        try:  #If neural network object have GradientTape function,kernel will use it or else use other.
+        try:  #If neural network object defining GradientTape function,kernel will use it or else use other.
             if self.nn.GradientTape!=None:
                 if type(self.process_thread)==list:
                     tape,output,loss=self.nn.GradientTape(data,labels,u)
@@ -207,7 +207,7 @@ class kernel:
         except AttributeError:
             with self.platform.GradientTape(persistent=True) as tape:
                 try:
-                    try:
+                    try:  #If neural network object defining one argument value fp function,kernel will use it or else use other.
                         output=self.nn.fp(data)
                         loss=self.nn.loss(output,labels)
                     except TypeError:
@@ -234,7 +234,7 @@ class kernel:
             pass
         if self.PO==1:
             self.lock[0].acquire()
-            try:  #If neural network object have gradient function,kernel will use it otherwise or else use other.
+            try:  #If neural network object defining gradient function,kernel will use it or else use other.
                 gradient=self.nn.gradient(tape,loss)
             except AttributeError:
                 gradient=tape.gradient(loss,self.nn.param)
@@ -261,7 +261,7 @@ class kernel:
             self.lock[0].release()
         elif self.PO==2:
             self.lock[0].acquire()
-            try:  #If neural network object have gradient function,kernel will use it otherwise or else use other.
+            try:  #If neural network object defining gradient function,kernel will use it or else use other.
                 gradient=self.nn.gradient(tape,loss)
             except AttributeError:
                 gradient=tape.gradient(loss,self.nn.param)
@@ -327,7 +327,7 @@ class kernel:
     def train_(self,_data_batch=None,_labels_batch=None,batch=None,batches=None,test_batch=None,index1=None,index2=None,j=None,t=None):
         if batch!=None:
             if index1==batches*batch:
-                data_batch,labels_batch=self.data_func(_data_batch,_labels_batch,batch,index1,index2,j,True)
+                data_batch,labels_batch=self.data_func(_data_batch,_labels_batch,batch,index1,index2,j,True)  #Return batch data after concatenating.
                 output,batch_loss=self.opt_t(data_batch,labels_batch,t)
                 try:
                     self.nn.bc[t]+=1
@@ -339,7 +339,7 @@ class kernel:
                         return batch_loss,batch_acc
                 except AttributeError:
                     return batch_loss,None
-            data_batch,labels_batch=self.data_func(_data_batch,_labels_batch,batch,index1,index2,j)
+            data_batch,labels_batch=self.data_func(_data_batch,_labels_batch,batch,index1,index2,j)  #Return batch data.
             output,batch_loss=self.opt_t(data_batch,labels_batch,t)
             try:
                 self.nn.bc[t]=j
