@@ -70,7 +70,7 @@ class kernel:
     def loss_acc(self,output=None,labels_batch=None,loss=None,test_batch=None,total_loss=None,total_acc=None):
         if self.batch!=None:
             total_loss+=loss
-            try:   #If neural network object defining accuracy function,kernel will use it to calculate accuracy.
+            try:   #If neural network object define accuracy function,kernel will use it to calculate accuracy.
                 if self.nn.accuracy!=None:
                     batch_acc=self.nn.accuracy(output,labels_batch)
                     total_acc+=batch_acc
@@ -81,7 +81,7 @@ class kernel:
             loss=loss.numpy()
             self.train_loss=loss
             self.train_loss_list.append(loss)
-            try:  #If neural network object defining accuracy function,kernel will use it to calculate accuracy.
+            try:  #If neural network object define accuracy function,kernel will use it to calculate accuracy.
                 if self.nn.accuracy!=None:
                     acc=self.nn.accuracy(output,self.train_labels)
                     acc=acc.numpy()
@@ -124,17 +124,17 @@ class kernel:
     #Optimization subfunction,it be used for opt function,it used optimization function of tensorflow platform.
     @function(jit_compile=True)
     def tf_opt(self,data,labels):
-        try:  #If neural network object defining GradientTape function,kernel will use it or else use other.
+        try:  #If neural network object define GradientTape function,kernel will use it or else use other.
             if self.nn.GradientTape!=None:
                 tape,output,loss=self.nn.GradientTape(data,labels)
         except AttributeError:
             with self.platform.GradientTape(persistent=True) as tape:
-                try:  #If neural network object defining one argument value fp function,kernel will use it or else use other.
+                try:  #If neural network object define one argument value fp function,kernel will use it or else use other.
                     output=self.nn.fp(data)
                     loss=self.nn.loss(output,labels)
                 except TypeError:
                     output,loss=self.nn.fp(data,labels)
-        try:  #If neural network object defining gradient function,kernel will use it or else use other.
+        try:  #If neural network object define gradient function,kernel will use it or else use other.
             gradient=self.nn.gradient(tape,loss)
         except AttributeError:
             gradient=tape.gradient(loss,self.nn.param)
