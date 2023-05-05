@@ -239,11 +239,11 @@ class kernel:
         self.batch=batch
         self.epoch=0
         self.train_counter+=1
-        if p==None:
+        if p==None:  #p and self.p variable be used for controlling printing count.
             self.p=9
         else:
             self.p=p-1
-        if s==None:
+        if s==None:  #s and self.s variable be used for controlling saving files.
             self.s=1
             self.file_list=None
         else:
