@@ -129,7 +129,7 @@ class kernel:
                 tape,output,loss=self.nn.GradientTape(data,labels)
         except AttributeError:
             with self.platform.GradientTape(persistent=True) as tape:
-                try:  #If neural network object define one argument value fp function,kernel will use it or else use other,this design allow you to implement more complicated operations.
+                try:  #If neural network object define one argument value fp(forward propagation) function,kernel will use it or else use other,this design allow you to implement more complicated operations.
                     output=self.nn.fp(data)
                     loss=self.nn.loss(output,labels)
                 except TypeError:
