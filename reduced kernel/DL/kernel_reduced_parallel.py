@@ -133,7 +133,7 @@ class kernel:
                             self.total_acc=np.zeros(self.process_thread,dtype=np.float32)
                 except AttributeError:
                     pass
-            try:  #If neural network object define attenuate function,kernel will initialize opt_counter.
+            try:  #If neural network object defining attenuate function,kernel will initialize opt_counter(optimization counter).
                 if self.nn.attenuate!=None:
                     if type(self.process_thread)==list:
                         self.opt_counter=np.zeros([self.process_thread[0]*self.process_thread[1]],dtype=np.float32)
@@ -207,7 +207,7 @@ class kernel:
         except AttributeError:
             with self.platform.GradientTape(persistent=True) as tape:
                 try:
-                    try:  #If neural network object define one argument value fp function,kernel will use it or else use other,this design allow you to implement more complicated operations.
+                    try:  #If neural network object define one argument value fp(forward propagation) function,kernel will use it or else use other,this design allow you to implement more complicated operations.
                         output=self.nn.fp(data)
                         loss=self.nn.loss(output,labels)
                     except TypeError:
