@@ -155,7 +155,7 @@ class kernel:
                 except AttributeError:
                     pass
             try:
-                if self.nn.attenuate!=None:  #If neural network object defining attenuate function,kernel will initialize opt_counter.
+                if self.nn.attenuate!=None:  #If neural network object defining attenuate function,kernel will initialize opt_counter(optimization counter).
                     if type(self.process_thread)==list:
                         self.opt_counter=np.zeros([self.process_thread[0]*self.process_thread[1]],dtype=np.float32)
                     else:
@@ -261,7 +261,7 @@ class kernel:
                 tape,output,loss=self.nn.GradientTape(data,labels)
         except AttributeError:
             with self.platform.GradientTape(persistent=True) as tape:
-                try:  #If neural network object define one argument value fp function,kernel will use it or else use other,this design allow you to implement more complicated operations.
+                try:  #If neural network object define one argument value fp(forward propagation) function,kernel will use it or else use other,this design allow you to implement more complicated operations.
                     output=self.nn.fp(data)
                     loss=self.nn.loss(output,labels)
                 except TypeError:
@@ -289,7 +289,7 @@ class kernel:
         except AttributeError:
             with self.platform.GradientTape(persistent=True) as tape:
                 try:
-                    try:  #If neural network object define one argument value fp function,kernel will use it or else use other,this design allow you to implement more complicated operations.
+                    try:  #If neural network object define one argument value fp(forward propagation) function,kernel will use it or else use other,this design allow you to implement more complicated operations.
                         output=self.nn.fp(data)
                         loss=self.nn.loss(output,labels)
                     except TypeError:
