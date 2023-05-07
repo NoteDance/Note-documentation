@@ -2,7 +2,7 @@ import tensorflow as tf
 from tensorflow.keras import layers,models
 
 
-class cifar:
+class cnn:
     def __init__(self):
         self.model=models.Sequential()
         self.model.add(layers.Conv2D(32,(3,3),activation='relu',input_shape=(32,32,3)))
