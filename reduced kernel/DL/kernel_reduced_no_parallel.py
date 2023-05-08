@@ -28,7 +28,6 @@ class kernel:
     def __init__(self,nn=None):
         self.nn=nn  #Neural network object.
         self.platform=None  #Platform object,kernel use it to distinguish platform you use.
-        self.batches=None
         self.batch=None
         self.epoch=0
         self.acc_flag='%'  #This object be used for acc printing.
