@@ -44,6 +44,6 @@ class nn:               #A neural network class example,use optimizer written by
         return self.loss_object(labels,output)
     
 
-    def opt(self,gradient,param): #optimization function,kernel uses it to optimize.
-        self.optimizer.opt(gradient,param)
+    def opt(self,gradient): #optimization function,kernel uses it to optimize.
+        self.optimizer.opt(gradient,self.param)
         return
