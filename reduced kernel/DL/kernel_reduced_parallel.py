@@ -84,8 +84,6 @@ class kernel:
         self.test_acc_list=[]  #This object be used for visualization function. 
         self.test_flag=False  #If you have test data,kernel will set it to True.
         self.total_epoch=0
-        self.time=0
-        self.total_time=0
     
     
     #Turn training data into kernel's instance object.
