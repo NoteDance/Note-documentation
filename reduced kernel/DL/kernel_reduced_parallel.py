@@ -291,29 +291,6 @@ class kernel:
         return output,loss
     
     
-    #Optimization subfunction,it be used for opt function,it used optimization function of pytorch platform.
-    def pytorch_opt(self,data,labels):
-        output=self.nn.fp(data)
-        loss=self.nn.loss(output,labels)
-        try:
-            self.nn.opt.zero_grad()
-            loss.backward()
-            self.nn.opt.step()
-        except:
-            self.nn.opt(loss)
-        return output,loss
-    
-    
-    #Main optimization function.
-    def opt(self,data,labels):
-        try:
-            if self.platform.DType!=None:
-                output,loss=self.tf_opt(data,labels)
-        except AttributeError:
-            output,loss=self.pytorch_opt(data,labels)
-        return output,loss
-    
-    
     #Main optimization function,it be used for parallel optimization.
     def opt_t(self,data,labels,t=None,u=None):
         if type(self.process_thread)==list:
