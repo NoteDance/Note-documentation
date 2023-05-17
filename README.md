@@ -236,35 +236,6 @@ for _ in range(6):
 loss,acc=test.loss_acc()
 ```
 
-**You can download neural network example in this link,and then you can import neural network and train with kernel,link and example code are below.**
-
-https://github.com/NoteDancing/Note-documentation/blob/Note-7.0-pv/Note%207.0%20pv%20documentation/DL/neural%20network/tensorflow/process/nn.py
-
-**multiprocessing example(parallel test):**
-```python
-import Note.DL.process.kernel as k   #import kernel
-import tensorflow as tf
-import nn as n                          #import neural network
-from multiprocessing import Process,Lock,Manager
-mnist=tf.keras.datasets.mnist
-(x_train,y_train),(x_test,y_test)=mnist.load_data()
-x_train,x_test =x_train/255.0,x_test/255.0
-x_train=x_train.reshape([60000,784])
-nn=n.nn()                                #create neural network object
-kernel=k.kernel(nn)                 #start kernel
-kernel.process=7      #7 processes to train
-kernel.data_segment_flag=True
-kernel.epoch_=6                #epoch:6
-kernel.PO=1
-kernel.process_t=2                #test process count
-kernel.data(x_train,y_train,x_test,y_test)
-manager=Manager()              #create manager object
-kernel.init(manager,1875)
-lock=[Lock(),Lock(),Lock()]
-for _ in range(7):
-    Process(target=kernel.train,args=(32,lock,32)).start()
- ```
-
 
 # Test neural network:
 ## DL:
