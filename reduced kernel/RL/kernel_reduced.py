@@ -62,7 +62,6 @@ class kernel:
         self.pool_lock=[]
         self.probability_list=[]
         self.running_flag_list=[]
-        self.direction_index=0
         self.finish_list=[]
         self.running_flag=np.array(0,dtype=np.int8)
         self.PN=True
@@ -140,7 +139,7 @@ class kernel:
                 if type(self.state_pool[index])==np.ndarray and len(self.state_pool[index])>self.pool_size:
                     self.state_pool[index]=self.state_pool[index][1:]
                     self.action_pool[index]=self.action_pool[index][1:]
-                    self.next_state_pool[t]=self.next_state_pool[index][1:]
+                    self.next_state_pool[index]=self.next_state_pool[index][1:]
                     self.reward_pool[index]=self.reward_pool[index][1:]
                     self.done_pool[index]=self.done_pool[index][1:]
             except:
