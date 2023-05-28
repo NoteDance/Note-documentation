@@ -45,7 +45,7 @@ class nn:               #A neural network class example,use optimizer written by
         self.param=[self.weight1,self.weight2,self.weight3,self.bias1,self.bias2,self.bias3] #parameter list,kernel uses it list for backpropagation.
         self.loss_object=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
         self.optimizer=Adam() #optimizer,kernel uses it to optimize.
-        self.bc=0 #batch counter,kernel use it to count.
+        self.bc=tf.Variable(0,dtype=tf.float64) #batch counter,kernel use it to count.
         self.info='example'
     
     
