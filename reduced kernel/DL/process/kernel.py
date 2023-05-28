@@ -280,6 +280,8 @@ class kernel:
                 gradient=tape.gradient(loss,self.nn.param)
             lock[0].release()
             lock[1].acquire()
+            if self.stop_func_(lock[1]):
+                return None,0
             try:
                 if self.nn.attenuate!=None:
                     gradient=self.nn.attenuate(gradient,self.opt_counter,p)
