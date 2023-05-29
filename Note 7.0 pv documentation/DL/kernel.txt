@@ -34,72 +34,11 @@ kernel.train(32,5)         #train neural network
 
 -----------------------------------------------------------------------------------------
 Parallel optimization:
-You can use parallel optimization to speed up your training,parallel optimization speed up training by multithreading.
+You can use parallel optimization to speed up your training,parallel optimization speed up training by multiprocessing.
 Note have two types of parallel optimization:
 1. parallel forward propagation and optimizing.
 2. parallel forward propagation and calculate a gradient and optimizing.
 3. parallel forward propagation and calculate multiple gradients and optimizing.
-
-
-Multithreading：
-example:
-import Note.create.DL.kernel as k   #import kernel
-import tensorflow as tf                   #import platform
-import cnn as c                               #import neural network
-import threading
-mnist=tf.keras.datasets.mnist
-(x_train,y_train),(x_test,y_test)=mnist.load_data()
-x_train,x_test =x_train/255.0,x_test/255.0
-y_train=tf.one_hot(y_train,10)
-cnn=c.cnn()                                #create neural network object
-kernel=k.kernel(cnn)   #start kernel
-kernel.platform=tf                            #use platform
-kernel.thread=2                        #thread count
-kernel.PO=1 or kernel.PO=2
-kernel.data(x_train,y_train)   #input you data
-kernel.thread_lock=[threading.Lock(),threading.Lock()] or kernel.thread_lock=[threading.Lock(),threading.Lock()]
-class thread(threading.Thread):
-	def run(self):
-		kernel.train(32,3)
-for _ in range(2):
-	_thread=thread()
-	_thread.start()
-for _ in range(2):
-	_thread.join()
-
-
-Stop multithreading training and saving when condition is met.
-example:
-import Note.create.DL.kernel as k  #import kernel
-import tensorflow as tf                  #import platform
-import cnn as c                              #import neural network
-import threading
-mnist=tf.keras.datasets.mnist
-(x_train,y_train),(x_test,y_test)=mnist.load_data()
-x_train,x_test =x_train/255.0,x_test/255.0
-y_train=tf.one_hot(y_train,10)
-cnn=c.cnn()                                #create neural network object
-kernel=k.kernel(cnn)   #start kernel
-kernel.platform=tf                            #use platform
-kernel.stop=True
-kernel.end_loss=0.7
-kernel.thread=2                        #thread count
-kernel.PO=1 or kernel.PO=2
-kernel.data(x_train,y_train)   #input you data
-kernel.thread_lock=[threading.Lock(),threading.Lock()] or kernel.thread_lock=[threading.Lock(),threading.Lock()]
-class thread(threading.Thread):
-	def run(self):
-		kernel.train(32,3)
-for _ in range(2):
-	_thread=thread()
-	_thread.start()
-for _ in range(2):
-	_thread.join()
-
-
-----------------------------------------------------------------------------------------
-Add threads:
-add_threads(self,thread)
 
 
 ----------------------------------------------------------------------------------------
@@ -114,12 +53,6 @@ If you want to train your neural network again.
 import Note.create.DL.kernel as k
 kernel=k.kernel()   #don't need neural network object.
 kernel.restore(s_path,p_path)   #use this API to restore your neural network and param file.
-
-
------------------------------------------------------------------------------------------
-This kernel API can set end condition for training.
-set_end(self,end_loss=None,end_acc=None,end_test_loss=None,end_test_acc=None)
-kernel.set_end(end condition)   #use set_end() by kernel
 
 
 -----------------------------------------------------------------------------------------
@@ -160,11 +93,8 @@ self.train_counter: count the number of times the train function has been used
 Kernel's methon object:
 data(self,train_data,train_labels,test_data=None,test_labels=None): assign data for self.train_data,self.train_labels,self.test_data,self.test_labels
 init(self,param=None): initialize some kernel's instance
-add_threads(self,thread): add thread count
 apply_gradient(self,tape,opt,loss,parameter): optimize neural network
 loss_acc(self,output=None,labels_batch=None,loss=None,test_batch=None,total_loss=None,total_acc=None,t=None): compute loss and acc
-core_opt(self,output,loss,t=None): optimize neural network
-core_opt_t(self,data,labels,t): optimize neural network by multithreading
 train(self,batch=None,epoch=None,test_batch=None,file_path=None,one=True,p=None,s=None): train neural network
 test(self,test_data,test_labels,batch=None,t=None): output test loss and test acc
 suspend_func(self): be used to suspend training
