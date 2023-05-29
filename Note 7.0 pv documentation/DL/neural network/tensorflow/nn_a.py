@@ -13,6 +13,7 @@ class nn:
         self.param=self.model.weights
         self.loss_object=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
         self.opt=tf.keras.optimizers.Adam(learning_rate=0.001)
+        self.opt_counter=tf.Variable(tf.zeros(3,dtype=tf.float64))
     
     
     def fp(self,data):
