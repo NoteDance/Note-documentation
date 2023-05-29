@@ -11,10 +11,6 @@ import os
 class kernel:
     def __init__(self,nn=None):
         self.nn=nn  #Neural network object.
-        try:
-            self.nn.km=1
-        except AttributeError:
-            pass
         self.PO=None  #PO object,two parallel optimization methods correspond to three numbers.
         self.process=None  #processes count you use.
         self.train_ds=None
@@ -35,7 +31,6 @@ class kernel:
         self.end_test_acc=None
         self.acc_flag='%'  #This object be used for acc printing.
         self.train_counter=0
-        self.opt_counter=None
         self.muti_p=None
         self.muti_s=None
         self.muti_save=1
@@ -70,15 +65,6 @@ class kernel:
             self.test_flag=True
         self.batch_counter=np.zeros(self.process,dtype=np.int32)
         self.total_loss=np.zeros(self.process,dtype=np.float32)
-        try:  #If neural network object defining attenuate function,kernel will initialize opt_counter(optimization counter).
-            if self.nn.attenuate!=None:
-                self.opt_counter=np.zeros(self.process,dtype=np.float32)
-        except AttributeError:
-            pass
-        try:
-            self.nn.bc=np.zeros(self.process,dtype=np.float32)
-        except AttributeError:
-            pass
         if self.train_dataset==None:
             if type(self.train_data)==list:
                 self.shape0=train_data[0].shape[0]
@@ -136,19 +122,6 @@ class kernel:
                     self.test_acc=Value('f',self.test_acc)
                     self.test_acc_list=manager.list(self.test_acc_list)
         except AttributeError:   
-            pass
-        try:
-            if self.nn.attenuate!=None:
-              self.opt_counter=Array('f',self.opt_counter)  
-        except AttributeError:   
-            pass
-        try:
-            self.nn.ec=Value('f',self.nn.ec)  
-        except AttributeError:
-            pass
-        try:
-            self.nn.bc=Array('f',self.nn.bc)  
-        except AttributeError:
             pass
         self.stop_flag=Value('b',self.stop_flag)
         self.save_flag=Value('b',self.save_flag)
@@ -241,11 +214,6 @@ class kernel:
                         loss=self.nn.loss(output,labels)
                     except TypeError:
                         output,loss=self.nn.fp(data,labels,p)
-        try:
-            if self.nn.attenuate!=None:
-                self.opt_counter[p]=0
-        except AttributeError:
-            pass
         if self.PO==1:
             lock[0].acquire()
             if self.stop_func_(lock[0]):
@@ -255,20 +223,9 @@ class kernel:
             except AttributeError:
                 gradient=tape.gradient(loss,self.nn.param)
             try:
-                if self.nn.attenuate!=None:
-                    gradient=self.nn.attenuate(gradient,self.opt_counter,p)
-            except AttributeError:
-                pass
-            try:
                 param=self.nn.opt(gradient)
             except TypeError:
                 param=self.nn.opt(gradient,p)
-            try:
-                if self.nn.attenuate!=None:
-                    for i in range(len(self.opt_counter)):
-                        self.opt_counter[i]+=1
-            except AttributeError:
-                pass
             lock[0].release()
         elif self.PO==2:
             lock[0].acquire()
@@ -283,20 +240,9 @@ class kernel:
             if self.stop_func_(lock[1]):
                 return None,0
             try:
-                if self.nn.attenuate!=None:
-                    gradient=self.nn.attenuate(gradient,self.opt_counter,p)
-            except AttributeError:
-                pass
-            try:
                 param=self.nn.opt(gradient)
             except TypeError:
                 param=self.nn.opt(gradient,p)
-            try:
-                if self.nn.attenuate!=None:
-                    for i in range(len(self.opt_counter)):
-                        self.opt_counter[i]+=1
-            except AttributeError:
-                pass
             lock[1].release()
         return output,loss,param
     
@@ -323,10 +269,6 @@ class kernel:
                 output,batch_loss,param=self.opt_t(data_batch,labels_batch,p,lock)
                 self.param[7]=param
                 try:
-                    self.nn.bc[p]+=1
-                except AttributeError:
-                    pass
-                try:
                     if self.nn.accuracy!=None:
                         batch_acc=self.nn.accuracy(output,labels_batch)
                 except AttributeError:
@@ -344,8 +286,8 @@ class kernel:
                     lock[2].acquire()
                 batches=np.sum(self.batch_counter)
                 if batches>=self.batches:
-                    for i in range(len(self.batch_counter)):
-                        self.batch_counter[i]=0
+                    batch_counter=np.frombuffer(self.batch_counter.get_obj(),dtype='i')
+                    batch_counter*=0
                     loss=np.sum(self.total_loss)/batches
                     try:
                         if self.nn.accuracy!=None:
@@ -371,22 +313,8 @@ class kernel:
                         pass
                     self.print_save()
                     self.epoch_counter.value+=1
-                    try:
-                        self.nn.bc[p]=0
-                    except AttributeError:
-                        pass
-                    try:
-                        self.nn.ec.value+=1
-                    except AttributeError:
-                        pass
-                    for i in range(len(self.total_loss)):
-                        self.total_loss[i]=0
-                    try:
-                        if self.nn.accuracy!=None:
-                            for i in range(len(self.total_acc)):
-                                self.total_acc[i]=0
-                    except AttributeError:
-                        pass
+                    total_loss=np.frombuffer(self.total_loss.get_obj(),dtype='f')
+                    total_loss*=0
                 if self.PO==1:
                     lock[1].release()
                 else:
@@ -784,18 +712,12 @@ class kernel:
             pickle.dump(self.test_acc_list,output_file)
         pickle.dump(self.total_epoch.value,output_file)
         output_file.close()
-        if self.save_flag==True:
-            print('\nSystem have stopped,Neural network have saved.')
         return
     
 	
     def restore(self,s_path):
         input_file=open(s_path,'rb')
         self.nn=pickle.load(input_file)
-        try:
-            self.nn.km=1
-        except AttributeError:
-            pass
         self.param[7]=pickle.load(input_file)
         self.batch=pickle.load(input_file)
         self.end_loss=pickle.load(input_file)
