@@ -1,6 +1,6 @@
 import tensorflow as tf
 import gym
-import Note.DL.process.optimizer as o
+import Note.nn.process.optimizer as o
 
 
 class Qnet:
