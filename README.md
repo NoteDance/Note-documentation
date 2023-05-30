@@ -245,34 +245,6 @@ kernel.visualize_train()
 ```
 
 ## RL：
-### Stop training and saving when condition is met:
-**multithreading example(Stop training and saving when condition is met.):**
-```python
-import Note.RL.kernel as k   #import kernel
-import DQN as d
-import threading
-dqn=d.DQN(4,128,2)                               #create neural network object
-kernel=k.kernel(dqn,5)   #start kernel,use 5 thread to train
-kernel.stop=True
-kernel.action_count=2
-kernel.set_up(epsilon=0.01,pool_size=10000,batch=64,update_step=10,trial_count=10,criterion=200)
-kernel.PO=1
-kernel.threading=threading
-kernel.lock=[threading.Lock(),threading.Lock(),threading.Lock()]
-class thread(threading.Thread):
-	def run(self):
-		kernel.train(100)
-for _ in range(5):
-	_thread=thread()
-	_thread.start()
-for _ in range(5):
-	_thread.join()
-kernel.loss_list or kernel.loss       #view training loss
-kernel.visualize_train()
-kernel.reward                         #view reward
-kernel.visualize_reward()
-```
-
 ### Pool Network:
 **You can download neural network example in this link,and then you can import neural network and train with kernel,link and example code are below.**
 
@@ -324,6 +296,34 @@ for _ in range(5):
 for _ in range(5):
 	_thread.join()
 kernel.visualize_train()
+kernel.visualize_reward()
+```
+
+### Stop training and saving when condition is met:
+**multithreading example(Stop training and saving when condition is met.):**
+```python
+import Note.RL.kernel as k   #import kernel
+import DQN as d
+import threading
+dqn=d.DQN(4,128,2)                               #create neural network object
+kernel=k.kernel(dqn,5)   #start kernel,use 5 thread to train
+kernel.stop=True
+kernel.action_count=2
+kernel.set_up(epsilon=0.01,pool_size=10000,batch=64,update_step=10,trial_count=10,criterion=200)
+kernel.PO=1
+kernel.threading=threading
+kernel.lock=[threading.Lock(),threading.Lock(),threading.Lock()]
+class thread(threading.Thread):
+	def run(self):
+		kernel.train(100)
+for _ in range(5):
+	_thread=thread()
+	_thread.start()
+for _ in range(5):
+	_thread.join()
+kernel.loss_list or kernel.loss       #view training loss
+kernel.visualize_train()
+kernel.reward                         #view reward
 kernel.visualize_reward()
 ```
 
