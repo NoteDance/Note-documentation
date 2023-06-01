@@ -518,3 +518,12 @@ kernel.platform=tf                       #use platform
 kernel.data(x_train,y_train)   #input you data
 kernel.train(32,5)         #train neural network
 ```
+
+
+# Note Compiler:
+documentation:https://github.com/NoteDancing/Note-documentation/tree/Note-7.0-pv/Note%207.0%20pv%20documentation/compiler
+```python
+import Note.nc as nc
+c=nc.compiler('nn.n')
+c.Compile()
+```
