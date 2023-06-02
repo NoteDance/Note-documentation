@@ -208,11 +208,7 @@ for _ in range(2):
 	_thread.join()
 kernel.visualize_train()
 ```
-**Gradient Attenuation：**
 
-**Calculate the attenuation coefficient based on the optimization counter using the attenuation function.**
-
-**example:https://github.com/NoteDancing/Note-documentation/blob/Note-7.0-pv/Note%207.0%20pv%20documentation/DL/neural%20network/tensorflow/nn_a.py**
 ### Stop training and saving when condition is met:
 **multithreading example(Stop training and saving when condition is met.):**
 ```python
@@ -244,6 +240,12 @@ kernel.train_loss_list or kernel.train_loss       #view training loss
 kernel.visualize_train()
 ```
 
+**Gradient Attenuation：**
+
+**Calculate the attenuation coefficient based on the optimization counter using the attenuation function.**
+
+**example:https://github.com/NoteDancing/Note-documentation/blob/Note-7.0-pv/Note%207.0%20pv%20documentation/DL/neural%20network/tensorflow/nn_a.py**
+
 ## RL：
 ### Pool Network:
 **You can download neural network example in this link,and then you can import neural network and train with kernel,link and example code are below.**
@@ -261,31 +263,6 @@ kernel.action_count=2
 kernel.set_up(epsilon=0.01,pool_size=10000,batch=64,update_step=10)
 kernel.PO=1                    #use PO1
 kernel.threading=threading
-kernel.lock=[threading.Lock(),threading.Lock(),threading.Lock()]
-class thread(threading.Thread):
-	def run(self):
-		kernel.train(100)
-for _ in range(5):
-	_thread=thread()
-	_thread.start()
-for _ in range(5):
-	_thread.join()
-kernel.visualize_train()
-kernel.visualize_reward()
-```
-
-**multithreading example:**
-```python
-import Note.RL.thread.kernel as k   #import kernel
-import DQN as d
-import threading
-dqn=d.DQN(4,128,2)                               #create neural network object
-kernel=k.kernel(dqn,5)   #start kernel,use 5 thread to train
-kernel.action_count=2
-kernel.set_up(epsilon=0.01,pool_size=10000,batch=64,update_step=10)
-kernel.PO=3                    #use PO3
-kernel.threading=threading
-kernel.max_lock=5
 kernel.lock=[threading.Lock(),threading.Lock(),threading.Lock()]
 class thread(threading.Thread):
 	def run(self):
