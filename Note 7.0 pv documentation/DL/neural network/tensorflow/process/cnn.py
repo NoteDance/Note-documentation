@@ -9,6 +9,7 @@ class cnn:
     def __init__(self):
         self.loss_object=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
         self.optimizer=o.Adam()
+        self.bc=tf.Variable(0,dtype=tf.float64)
     
     
     def build(self):
@@ -46,5 +47,5 @@ class cnn:
     
     
     def opt(self,gradient):
-        param=self.optimizer.opt(gradient,self.param)
+        param=self.optimizer.opt(gradient,self.param,self.bc)
         return param
