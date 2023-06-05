@@ -478,11 +478,11 @@ kernel.train_ol()         #train neural network
 # Layer:
 **You can download neural network example in this link,and then you can import neural network and train with kernel,link and example code are below.**
 
-https://github.com/NoteDancing/Note-documentation/blob/Note-7.0-pv/Note%207.0%20pv%20documentation/DL/neural%20network/tensorflow/nn_layer.py
+https://github.com/NoteDancing/Note-documentation/blob/Note-7.0-pv/Note%207.0%20pv%20documentation/DL/neural%20network/tensorflow/layer/nn.py
 ```python
 import Note.DL.kernel as k   #import kernel
 import tensorflow as tf              #import platform
-import nn_layer as n                          #import neural network
+import nn as n                          #import neural network
 mnist=tf.keras.datasets.mnist
 (x_train,y_train),(x_test,y_test)=mnist.load_data()
 x_train,x_test =x_train/255.0,x_test/255.0
