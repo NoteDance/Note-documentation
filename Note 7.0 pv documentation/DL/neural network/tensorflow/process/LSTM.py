@@ -15,8 +15,8 @@ class lstm:
 
     def build(self):
         # Create two LSTM layers with 50 hidden units each
-        self.lstm1=LSTM(weight_shape=(3,50),timestep=10,return_sequence=True) # First LSTM layer that returns the full sequence
-        self.lstm2=LSTM(weight_shape=(50,50),timestep=10) # Second LSTM layer that returns the last output only
+        self.lstm1=LSTM(weight_shape=(3,50),return_sequence=True) # First LSTM layer that returns the full sequence
+        self.lstm2=LSTM(weight_shape=(50,50),) # Second LSTM layer that returns the last output only
         # Create a dense layer with 10 output units
         self.dense=dense([50, 10])
         # Store the parameters of the layers in a list
