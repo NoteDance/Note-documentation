@@ -14,7 +14,7 @@ class cnn:
         # Initialize the alpha parameter for mixup
         self.alpha=1.0
         # Initialize a variable to keep track of the batch count
-        self.bc=tf.Variable(0,dtype=tf.float64)
+        self.bc=tf.Variable(0,dtype=tf.float32)
     
     
     def build(self):
