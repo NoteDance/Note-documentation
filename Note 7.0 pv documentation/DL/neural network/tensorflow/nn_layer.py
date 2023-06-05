@@ -1,5 +1,6 @@
 import tensorflow as tf
 import Note.nn.layer.dense as d
+from Note.nn.layer.flatten import flatten
 
 
 class nn:
@@ -17,6 +18,7 @@ class nn:
     
     
     def fp(self,data):
+        data=flatten(data)
         output1=self.layer1.output(data)
         output2=self.layer2.output(output1)
         return output2
