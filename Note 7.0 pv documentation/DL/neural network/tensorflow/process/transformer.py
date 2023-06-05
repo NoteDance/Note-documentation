@@ -6,7 +6,7 @@ from Note.nn.layer.emdedding import embedding
 from Note.nn.positional_encoding import positional_encoding
 
 # Define a positional encoding transformer neural network class
-class tnn:
+class Transformer:
     def __init__(self,vocab_size,embed_size,num_heads,num_layers,max_len):
         self.vocab_size=vocab_size
         self.embed_size=embed_size
