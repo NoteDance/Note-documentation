@@ -11,7 +11,7 @@ class cnn:
         self.loss_object=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
         self.optimizer=o.Adam()
         # Initialize a variable to keep track of the batch count
-        self.bc=tf.Variable(0,dtype=tf.float64)
+        self.bc=tf.Variable(0,dtype=tf.float32)
     
     
     def build(self):
