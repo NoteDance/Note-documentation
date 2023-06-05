@@ -1,5 +1,6 @@
 import tensorflow as tf
 import Note.nn.process.optimizer as o
+from Note.nn.layer.flatten import flatten
 
 # Define a neural network class
 class nn:
@@ -20,6 +21,7 @@ class nn:
     
     def fp(self,data):
         # Perform forward propagation on the input data
+        data=flatten(data)
         layer1=tf.nn.relu(tf.matmul(data,self.weight1)+self.bias1) # First layer with relu activation
         layer2=tf.nn.relu(tf.matmul(layer1,self.weight2)+self.bias2) # Second layer with relu activation
         output=tf.matmul(layer2,self.weight3)+self.bias3 # Output layer with linear activation
