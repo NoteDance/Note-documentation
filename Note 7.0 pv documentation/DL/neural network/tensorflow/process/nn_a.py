@@ -1,6 +1,7 @@
 import tensorflow as tf
 import Note.nn.layer.dense as d
 import Note.nn.process.optimizer as o
+from Note.nn.layer.flatten import flatten
 
 # Define a neural network class with gradient attenuation
 class nn:
@@ -23,6 +24,7 @@ class nn:
     
     def fp(self,data):
         # Perform forward propagation on the input data
+        data=flatten(data)
         output1=self.layer1.output(data)
         output2=self.layer2.output(output1)
         return output2
