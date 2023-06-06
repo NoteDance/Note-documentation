@@ -35,7 +35,7 @@ class cnn:
     
     def data_func(self,data_batch,labels_batch):
         # Apply mixup augmentation on the input data and labels
-        return lmix(data_batch,labels_batch,self.alpha,128)
+        return lmix(data_batch,labels_batch,self.alpha)
     
     
     def fp(self,data):
