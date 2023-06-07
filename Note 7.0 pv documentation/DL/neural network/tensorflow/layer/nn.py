@@ -6,7 +6,6 @@ from Note.nn.layer.flatten import flatten
 class nn:
     def __init__(self):
         self.loss_object=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-        self.train_accuracy=tf.keras.metrics.SparseCategoricalAccuracy(name='train_accuracy')
         self.opt=tf.keras.optimizers.Adam()
     
     
