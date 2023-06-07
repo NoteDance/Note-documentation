@@ -51,10 +51,6 @@ class kernel:
         self.train_data=train_data
         self.train_labels=train_labels
         self.train_dataset=train_dataset
-        if type(train_data)==list:
-            self.data_batch=[x for x in range(len(train_data))]
-        if type(train_labels)==list:
-            self.labels_batch=[x for x in range(len(train_labels))]
         self.test_data=test_data
         self.test_labels=test_labels
         self.test_dataset=test_dataset
@@ -292,10 +288,6 @@ class kernel:
     
     
     def test(self,test_data=None,test_labels=None,batch=None,p=None):
-        if type(test_data)==list:
-            data_batch=[x for x in range(len(test_data))]
-        if type(test_labels)==list:
-            labels_batch=[x for x in range(len(test_labels))]
         if batch!=None:
             total_loss=0
             total_acc=0
@@ -316,25 +308,13 @@ class kernel:
             else:
                 total_loss=0
                 total_acc=0
-                if type(test_data)==list:
-                    batches=int((test_data[0].shape[0]-test_data[0].shape[0]%batch)/batch)
-                    shape0=test_data[0].shape[0]
-                else:
-                    batches=int((test_data.shape[0]-test_data.shape[0]%batch)/batch)
-                    shape0=test_data.shape[0]
+                batches=int((test_data.shape[0]-test_data.shape[0]%batch)/batch)
+                shape0=test_data.shape[0]
                 for j in range(batches):
                     index1=j*batch
                     index2=(j+1)*batch
-                    if type(test_data)==list:
-                        for i in range(len(test_data)):
-                            data_batch[i]=test_data[i][index1:index2]
-                    else:
-                        data_batch=test_data[index1:index2]
-                    if type(test_labels)==list:
-                        for i in range(len(test_labels)):
-                            labels_batch[i]=test_labels[i][index1:index2]
-                    else:
-                        labels_batch=test_labels[index1:index2]
+                    data_batch=test_data[index1:index2]
+                    labels_batch=test_labels[index1:index2]
                     try:
                         output=self.nn.fp(data_batch)
                     except TypeError:
@@ -352,27 +332,11 @@ class kernel:
                     index1=batches*batch
                     index2=batch-(shape0-batches*batch)
                     try:
-                        if type(test_data)==list:
-                            for i in range(len(test_data)):
-                                data_batch[i]=tf.concat([test_data[i][index1:],test_data[i][:index2]],0)
-                        else:
-                            data_batch=tf.concat([test_data[index1:],test_data[:index2]],0)
-                        if type(self.test_labels)==list:
-                            for i in range(len(test_labels)):
-                                labels_batch[i]=tf.concat([test_labels[i][index1:],test_labels[i][:index2]],0)
-                        else:
-                            labels_batch=tf.concat([test_labels[index1:],test_labels[:index2]],0)
+                        data_batch=tf.concat([test_data[index1:],test_data[:index2]],0)
+                        labels_batch=tf.concat([test_labels[index1:],test_labels[:index2]],0)
                     except:
-                        if type(test_data)==list:
-                            for i in range(len(test_data)):
-                                data_batch[i]=tf.concat([test_data[i][index1:],test_data[i][:index2]],0)
-                        else:
-                            data_batch=tf.concat([test_data[index1:],test_data[:index2]],0)
-                        if type(self.test_labels)==list:
-                            for i in range(len(test_labels)):
-                                labels_batch[i]=tf.concat([test_labels[i][index1:],test_labels[i][:index2]],0)
-                        else:
-                            labels_batch=tf.concat([test_labels[index1:],test_labels[:index2]],0)
+                        data_batch=tf.concat([test_data[index1:],test_data[:index2]],0)
+                        labels_batch=tf.concat([test_labels[index1:],test_labels[:index2]],0)
                     try:
                         output=self.nn.fp(data_batch)
                     except TypeError:
