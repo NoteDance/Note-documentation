@@ -28,7 +28,7 @@ class Transformer:
         self.param = [self.embedding_layer.embeddings]
         for transformer_layer in self.transformer_layers:
             self.param.extend(transformer_layer.weight_list)
-        self.param.extend(self.logits_layer.weight_list)
+        self.param.extend(self.logits_layer.param_list)
     
     
     def fp(self,data):
