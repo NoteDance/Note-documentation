@@ -18,7 +18,7 @@ class nn:
         self.layer1=d.dense([784,128],activation='relu')
         self.layer2=d.dense([128,10])
         # Store the parameters of the layers in a list
-        self.param=[self.layer1.weight,self.layer1.bias,self.layer2.weight,self.layer2.bias]
+        self.param=[self.layer1.param_list,self.layer2.param_list]
         return
     
     
