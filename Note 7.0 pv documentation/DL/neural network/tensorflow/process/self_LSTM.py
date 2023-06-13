@@ -29,9 +29,9 @@ class self_LSTM:
         self.logits_layer = dense([self.embed_size,self.vocab_size])
         # Store the parameters of the layers in a list
         self.param = [self.embedding_layer.embeddings]
-        self.param.extend(self.lstm_layer.param_list)
-        self.param.extend(self.self_attention_layer.param_list)
-        self.param.extend(self.logits_layer.param_list)
+        self.param.extend(self.lstm_layer.param)
+        self.param.extend(self.self_attention_layer.param)
+        self.param.extend(self.logits_layer.param)
     
     
     def fp(self,data):
