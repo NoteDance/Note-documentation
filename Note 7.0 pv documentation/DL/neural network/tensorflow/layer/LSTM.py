@@ -17,8 +17,8 @@ class lstm:
         # Create a dense layer with 10 output units
         self.dense=dense([50, 10])
         # Store the parameters of the layers in a list
-        self.param=[self.lstm1.param_list,
-                      self.lstm2.param_list,
+        self.param=[self.lstm1.param,
+                      self.lstm2.param,
                       self.dense.weight,
                       self.dense.bias]
         return
