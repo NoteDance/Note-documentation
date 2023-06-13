@@ -30,8 +30,8 @@ class Transformer:
         # Store the parameters of the layers in a list
         self.param = [self.embedding_layer.embeddings]
         for transformer_layer in self.transformer_layers:
-            self.param.extend(transformer_layer.param_list)
-        self.param.extend(self.logits_layer.param_list)
+            self.param.extend(transformer_layer.param)
+        self.param.extend(self.logits_layer.param)
     
     
     def fp(self,data):
