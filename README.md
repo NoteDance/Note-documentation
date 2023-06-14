@@ -274,7 +274,7 @@ kernel.visualize_train()
 
 **Calculate the attenuation coefficient based on the optimization counter using the attenuation function.**
 
-**example:https://github.com/NoteDancing/Note-documentation/blob/Note-7.0-pv/Note%207.0%20pv%20documentation/DL/neural%20network/tensorflow/nn_a.py**
+**example:https://github.com/NoteDancing/Note-documentation/blob/Note-7.0-pv/Note%207.0%20pv%20documentation/DL/neural%20network/tensorflow/nn_attenuate.py**
 
 ## RL：
 ### Pool Network:
