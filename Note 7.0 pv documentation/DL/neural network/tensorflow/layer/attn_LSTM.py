@@ -22,8 +22,7 @@ class attn_lstm:
         # Store the parameters of the layers and the attention in a list
         self.param=[self.lstm1.param,
                       self.lstm2.param,
-                      self.dense.weight,
-                      self.dense.bias,
+                      self.dense.param,
                       self.attn.param] # Add the attention parameters to the list
         return
     
