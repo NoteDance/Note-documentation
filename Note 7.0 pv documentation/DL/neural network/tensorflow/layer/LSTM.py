@@ -19,8 +19,8 @@ class lstm:
         # Store the parameters of the layers in a list
         self.param=[self.lstm1.param,
                       self.lstm2.param,
-                      self.dense.weight,
-                      self.dense.bias]
+                      self.dense.param,
+                      ]
         return
     
 
