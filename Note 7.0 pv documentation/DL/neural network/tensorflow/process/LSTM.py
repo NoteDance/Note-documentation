@@ -31,7 +31,7 @@ class lstm:
         # Perform forward propagation on the input data
         x=self.lstm1.output(data) # First LSTM layer output
         x=self.lstm2.output(x) # Second LSTM layer output
-        output=tf.matmul(x,self.dense.weight)+self.dense.bias # Dense layer output
+        output=self.dense.output(x) # Dense layer output
         return output
     
     
