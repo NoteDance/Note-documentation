@@ -1,6 +1,6 @@
 import tensorflow as tf
 import Note.nn.process.optimizer as o
-from Note.nn.layer.transformer import transformer
+from Note.nn.layer.Transformer import Transformer
 from Note.nn.layer.dense import dense
 from Note.nn.layer.emdedding import embedding
 from Note.nn.positional_encoding import positional_encoding
