@@ -49,5 +49,5 @@ class attn_lstm:
     
     def opt(self,gradient):
         # Perform optimization on the parameters using the gradient and the batch count
-        param=self.optimizer.opt(gradient,self.param,self.bc)
+        param=self.optimizer.opt(gradient,self.param,self.bc[0])
         return param   
