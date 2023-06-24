@@ -2,7 +2,7 @@ import tensorflow as tf
 from Note.nn.layer.conv2d import conv2d
 from Note.nn.layer.dense import dense
 from Note.nn.layer.flatten import flatten
-import Note.nn.process.optimizer as o
+from Note.nn.process.optimizer import Adam
 from Note.nn.layer.LMix import lmix
 
 # Define a convolutional neural network class with mixup augmentation
@@ -10,7 +10,7 @@ class cnn:
     def __init__(self):
         # Initialize the loss function and the optimizer
         self.loss_object=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-        self.optimizer=o.Adam()
+        self.optimizer=Adam()
         # Initialize the alpha parameter for mixup
         self.alpha=1.0
         # Initialize a variable to keep track of the batch count

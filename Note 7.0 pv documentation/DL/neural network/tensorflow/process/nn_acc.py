@@ -1,6 +1,6 @@
 import tensorflow as tf
 import Note.nn.layer.dense as d
-import Note.nn.process.optimizer as o
+from Note.nn.process.optimizer import Momentum
 from Note.nn.layer.flatten import flatten
 
 # Define a neural network class
@@ -9,7 +9,7 @@ class nn:
         # Initialize the loss function and the optimizer
         self.loss_object=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
         self.train_accuracy=tf.keras.metrics.SparseCategoricalAccuracy(name='train_accuracy')
-        self.optimizer=o.Momentum(0.07,0.7)
+        self.optimizer=Momentum(0.07,0.7)
     
     
     def build(self):

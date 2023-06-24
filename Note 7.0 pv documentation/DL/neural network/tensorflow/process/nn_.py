@@ -1,5 +1,5 @@
 import tensorflow as tf
-import Note.nn.process.optimizer as o
+from Note.nn.process.optimizer import Momentum
 from Note.nn.layer.flatten import flatten
 
 # Define a neural network class
@@ -16,7 +16,7 @@ class nn:
         self.param=[self.weight1,self.weight2,self.weight3,self.bias1,self.bias2,self.bias3]
         # Initialize the loss function and the optimizer
         self.loss_object=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-        self.optimizer=o.Momentum(0.07,0.7)
+        self.optimizer=Momentum(0.07,0.7)
     
     
     def fp(self,data):

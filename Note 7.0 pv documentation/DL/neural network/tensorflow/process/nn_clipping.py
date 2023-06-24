@@ -1,6 +1,6 @@
 import tensorflow as tf
 import Note.nn.layer.dense as d
-import Note.nn.process.optimizer as o
+from Note.nn.process.optimizer import Momentum
 from Note.nn.layer.flatten import flatten
 from Note.nn.gradient_clipping import gradient_clipping
 
@@ -9,7 +9,7 @@ class nn:
     def __init__(self):
         # Initialize the loss function and the optimizer
         self.loss_object=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-        self.optimizer=o.Momentum(0.07,0.7)
+        self.optimizer=Momentum(0.07,0.7)
     
     
     def build(self):

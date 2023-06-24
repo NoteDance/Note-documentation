@@ -1,6 +1,6 @@
 import tensorflow as tf
 import Note.nn.layer.dense as d
-import Note.nn.process.optimizer as o
+from Note.nn.process.optimizer import Momentum
 from Note.nn.layer.flatten import flatten
 
 # Define a neural network class with gradient attenuation
@@ -8,7 +8,7 @@ class nn:
     def __init__(self):
         # Initialize the loss function and the optimizer
         self.loss_object=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-        self.optimizer=o.Momentum(0.07,0.7)
+        self.optimizer=Momentum(0.07,0.7)
         # Initialize a variable to keep track of the number of optimization steps
         self.opt_counter=tf.Variable(tf.zeros(7,dtype=tf.float32))
     

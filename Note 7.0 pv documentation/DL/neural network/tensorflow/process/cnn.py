@@ -2,14 +2,14 @@ import tensorflow as tf
 from Note.nn.layer.conv2d import conv2d
 from Note.nn.layer.dense import dense
 from Note.nn.layer.flatten import flatten
-import Note.nn.process.optimizer as o
+from Note.nn.process.optimizer import Adam
 
 # Define a convolutional neural network class
 class cnn:
     def __init__(self):
         # Initialize the loss function and the optimizer
         self.loss_object=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-        self.optimizer=o.Adam()
+        self.optimizer=Adam()
         # Initialize a variable to keep track of the batch count
         self.bc=tf.Variable(0,dtype=tf.float32)
     
