@@ -85,8 +85,6 @@ class kernel:
     
     def segment_data(self):
         if len(self.train_data)!=self.process:  # check if the train data is already segmented 
-            data=None
-            labels=None
             segments=int((len(self.train_data)-len(self.train_data)%self.process)/self.process)  # calculate the number of samples for each segment 
             for i in range(self.process):  # loop over the processes 
                 index1=i*segments  # get the start index of the segment 
