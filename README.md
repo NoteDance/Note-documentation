@@ -88,8 +88,8 @@ loss,acc=test.loss_acc()
 
 
 # Multiprocessing:
-## PO3:
-**multiprocessing example(PO3):**
+## PO2:
+**multiprocessing example(PO2):**
 ```python
 import Note.DL.process.kernel as k   #import kernel
 import tensorflow as tf
@@ -106,12 +106,39 @@ kernel.process=7      #7 processes to train
 kernel.data_segment_flag=True
 kernel.epoch=6                #epoch:6
 kernel.batch=32            #batch:32
-kernel.PO=3                    #use PO3
+kernel.PO=2                    #use PO3
 kernel.data(x_train,y_train)   #input train data
 manager=Manager()              #create manager object
 kernel.init(manager)      #initialize shared data
 lock=[Lock(),Lock()]
 g_lock=[Lock(),Lock(),Lock()]
+for p in range(7):
+	Process(target=kernel.train,args=(p,lock,g_lock)).start()
+kernel.update_nn_param()
+kernel.test(x_train,y_train,32)
+```
+```python
+import Note.DL.process.kernel as k   #import kernel
+import tensorflow as tf
+import nn as n                          #import neural network
+from multiprocessing import Process,Lock,Manager
+mnist=tf.keras.datasets.mnist
+(x_train,y_train),(x_test,y_test)=mnist.load_data()
+x_train,x_test =x_train/255.0,x_test/255.0
+x_train=x_train.reshape([60000,784])
+nn=n.nn()                                #create neural network object
+nn.build()
+kernel=k.kernel(nn)   #start kernel
+kernel.process=7      #7 processes to train
+kernel.data_segment_flag=True
+kernel.epoch=6                #epoch:6
+kernel.batch=32            #batch:32
+kernel.PO=2                    #use PO3
+kernel.data(x_train,y_train)   #input train data
+manager=Manager()              #create manager object
+kernel.init(manager)      #initialize shared data
+lock=[Lock(),Lock()]
+g_lock=Lock()
 for p in range(7):
 	Process(target=kernel.train,args=(p,lock,g_lock)).start()
 kernel.update_nn_param()
@@ -137,7 +164,7 @@ kernel.process=7      #7 processes to train
 kernel.data_segment_flag=True
 kernel.epoch=6                #epoch:6
 kernel.batch=32            #batch:32
-kernel.PO=3                    #use PO3
+kernel.PO=2                    #use PO3
 kernel.data(x_train,y_train)   #input train data
 manager=Manager()              #create manager object
 kernel.init(manager)      #initialize shared data
@@ -146,7 +173,7 @@ g_lock=[Lock(),Lock(),Lock()]
 for p in range(7):
 	Process(target=kernel.train,args=(p,lock,g_lock)).start()
 ```
-## PO4：
+## PO3：
 ```python
 import Note.DL.process.kernel as k   #import kernel
 import tensorflow as tf
@@ -162,7 +189,7 @@ kernel.process=7     #7 processes to train
 kernel.data_segment_flag=True
 kernel.epoch=6                #epoch:6
 kernel.batch=32            #batch:32
-kernel.PO=4                    #use PO4
+kernel.PO=3                    #use PO4
 kernel.data(x_train,y_train)   #input train data
 manager=Manager()              #create manager object
 kernel.init(manager)      #initialize shared data
@@ -187,7 +214,7 @@ kernel.process=7     #7 processes to train
 kernel.data_segment_flag=True
 kernel.epoch=6                #epoch:6
 kernel.batch=32            #batch:32
-kernel.PO=4                    #use PO4
+kernel.PO=3                    #use PO4
 kernel.data(x_train,y_train)   #input train data
 manager=Manager()              #create manager object
 kernel.init(manager)      #initialize shared data
