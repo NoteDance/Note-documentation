@@ -59,10 +59,16 @@ class kernel:
             self.test_flag=True  # set the test flag to True 
         self.test_dataset=test_dataset  # set the test dataset object 
         self.batch_counter=np.zeros(self.process,dtype=np.int32)  # initialize an array to count batches for each process 
-        self.total_loss=np.zeros(self.process,dtype=np.float32)  # initialize an array to accumulate loss for each process 
+        if type(self.nn.param[0])!=list:  # initialize an array to accumulate loss for each process 
+            self.total_loss=np.zeros(self.process,dtype=self.nn.param[0].dtype.name)
+        else:
+            self.total_loss=np.zeros(self.process,dtype=self.nn.param[0][0].dtype.name)
         try:
             if self.nn.accuracy!=None:
-                self.total_acc=np.zeros(self.process,dtype=np.float32)  # initialize an array to accumulate accuracy for each process 
+                if type(self.nn.param[0])!=list:  # initialize an array to accumulate accuracy for each process 
+                    self.total_acc=np.zeros(self.process,dtype=self.nn.param[0].dtype.name)
+                else:
+                    self.total_acc=np.zeros(self.process,dtype=self.nn.param[0][0].dtype.name)
         except Exception:
             pass
         if self.priority_flag==True:
