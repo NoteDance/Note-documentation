@@ -261,6 +261,26 @@ for p in range(5):
 ```
 
 
+# Online training:
+**You can download neural network example in this link,and then you can import neural network and train with kernel,link and example code are below.**
+
+https://github.com/NoteDancing/Note-documentation/blob/Note-7.0-pv/Note%207.0%20pv%20documentation/DL/neural%20network/tensorflow/nn_ol.py
+
+**example:**
+```python
+import Note.DL.kernel as k   #import kernel #import platform
+import nn_ol as n                          #import neural network
+mnist=tf.keras.datasets.mnist
+(x_train,y_train),(x_test,y_test)=mnist.load_data()
+x_train,x_test =x_train/255.0,x_test/255.0
+nn=n.nn(x_train,y_train)                                #create neural network object
+kernel=k.kernel(nn)                 #start kernel
+kernel.platform=tf                       #use platform
+kernel.data(x_train,y_train)   #input train data
+kernel.train_ol()         #train neural network
+```
+
+
 # Test neural network:
 ## DL:
 You can test it before using the kernel training neural network.
