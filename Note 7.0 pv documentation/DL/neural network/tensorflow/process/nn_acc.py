@@ -2,13 +2,13 @@ import tensorflow as tf
 import Note.nn.layer.dense as d
 from Note.nn.process.optimizer import Momentum
 from Note.nn.layer.flatten import flatten
+from Note.nn.accuracy import sparse_categorical_accuracy
 
 # Define a neural network class
 class nn:
     def __init__(self):
         # Initialize the loss function and the optimizer
         self.loss_object=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-        self.train_accuracy=tf.keras.metrics.SparseCategoricalAccuracy(name='train_accuracy')
         self.optimizer=Momentum(0.07,0.7)
     
     
@@ -35,7 +35,7 @@ class nn:
     
     
     def accuracy(self,output,labels): #accuracy function,kernel uses it to calculate accuracy.
-        return self.train_accuracy(labels,output)
+        return sparse_categorical_accuracy(labels,output)
     
 
     def opt(self,gradient):
