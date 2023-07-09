@@ -114,34 +114,6 @@ for p in range(7):
 kernel.update_nn_param()
 kernel.test(x_train,y_train,32)
 ```
-### Stop training and saving when condition is met:
-```python
-import Note.DL.process.kernel as k   #import kernel
-import tensorflow as tf
-import nn as n                          #import neural network
-from multiprocessing import Process,Lock,Manager
-mnist=tf.keras.datasets.mnist
-(x_train,y_train),(x_test,y_test)=mnist.load_data()
-x_train,x_test =x_train/255.0,x_test/255.0
-x_train=x_train.reshape([60000,784])
-nn=n.nn()                                #create neural network object
-nn.build()
-kernel=k.kernel(nn)   #start kernel
-kernel.stop=True
-kernel.end_loss=0.7                           #stop condition
-kernel.process=7      #7 processes to train
-kernel.data_segment_flag=True
-kernel.epoch=6                #epoch:6
-kernel.batch=32            #batch:32
-kernel.PO=2                    #use PO3
-kernel.data(x_train,y_train)   #input train data
-manager=Manager()              #create manager object
-kernel.init(manager)      #initialize shared data
-lock=[Lock(),Lock()]
-g_lock=Lock()
-for p in range(7):
-	Process(target=kernel.train,args=(p,lock,g_lock)).start()
-```
 ### PO3：
 ```python
 import Note.DL.process.kernel as k   #import kernel
@@ -191,6 +163,59 @@ for p in range(7):
 	Process(target=kernel.train,args=(p,)).start()
 kernel.update_nn_param()
 kernel.test(x_train,y_train,32)
+```
+### Parallel test:
+```python
+import Note.DL.process.kernel as k   #import kernel
+import tensorflow as tf
+import nn as n                          #import neural network
+from multiprocessing import Process,Lock,Manager
+mnist=tf.keras.datasets.mnist
+(x_train,y_train),(x_test,y_test)=mnist.load_data()
+x_train,x_test =x_train/255.0,x_test/255.0
+nn=n.nn()                                #create neural network object
+nn.build()
+kernel=k.kernel(nn)   #start kernel
+kernel.process=7      #7 processes to train
+kernel.process_t=3
+kernel.data_segment_flag=True
+kernel.epoch=6                #epoch:6
+kernel.batch=32            #batch:32
+kernel.PO=1                    #use PO1
+kernel.data(x_train,y_train,x_test,y_test)   #input train data
+manager=Manager()              #create manager object
+kernel.init(manager)      #initialize shared data
+lock=[Lock(),Lock()]
+for p in range(7):
+	Process(target=kernel.train,args=(p,lock,None,32)).start()
+```
+### Stop training and saving when condition is met:
+```python
+import Note.DL.process.kernel as k   #import kernel
+import tensorflow as tf
+import nn as n                          #import neural network
+from multiprocessing import Process,Lock,Manager
+mnist=tf.keras.datasets.mnist
+(x_train,y_train),(x_test,y_test)=mnist.load_data()
+x_train,x_test =x_train/255.0,x_test/255.0
+x_train=x_train.reshape([60000,784])
+nn=n.nn()                                #create neural network object
+nn.build()
+kernel=k.kernel(nn)   #start kernel
+kernel.stop=True
+kernel.end_loss=0.7                           #stop condition
+kernel.process=7      #7 processes to train
+kernel.data_segment_flag=True
+kernel.epoch=6                #epoch:6
+kernel.batch=32            #batch:32
+kernel.PO=2                    #use PO3
+kernel.data(x_train,y_train)   #input train data
+manager=Manager()              #create manager object
+kernel.init(manager)      #initialize shared data
+lock=[Lock(),Lock()]
+g_lock=Lock()
+for p in range(7):
+	Process(target=kernel.train,args=(p,lock,g_lock)).start()
 ```
 
 
