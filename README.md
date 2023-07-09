@@ -38,8 +38,24 @@ kernel.visualize_reward()
 # Parallel test:
 **You can download neural network example in this link,and then you can import neural network and train with kernel,link and example code are below.**
 
-https://github.com/NoteDancing/Note-documentation/blob/Note-7.0-pv/Note%207.0%20pv%20documentation/DL/neural%20network/tensorflow/process/nn.py
+https://github.com/NoteDancing/Note-documentation/blob/Note-7.0/Note%207.0%20documentation/DL/neural%20network/tensorflow/process/nn.py
 
+```python
+import Note.DL.kernel as k   #import kernel
+import tensorflow as tf              #import platform
+import nn as n                          #import neural network
+mnist=tf.keras.datasets.mnist
+(x_train,y_train),(x_test,y_test)=mnist.load_data()
+x_train,x_test =x_train/255.0,x_test/255.0
+nn=n.nn()                                #create neural network object
+kernel=k.kernel(nn)                 #start kernel
+kernel.platform=tf                       #use platform
+kernel.process_t=3
+kernel.data(x_train,y_train,x_test,y_test)   #input train data
+kernel.train(32,5,32)         #train neural network
+                           #batch size:32
+                           #epoch:5
+```
 ```python
 import tensorflow as tf
 import nn_acc as n
@@ -223,7 +239,7 @@ for p in range(7):
 ### Pool Network:
 **You can download neural network example in this link,and then you can import neural network and train with kernel,link and example code are below.**
 
-https://github.com/NoteDancing/Note-documentation/blob/Note-7.0-pv/Note%207.0%20pv%20documentation/RL/neural%20network/tensorflow/pool%20net/DQN.py
+https://github.com/NoteDancing/Note-documentation/blob/Note-7.0/Note%207.0%20documentation/RL/neural%20network/tensorflow/pool%20net/DQN.py
 
 #### PO2:
 ```python
@@ -284,7 +300,7 @@ for p in range(5):
 # Online training:
 **You can download neural network example in this link,and then you can import neural network and train with kernel,link and example code are below.**
 
-https://github.com/NoteDancing/Note-documentation/blob/Note-7.0-pv/Note%207.0%20pv%20documentation/DL/neural%20network/tensorflow/nn_ol.py
+https://github.com/NoteDancing/Note-documentation/blob/Note-7.0/Note%207.0%20documentation/DL/neural%20network/tensorflow/nn_ol.py
 
 **example:**
 ```python
@@ -327,7 +343,7 @@ t.test(dqn,tf,2)
 
 
 # Note Compiler:
-documentation:https://github.com/NoteDancing/Note-documentation/tree/Note-7.0-pv/Note%207.0%20pv%20documentation/compiler
+documentation:https://github.com/NoteDancing/Note-documentation/tree/Note-7.0/Note%207.0%20documentation/compiler
 ```python
 import Note.nc as nc
 c=nc.compiler('nn.n')
