@@ -562,25 +562,13 @@ class kernel:
             else:  # if a numpy array is used for test data
                 total_loss=0  # initialize the total loss value for all batches
                 total_acc=0  # initialize the total accuracy value for all batches
-                if type(test_data)==list:  # if test data is a list of arrays (for multiple inputs)
-                    batches=int((test_data[0].shape[0]-test_data[0].shape[0]%batch)/batch)  # calculate how many batches are needed for test data according to batch size
-                    shape0=test_data[0].shape[0]  # get the number of samples in test data
-                else:  # if test data is a single array 
-                    batches=int((test_data.shape[0]-test_data.shape[0]%batch)/batch)  # calculate how many batches are needed for test data according to batch size
-                    shape0=test_data.shape[0]  # get the number of samples in test data
+                batches=int((test_data.shape[0]-test_data.shape[0]%batch)/batch)  # calculate how many batches are needed for test data according to batch size
+                shape0=test_data.shape[0]  # get the number of samples in test data
                 for j in range(batches):  # iterate over each batch index
                     index1=j*batch  # calculate the start index of test data for this batch
                     index2=(j+1)*batch  # calculate the end index of test data for this batch
-                    if type(test_data)==list:  # if test data is a list of arrays (for multiple inputs)
-                        for i in range(len(test_data)):  
-                            data_batch[i]=test_data[i][index1:index2]  # get a slice of test data according to the index range for each input array 
-                    else:  # if test data is a single array 
-                        data_batch=test_data[index1:index2]  # get a slice of test data according to the index range 
-                    if type(test_labels)==list:  # if test labels is a list of arrays (for multiple outputs)
-                        for i in range(len(test_labels)):  
-                            labels_batch[i]=test_labels[i][index1:index2]  # get a slice of test labels according to the index range for each output array 
-                    else:  # if test labels is a single array 
-                        labels_batch=test_labels[index1:index2]  # get a slice of test labels according to the index range 
+                    data_batch=test_data[index1:index2]  # get a slice of test data according to the index range 
+                    labels_batch=test_labels[index1:index2]  # get a slice of test labels according to the index range 
                     output=self.nn.fp(data_batch)   # get the output value using the neural network's forward propagation method 
                     batch_loss=self.nn.loss(output,labels_batch)   # get the batch loss value using the neural network's loss function 
                     total_loss+=batch_loss   # accumulate the batch loss to total loss 
@@ -599,27 +587,11 @@ class kernel:
                     index2=batch-(shape0-batches*batch)   # calculate how many samples are needed from the beginning of test data to form a full batch 
                     try:
                         try:
-                            if type(test_data)==list:   # if test data is a list of arrays (for multiple                            if type(test_data)==list:   # if test data is a list of arrays (for multiple inputs)
-                                for i in range(len(test_data)):  
-                                    data_batch[i]=self.platform.concat([test_data[i][index1:],test_data[i][:index2]],0)  # concatenate two slices of test data from the end and the beginning to form a batch for each input array 
-                            else:  # if test data is a single array 
-                                data_batch=self.platform.concat([test_data[index1:],test_data[:index2]],0)  # concatenate two slices of test data from the end and the beginning to form a batch 
-                            if type(test_labels)==list:  # if test labels is a list of arrays (for multiple outputs)
-                                for i in range(len(test_labels)):  
-                                    labels_batch[i]=self.platform.concat([test_labels[i][index1:],test_labels[i][:index2]],0)  # concatenate two slices of test labels from the end and the beginning to form a batch for each output array 
-                            else:  # if test labels is a single array 
-                                labels_batch=self.platform.concat([test_labels[index1:],test_labels[:index2]],0)  # concatenate two slices of test labels from the end and the beginning to form a batch 
+                            data_batch=self.platform.concat([test_data[index1:],test_data[:index2]],0)  # concatenate two slices of test data from the end and the beginning to form a batch 
+                            labels_batch=self.platform.concat([test_labels[index1:],test_labels[:index2]],0)  # concatenate two slices of test labels from the end and the beginning to form a batch 
                         except Exception:  # if the platform's concat method fails 
-                            if type(test_data)==list:  # if test data is a list of arrays (for multiple inputs)
-                                for i in range(len(test_data)):  
-                                    data_batch[i]=np.concatenate([test_data[i][index1:],test_data[i][:index2]],0)  # use numpy's concatenate method instead for each input array 
-                            else:  # if test data is a single array 
-                                data_batch=np.concatenate([test_data[index1:],test_data[:index2]],0)  # use numpy's concatenate method instead 
-                            if type(test_labels)==list:  # if test labels is a list of arrays (for multiple outputs)
-                                for i in range(len(test_labels)):  
-                                    labels_batch[i]=np.concatenate([test_labels[i][index1:],test_labels[i][:index2]],0)  # use numpy's concatenate method instead for each output array 
-                            else:  # if test labels is a single array 
-                                labels_batch=np.concatenate([test_labels[index1:],test_labels[:index2]],0)  # use numpy's concatenate method instead 
+                            data_batch=np.concatenate([test_data[index1:],test_data[:index2]],0)  # use numpy's concatenate method instead 
+                            labels_batch=np.concatenate([test_labels[index1:],test_labels[:index2]],0)  # use numpy's concatenate method instead 
                     except Exception as e:
                         raise e  # raise any other exception 
                     output=self.nn.fp(data_batch)   # get the output value using the neural network's forward propagation method 
