@@ -516,11 +516,7 @@ class kernel:
                     index1=j*batch  # get the start index of the batch 
                     index2=(j+1)*batch  # get the end index of the batch 
                     data_batch=test_data[index1:index2]  # get the data batch from test data array 
-                    if type(test_labels)==list:  # check if test labels is a list 
-                        for i in range(len(test_labels)):  
-                            labels_batch[i]=test_labels[i][index1:index2]  # get the labels batch from test labels list 
-                    else:
-                        labels_batch=test_labels[index1:index2]  # get the labels batch from test labels array 
+                    labels_batch=test_labels[index1:index2]  # get the labels batch from test labels array 
                     try:
                         try:
                             output=self.nn.fp(data_batch)  # use the neural network's forward propagation function to get the output 
