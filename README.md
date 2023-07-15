@@ -1,5 +1,37 @@
-# Stop training and saving when condition is met:
-## DL:
+# Non-parallel training:
+
+## Save and restore:
+```python
+import Note.DL.kernel as k   #import kernel
+import tensorflow as tf              #import platform
+import nn as n                          #import neural network
+mnist=tf.keras.datasets.mnist
+(x_train,y_train),(x_test,y_test)=mnist.load_data()
+x_train,x_test =x_train/255.0,x_test/255.0
+nn=n.nn()                                #create neural network object
+kernel=k.kernel(nn)                 #start kernel
+kernel.platform=tf                       #use platform
+kernel.data(x_train,y_train)   #input train data
+kernel.train(32,5)         #train neural network
+                           #batch size:32
+                           #epoch:5
+kernel.save()              #save neural network
+```
+```python
+import Note.DL.kernel as k   #import kernel
+import tensorflow as tf              #import platform
+mnist=tf.keras.datasets.mnist
+(x_train,y_train),(x_test,y_test)=mnist.load_data()
+x_train,x_test =x_train/255.0,x_test/255.0
+kernel=k.kernel()                 #start kernel
+kernel.platform=tf                    #use platform
+kernel.data(x_train,y_train)   #input train data
+kernel.restore('save.dat')     #restore neural network
+kernel.train(32,1)             #train again
+```
+
+## Stop training and saving when condition is met:
+### DL:
 ```python
 import Note.DL.kernel as k   #import kernel
 import tensorflow as tf              #import platform
@@ -18,7 +50,7 @@ kernel.train(32,5)         #train neural network
                            #epoch:5
 ```
 
-## RL:
+### RL:
 ```python
 import Note.RL.kernel as k   #import kernel
 import DQN as d
@@ -34,8 +66,7 @@ kernel.reward                         #view reward
 kernel.visualize_reward()
 ```
 
-
-# Training with test data
+## Training with test data
 https://github.com/NoteDancing/Note-documentation/blob/Note-7.0/Note%207.0%20documentation/DL/neural%20network/tensorflow/nn_acc.py
 ```python
 import Note.DL.kernel as k   #import kernel
@@ -55,8 +86,7 @@ kernel.train(32,5,32)         #train neural network
 kernel.save()              #save neural network
 ```
 
-
-# Parallel test:
+## Parallel test:
 **You can download neural network example in this link,and then you can import neural network and train with kernel,link and example code are below.**
 
 https://github.com/NoteDancing/Note-documentation/blob/Note-7.0/Note%207.0%20documentation/DL/neural%20network/tensorflow/process/nn.py
@@ -78,25 +108,12 @@ kernel.train(32,5,32)         #train neural network
                            #batch size:32
                            #epoch:5
 ```
-```python
-import tensorflow as tf
-import nn_acc as n
-import Note.DL.dl.test as t
-mnist=tf.keras.datasets.mnist
-(x_train,y_train),(x_test,y_test)=mnist.load_data()
-x_train,x_test =x_train/255.0,x_test/255.0
-nn=n.nn()
-nn.build()
-test=t.parallel_test(nn,x_test,y_test,6,32)
-test.segment_data()
-for p in range(6):
-	Process(target=test.test).start()
-loss=test.loss_acc()
-```
 
 
-# Multiprocessing:
+# Parallel training:
+
 ## DL:
+
 ### PO2:
 ```python
 import Note.DL.process.kernel as k   #import kernel
@@ -114,7 +131,7 @@ kernel.process=7      #7 processes to train
 kernel.data_segment_flag=True
 kernel.epoch=6                #epoch:6
 kernel.batch=32            #batch:32
-kernel.PO=2                    #use PO3
+kernel.PO=2                    #use PO2
 kernel.data(x_train,y_train)   #input train data
 manager=Manager()              #create manager object
 kernel.init(manager)      #initialize shared data
@@ -141,7 +158,7 @@ kernel.process=7      #7 processes to train
 kernel.data_segment_flag=True
 kernel.epoch=6                #epoch:6
 kernel.batch=32            #batch:32
-kernel.PO=2                    #use PO3
+kernel.PO=2                    #use PO2
 kernel.data(x_train,y_train)   #input train data
 manager=Manager()              #create manager object
 kernel.init(manager)      #initialize shared data
@@ -152,6 +169,7 @@ for p in range(7):
 kernel.update_nn_param()
 kernel.test(x_train,y_train,32)
 ```
+
 ### PO3：
 ```python
 import Note.DL.process.kernel as k   #import kernel
@@ -168,7 +186,7 @@ kernel.process=7     #7 processes to train
 kernel.data_segment_flag=True
 kernel.epoch=6                #epoch:6
 kernel.batch=32            #batch:32
-kernel.PO=3                    #use PO4
+kernel.PO=3                    #use PO3
 kernel.data(x_train,y_train)   #input train data
 manager=Manager()              #create manager object
 kernel.init(manager)      #initialize shared data
@@ -193,7 +211,7 @@ kernel.process=7     #7 processes to train
 kernel.data_segment_flag=True
 kernel.epoch=6                #epoch:6
 kernel.batch=32            #batch:32
-kernel.PO=3                    #use PO4
+kernel.PO=3                    #use PO3
 kernel.data(x_train,y_train)   #input train data
 manager=Manager()              #create manager object
 kernel.init(manager)      #initialize shared data
@@ -202,6 +220,55 @@ for p in range(7):
 kernel.update_nn_param()
 kernel.test(x_train,y_train,32)
 ```
+
+### Save and restore:
+```python
+import Note.DL.process.kernel as k   #import kernel
+import tensorflow as tf
+import nn as n                          #import neural network
+from multiprocessing import Process,Lock,Manager
+mnist=tf.keras.datasets.mnist
+(x_train,y_train),(x_test,y_test)=mnist.load_data()
+x_train,x_test =x_train/255.0,x_test/255.0
+nn=n.nn()                                #create neural network object
+nn.build()
+kernel=k.kernel(nn)   #start kernel
+kernel.process=7     #7 processes to train
+kernel.data_segment_flag=True
+kernel.epoch=6                #epoch:6
+kernel.batch=32            #batch:32
+kernel.PO=3                    #use PO3
+kernel.data(x_train,y_train)   #input train data
+manager=Manager()              #create manager object
+kernel.init(manager)      #initialize shared data
+for p in range(7): 
+	Process(target=kernel.train,args=(p,)).start()
+kernel.update_nn_param()
+kernel.test(x_train,y_train,32)
+kernel.save()              #save neural network
+```
+```python
+import Note.DL.process.kernel as k   #import kernel
+import tensorflow as tf
+import nn as n                          #import neural network
+from multiprocessing import Process,Lock,Manager
+mnist=tf.keras.datasets.mnist
+(x_train,y_train),(x_test,y_test)=mnist.load_data()
+x_train,x_test =x_train/255.0,x_test/255.0
+kernel=k.kernel()   #start kernel
+kernel.process=7     #7 processes to train
+kernel.data_segment_flag=True
+kernel.epoch=1                #epoch:6
+kernel.batch=32            #batch:32
+kernel.PO=3                    #use PO3
+kernel.data(x_train,y_train)   #input train data
+manager=Manager()              #create manager object
+kernel.init(manager)      #initialize shared data
+kernel.restore('save.dat')     #restore neural network
+for p in range(7): 
+	Process(target=kernel.train,args=(p,)).start()
+```
+
 ### Parallel test:
 ```python
 import Note.DL.process.kernel as k   #import kernel
@@ -227,6 +294,7 @@ lock=[Lock(),Lock()]
 for p in range(7):
 	Process(target=kernel.train,args=(p,lock,None,32)).start()
 ```
+
 ### Stop training and saving when condition is met:
 ```python
 import Note.DL.process.kernel as k   #import kernel
@@ -246,7 +314,7 @@ kernel.process=7      #7 processes to train
 kernel.data_segment_flag=True
 kernel.epoch=6                #epoch:6
 kernel.batch=32            #batch:32
-kernel.PO=2                    #use PO3
+kernel.PO=2                    #use PO2
 kernel.data(x_train,y_train)   #input train data
 manager=Manager()              #create manager object
 kernel.init(manager)      #initialize shared data
@@ -256,14 +324,14 @@ for p in range(7):
 	Process(target=kernel.train,args=(p,lock,g_lock)).start()
 ```
 
-
 ## RL：
-### Pool Network:
+**Pool Network:**
+
 **You can download neural network example in this link,and then you can import neural network and train with kernel,link and example code are below.**
 
 https://github.com/NoteDancing/Note-documentation/blob/Note-7.0/Note%207.0%20documentation/RL/neural%20network/tensorflow/pool%20net/DQN.py
 
-#### PO2:
+### PO2:
 ```python
 import Note.RL.kernel as k   #import kernel
 import DQN as d
@@ -282,7 +350,7 @@ for p in range(5):
     Process(target=kernel.train,args=(p,100,lock,pool_lock,g_lock)).start()
 ```
 
-#### PO3:
+### PO3:
 ```python
 import Note.RL.kernel as k   #import kernel
 import DQN as d
@@ -316,6 +384,28 @@ lock=[Lock(),Lock(),Lock()]
 g_lock=Lock()
 for p in range(5):
     Process(target=kernel.train,args=(p,100,lock,pool_lock)).start()
+```
+
+
+# Parallel test:
+**You can download neural network example in this link,and then you can import neural network and train with kernel,link and example code are below.**
+
+https://github.com/NoteDancing/Note-documentation/blob/Note-7.0/Note%207.0%20documentation/DL/neural%20network/tensorflow/process/nn.py
+
+```python
+import tensorflow as tf
+import nn_acc as n
+import Note.DL.dl.test as t
+mnist=tf.keras.datasets.mnist
+(x_train,y_train),(x_test,y_test)=mnist.load_data()
+x_train,x_test =x_train/255.0,x_test/255.0
+nn=n.nn()
+nn.build()
+test=t.parallel_test(nn,x_test,y_test,6,32)
+test.segment_data()
+for p in range(6):
+	Process(target=test.test).start()
+loss=test.loss_acc()
 ```
 
 
