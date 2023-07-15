@@ -36,6 +36,7 @@ kernel.visualize_reward()
 
 
 # Training with test data
+https://github.com/NoteDancing/Note-documentation/blob/Note-7.0/Note%207.0%20documentation/DL/neural%20network/tensorflow/nn_acc.py
 ```python
 import Note.DL.kernel as k   #import kernel
 import tensorflow as tf              #import platform
