@@ -117,7 +117,7 @@ nn=n.nn()                            #create neural network object
 nn.build()                           #build the network structure
 kernel=k.kernel(nn)                  #create kernel object with the network
 kernel.process=7                     #set the number of processes to train
-kernel.data_segment_flag=True        #set the flag to segment data
+kernel.data_segment_flag=True        #set the flag to segment data for each process
 kernel.epoch=6                       #set the number of epochs to train
 kernel.batch=32                      #set the batch size
 kernel.PO=2                          #use PO2 algorithm for parallel optimization
@@ -144,7 +144,7 @@ nn=n.nn()                            #create neural network object
 nn.build()                           #build the network structure
 kernel=k.kernel(nn)                  #create kernel object with the network
 kernel.process=7                     #set the number of processes to train
-kernel.data_segment_flag=True        #set the flag to segment data
+kernel.data_segment_flag=True        #set the flag to segment data for each process
 kernel.epoch=6                       #set the number of epochs to train
 kernel.batch=32                      #set the batch size
 kernel.PO=2                          #use PO2 algorithm for parallel optimization
@@ -172,7 +172,7 @@ nn=n.nn()                            #create neural network object
 nn.build()                           #build the network structure
 kernel=k.kernel(nn)                  #create kernel object with the network
 kernel.process=7                     #set the number of processes to train
-kernel.data_segment_flag=True        #set the flag to segment data
+kernel.data_segment_flag=True        #set the flag to segment data for each process
 kernel.epoch=6                       #set the number of epochs to train
 kernel.batch=32                      #set the batch size
 kernel.PO=3                          #use PO3 algorithm for parallel optimization
@@ -197,7 +197,7 @@ nn=n.nn()                            #create neural network object
 nn.build()                           #build the network structure
 kernel=k.kernel(nn)                  #create kernel object with the network
 kernel.process=7                     #set the number of processes to train
-kernel.data_segment_flag=True        #set the flag to segment data
+kernel.data_segment_flag=True        #set the flag to segment data for each process
 kernel.epoch=6                       #set the number of epochs to train
 kernel.batch=32                      #set the batch size
 kernel.PO=3                          #use PO3 algorithm for parallel optimization
@@ -224,7 +224,7 @@ nn=n.nn()                            #create neural network object
 nn.build()                           #build the network structure
 kernel=k.kernel(nn)                  #create kernel object with the network
 kernel.process=7                     #set the number of processes to train
-kernel.data_segment_flag=True        #set the flag to segment data
+kernel.data_segment_flag=True        #set the flag to segment data for each process
 kernel.epoch=6                       #set the number of epochs to train
 kernel.batch=32                      #set the batch size
 kernel.PO=3                          #use PO3 algorithm for parallel optimization
@@ -247,7 +247,7 @@ mnist=tf.keras.datasets.mnist        #load mnist dataset
 x_train,x_test =x_train/255.0,x_test/255.0 #normalize data
 kernel=k.kernel()                    #create kernel object without a network
 kernel.process=7                     #set the number of processes to train
-kernel.data_segment_flag=True        #set the flag to segment data
+kernel.data_segment_flag=True        #set the flag to segment data for each process
 kernel.epoch=1                       #set the number of epochs to train
 kernel.batch=32                      #set the batch size
 kernel.PO=3                          #use PO3 algorithm for parallel optimization
@@ -273,7 +273,7 @@ nn.build()                           #build the network structure
 kernel=k.kernel(nn)                  #create kernel object with the network
 kernel.process=7                     #set the number of processes to train
 kernel.process_t=3                   #set the number of processes to test
-kernel.data_segment_flag=True        #set the flag to segment data
+kernel.data_segment_flag=True        #set the flag to segment data for each process
 kernel.epoch=6                       #set the number of epochs to train
 kernel.batch=32                      #set the batch size
 kernel.PO=3                          #use PO3 algorithm for parallel optimization
@@ -300,7 +300,7 @@ kernel=k.kernel(nn)                  #create kernel object with the network
 kernel.stop=True                     #set the flag to stop training when a condition is met
 kernel.end_loss=0.7                  #set the condition to stop training when the loss is less than 0.7
 kernel.process=7                     #set the number of processes to train
-kernel.data_segment_flag=True        #set the flag to segment data
+kernel.data_segment_flag=True        #set the flag to segment data for each process
 kernel.epoch=6                       #set the number of epochs to train
 kernel.batch=32                      #set the batch size
 kernel.PO=2                          #use PO2 algorithm for parallel optimization
@@ -392,7 +392,7 @@ x_train,x_test =x_train/255.0,x_test/255.0 #normalize data
 nn=n.nn()                     #create neural network object
 nn.build()                    #build the network structure
 test=t.parallel_test(nn,x_test,y_test,6,32) #create parallel test object with the network, the test data, the number of processes and the batch size
-test.segment_data()           #segment data
+test.segment_data()           #segment data for each process
 for p in range(6):            #loop over the processes
 	Process(target=test.test).start() #start each process with the test function
 loss=test.loss_acc()          #calculate the loss and accuracy of the test
