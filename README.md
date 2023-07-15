@@ -35,6 +35,26 @@ kernel.visualize_reward()
 ```
 
 
+# Training with test data
+```python
+import Note.DL.kernel as k   #import kernel
+import tensorflow as tf              #import platform
+import nn_acc as n                          #import neural network
+mnist=tf.keras.datasets.mnist
+(x_train,y_train),(x_test,y_test)=mnist.load_data()
+x_train,x_test =x_train/255.0,x_test/255.0
+nn=n.nn()                                #create neural network object
+kernel=k.kernel(nn)                 #start kernel
+kernel.platform=tf                       #use platform
+kernel.data(x_train,y_train,x_test,y_test)   #input train data
+kernel.train(32,5,32)         #train neural network
+                           #batch size:32
+			   #test batch size:32
+                           #epoch:5
+kernel.save()              #save neural network
+```
+
+
 # Parallel test:
 **You can download neural network example in this link,and then you can import neural network and train with kernel,link and example code are below.**
 
@@ -318,28 +338,28 @@ kernel.train_ol()         #train neural network
 ```
 
 
-# Test neural network:
+# Check neural network:
 ## DL:
 You can test it before using the kernel training neural network.
 ```python
-import Note.DL.dl.test_nn as t
+from Note.DL.dl.check_nn import check
 import tensorflow as tf              #import platform
 import nn as n                          #import neural network
 mnist=tf.keras.datasets.mnist
 (x_train,y_train),(x_test,y_test)=mnist.load_data()
 x_train,x_test =x_train/255.0,x_test/255.0
 nn=n.nn()
-t.test(cnn,tf,x_train[:32],y_train[:32])
+check(cnn,tf,x_train[:32],y_train[:32])
 ```
 
 ## RL:
 You can test it before using the kernel training neural network.
 ```python
-import Note.RL.rl.test_nn as t
+from Note.RL.rl.check_nn import check
 import tensorflow as tf              #import platform
 import DQN as d
 dqn=d.DQN(4,128,2)                               #create neural network object
-t.test(dqn,tf,2)
+checkdqn,tf,2)
 ```
 
 
