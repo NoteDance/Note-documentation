@@ -2,9 +2,3 @@ Pool network:
 Pool network use multiprocessing parallel and random add episode in pool,which would make data being uncorrelated in pool,
 then pools would be used parallel training agent.
 Each process have a pool.
-
-Support stop mechanism.
-Support prioritized replay.
-Support gradient attenuation.
-Support memory protection mechanism.
-Support training priority and memory priority.
