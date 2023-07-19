@@ -2,13 +2,13 @@ import tensorflow as tf # import TensorFlow library
 import Note.nn.layer.dense as d # import Note's dense layer module
 from Note.nn.layer.flatten import flatten # import Note's flatten layer function
 from Note.nn.process.optimizer import Momentum # import Note's momentum optimizer module
+from Note.nn.assign_device import assign_device_with_modulo # import the function to assign device according to the process index and the device type using modulo operation
 
 
 class nn:               # A neural network class example, allocate device for multiple threads
     def __init__(self): # initialize the network
         self.loss_object=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True) # loss object, kernel uses it to calculate loss. Here we use sparse categorical crossentropy with logits as output
         self.optimizer=Momentum(0.07,0.7) # optimizer, kernel uses it to optimize. Here we use a custom momentum optimizer with learning rate 0.07 and momentum 0.7
-        self.device_table={0:'GPU:0',1:'GPU:0',2:'GPU:0',3:'GPU:1',4:'GPU:1',5:'GPU:1',6:'GPU:2'} # a dictionary to map process index to device name
         self.info='example' # some information about the network
     
     
@@ -22,7 +22,7 @@ class nn:               # A neural network class example, allocate device for mu
     
     
     def fp(self,data,p): # forward propagation function, kernel uses it for forward propagation
-        with tf.device(self.device_table[p]): # assign the device according to the process index p
+        with tf.device(assign_device_with_modulo(p,'GPU')): # assign the device according to the process index p
             data=flatten(data) # flatten the data to a vector of 784 elements
             output1=self.layer1.output(data) # pass the data through the first layer and get the output
             output2=self.layer2.output(output1) # pass the output of the first layer through the second layer and get the final output logits
