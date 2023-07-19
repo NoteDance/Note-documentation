@@ -2,7 +2,7 @@ import tensorflow as tf # import TensorFlow library
 import Note.nn.layer.dense as d # import Note's dense layer module
 from Note.nn.layer.flatten import flatten # import Note's flatten layer function
 from Note.nn.process.optimizer import Momentum # import Note's momentum optimizer module
-from Note.nn.assign_device import assign_device_with_modulo # import the function to assign device according to the process index and the device type using modulo operation
+from Note.nn.process.assign_device import assign_device_with_modulo # import the function to assign device according to the process index and the device type using modulo operation
 
 
 class nn:               # A neural network class example, allocate device for multiple threads
