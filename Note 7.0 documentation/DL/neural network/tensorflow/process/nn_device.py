@@ -29,8 +29,9 @@ class nn:               # A neural network class example, allocate device for mu
         return output2
     
     
-    def loss(self,output,labels): # loss function, kernel uses it to calculate loss
-        return self.loss_object(labels,output) # return the mean softmax cross entropy loss between labels and output
+    def loss(self,output,labels,p): # loss function, kernel uses it to calculate loss
+        with tf.device(assign_device_with_modulo(p,'GPU')): # assign the device according to the process index p
+            return self.loss_object(labels,output) # return the mean softmax cross entropy loss between labels and output
     
     
     def opt(self,gradient): # optimization function, kernel uses it to optimize parameter
