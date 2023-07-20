@@ -68,18 +68,17 @@ class kernel:
         if self.priority_flag==True:  # if priority optimization is enabled
             self.opt_counter=Array('i',np.zeros(self.process,dtype=np.int32))  # use Array to store optimization counter for each process
         try:
-            if self.nn.attenuate!=None:  # if attenuation function is defined
-              self.nn.opt_counter=manager.list([self.nn.opt_counter])  # use manager.list to share optimization counter for attenuation function among processes  
+            self.nn.opt_counter=manager.list([self.nn.opt_counter])  # use manager.list to share optimization counter for attenuation function among processes  
         except Exception:
-            pass
+            self.opt_counter_=manager.list()
         try:
             self.nn.ec=manager.list(self.nn.ec)  # use manager.list to share episode counter for neural network model among processes 
         except Exception:
-            pass
+            self.ec_=manager.list()
         try:
             self.nn.bc=manager.list(self.nn.bc)  # use manager.list to share batch counter for neural network model among processes 
         except Exception:
-            pass
+            self.bc_=manager.list()
         self.stop_flag=Value('b',self.stop_flag)  # use Value to share stop flag among processes 
         self.save_flag=Value('b',self.save_flag)  # use Value to share save flag among processes 
         self.param=manager.dict()  # use manager.dict to share parameters among processes 
