@@ -41,23 +41,19 @@ class kernel:
     
     
     def data(self,train_data=None,train_labels=None,test_data=None,test_labels=None,train_dataset=None,test_dataset=None):
-        if type(self.nn.param[0])!=list:
+        if train_data is not None and type(self.nn.param[0])!=list:
             self.train_data=train_data.astype(self.nn.param[0].dtype.name) # convert the train data type to match the neural network parameters type
             self.train_labels=train_labels.astype(self.nn.param[0].dtype.name) # convert the train labels type to match the neural network parameters type
-        else:
+        elif train_data is not None:
             self.train_data=train_data.astype(self.nn.param[0][0].dtype.name) # convert the train data type to match the neural network parameters type (for multiple inputs)
             self.train_labels=train_labels.astype(self.nn.param[0][0].dtype.name) # convert the train labels type to match the neural network parameters type (for multiple inputs)
         self.train_dataset=train_dataset # a tensorflow or pytorch dataset object for train data (optional)
-        if test_data is not None: 
-            if type(self.nn.param[0])!=list:
-                self.test_data=test_data.astype(self.nn.param[0].dtype.name) # convert the test data type to match the neural network parameters type
-                self.test_labels=test_labels.astype(self.nn.param[0].dtype.name) # convert the test labels type to match the neural network parameters type
-            else:
-                self.test_data=test_data.astype(self.nn.param[0][0].dtype.name)  # convert the test data type to match the neural network parameters type (for multiple inputs)
-                self.test_labels=test_labels.astype(self.nn.param[0][0].dtype.name)  # convert the test labels type to match the neural network parameters type (for multiple inputs)
-            self.test_flag=True  # set the test flag to True if test data is provided 
+        self.test_data=test_data  # set the test data array 
+        self.test_labels=test_labels  # set the test labels array
         self.test_dataset=test_dataset  # a tensorflow or pytorch dataset object for test data (optional)
-        if self.train_dataset==None: 
+        if test_data is not None or test_dataset is not None: 
+            self.test_flag=True  # set the test flag to True if test data is provided 
+        if train_data is not None: 
             self.shape0=train_data.shape[0]  # get the number of samples in train data
         return
     
@@ -546,7 +542,9 @@ class kernel:
             total_loss=0  # initialize the total loss value for all batches
             total_acc=0  # initialize the total accuracy value for all batches
             if self.test_dataset!=None:  # if a tensorflow or pytorch dataset object is used for test data
+                batches=0
                 for data_batch,labels_batch in self.test_dataset:  # iterate over each batch of data and labels from the test dataset
+                    batches+=1
                     output=self.nn.fp(data_batch)  # get the output value using the neural network's forward propagation method
                     batch_loss=self.nn.loss(output,labels_batch)  # get the batch loss value using the neural network's loss function
                     total_loss+=batch_loss  # accumulate the batch loss to total loss
@@ -559,9 +557,13 @@ class kernel:
                                 raise e  # raise the exception 
                         except Exception:
                             pass
+                test_loss=total_loss.numpy()/batches   # convert the total loss value to numpy array and divide it by number of batches to get the average loss value for test data 
+                try:
+                    if self.nn.accuracy!=None:   # if the neural network has an accuracy method defined 
+                        test_acc=total_acc.numpy()/batches   # convert the total accuracy value to numpy array and divide it by number of batches to get the average accuracy value for test data 
+                except Exception:
+                    pass
             else:  # if a numpy array is used for test data
-                total_loss=0  # initialize the total loss value for all batches
-                total_acc=0  # initialize the total accuracy value for all batches
                 batches=int((test_data.shape[0]-test_data.shape[0]%batch)/batch)  # calculate how many batches are needed for test data according to batch size
                 shape0=test_data.shape[0]  # get the number of samples in test data
                 for j in range(batches):  # iterate over each batch index
