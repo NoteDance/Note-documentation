@@ -46,18 +46,18 @@ class kernel:
         self.total_epoch=0 # the total number of epochs
     
     def data(self,train_data=None,train_labels=None,test_data=None,test_labels=None,train_dataset=None,test_dataset=None):
-        if type(self.nn.param[0])!=list:
+        if train_data is not None and type(self.nn.param[0])!=list:
             self.train_data=train_data.astype(self.nn.param[0].dtype.name) # convert the train data type to match the model parameter type
             self.train_labels=train_labels.astype(self.nn.param[0].dtype.name) # convert the train labels type to match the model parameter type
-        else:
+        elif train_data is not None:
             self.train_data=train_data.astype(self.nn.param[0][0].dtype.name) # convert the train data type to match the model parameter type
             self.train_labels=train_labels.astype(self.nn.param[0][0].dtype.name) # convert the train labels type to match the model parameter type
         self.train_dataset=train_dataset # set the train dataset object
-        if test_data is not None: 
-            self.test_data=test_data  # set the test data array 
-            self.test_labels=test_labels  # set the test labels array 
-            self.test_flag=True  # set the test flag to True 
+        self.test_data=test_data  # set the test data array 
+        self.test_labels=test_labels  # set the test labels array
         self.test_dataset=test_dataset  # set the test dataset object 
+        if test_data is not None or test_dataset is not None: 
+            self.test_flag=True  # set the test flag to True 
         self.batch_counter=np.zeros(self.process,dtype=np.int32)  # initialize an array to count batches for each process 
         if type(self.nn.param[0])!=list:  # initialize an array to accumulate loss for each process 
             self.total_loss=np.zeros(self.process,dtype=self.nn.param[0].dtype.name)
@@ -73,17 +73,11 @@ class kernel:
             pass
         if self.priority_flag==True:
             self.opt_counter=np.zeros(self.process,dtype=np.int32)  # initialize an array to count optimization steps for each process 
-        if self.train_dataset==None:
-            if type(self.train_data)==list:
-                self.shape0=train_data[0].shape[0]  # get the number of samples in the first train data array 
-                self.batches=int((self.shape0-self.shape0%self.batch)/self.batch)  # calculate the number of batches 
-                if self.shape0%self.batch!=0:
-                    self.batches+=1  # add one more batch if there are remaining samples 
-            else:
-                self.shape0=train_data.shape[0]  # get the number of samples in the train data array 
-                self.batches=int((self.shape0-self.shape0%self.batch)/self.batch)  # calculate the number of batches 
-                if self.shape0%self.batch!=0:
-                    self.batches+=1  # add one more batch if there are remaining samples 
+        if train_data is not None:
+            self.shape0=train_data.shape[0]  # get the number of samples in the train data array 
+            self.batches=int((self.shape0-self.shape0%self.batch)/self.batch)  # calculate the number of batches 
+            if self.shape0%self.batch!=0:
+                self.batches+=1  # add one more batch if there are remaining samples 
         if self.data_segment_flag==True:
             self.train_data,self.train_labels=self.segment_data()  # segment the train data and labels according to the number of processes 
         return
@@ -478,17 +472,19 @@ class kernel:
     
     
     def test(self,test_data=None,test_labels=None,batch=None,p=None):
-        if type(self.nn.param[0])!=list:  
+        if test_data is not None and type(self.nn.param[0])!=list:  
             test_data=test_data.astype(self.nn.param[0].dtype.name)  # convert the test data type to match the model parameter type
             test_labels=test_labels.astype(self.nn.param[0].dtype.name)  # convert the test labels type to match the model parameter type
-        else:
+        elif test_data is not None:
             test_data=test_data.astype(self.nn.param[0][0].dtype.name)  # convert the test data type to match the model parameter type
             test_labels=test_labels.astype(self.nn.param[0][0].dtype.name)  # convert the test labels type to match the model parameter type
         if batch!=None:  # check if batch is not None 
             total_loss=0  # initialize total loss to zero 
             total_acc=0  # initialize total accuracy to zero 
             if self.test_dataset!=None:  # check if test dataset is not None 
+                batches=0
                 for data_batch,labels_batch in self.test_dataset:  # loop over the test dataset batches 
+                    batches+=1
                     try:
                         try:
                             output=self.nn.fp(data_batch)  # use the neural network's forward propagation function to get the output 
@@ -507,9 +503,13 @@ class kernel:
                                raise e
                         except Exception:
                             pass
+                test_loss=total_loss.numpy()/batches  # calculate the average test loss for all batches 
+                try:
+                    if self.nn.accuracy!=None:  # check if the neural network has an accuracy function 
+                        test_acc=total_acc.numpy()/batches  # calculate the average test accuracy for all batches 
+                except Exception:
+                    pass
             else:  # if test dataset is None 
-                total_loss=0  # initialize total loss to zero 
-                total_acc=0  # initialize total accuracy to zero 
                 batches=int((test_data.shape[0]-test_data.shape[0]%batch)/batch)  # calculate the number of batches 
                 shape0=test_data.shape[0]  # get the number of samples in the test data array 
                 for j in range(batches):  # loop over the batches 
