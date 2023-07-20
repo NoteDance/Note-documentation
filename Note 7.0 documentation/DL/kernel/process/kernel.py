@@ -128,18 +128,17 @@ class kernel:
         if self.priority_flag==True:
             self.opt_counter=Array('i',self.opt_counter)  # create a shared array for optimization counter 
         try:
-            if self.nn.attenuate!=None:
-              self.nn.opt_counter=manager.list([self.nn.opt_counter])  # create a shared list for the neural network's optimization counter 
+            self.nn.opt_counter=manager.list([self.nn.opt_counter])  # create a shared list for the neural network's optimization counter 
         except Exception:
-            pass
+            self.opt_counter_=manager.list()
         try:
             self.nn.ec=manager.list([self.nn.ec])  # create a shared list for the neural network's epoch counter 
         except Exception:
-            pass
+            self.ec_=manager.list()
         try:
             self.nn.bc=manager.list([self.nn.bc])  # create a shared list for the neural network's batch counter 
         except Exception:
-            pass
+            self.bc_=manager.list()
         self.stop_flag=Value('b',self.stop_flag)  # create a shared value for stop flag 
         self.save_flag=Value('b',self.save_flag)  # create a shared value for save flag 
         self.param=manager.dict()  # create a shared dictionary for parameters 
