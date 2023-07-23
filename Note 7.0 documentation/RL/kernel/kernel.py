@@ -139,16 +139,9 @@ class kernel:
             if type(self.state_pool[index])!=np.ndarray and self.state_pool[index]==None: # check if the pool is empty
                 self.state_pool[index]=s # assign the state to the pool
                 if type(a)==int: # check if the action is an integer
-                    if type(self.nn.param[0])!=list: 
-                        a=np.array(a,self.nn.param[0].dtype.name) # convert the action to an array with the same data type as neural network parameters 
-                    else:
-                        a=np.array(a,self.nn.param[0][0].dtype.name) # convert the action to an array with the same data type as neural network parameters 
+                    a=np.array(a) # convert the action to an array
                     self.action_pool[index]=np.expand_dims(a,axis=0) # expand the dimension of the action and assign it to the pool
                 else: # otherwise, assume the action is an array
-                    if type(self.nn.param[0])!=list:
-                        a=a.astype(self.nn.param[0].dtype.name) # convert the action to an array with the same data type as neural network parameters 
-                    else:
-                        a=a.astype(self.nn.param[0][0].dtype.name) # convert the action to an array with the same data type as neural network parameters 
                     self.action_pool[index]=a # assign the action to the pool
                 self.next_state_pool[index]=np.expand_dims(next_s,axis=0) # expand the dimension of the next state and assign it to the pool
                 self.reward_pool[index]=np.expand_dims(r,axis=0) # expand the dimension of the reward and assign it to the pool
@@ -157,16 +150,9 @@ class kernel:
                 try:
                     self.state_pool[index]=np.concatenate((self.state_pool[index],s),0) # concatenate the state with the existing pool
                     if type(a)==int: # check if the action is an integer
-                        if type(self.nn.param[0])!=list:
-                            a=np.array(a,self.nn.param[0].dtype.name) # convert the action to an array with the same data type as neural network parameters 
-                        else:
-                            a=np.array(a,self.nn.param[0][0].dtype.name) # convert the action to an array with the same data type as neural network parameters 
+                        a=np.array(a) # convert the action to an array
                         self.action_pool[index]=np.concatenate((self.action_pool[index],np.expand_dims(a,axis=0)),0) # expand and concatenate the action with the existing pool
                     else: # otherwise, assume the action is an array
-                        if type(self.nn.param[0])!=list:
-                            a=a.astype(self.nn.param[0].dtype.name) # convert the action to an array with the same data type as neural network parameters 
-                        else:
-                            a=a.astype(self.nn.param[0][0].dtype.name) # convert the action to an array with the same data type as neural network parameters 
                         self.action_pool[index]=np.concatenate((self.action_pool[index],a),0) # concatenate the action with the existing pool
                     self.next_state_pool[index]=np.concatenate((self.next_state_pool[index],np.expand_dims(next_s,axis=0)),0) # expand and concatenate the next state with the existing pool
                     self.reward_pool[index]=np.concatenate((self.reward_pool[index],np.expand_dims(r,axis=0)),0) # expand and concatenate the reward with the existing pool
