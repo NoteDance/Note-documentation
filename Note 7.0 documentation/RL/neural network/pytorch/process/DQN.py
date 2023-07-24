@@ -1,6 +1,7 @@
 import torch
 import gym
 import torch.nn.functional as F
+from Note.nn.process.assign_device_pytorch import assign_device
 
 
 class Qnet(torch.nn.Module):
@@ -36,12 +37,12 @@ class DQN:
             return next_state,reward,done
     
     
-    def loss(self,s,a,next_s,r,d): #loss function,kernel uses it to calculate loss.
-        s=torch.tensor(s,dtype=torch.float).to(self.device)
-        a=torch.tensor(a,dtype=torch.int64).view(-1,1).to(self.device)
-        next_s=torch.tensor(next_s,dtype=torch.float).to(self.device)
-        r=torch.tensor(r,dtype=torch.float).view(-1,1).to(self.device)
-        d=torch.tensor(d,dtype=torch.float).view(-1,1).to(self.device)
+    def loss(self,s,a,next_s,r,d,p): #loss function,kernel uses it to calculate loss.
+        s=torch.tensor(s,dtype=torch.float).to(assign_device(p,'GPU'))
+        a=torch.tensor(a,dtype=torch.int64).view(-1,1).to(assign_device(p,'GPU'))
+        next_s=torch.tensor(next_s,dtype=torch.float).to(assign_device(p,'GPU'))
+        r=torch.tensor(r,dtype=torch.float).view(-1,1).to(assign_device(p,'GPU'))
+        d=torch.tensor(d,dtype=torch.float).view(-1,1).to(assign_device(p,'GPU'))
         q_value=self.nn(s).gather(1,a)
         next_q_value=self.target_q_net(next_s).max(1)[0].view(-1,1)
         target=r+0.98*next_q_value*(1-d)
