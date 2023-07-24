@@ -30,7 +30,7 @@ class neuralnetwork: # define another class for the neural network object
             self.device=torch.device('cpu') # set the device to cpu
         self.model=NeuralNetwork().to(self.device) # create an instance of the neural network model and move it to the device
         self.loss_fn=nn.CrossEntropyLoss() # define the loss function as cross entropy loss
-        self.opt=[torch.optim.SGD(self.model.parameters(),lr=1e-3) for _ in range(3)] # define a list of optimizers as stochastic gradient descent with learning rate 1e-3
+        self.opt=[torch.optim.SGD(self.model.parameters(),lr=1e-3) for _ in range(7)] # define a list of optimizers as stochastic gradient descent with learning rate 1e-3
     
     
     def fp(self,x,p): # define a method for forward propagation
