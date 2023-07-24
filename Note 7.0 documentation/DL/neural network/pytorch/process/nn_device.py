@@ -1,6 +1,6 @@
 import torch # import the PyTorch library
 from torch import nn # import the neural network module from PyTorch
-from Note.nn.assign_device import assign_device_pytorch # import a custom function to assign device for PyTorch tensors
+from Note.nn.process.assign_device import assign_device_pytorch # import a custom function to assign device for PyTorch tensors
 
 
 class NeuralNetwork(nn.Module): # define a class for the neural network model
