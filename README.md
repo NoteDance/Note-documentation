@@ -78,7 +78,7 @@ kernel.test(x_test,y_test,32)#test the network performance on the test set with 
 ```
 
 ## Parallel test:
-**You can download neural network example in this link,and then you can import neural network and train with kernel,link and example code are below.**
+**You can get neural network example from the link below, and then you can import neural network and train with kernel, example code are below.**
 
 https://github.com/NoteDancing/Note-documentation/blob/Note-7.0/Note%207.0%20documentation/DL/neural%20network/tensorflow/process/nn.py
 
@@ -316,7 +316,7 @@ for p in range(7):                   #loop over the processes
 ## RL：
 **Pool Network:**
 
-**You can download neural network example in this link,and then you can import neural network and train with kernel,link and example code are below.**
+**You can get neural network example from the link below, and then you can import neural network and train with kernel, example code are below.**
 
 https://github.com/NoteDancing/Note-documentation/blob/Note-7.0/Note%207.0%20documentation/RL/neural%20network/tensorflow/pool%20network/DQN.py
 
@@ -375,7 +375,7 @@ for p in range(5):           #loop over the processes
 
 
 # Parallel test:
-**You can download neural network example in this link,and then you can import neural network and train with kernel,link and example code are below.**
+**You can get neural network example from the link below, and then you can import neural network and train with kernel, example code are below.**
 
 https://github.com/NoteDancing/Note-documentation/blob/Note-7.0/Note%207.0%20documentation/DL/neural%20network/tensorflow/process/nn.py
 
@@ -398,7 +398,7 @@ loss=test.loss_acc()          #calculate the loss and accuracy of the test
 
 
 # Online training:
-**You can download neural network example in this link,and then you can import neural network and train with kernel,link and example code are below.**
+**You can get neural network example from the link below, and then you can import neural network and train with kernel, example code are below.**
 
 https://github.com/NoteDancing/Note-documentation/blob/Note-7.0/Note%207.0%20documentation/DL/neural%20network/tensorflow/nn_ol.py
 
