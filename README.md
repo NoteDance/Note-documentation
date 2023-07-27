@@ -80,7 +80,7 @@ kernel.test(x_test,y_test,32)#test the network performance on the test set with 
 ## Parallel test:
 **You can get neural network example from the link below, and then you can import neural network and train with kernel, example code are below.**
 
-https://github.com/NoteDancing/Note-documentation/blob/Note-7.0/Note%207.0%20documentation/DL/neural%20network/tensorflow/process/nn.py
+https://github.com/NoteDancing/Note-documentation/blob/Note-7.0/Note%207.0%20documentation/DL/neural%20network/tensorflow/parallel/nn.py
 
 ```python
 import Note.DL.kernel as k   #import kernel module
