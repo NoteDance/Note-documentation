@@ -12,59 +12,42 @@ class kernel:
             self.reward=np.zeros(process,dtype=np.float32) # the reward array for each process
             self.sc=np.zeros(process,dtype=np.int32) # the step counter array for each process
         self.device=device # the device to run the model on, either GPU or CPU
-        self.state_pool={} # the dictionary to store the state transitions for each process
-        self.action_pool={} # the dictionary to store the actions for each process
-        self.next_state_pool={} # the dictionary to store the next states for each process
-        self.reward_pool={} # the dictionary to store the rewards for each process
-        self.done_pool={} # the dictionary to store the done flags for each process
         self.epsilon=None # the epsilon value for the epsilon-greedy policy
         self.episode_step=None # the maximum number of steps per episode
         self.pool_size=None # the maximum size of the state pool for each process
         self.batch=None # the batch size for training
-        self.episode_=0 # the episode counter
         self.update_step=None # the frequency of updating the target network parameters
         self.trial_count=None # the number of trials to calculate the average reward
         self.process=process # the number of processes to run in parallel
-        self.process_counter=0 # the counter of running processes
-        self.probability_list=[] # the list of probabilities to select a process
-        self.running_flag_list=[] # the list of flags to indicate whether a process is running or not
-        self.finish_list=[] # the list of indices of finished processes
-        self.running_flag=[] # the list of flags to indicate whether a process is running or not (shared)
         self.priority_flag=False # the flag to indicate whether to use priority-based optimization or not
-        self.priority_p=0 # the index of the priority process to optimize first
         self.max_opt=None # the maximum number of optimization steps for a priority process
         self.stop=False # the flag to indicate whether to stop training or not
-        self.save_flag=False # the flag to indicate whether to save the model parameters or not
-        self.stop_flag=False # the flag to indicate whether to stop training or not (shared)
         self.opt_counter=None # the array to store the optimization counter for each process
         self.s=None # a temporary variable to store a state tensor
         self.filename='save.dat' # the file name to save and load the model parameters and states
-        self.reward_list=[] # the list of rewards for each episode (shared)
-        self.loss_list=[] # the list of losses for each episode (shared)
-        self.total_episode=0 # the total number of episodes (shared)
     
     
     def init(self,manager):
         """This method is used to initialize some shared variables using a manager object"""
         
-        self.state_pool=manager.dict(self.state_pool) 
-        self.action_pool=manager.dict(self.action_pool)
-        self.next_state_pool=manager.dict(self.next_state_pool)
-        self.reward_pool=manager.dict(self.reward_pool)
-        self.done_pool=manager.dict(self.done_pool)
+        self.state_pool=manager.dict({}) 
+        self.action_pool=manager.dict({})
+        self.next_state_pool=manager.dict({})
+        self.reward_pool=manager.dict({})
+        self.done_pool=manager.dict({})
         self.reward=Array('f',self.reward) 
         self.loss=np.zeros(self.process) 
         self.loss=Array('f',self.loss) 
         self.sc=Array('i',self.sc) 
-        self.process_counter=Value('i',self.process_counter) 
-        self.probability_list=manager.list(self.probability_list) 
-        self.running_flag_list=manager.list(self.running_flag_list) 
-        self.finish_list=manager.list(self.finish_list) 
+        self.process_counter=Value('i',0) 
+        self.probability_list=manager.list([]) 
+        self.running_flag_list=manager.list([]) 
+        self.finish_list=manager.list([]) 
         self.running_flag=manager.list([0]) 
-        self.reward_list=manager.list(self.reward_list) 
-        self.loss_list=manager.list(self.loss_list) 
-        self.total_episode=Value('i',self.total_episode) 
-        self.priority_p=Value('i',self.priority_p) 
+        self.reward_list=manager.list([]) 
+        self.loss_list=manager.list([]) 
+        self.total_episode=Value('i',0) 
+        self.priority_p=Value('i',0) 
         if self.priority_flag==True:
             self.opt_counter=Array('i',np.zeros(self.process,dtype=np.int32)) 
         try:
@@ -80,8 +63,8 @@ class kernel:
         except Exception:
             self.bc_=manager.list() 
         self.episode_=Value('i',self.total_episode.value) 
-        self.stop_flag=Value('b',self.stop_flag) 
-        self.save_flag=Value('b',self.save_flag) 
+        self.stop_flag=Value('b',False) 
+        self.save_flag=Value('b',False) 
         self.file_list=manager.list([]) 
         return
     
