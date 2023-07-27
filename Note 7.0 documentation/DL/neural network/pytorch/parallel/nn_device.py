@@ -1,6 +1,6 @@
 import torch # import the PyTorch library
 from torch import nn # import the neural network module from PyTorch
-from Note.nn.process.assign_device import assign_device_pytorch # import a custom function to assign device for PyTorch tensors
+from Note.nn.parallel.assign_device_pytorch import assign_device # import a custom function to assign device for PyTorch tensors
 
 
 class NeuralNetwork(nn.Module): # define a class for the neural network model
@@ -34,12 +34,12 @@ class neuralnetwork: # define another class for the neural network object
     
     
     def fp(self,x,p): # define a method for forward propagation
-        pred=self.model(x.to(assign_device_pytorch(p,'GPU')))   # assign the device according to the process index p
+        pred=self.model(x.to(assign_device(p,'GPU')))   # assign the device according to the process index p
                                                                 # get the predictions from the model by passing the input tensor to the device and then to the model
         return pred # return the predictions
     
     
     def loss(self,output,labels,p): # define a method for calculating loss
-        loss=self.loss_fn(output,labels.to(assign_device_pytorch(p,'GPU'))) # assign the device according to the process index p
+        loss=self.loss_fn(output,labels.to(assign_device(p,'GPU'))) # assign the device according to the process index p
                                                                             # calculate the loss by passing the output and labels tensors to the device and then to the loss function
         return loss # return the loss
