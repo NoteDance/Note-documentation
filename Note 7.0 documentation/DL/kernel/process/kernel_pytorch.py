@@ -14,36 +14,21 @@ class kernel: # define a class named kernel
         self.batches_t=None # initialize the batches_t attribute to None
         self.shuffle=False # initialize the shuffle attribute to False
         self.priority_flag=False # initialize the priority_flag attribute to False
-        self.priority_p=0 # initialize the priority_p attribute to 0
         self.max_opt=None # initialize the max_opt attribute to None
         self.epoch=None # initialize the epoch attribute to None
-        self.epoch_counter=0 # initialize the epoch_counter attribute to 0
         self.stop=False # initialize the stop attribute to False
-        self.stop_flag=False # initialize the stop_flag attribute to False
-        self.save_flag=False # initialize the save_flag attribute to False
         self.save_epoch=None # initialize the save_epoch attribute to None
         self.batch=None # initialize the batch attribute to None
-        self.epoch_=0 # initialize the epoch_ attribute to 0
         self.end_loss=None # initialize the end_loss attribute to None
         self.end_acc=None # initialize the end_acc attribute to None
         self.end_test_loss=None # initialize the end_test_loss attribute to None
         self.end_test_acc=None # initialize the end_test_acc attribute to None
         self.acc_flag='%' # initialize the acc_flag attribute to '%'
-        self.opt_counter=None # initialize the opt_counter attribute to None
         self.p=None # initialize the p attribute to None
         self.s=None # initialize the s attribute to None
         self.saving_one=True # initialize the saving_one attribute to True
         self.filename='save.dat' # initialize the filename attribute to 'save.dat'
-        self.train_loss=0 # initialize the train_loss attribute to 0
-        self.train_acc=0 # initialize the train_acc attribute to 0
-        self.train_loss_list=[] # initialize the train_loss_list attribute to an empty list
-        self.train_acc_list=[] # initialize the train_acc_list attribute to an empty list
-        self.test_loss=0 # initialize the test_loss attribute to 0
-        self.test_acc=0 # initialize the test_acc attribute to 0
-        self.test_loss_list=[] # initialize the test_loss_list attribute to an empty list
-        self.test_acc_list=[] # initialize the test_acc_list attribute to an empty list
         self.test_flag=False # initialize the test_flag attribute to False
-        self.total_epoch=0 # initialize the total_epoch attribute to 0
     
     
     def data(self,train_dataset=None,test_dataset=None): 
@@ -85,23 +70,23 @@ class kernel: # define a class named kernel
         
         '''The manager argument is expected to be a multiprocessing.Manager object that can create shared variables across processes'''
     
-        self.epoch_counter=Value('i',self.epoch_counter) # create a shared variable with an integer data type and an initial value equal to the epoch_counter attribute, and assign it to the epoch_counter attribute
+        self.epoch_counter=Value('i',0) # create a shared variable with an integer data type and an initial value equal to the epoch_counter attribute, and assign it to the epoch_counter attribute
         self.batch_counter=Array('i',self.batch_counter) # create a shared array with an integer data type and an initial value equal to the batch_counter attribute, and assign it to the batch_counter attribute
         self.total_loss=Array('f',self.total_loss) # create a shared array with a float data type and an initial value equal to the total_loss attribute, and assign it to the total_loss attribute
-        self.total_epoch=Value('i',self.total_epoch) # create a shared variable with an integer data type and an initial value equal to the total_epoch attribute, and assign it to the total_epoch attribute
-        self.train_loss=Value('f',self.train_loss) # create a shared variable with a float data type and an initial value equal to the train_loss attribute, and assign it to the train_loss attribute
-        self.train_loss_list=manager.list(self.train_loss_list) # create a shared list with an initial value equal to the train_loss_list attribute, using the list method of the manager argument, and assign it to the train_loss_list attribute
-        self.priority_p=Value('i',self.priority_p) # create a shared variable with an integer data type and an initial value equal to the priority_p attribute, and assign it to the priority_p attribute
+        self.total_epoch=Value('i',0) # create a shared variable with an integer data type and an initial value equal to the total_epoch attribute, and assign it to the total_epoch attribute
+        self.train_loss=Value('f',0) # create a shared variable with a float data type and an initial value equal to the train_loss attribute, and assign it to the train_loss attribute
+        self.train_loss_list=manager.list([]) # create a shared list with an initial value equal to the train_loss_list attribute, using the list method of the manager argument, and assign it to the train_loss_list attribute
+        self.priority_p=Value('i',0) # create a shared variable with an integer data type and an initial value equal to the priority_p attribute, and assign it to the priority_p attribute
         if self.test_flag==True: # check if the test_flag attribute is True
-            self.test_loss=Value('f',self.test_loss) # create a shared variable with a float data type and an initial value equal to the test_loss attribute, and assign it to the test_loss attribute
-            self.test_loss_list=manager.list(self.test_loss_list) # create a shared list with an initial value equal to the test_loss_list attribute, using the list method of the manager argument, and assign it to the test_loss_list attribute
+            self.test_loss=Value('f',0) # create a shared variable with a float data type and an initial value equal to the test_loss attribute, and assign it to the test_loss attribute
+            self.test_loss_list=manager.list([]) # create a shared list with an initial value equal to the test_loss_list attribute, using the list method of the manager argument, and assign it to the test_loss_list attribute
         if hasattr(self.nn,'accuracy'): # check if the nn attribute has a method named accuracy
             self.total_acc=Array('f',self.total_acc) # create a shared array with a float data type and an initial value equal to the total_acc attribute, and assign it to the total_acc attribute
-            self.train_acc=Value('f',self.train_acc) # create a shared variable with a float data type and an initial value equal to the train_acc attribute, and assign it to the train_acc attribute
-            self.train_acc_list=manager.list(self.train_acc_list) # create a shared list with an initial value equal to the train_acc_list attribute, using the list method of the manager argument, and assign it to the train_acc_list attribute
+            self.train_acc=Value('f',0) # create a shared variable with a float data type and an initial value equal to the train_acc attribute, and assign it to the train_acc attribute
+            self.train_acc_list=manager.list([]) # create a shared list with an initial value equal to the train_acc_list attribute, using the list method of the manager argument, and assign it to the train_acc_list attribute
             if self.test_flag==True: # check if the test_flag attribute is True
-                self.test_acc=Value('f',self.test_acc) # create a shared variable with a float data type and an initial value equal to the test_acc attribute, and assign it to the test_acc attribute
-                self.test_acc_list=manager.list(self.test_acc_list) # create a shared list with an initial value equal to the test_acc_list attribute, using the list method of the manager argument, and assign it to the test_acc_list attribute
+                self.test_acc=Value('f',0) # create a shared variable with a float data type and an initial value equal to the test_acc attribute, and assign it to the test_acc attribute
+                self.test_acc_list=manager.list([]) # create a shared list with an initial value equal to the test_acc_list attribute, using the list method of the manager argument, and assign it to the test_acc_list attribute
         if self.priority_flag==True: # check if the priority_flag attribute is True
             self.opt_counter=Array('i',self.opt_counter) # create a shared array with an integer data type and an initial value equal to the opt_counter attribute, and assign it to the opt_counter attribute  
         try:
@@ -116,9 +101,9 @@ class kernel: # define a class named kernel
             self.nn.bc=manager.list([self.nn.bc]) # try to create a shared list with an initial value equal to a list containing the bc attribute of the nn attribute, using the list method of the manager argument, and assign it to the bc attribute of the nn attribute
         except Exception: # handle any exception that may occur
             self.bc_=manager.list() # create an empty shared list using the list method of the manager argument, and assign it to the bc_ attribute
-        self.epoch_=Value('i',self.epoch_) # create a shared variable with an integer data type and an initial value equal to the epoch_ attribute, and assign it to the epoch_ attribute
-        self.stop_flag=Value('b',self.stop_flag) # create a shared variable with a boolean data type and an initial value equal to the stop_flag attribute, and assign it to the stop_flag attribute
-        self.save_flag=Value('b',self.save_flag) # create a shared variable with a boolean data type and an initial value equal to the save_flag attribute, and assign it to the save_flag attribute
+        self.epoch_=Value('i',0) # create a shared variable with an integer data type and an initial value equal to the epoch_ attribute, and assign it to the epoch_ attribute
+        self.stop_flag=Value('b',False) # create a shared variable with a boolean data type and an initial value equal to the stop_flag attribute, and assign it to the stop_flag attribute
+        self.save_flag=Value('b',False) # create a shared variable with a boolean data type and an initial value equal to the save_flag attribute, and assign it to the save_flag attribute
         self.file_list=manager.list([]) # create an empty shared list using the list method of the manager argument, and assign it to the file_list attribute
         return # return nothing
     
