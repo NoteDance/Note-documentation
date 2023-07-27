@@ -21,36 +21,21 @@ class kernel:
         self.batches=None # the number of batches per epoch
         self.buffer_size=None # the buffer size for shuffling the data
         self.priority_flag=False # a flag to indicate whether to use priority optimization
-        self.priority_p=0 # the priority process index
         self.max_opt=None # the maximum number of optimization steps for each process
         self.epoch=None # the number of epochs for training
-        self.epoch_counter=0 # the counter for epochs
         self.stop=False # a flag to indicate whether to stop the training
-        self.stop_flag=False # a flag to indicate whether to stop the training by external signal
-        self.save_flag=False # a flag to indicate whether to save the model parameters
         self.save_epoch=None # the epoch interval for saving the model parameters
         self.batch=None # the batch size for training and testing data
-        self.epoch_=0 # a counter for epochs in online mode
         self.end_loss=None # the end condition for training loss
         self.end_acc=None # the end condition for training accuracy
         self.end_test_loss=None # the end condition for testing loss
         self.end_test_acc=None # the end condition for testing accuracy
         self.acc_flag='%' # a flag to indicate whether to use percentage or decimal for accuracy display
-        self.opt_counter=None # a counter for optimization steps for each process
         self.p=None # the process index for online mode
         self.s=None # a signal object for online mode
         self.saving_one=True # a flag to indicate whether to save only one copy of model parameters or multiple copies with different names
         self.filename='save.dat' # the default filename for saving model parameters
-        self.train_loss=0 # the current training loss value
-        self.train_acc=0 # the current training accuracy value
-        self.train_loss_list=[] # the list of training loss values over epochs
-        self.train_acc_list=[] # the list of training accuracy values over epochs
-        self.test_loss=0 # the current testing loss value
-        self.test_acc=0 # the current testing accuracy value
-        self.test_loss_list=[] # the list of testing loss values over epochs
-        self.test_acc_list=[] # the list of testing accuracy values over epochs
         self.test_flag=False # a flag to indicate whether to use testing data or not
-        self.total_epoch=0 # the total number of epochs for training
         
         
     def data(self,train_data=None,train_labels=None,test_data=None,test_labels=None,train_dataset=None,test_dataset=None):
@@ -113,24 +98,24 @@ class kernel:
     
     def init(self,manager):
         # a method to initialize some shared variables for multiprocessing
-        self.epoch_counter=Value('i',self.epoch_counter) # create a shared value for epoch counter
+        self.epoch_counter=Value('i',0) # create a shared value for epoch counter
         self.batch_counter=Array('i',self.batch_counter) # create a shared array for batch counter
         self.total_loss=Array('f',self.total_loss) # create a shared array for total loss
-        self.total_epoch=Value('i',self.total_epoch) # create a shared value for total epoch
-        self.train_loss=Value('f',self.train_loss) # create a shared value for training loss
-        self.train_loss_list=manager.list(self.train_loss_list) # create a shared list for training loss list
-        self.priority_p=Value('i',self.priority_p) # create a shared value for priority process index
+        self.total_epoch=Value('i',0) # create a shared value for total epoch
+        self.train_loss=Value('f',0) # create a shared value for training loss
+        self.train_loss_list=manager.list([]) # create a shared list for training loss list
+        self.priority_p=Value('i',0) # create a shared value for priority process index
         if self.test_flag==True: 
-            self.test_loss=Value('f',self.test_loss) # create a shared value for testing loss if using testing data or dataset
-            self.test_loss_list=manager.list(self.test_loss_list) # create a shared list for testing loss list if using testing data or dataset
+            self.test_loss=Value('f',0) # create a shared value for testing loss if using testing data or dataset
+            self.test_loss_list=manager.list([]) # create a shared list for testing loss list if using testing data or dataset
         if hasattr(self.nn,'accuracy'):
             if self.nn.accuracy!=None:
                 self.total_acc=Array('f',self.total_acc) # create a shared array for total accuracy if using accuracy metric
-                self.train_acc=Value('f',self.train_acc) # create a shared value for training accuracy if using accuracy metric
-                self.train_acc_list=manager.list(self.train_acc_list) # create a shared list for training accuracy list if using accuracy metric
+                self.train_acc=Value('f',0) # create a shared value for training accuracy if using accuracy metric
+                self.train_acc_list=manager.list([]) # create a shared list for training accuracy list if using accuracy metric
                 if self.test_flag==True:
-                    self.test_acc=Value('f',self.test_acc) # create a shared value for testing accuracy if using testing data or dataset and accuracy metric
-                    self.test_acc_list=manager.list(self.test_acc_list) # create a shared list for testing accuracy list if using testing data or dataset and accuracy metric
+                    self.test_acc=Value('f',0) # create a shared value for testing accuracy if using testing data or dataset and accuracy metric
+                    self.test_acc_list=manager.list([]) # create a shared list for testing accuracy list if using testing data or dataset and accuracy metric
         if self.priority_flag==True:
             self.opt_counter=Array('i',self.opt_counter)  # create a shared array for optimization counter if using priority optimization 
         try:
@@ -145,9 +130,9 @@ class kernel:
             self.nn.bc=manager.list([self.nn.bc]) # create a shared list for batch counter in the neural network model 
         except Exception:
             self.bc_=manager.list() # create an empty list if there is no batch counter in the neural network model 
-        self.epoch_=Value('i',self.epoch_) # create a shared value for epoch counter in online mode
-        self.stop_flag=Value('b',self.stop_flag) # create a shared value for stop flag by external signal
-        self.save_flag=Value('b',self.save_flag) # create a shared value for save flag by external signal
+        self.epoch_=Value('i',0) # create a shared value for epoch counter in online mode
+        self.stop_flag=Value('b',False) # create a shared value for stop flag by external signal
+        self.save_flag=Value('b',False) # create a shared value for save flag by external signal
         self.file_list=manager.list([]) # create an empty list for file names of saved model parameters
         self.param=manager.dict() # create an empty dictionary for model parameters
         self.param[7]=self.nn.param # set the 7th key of the dictionary to be the model parameters of the neural network model 
