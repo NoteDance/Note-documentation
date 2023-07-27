@@ -15,45 +15,27 @@ class kernel:
         if process!=None:
             self.reward=np.zeros(process,dtype=np.float32) # the reward array for each process
             self.sc=np.zeros(process,dtype=np.int32) # the step counter array for each process
-        self.state_pool={} # the state pool dictionary for each process
-        self.action_pool={} # the action pool dictionary for each process
-        self.next_state_pool={} # the next state pool dictionary for each process
-        self.reward_pool={} # the reward pool dictionary for each process
-        self.done_pool={} # the done pool dictionary for each process
         self.epsilon=None # the exploration rate array for each process
         self.episode_step=None # the maximum number of steps per episode
         self.pool_size=None # the maximum size of the pool
         self.batch=None # the batch size for training
-        self.episode_=0 # the episode counter
         self.update_step=None # the update frequency for the target network
         self.trial_count=None # the number of trials to compute the average reward
         self.process=process # the number of processes
-        self.process_counter=0 # the running process counter
-        self.probability_list=[] # the probability list for sampling processes based on their running flag
-        self.running_flag_list=[] # the running flag list for each process
-        self.finish_list=[] # the finish flag list for each process
-        self.running_flag=[] # the running flag array for each process
         self.PO=None # the parallel optimization mode (1, 2, or 3)
         self.priority_flag=False # the priority flag for optimization order
-        self.priority_p=0 # the priority index for optimization order
         self.max_opt=None # the maximum number of optimization steps per process per episode
         self.stop=False # the stop flag for training
-        self.save_flag=False # the save flag for saving parameters to file
-        self.stop_flag=False # the stop flag for optimization operation
-        self.opt_counter=None # the optimization counter array for each process
         self.s=None # the state array for online training mode
         self.filename='save.dat' # the file name to save parameters to file
-        self.reward_list=[] # the reward list to store episode rewards
-        self.loss_list=[] # the loss list to store episode losses
-        self.total_episode=0 # the total episode counter
     
     
     def init(self,manager):
-        self.state_pool=manager.dict(self.state_pool) # create a shared memory space for state pool using manager object 
-        self.action_pool=manager.dict(self.action_pool) # create a shared memory space for action pool using manager object 
-        self.next_state_pool=manager.dict(self.next_state_pool) # create a shared memory space for next state pool using manager object 
-        self.reward_pool=manager.dict(self.reward_pool) # create a shared memory space for reward pool using manager object 
-        self.done_pool=manager.dict(self.done_pool) # create a shared memory space for done pool using manager object 
+        self.state_pool=manager.dict({}) # create a shared memory space for state pool using manager object 
+        self.action_pool=manager.dict({}) # create a shared memory space for action pool using manager object 
+        self.next_state_pool=manager.dict({}) # create a shared memory space for next state pool using manager object 
+        self.reward_pool=manager.dict({}) # create a shared memory space for reward pool using manager object 
+        self.done_pool=manager.dict({}) # create a shared memory space for done pool using manager object 
         self.reward=Array('f',self.reward) # create a shared memory space for reward array using Array object 
         if type(self.nn.param[0])!=list:
             self.loss=np.zeros(self.process,dtype=self.nn.param[0].dtype.name) # create a loss array with the same data type as neural network parameters 
@@ -61,15 +43,15 @@ class kernel:
             self.loss=np.zeros(self.process,dtype=self.nn.param[0][0].dtype.name) # create a loss array with the same data type as neural network parameters 
         self.loss=Array('f',self.loss)
         self.sc=Array('i',self.sc) # create a shared memory space for step counter array using Array object 
-        self.process_counter=Value('i',self.process_counter) # create a shared memory space for process counter using Value object 
-        self.probability_list=manager.list(self.probability_list) # create a shared memory space for probability list using manager object 
-        self.running_flag_list=manager.list(self.running_flag_list) # create a shared memory space for running flag list using manager object 
-        self.finish_list=manager.list(self.finish_list) # create a shared memory space for finish flag list using manager object 
+        self.process_counter=Value('i',0) # create a shared memory space for process counter using Value object 
+        self.probability_list=manager.list([]) # create a shared memory space for probability list using manager object 
+        self.running_flag_list=manager.list([]) # create a shared memory space for running flag list using manager object 
+        self.finish_list=manager.list([]) # create a shared memory space for finish flag list using manager object 
         self.running_flag=manager.list([0]) # create a shared memory space for running flag array using manager object 
-        self.reward_list=manager.list(self.reward_list) # create a shared memory space for reward list using manager object 
-        self.loss_list=manager.list(self.loss_list) # create a shared memory space for loss list using manager object 
-        self.total_episode=Value('i',self.total_episode) # create a shared memory space for total episode counter using Value object 
-        self.priority_p=Value('i',self.priority_p) # create a shared memory space for priority index using Value object 
+        self.reward_list=manager.list([]) # create a shared memory space for reward list using manager object 
+        self.loss_list=manager.list([]) # create a shared memory space for loss list using manager object 
+        self.total_episode=Value('i',0) # create a shared memory space for total episode counter using Value object 
+        self.priority_p=Value('i',0) # create a shared memory space for priority index using Value object 
         if self.priority_flag==True:
             self.opt_counter=Array('i',np.zeros(self.process,dtype=np.int32)) # create a shared memory space for optimization counter array using Array object 
         try:
@@ -85,8 +67,8 @@ class kernel:
         except Exception:
             self.bc_=manager.list() # create an empty list to store the exception
         self.episode_=Value('i',self.total_episode) # create a shared memory space for episode counter using Value object 
-        self.stop_flag=Value('b',self.stop_flag) # create a shared memory space for stop flag using Value object 
-        self.save_flag=Value('b',self.save_flag) # create a shared memory space for save flag using Value object 
+        self.stop_flag=Value('b',False) # create a shared memory space for stop flag using Value object 
+        self.save_flag=Value('b',False) # create a shared memory space for save flag using Value object 
         self.file_list=manager.list([]) # create an empty list to store the file names
         self.param=manager.dict() # create an empty dictionary to store the parameters
         return
