@@ -105,7 +105,7 @@ kernel.train(32,5,32)        #train the network with batch size 32, epoch 5 and 
 
 ### PO2:
 ```python
-import Note.DL.process.kernel as k   #import kernel module
+import Note.DL.parallel.kernel as k   #import kernel module
 import tensorflow as tf              #import tensorflow library
 import nn as n                       #import neural network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
@@ -132,7 +132,7 @@ kernel.update_nn_param()             #update the network parameters after traini
 kernel.test(x_train,y_train,32)      #test the network performance on the train set with batch size 32
 ```
 ```python
-import Note.DL.process.kernel as k   #import kernel module
+import Note.DL.parallel.kernel as k   #import kernel module
 import tensorflow as tf              #import tensorflow library
 import nn as n                       #import neural network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
@@ -161,7 +161,7 @@ kernel.test(x_train,y_train,32)      #test the network performance on the train 
 
 ### PO3：
 ```python
-import Note.DL.process.kernel as k   #import kernel module
+import Note.DL.parallel.kernel as k   #import kernel module
 import tensorflow as tf              #import tensorflow library
 import nn as n                       #import neural network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
@@ -186,7 +186,7 @@ kernel.update_nn_param()             #update the network parameters after traini
 kernel.test(x_train,y_train,32)      #test the network performance on the train set with batch size 32
 ```
 ```python
-import Note.DL.process.kernel as k   #import kernel module
+import Note.DL.parallel.kernel as k   #import kernel module
 import tensorflow as tf              #import tensorflow library
 import nn as n                       #import neural network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
@@ -213,7 +213,7 @@ kernel.test(x_train,y_train,32)      #test the network performance on the train 
 
 ### Save and restore:
 ```python
-import Note.DL.process.kernel as k   #import kernel module
+import Note.DL.parallel.kernel as k   #import kernel module
 import tensorflow as tf              #import tensorflow library
 import nn as n                       #import neural network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
@@ -238,7 +238,7 @@ kernel.test(x_train,y_train,32)      #test the network performance on the train 
 kernel.save()                        #save the neural network to a file
 ```
 ```python
-import Note.DL.process.kernel as k   #import kernel module
+import Note.DL.parallel.kernel as k   #import kernel module
 import tensorflow as tf              #import tensorflow library
 import nn as n                       #import neural network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
@@ -261,7 +261,7 @@ for p in range(7):                   #loop over the processes
 
 ### Parallel test:
 ```python
-import Note.DL.process.kernel as k   #import kernel module
+import Note.DL.parallel.kernel as k   #import kernel module
 import tensorflow as tf              #import tensorflow library
 import nn as n                       #import neural network module
 from multiprocessing import Process,Manager #import multiprocessing tools
@@ -286,7 +286,7 @@ for p in range(7):                   #loop over the processes
 
 ### Stop training and saving when condition is met:
 ```python
-import Note.DL.process.kernel as k   #import kernel module
+import Note.DL.parallel.kernel as k   #import kernel module
 import tensorflow as tf              #import tensorflow library
 import nn as n                       #import neural network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
@@ -318,11 +318,11 @@ for p in range(7):                   #loop over the processes
 
 **You can get neural network example from the link below, and then you can import neural network and train with kernel, example code are below.**
 
-https://github.com/NoteDancing/Note-documentation/blob/Note-7.0/Note%207.0%20documentation/RL/neural%20network/tensorflow/pool%20network/DQN.py
+https://github.com/NoteDancing/Note-documentation/blob/Note-7.0/Note%207.0%20documentation/RL/neural%20network/tensorflow/parallel/DQN.py
 
 ### PO2:
 ```python
-import Note.RL.kernel as k   #import kernel module
+import Note.RL.parallel.kernel as k   #import kernel module
 import DQN as d              #import deep Q-network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
@@ -341,7 +341,7 @@ for p in range(5):           #loop over the processes
 
 ### PO3:
 ```python
-import Note.RL.kernel as k   #import kernel module
+import Note.RL.parallel.kernel as k   #import kernel module
 import DQN as d              #import deep Q-network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
@@ -357,7 +357,7 @@ for p in range(5):           #loop over the processes
     Process(target=kernel.train,args=(p,100,lock,pool_lock)).start() #start each process with the train function and pass the process id, the number of episodes, the locks and the pool locks as arguments
 ```
 ```python
-import Note.RL.kernel as k   #import kernel module
+import Note.RL.parallel.kernel as k   #import kernel module
 import DQN as d              #import deep Q-network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
@@ -377,7 +377,7 @@ for p in range(5):           #loop over the processes
 # Parallel test:
 **You can get neural network example from the link below, and then you can import neural network and train with kernel, example code are below.**
 
-https://github.com/NoteDancing/Note-documentation/blob/Note-7.0/Note%207.0%20documentation/DL/neural%20network/tensorflow/process/nn.py
+https://github.com/NoteDancing/Note-documentation/blob/Note-7.0/Note%207.0%20documentation/DL/neural%20network/tensorflow/parallel/nn.py
 
 ```python
 import tensorflow as tf       #import tensorflow library
@@ -400,7 +400,7 @@ loss=test.loss_acc()          #calculate the loss and accuracy of the test
 # Online training:
 **You can get neural network example from the link below, and then you can import neural network and train with kernel, example code are below.**
 
-https://github.com/NoteDancing/Note-documentation/blob/Note-7.0/Note%207.0%20documentation/DL/neural%20network/tensorflow/nn_ol.py
+https://github.com/NoteDancing/Note-documentation/blob/Note-7.0/Note%207.0%20documentation/DL/neural%20network/tensorflow/non-parallel/nn_ol.py
 
 **example:**
 ```python
