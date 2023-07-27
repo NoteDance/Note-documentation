@@ -331,11 +331,11 @@ class kernel:
         self.running_flag.append(1) # append a 1 to the running flag list to indicate that this process is running 
         self.process_counter.value+=1 # increment the counter of running processes by 1 
         self.finish_list.append(None) # append a None to the finish list to indicate that this process is not finished yet 
+        lock[1].release() # release the lock for the shared variables 
         try:
             epsilon=self.epsilon[p] # get the epsilon value for this process index 
         except Exception:
             epsilon=None # set the epsilon value to None if there is no epsilon value 
-        lock[1].release() # release the lock for the shared variables 
         for k in range(episode_count): # for each episode 
             s=self.nn.env(p=p,initial=True) # get an initial state from the environment according to this process index 
             s=np.array(s) # convert the state to an array 
