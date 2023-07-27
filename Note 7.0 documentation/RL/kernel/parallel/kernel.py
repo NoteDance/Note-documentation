@@ -482,14 +482,14 @@ class kernel:
         self.running_flag.append(1) # append a running flag of 1 to indicate that current process is running 
         self.process_counter.value+=1 # increment the process counter by 1
         self.finish_list.append(None) # append a finish flag of None to indicate that current process is not finished 
-        try:
-            epsilon=self.epsilon[p] # get the exploration rate for current process 
-        except Exception:
-            epsilon=None # set the exploration rate as None if exception occurs 
         if self.PO==1 or self.PO==2: # check if parallel optimization mode is 1 or 2
             lock[1].release() # release the lock for initialization operation 
         elif self.PO==3: # check if parallel optimization mode is 3
             lock[1].release() # release the lock for initialization operation 
+        try:
+            epsilon=self.epsilon[p] # get the exploration rate for current process 
+        except Exception:
+            epsilon=None # set the exploration rate as None if exception occurs
         for k in range(episode_count): # loop over each episode 
             s=self.nn.env(p=p,initial=True) # reset the environment and get the initial state 
             if type(self.nn.param[0])!=list:
