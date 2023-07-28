@@ -12,7 +12,7 @@ class nn:
         self.loss_object=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
         self.optimizer=Momentum(0.07,0.7)
         # Initialize a variable to keep track of the number of optimization steps
-        self.opt_counter=tf.Variable(tf.zeros(7,dtype=tf.float32))
+        self.opt_counter=tf.Variable(tf.zeros(3,dtype=tf.float32))
     
     
     def build(self):
