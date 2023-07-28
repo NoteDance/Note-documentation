@@ -31,8 +31,7 @@ class kernel:
         self.end_test_loss=None # the end condition for testing loss
         self.end_test_acc=None # the end condition for testing accuracy
         self.acc_flag='%' # a flag to indicate whether to use percentage or decimal for accuracy display
-        self.p=None # the process index for online mode
-        self.s=None # a signal object for online mode
+        self.s=None # initialize the s attribute to None
         self.saving_one=True # a flag to indicate whether to save only one copy of model parameters or multiple copies with different names
         self.filename='save.dat' # the default filename for saving model parameters
         self.test_flag=False # a flag to indicate whether to use testing data or not
@@ -391,7 +390,7 @@ class kernel:
                         else: 
                             self.test_loss.value=self.test(self.test_data,self.test_labels,test_batch) # get the testing loss value with testing data, labels and batch size as inputs
                             self.test_loss_list.append(self.test_loss.value) # append the testing loss value to the testing loss list
-                    self.print_save() # print and save the results for this epoch
+                    self.save_() # save the results for this epoch
                     self.epoch_counter.value+=1 # increment the epoch counter by 1
                     if hasattr(self.nn,'ec'): 
                         ec=self.nn.ec[0] # get the epoch counter in the neural network model
