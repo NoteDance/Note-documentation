@@ -390,7 +390,7 @@ class kernel:
                         else: 
                             self.test_loss.value=self.test(self.test_data,self.test_labels,test_batch) # get the testing loss value with testing data, labels and batch size as inputs
                             self.test_loss_list.append(self.test_loss.value) # append the testing loss value to the testing loss list
-                    self.save_() # save the results for this epoch
+                    self.save_() # call the save_ method to save
                     self.epoch_counter.value+=1 # increment the epoch counter by 1
                     if hasattr(self.nn,'ec'): 
                         ec=self.nn.ec[0] # get the epoch counter in the neural network model
