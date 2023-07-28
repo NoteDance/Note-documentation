@@ -24,7 +24,6 @@ class kernel: # define a class named kernel
         self.end_test_loss=None # initialize the end_test_loss attribute to None
         self.end_test_acc=None # initialize the end_test_acc attribute to None
         self.acc_flag='%' # initialize the acc_flag attribute to '%'
-        self.p=None # initialize the p attribute to None
         self.s=None # initialize the s attribute to None
         self.saving_one=True # initialize the saving_one attribute to True
         self.filename='save.dat' # initialize the filename attribute to 'save.dat'
@@ -286,7 +285,7 @@ class kernel: # define a class named kernel
                         else: # otherwise
                             self.test_loss.value=self.test(test_batch) # call the test method with the test_batch argument, and assign the return value to the value of the test_loss attribute
                             self.test_loss_list.append(self.test_loss.value) # append the value of the test_loss attribute to the test_loss_list attribute
-                self.print_save() # call the print_save method to print and save some information
+                self.save_() # call the save_ method to save
                 self.epoch_counter.value+=1 # increment the value of the epoch_counter attribute by 1
                 if hasattr(self.nn,'ec'): # check if the nn attribute has an attribute named ec
                     ec=self.nn.ec[0] # assign the first element of the ec attribute of the nn attribute to the ec variable
