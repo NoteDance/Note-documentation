@@ -1,4 +1,5 @@
 import tensorflow as tf
+from tensorflow.python.util import nest
 import Note.nn.layer.dense as d
 from Note.nn.parallel.optimizer import Momentum
 from Note.nn.layer.flatten import flatten
@@ -37,9 +38,11 @@ class nn:
     
     def attenuate(self,gradient,oc,p):  #gradient attenuation function,kernel uses it to calculate attenuation coefficient.
         # Apply an exponential decay to the gradient based on the optimization counter
-        ac=0.9**oc[p]                   #ac:attenuation coefficient
-        for i in range(len(gradient)):  #oc:optimization counter
-            gradient[i]=ac*gradient[i]  #p:process number
+        ac=0.9**oc[0][p]                   #ac:attenuation coefficient
+        gradient_flat=nest.flatten(gradient)
+        for i in range(len(gradient_flat)):  #oc:optimization counter
+            gradient_flat[i]=ac*gradient_flat[i]  #p:process number
+        gradient=nest.pack_sequence_as(gradient,gradient_flat)
         return gradient  
     
 
