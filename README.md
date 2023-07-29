@@ -412,7 +412,7 @@ test=t.parallel_test(nn,x_test,y_test,6,32) #create parallel test object with th
 test.segment_data()           #segment data for each process
 for p in range(6):            #loop over the processes
 	Process(target=test.test).start() #start each process with the test function
-loss=test.loss_acc()          #calculate the loss and accuracy of the test
+loss,acc=test.loss_acc()          #calculate the loss and accuracy of the test
 ```
 
 
