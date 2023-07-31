@@ -9,7 +9,6 @@ class nn:               # A neural network class example, allocate device for mu
     def __init__(self): # initialize the network
         self.loss_object=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True) # loss object, kernel uses it to calculate loss. Here we use sparse categorical crossentropy with logits as output
         self.optimizer=Momentum(0.07,0.7) # optimizer, kernel uses it to optimize. Here we use a custom momentum optimizer with learning rate 0.07 and momentum 0.7
-        self.info='example' # some information about the network
     
     
     def build(self): # build function, kernel uses it to create the network layers
