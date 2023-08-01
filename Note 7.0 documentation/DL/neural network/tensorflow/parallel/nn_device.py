@@ -33,7 +33,8 @@ class nn:               # A neural network class example, allocate device for mu
             return self.loss_object(labels,output) # return the mean softmax cross entropy loss between labels and output
     
     
-    def opt(self,gradient): # optimization function, kernel uses it to optimize parameter
+    def opt(self,gradient,p): # optimization function, kernel uses it to optimize parameter
         # Perform optimization on the parameters using the gradient
-        param=self.optimizer.opt(gradient,self.param) # apply the Note's momentum optimizer to update the parameters using the gradient
+        with tf.device(assign_device(p,'GPU')): # assign the device according to the process index p
+            param=self.optimizer.opt(gradient,self.param) # apply the Note's momentum optimizer to update the parameters using the gradient
         return param
