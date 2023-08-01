@@ -461,12 +461,3 @@ import DQN as d                        #import deep Q-network module
 dqn=d.DQN(4,128,2)                     #create neural network object with 4 inputs, 128 hidden units and 2 outputs
 check(dqn,tf,2)                        #check the network with tensorflow platform and 2 actions
 ```
-
-
-# Note Compiler:
-documentation:https://github.com/NoteDancing/Note-documentation/tree/Note-7.0/Note%207.0%20documentation/compiler
-```python
-import Note.nc as nc
-c=nc.compiler('nn.n')
-c.Compile()
-```
