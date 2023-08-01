@@ -216,7 +216,7 @@ kernel.test(x_train,y_train,32)      #test the network performance on the train 
 import Note.DL.parallel.kernel as k   #import kernel module
 import tensorflow as tf              #import tensorflow library
 import nn as n                       #import neural network module
-from multiprocessing import Process,Lock,Manager #import multiprocessing tools
+from multiprocessing import Process,Manager #import multiprocessing tools
 mnist=tf.keras.datasets.mnist        #load mnist dataset
 (x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
 x_train,x_test =x_train/255.0,x_test/255.0 #normalize data
@@ -241,7 +241,7 @@ kernel.save()                        #save the neural network to a file
 import Note.DL.parallel.kernel as k   #import kernel module
 import tensorflow as tf              #import tensorflow library
 import nn as n                       #import neural network module
-from multiprocessing import Process,Lock,Manager #import multiprocessing tools
+from multiprocessing import Process,Manager #import multiprocessing tools
 mnist=tf.keras.datasets.mnist        #load mnist dataset
 (x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
 x_train,x_test =x_train/255.0,x_test/255.0 #normalize data
