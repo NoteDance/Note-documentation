@@ -504,7 +504,7 @@ class kernel:
         while True: # loop indefinitely until break condition is met 
             if self.stop_flag.value==True: # if stop flag is True 
                 break # break out of the loop 
-            if self.episode_counter.value>=self.episode: # if episode counter value is greater than or equal to episode
+            if self.episode!=None and self.episode_counter.value>=self.episode: # if episode counter value is greater than or equal to episode
                 break # break out of the loop 
             s=self.nn.env(p=p,initial=True) # get initial state from calling env attribute of neural network model with process index and initial flag as arguments 
             if type(self.nn.param[0])!=list: # if neural network model parameter is not a list
@@ -513,6 +513,8 @@ class kernel:
                 s=np.array(s,self.nn.param[0][0].dtype.name) # convert state data to the same data type as the first element of the neural network model parameter list
             if self.episode_step==None: # if episode step value is not given
                 while True: # loop indefinitely until break condition is met 
+                    if self.episode!=None and self.episode_counter.value>=self.episode: # if episode counter value is greater than or equal to episode
+                        break # break out of the loop 
                     next_s,r,done,index=self.env(s,epsilon,p,lock,pool_lock) # get next state, reward, done flag and index from calling env method with state, epsilon, process index, lock and pool lock as arguments 
                     self.reward[p]+=r # add reward to reward array for process index p 
                     s=next_s # set state to next state 
@@ -535,7 +537,7 @@ class kernel:
                         break # break out of the loop 
             else: # otherwise, assume that episode step value is given
                 for l in range(self.episode_step): # loop through the episode step indices
-                    if self.episode_counter.value>=self.episode: # if episode counter value is greater than or equal to episode
+                    if self.episode!=None and self.episode_counter.value>=self.episode: # if episode counter value is greater than or equal to episode
                         break # break out of the loop 
                     next_s,r,done,index=self.env(s,epsilon,p,lock,pool_lock) # get next state, reward, done flag and index from calling env method with state, epsilon, process index, lock and pool lock as arguments 
                     self.reward[p]+=r # add reward to reward array for process index p 
