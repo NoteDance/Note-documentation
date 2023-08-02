@@ -326,6 +326,7 @@ import DQN as d              #import deep Q-network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
 kernel=k.kernel(dqn,5)       #create kernel object with the network and 5 processes to train
+kernel.episode=300           #set the number of episodes to 300
 manager=Manager()            #create manager object to share data among processes
 kernel.init(manager)         #initialize shared data with the manager
 kernel.action_count=2        #set the number of actions to 2
@@ -334,7 +335,7 @@ kernel.PO=1                  #use PO1 algorithm for parallel optimization
 pool_lock=[Lock(),Lock(),Lock(),Lock(),Lock()] #create a list of locks for each process's replay pool
 lock=[Lock(),Lock(),Lock()]  #create a list of locks for synchronization
 for p in range(5):           #loop over the processes
-    Process(target=kernel.train,args=(p,100,lock,pool_lock)).start() #start each process with the train function and pass the process id, the number of episodes, the locks and the pool locks as arguments
+    Process(target=kernel.train,args=(p,lock,pool_lock)).start() #start each process with the train function and pass the process id, the number of episodes, the locks and the pool locks as arguments
 ```
 
 ### PO2:
@@ -344,6 +345,7 @@ import DQN as d              #import deep Q-network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
 kernel=k.kernel(dqn,5)       #create kernel object with the network and 5 processes to train
+kernel.episode=300           #set the number of episodes to 300
 manager=Manager()            #create manager object to share data among processes
 kernel.init(manager)         #initialize shared data with the manager
 kernel.action_count=2        #set the number of actions to 2
@@ -353,7 +355,7 @@ pool_lock=[Lock(),Lock(),Lock(),Lock(),Lock()] #create a list of locks for each 
 lock=[Lock(),Lock(),Lock()]  #create a list of locks for synchronization
 g_lock=Lock()                #create a global lock for gradient computing
 for p in range(5):           #loop over the processes
-    Process(target=kernel.train,args=(p,100,lock,pool_lock,g_lock)).start() #start each process with the train function and pass the process id, the number of episodes, the locks, the pool locks and the global lock as arguments
+    Process(target=kernel.train,args=(p,lock,pool_lock,g_lock)).start() #start each process with the train function and pass the process id, the number of episodes, the locks, the pool locks and the global lock as arguments
 ```
 
 ### PO3:
@@ -363,6 +365,7 @@ import DQN as d              #import deep Q-network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
 kernel=k.kernel(dqn,5)       #create kernel object with the network and 5 processes to train
+kernel.episode=300           #set the number of episodes to 300
 manager=Manager()            #create manager object to share data among processes
 kernel.init(manager)         #initialize shared data with the manager
 kernel.action_count=2        #set the number of actions to 2
@@ -371,7 +374,7 @@ kernel.PO=3                  #use PO3 algorithm for parallel optimization
 pool_lock=[Lock(),Lock(),Lock(),Lock(),Lock()] #create a list of locks for each process's replay pool
 lock=[Lock(),Lock(),Lock()]  #create three locks for synchronization
 for p in range(5):           #loop over the processes
-    Process(target=kernel.train,args=(p,100,lock,pool_lock)).start() #start each process with the train function and pass the process id, the number of episodes, the locks and the pool locks as arguments
+    Process(target=kernel.train,args=(p,lock,pool_lock)).start() #start each process with the train function and pass the process id, the number of episodes, the locks and the pool locks as arguments
 ```
 
 ### Stop training and saving when condition is met:
@@ -381,6 +384,7 @@ import DQN as d              #import deep Q-network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
 kernel=k.kernel(dqn,5)       #create kernel object with the network and 5 processes to train
+kernel.episode=300           #set the number of episodes to 300
 manager=Manager()            #create manager object to share data among processes
 kernel.init(manager)         #initialize shared data with the manager
 kernel.action_count=2        #set the number of actions to 2
@@ -390,7 +394,7 @@ kernel.PO=3                  #use PO3 algorithm for parallel optimization
 pool_lock=[Lock(),Lock(),Lock(),Lock(),Lock()] #create a list of locks for each process's replay pool
 lock=[Lock(),Lock(),Lock()]  #create three locks for synchronization
 for p in range(5):           #loop over the processes
-    Process(target=kernel.train,args=(p,100,lock,pool_lock)).start() #start each process with the train function and pass the process id, the number of episodes, the locks and the pool locks as arguments
+    Process(target=kernel.train,args=(p,lock,pool_lock)).start() #start each process with the train function and pass the process id, the number of episodes, the locks and the pool locks as arguments
 ```
 
 
