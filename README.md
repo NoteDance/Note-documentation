@@ -1,6 +1,6 @@
 # Non-parallel training:
-
-## Save and restore:
+## DL:
+### Save and restore:
 ```python
 import Note.DL.kernel as k   #import kernel module
 import tensorflow as tf      #import tensorflow library
@@ -28,8 +28,7 @@ kernel.restore('save.dat')    #restore the network from a file
 kernel.train(32,1)            #train the network again with batch size 32 and epoch 1
 ```
 
-## Stop training and saving when condition is met:
-### DL:
+### Stop training and saving when condition is met:
 ```python
 import Note.DL.kernel as k   #import kernel module
 import tensorflow as tf      #import tensorflow library
@@ -46,7 +45,27 @@ kernel.data(x_train,y_train) #input train data to the kernel
 kernel.train(32,5)           #train the network with batch size 32 and epoch 5
 ```
 
-### RL:
+### Visualization:
+```python
+import Note.DL.kernel as k   #import kernel module
+import tensorflow as tf      #import tensorflow library
+import nn as n               #import neural network module
+mnist=tf.keras.datasets.mnist #load mnist dataset
+(x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
+x_train,x_test =x_train/255.0,x_test/255.0 #normalize data
+nn=n.nn()                    #create neural network object
+kernel=k.kernel(nn)          #create kernel object with the network
+kernel.platform=tf           #set the platform to tensorflow
+kernel.stop=True             #set the flag to stop training when a condition is met
+kernel.end_loss=0.7          #set the condition to stop training when the loss is less than 0.7
+kernel.data(x_train,y_train) #input train data to the kernel
+kernel.train(32,5)           #train the network with batch size 32 and epoch 5
+kernel.visualize_train()     #visualize the loss
+```
+
+
+## RL:
+### Stop training and saving when condition is met:
 ```python
 import Note.RL.kernel as k   #import kernel module
 import DQN as d              #import deep Q-network module
@@ -56,6 +75,20 @@ kernel.stop=True             #set the flag to stop training when a condition is 
 kernel.action_count=2        #set the number of actions to 2
 kernel.set_up(epsilon=0.01,pool_size=10000,batch=64,update_step=10,trial_count=10,criterion=200) #set up the hyperparameters for training and the condition to stop training when the average reward of 10 trials is greater than 200
 kernel.train(100)            #train the network for 500 episodes
+```
+
+### Visualization:
+```python
+import Note.RL.kernel as k   #import kernel module
+import DQN as d              #import deep Q-network module
+dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
+kernel=k.kernel(dqn)       #create kernel object with the network
+kernel.stop=True             #set the flag to stop training when a condition is met
+kernel.action_count=2        #set the number of actions to 2
+kernel.set_up(epsilon=0.01,pool_size=10000,batch=64,update_step=10,trial_count=10,criterion=200) #set up the hyperparameters for training and the condition to stop training when the average reward of 10 trials is greater than 200
+kernel.train(100)            #train the network for 500 episodes
+kernel.visualize_reward()    #visualize the reward
+kernel.visualize_train()     #visualize the loss
 ```
 
 ## Training with test data
@@ -98,9 +131,7 @@ kernel.train(32,5,32)        #train the network with batch size 32, epoch 5 and 
 
 
 # Parallel training:
-
 ## DL:
-
 ### PO1:
 ```python
 import Note.DL.parallel.kernel as k   #import kernel module
@@ -257,6 +288,34 @@ kernel.init(manager)                 #initialize shared data with the manager
 kernel.restore('save.dat')           #restore the neural network from a file
 for p in range(3):                   #loop over the processes
 	Process(target=kernel.train,args=(p,)).start() #start each process with the train function and pass the process id as argument
+```
+
+### Visualization:
+```python
+import Note.DL.parallel.kernel as k   #import kernel module
+import tensorflow as tf              #import tensorflow library
+import nn as n                       #import neural network module
+from multiprocessing import Process,Lock,Manager #import multiprocessing tools
+mnist=tf.keras.datasets.mnist        #load mnist dataset
+(x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
+x_train,x_test =x_train/255.0,x_test/255.0 #normalize data
+nn=n.nn()                            #create neural network object
+nn.build()                           #build the network structure
+kernel=k.kernel(nn)                  #create kernel object with the network
+kernel.process=3                     #set the number of processes to train
+kernel.data_segment_flag=True        #set the flag to segment data for each process
+kernel.epoch=5                       #set the number of epochs to train
+kernel.batch=32                      #set the batch size
+kernel.PO=3                          #use PO3 algorithm for parallel optimization
+kernel.data(x_train,y_train)         #input train data to the kernel
+manager=Manager()                    #create manager object to share data among processes
+kernel.init(manager)                 #initialize shared data with the manager
+lock=Lock()                          #create a lock for synchronization
+for p in range(3):                   #loop over the processes
+	Process(target=kernel.train,args=(p,lock)).start() #start each process with the train function and pass the process id and the lock as arguments
+kernel.update_nn_param()             #update the network parameters after training
+kernel.test(x_train,y_train,32)      #test the network performance on the train set with batch size 32
+kernel.visualize_train()             #visualize the loss
 ```
 
 ### Parallel test:
@@ -435,6 +494,27 @@ pool_lock=[Lock(),Lock(),Lock(),Lock(),Lock()] #create a list of locks for each 
 lock=[Lock(),Lock(),Lock()]  #create three locks for synchronization
 for p in range(5):           #loop over the processes
     Process(target=kernel.train,args=(p,lock,pool_lock)).start() #start each process with the train function and pass the process id, the number of episodes, the locks and the pool locks as arguments
+```
+
+### Visualization:
+```python
+import Note.RL.parallel.kernel as k   #import kernel module
+import DQN as d              #import deep Q-network module
+from multiprocessing import Process,Lock,Manager #import multiprocessing tools
+dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
+kernel=k.kernel(dqn,5)       #create kernel object with the network and 5 processes to train
+kernel.episode=100           #set the number of episodes to 100
+manager=Manager()            #create manager object to share data among processes
+kernel.init(manager)         #initialize shared data with the manager
+kernel.action_count=2        #set the number of actions to 2
+kernel.set_up(epsilon=0.01,pool_size=10000,batch=64,update_step=10) #set up the hyperparameters for training
+kernel.PO=3                  #use PO3 algorithm for parallel optimization
+pool_lock=[Lock(),Lock(),Lock(),Lock(),Lock()] #create a list of locks for each process's replay pool
+lock=[Lock(),Lock(),Lock()]  #create three locks for synchronization
+for p in range(5):           #loop over the processes
+    Process(target=kernel.train,args=(p,lock,pool_lock)).start() #start each process with the train function and pass the process id, the number of episodes, the locks and the pool locks as arguments
+kernel.visualize_reward()    #visualize the reward
+kernel.visualize_train()     #visualize the loss
 ```
 
 ### Stop training and saving when condition is met:
