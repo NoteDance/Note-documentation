@@ -519,11 +519,6 @@ kernel.test(x_train,y_train,32)      #test the network performance on the train 
 
 ## RL：
 **Pool Network:**
-
-**You can get neural network example from the link below, and then you can import neural network and train with kernel, example code are below.**
-
-https://github.com/NoteDancing/Note-documentation/blob/Note-7.0/Note%207.0%20documentation/RL/neural%20network/tensorflow/parallel/DQN.py
-
 ### PO1:
 ```python
 import Note.RL.parallel.kernel as k   #import kernel module
