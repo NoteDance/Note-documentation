@@ -28,6 +28,41 @@ kernel.restore('save.dat')    #restore the network from a file
 kernel.train(32,1)            #train the network again with batch size 32 and epoch 1
 ```
 
+## Training with test data
+**You can get neural network example from the link below, and then you can import neural network and train with kernel, example code are below.**
+
+https://github.com/NoteDancing/Note-documentation/blob/Note-7.0/Note%207.0%20documentation/DL/neural%20network/tensorflow/nn_acc.py
+
+```python
+import Note.DL.kernel as k   #import kernel module
+import tensorflow as tf      #import tensorflow library
+import nn_acc as n           #import neural network module with accuracy function
+mnist=tf.keras.datasets.mnist #load mnist dataset
+(x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
+x_train,x_test =x_train/255.0,x_test/255.0 #normalize data
+nn=n.nn()                    #create neural network object
+kernel=k.kernel(nn)          #create kernel object with the network
+kernel.platform=tf           #set the platform to tensorflow
+kernel.data(x_train,y_train,x_test,y_test) #input train and test data and labels to the kernel
+kernel.train(32,5,32)        #train the network with batch size 32, epoch 5 and test batch size 32
+kernel.test(x_test,y_test,32)#test the network performance on the test set with batch size 32
+```
+
+### Saving multiple files in training:
+```python
+import Note.DL.kernel as k   #import kernel module
+import tensorflow as tf      #import tensorflow library
+import nn as n               #import neural network module
+mnist=tf.keras.datasets.mnist #load mnist dataset
+(x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
+x_train,x_test =x_train/255.0,x_test/255.0 #normalize data
+nn=n.nn()                    #create neural network object
+kernel=k.kernel(nn)          #create kernel object with the network
+kernel.platform=tf           #set the platform to tensorflow
+kernel.data(x_train,y_train) #input train data to the kernel
+kernel.train(32,5,save=True,one=False,s=3)           #train the network with batch size 32 and epoch 5
+```
+
 ### Stop training and saving when condition is met:
 ```python
 import Note.DL.kernel as k   #import kernel module
@@ -63,8 +98,36 @@ kernel.train(32,5)           #train the network with batch size 32 and epoch 5
 kernel.visualize_train()     #visualize the loss
 ```
 
+### Set the print count:
+```python
+import Note.DL.kernel as k   #import kernel module
+import tensorflow as tf      #import tensorflow library
+import nn as n               #import neural network module
+mnist=tf.keras.datasets.mnist #load mnist dataset
+(x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
+x_train,x_test =x_train/255.0,x_test/255.0 #normalize data
+nn=n.nn()                    #create neural network object
+kernel=k.kernel(nn)          #create kernel object with the network
+kernel.platform=tf           #set the platform to tensorflow
+kernel.data(x_train,y_train) #input train data to the kernel
+kernel.train(32,5,p=3)           #train the network with batch size 32 and epoch 5
+```
+
 
 ## RL:
+### Saving multiple files in training:
+```python
+import Note.RL.kernel as k   #import kernel module
+import tensorflow as tf           #import tensorflow library
+import DQN as d                   #import deep Q-network module
+dqn=d.DQN(4,128,2)                #create neural network object with 4 inputs, 128 hidden units and 2 outputs
+kernel=k.kernel(dqn)              #create kernel object with the network
+kernel.platform=tf                #set the platform to tensorflow
+kernel.action_count=2             #set the number of actions to 2
+kernel.set_up(epsilon=0.01,pool_size=10000,batch=64,update_step=10) #set up the hyperparameters for training
+kernel.train(100,save=True,one=False,s=3)                 #train the network for 100 episodes
+```
+
 ### Stop training and saving when condition is met:
 ```python
 import Note.RL.kernel as k   #import kernel module
@@ -91,22 +154,18 @@ kernel.visualize_reward()    #visualize the reward
 kernel.visualize_train()     #visualize the loss
 ```
 
-## Training with test data
-https://github.com/NoteDancing/Note-documentation/blob/Note-7.0/Note%207.0%20documentation/DL/neural%20network/tensorflow/nn_acc.py
+### Set the print count:
 ```python
-import Note.DL.kernel as k   #import kernel module
-import tensorflow as tf      #import tensorflow library
-import nn_acc as n           #import neural network module with accuracy function
-mnist=tf.keras.datasets.mnist #load mnist dataset
-(x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
-x_train,x_test =x_train/255.0,x_test/255.0 #normalize data
-nn=n.nn()                    #create neural network object
-kernel=k.kernel(nn)          #create kernel object with the network
-kernel.platform=tf           #set the platform to tensorflow
-kernel.data(x_train,y_train,x_test,y_test) #input train and test data and labels to the kernel
-kernel.train(32,5,32)        #train the network with batch size 32, epoch 5 and test batch size 32
-kernel.test(x_test,y_test,32)#test the network performance on the test set with batch size 32
+import Note.RL.kernel as k   #import kernel module
+import DQN as d              #import deep Q-network module
+dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
+kernel=k.kernel(dqn)       #create kernel object with the network
+kernel.stop=True             #set the flag to stop training when a condition is met
+kernel.action_count=2        #set the number of actions to 2
+kernel.set_up(epsilon=0.01,pool_size=10000,batch=64,update_step=10,trial_count=10,criterion=200) #set up the hyperparameters for training and the condition to stop training when the average reward of 10 trials is greater than 200
+kernel.train(100,p=3)            #train the network for 500 episodes
 ```
+
 
 ## Parallel test:
 **You can get neural network example from the link below, and then you can import neural network and train with kernel, example code are below.**
