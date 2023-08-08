@@ -75,24 +75,18 @@ class kernel:
     
     def segment_data(self):
         # a method to segment the data for each process
-        if len(self.train_data)!=self.process: 
-            segments=int((len(self.train_data)-len(self.train_data)%self.process)/self.process) # calculate how many segments to divide the data into
-            for i in range(self.process):
-                index1=i*segments # get the start index of each segment
-                index2=(i+1)*segments # get the end index of each segment
-                if i==0: 
-                    data=np.expand_dims(self.train_data[index1:index2],axis=0) # create a new axis for each segment of data
-                    labels=np.expand_dims(self.train_labels[index1:index2],axis=0) # create a new axis for each segment of labels
-                else:
-                    data=np.concatenate((data,np.expand_dims(self.train_data[index1:index2],axis=0))) # concatenate the segments of data along the new axis
-                    labels=np.concatenate((labels,np.expand_dims(self.train_labels[index1:index2],axis=0))) # concatenate the segments of labels along the new axis
-            if len(data)%self.process!=0: # if there are some remaining samples
-                segments+=1 # add one more segment
-                index1=segments*self.process # get the start index of the last segment
-                index2=self.process-(len(self.train_data)-segments*self.process) # get the end index of the last segment
-                data=np.concatenate((data,np.expand_dims(self.train_data[index1:index2],axis=0))) # concatenate the last segment of data along the new axis
-                labels=np.concatenate((labels,np.expand_dims(self.train_labels[index1:index2],axis=0))) # concatenate the last segment of labels along the new axis
-            return data,labels # return the segmented data and labels
+        # calculate the number of data to be sliced
+        length = len(self.train_data) - len(self.train_data) % self.process
+        # slice the front part of the data and labels
+        data = self.train_data[:length]
+        labels = self.train_labels[:length]
+        # split the data and labels into subarrays
+        data = np.split(data, self.process)
+        labels = np.split(labels, self.process)
+        # stack the data and labels along a new axis
+        data = np.stack(data, axis=0)
+        labels = np.stack(labels, axis=0)
+        return data, labels
     
     
     def init(self,manager):
