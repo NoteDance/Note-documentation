@@ -83,9 +83,6 @@ class kernel:
         # split the data and labels into subarrays
         data=np.split(data, self.process)
         labels=np.split(labels, self.process)
-        # stack the data and labels along a new axis
-        data=np.stack(data, axis=0)
-        labels=np.stack(labels, axis=0)
         return data,labels
     
     
