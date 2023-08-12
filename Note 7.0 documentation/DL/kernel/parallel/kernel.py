@@ -142,18 +142,20 @@ class kernel:
     
     def end(self):
         # a method to check whether to end the training according to some conditions
-        if self.end_loss!=None and len(self.train_loss_list)!=0 and self.train_loss_list[-1]<self.end_loss:
-            return True # return True if the training loss is lower than the end loss
-        elif self.end_acc!=None and len(self.train_acc_list)!=0 and self.train_acc_list[-1]>self.end_acc:
-            return True # return True if the training accuracy is higher than the end accuracy
-        elif self.end_loss!=None and len(self.train_loss_list)!=0 and self.end_acc!=None and self.train_loss_list[-1]<self.end_loss and self.train_acc_list[-1]>self.end_acc:
-            return True # return True if both the training loss and accuracy meet the end conditions
-        elif self.end_test_loss!=None and len(self.test_loss_list)!=0 and self.test_loss_list[-1]<self.end_test_loss:
-            return True # return True if the testing loss is lower than the end test loss
+        if self.end_acc!=None and len(self.train_acc_list)!=0 and self.train_acc_list[-1]>self.end_acc:
+            return True
+        elif self.end_loss!=None and len(self.train_loss_list)!=0 and self.train_loss_list[-1]<self.end_loss:
+            return True
         elif self.end_test_acc!=None and len(self.test_acc_list)!=0 and self.test_acc_list[-1]>self.end_test_acc:
-            return True # return True if the testing accuracy is higher than the end test accuracy
-        elif self.end_test_loss!=None and len(self.test_loss_list)!=0 and self.end_test_acc!=None and self.test_loss_list[-1]<self.end_test_loss and self.test_acc_list[-1]>self.end_test_acc:
-            return True # return True if both the testing loss and accuracy meet the end conditions
+            return True
+        elif self.end_test_loss!=None and len(self.test_loss_list)!=0 and self.test_loss_list[-1]<self.end_test_loss:
+            return True
+        elif self.end_acc!=None and self.end_test_acc!=None:
+            if len(self.train_acc_list)!=0 and len(self.test_acc_list)!=0 and self.train_acc_list[-1]>self.end_acc and self.test_acc_list[-1]>self.end_test_acc:
+                return True
+        elif self.end_loss!=None and self.end_test_loss!=None:
+            if len(self.train_loss_list)!=0 and len(self.test_loss_list)!=0 and self.train_loss_list[-1]<self.end_loss and self.test_loss_list[-1]<self.end_test_loss:
+                return True
     
     
     @tf.function(jit_compile=True)
