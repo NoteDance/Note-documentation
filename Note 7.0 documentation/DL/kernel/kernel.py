@@ -88,20 +88,22 @@ class kernel: # define a class
         return # return from the method
     
     
-    def end(self): 
-        # define a method for checking if some conditions are met for ending training or testing process 
-        if self.end_loss!=None and len(self.train_loss_list)!=0 and self.train_loss_list[-1]<self.end_loss: # check if the end_loss attribute is not None and the train_loss_list attribute is not empty and the last element of the train_loss_list attribute is less than the end_loss attribute
-            return True # return True
-        elif self.end_acc!=None and len(self.train_acc_list)!=0 and self.train_acc_list[-1]>self.end_acc: # check if the end_acc attribute is not None and the train_acc_list attribute is not empty and the last element of the train_acc_list attribute is greater than the end_acc attribute
-            return True # return True
-        elif self.end_loss!=None and len(self.train_loss_list)!=0 and self.end_acc!=None and self.train_loss_list[-1]<self.end_loss and self.train_acc_list[-1]>self.end_acc: # check if the end_loss attribute and the end_acc attribute are not None and the train_loss_list attribute and the train_acc_list attribute are not empty and the last element of the train_loss_list attribute is less than the end_loss attribute and the last element of the train_acc_list attribute is greater than the end_acc attribute
-            return True # return True
-        elif self.end_test_loss!=None and len(self.test_loss_list)!=0 and self.test_loss_list[-1]<self.end_test_loss: # check if the end_test_loss attribute is not None and the test_loss_list attribute is not empty and the last element of the test_loss_list attribute is less than the end_test_loss attribute
-            return True # return True
-        elif self.end_test_acc!=None and len(self.test_acc_list)!=0 and self.test_acc_list[-1]>self.end_test_acc: # check if the end_test_acc attribute is not None and the test_acc_list attribute is not empty and the last element of the test_acc_list attribute is greater than the end_test_acc attribute
-            return True # return True
-        elif self.end_test_loss!=None and len(self.test_loss_list)!=0 and self.end_test_acc!=None and self.test_loss_list[-1]<self.end_test_loss and self.test_acc_list[-1]>self.end_test_acc: # check if the end_test_loss attribute and the end_test_acc attribute are not None and the test_loss_list attribute and the test_acc_list attribute are not empty and the last element of the test_loss_list attribute is less than the end_test_loss attribute and the last element of the test_acc_list attribute is greater than the end_test_acc attribute
-            return True # return True
+    def end(self):
+        # define a method for checking if some conditions are met for ending training
+        if self.end_acc!=None and self.train_acc!=None and self.train_acc>self.end_acc:
+            return True
+        elif self.end_loss!=None and self.train_loss!=None and self.train_loss<self.end_loss:
+            return True
+        elif self.end_test_acc!=None and self.test_acc!=None and self.test_acc>self.end_test_acc:
+            return True
+        elif self.end_test_loss!=None and self.test_loss!=None and self.test_loss<self.end_test_loss:
+            return True
+        elif self.end_acc!=None and self.end_test_acc!=None:
+            if self.train_acc!=None and self.test_acc!=None and self.train_acc>self.end_acc and self.test_acc>self.end_test_acc:
+                return True
+        elif self.end_loss!=None and self.end_test_loss!=None:
+            if self.train_loss!=None and self.test_loss!=None and self.train_loss<self.end_loss and self.test_loss<self.end_test_loss:
+                return True
     
     
     def loss_acc(self,output=None,labels_batch=None,loss=None,test_batch=None,total_loss=None,total_acc=None): 
