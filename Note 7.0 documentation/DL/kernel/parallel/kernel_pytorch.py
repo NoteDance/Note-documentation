@@ -122,7 +122,7 @@ class kernel: # define a class named kernel
         return # return nothing
     
     
-    def end(self): 
+    def end(self):
         '''define a method named end that takes no arguments'''
         
         '''This method is used to check if the training process should be stopped based on some criteria'''
@@ -133,20 +133,20 @@ class kernel: # define a class named kernel
         
         '''The method will return a boolean value indicating whether the training process should be stopped or not'''
         
-        if self.end_loss!=None and len(self.train_loss_list)!=0 and self.train_loss_list[-1]<self.end_loss: # check if the end_loss attribute is not None and the train_loss_list attribute is not empty and the last element of the train_loss_list attribute is less than the end_loss attribute
-            return True # return True
-        elif self.end_acc!=None and len(self.train_acc_list)!=0 and self.train_acc_list[-1]>self.end_acc: # check if the end_acc attribute is not None and the train_acc_list attribute is not empty and the last element of the train_acc_list attribute is greater than the end_acc attribute
-            return True # return True
-        elif self.end_loss!=None and len(self.train_loss_list)!=0 and self.end_acc!=None and self.train_loss_list[-1]<self.end_loss and self.train_acc_list[-1]>self.end_acc: # check if both previous conditions are met
-            return True # return True
-        elif self.end_test_loss!=None and len(self.test_loss_list)!=0 and self.test_loss_list[-1]<self.end_test_loss: # check if the end_test_loss attribute is not None and the test_loss_list attribute is not empty and the last element of the test_loss_list attribute is less than the end_test_loss attribute
-            return True # return True
-        elif self.end_test_acc!=None and len(self.test_acc_list)!=0 and self.test_acc_list[-1]>self.end_test_acc: # check if the end_test_acc attribute is not None and the test_acc_list attribute is not empty and the last element of the test_acc_list attribute is greater than the end_test_acc attribute
-            return True # return True
-        elif self.end_test_loss!=None and len(self.test_loss_list)!=0 and self.end_test_acc!=None and self.test_loss_list[-1]<self.end_test_loss and self.test_acc_list[-1]>self.end_test_acc: # check if both previous conditions are met
-            return True # return True
-        else: # otherwise
-            return False # return False
+        if self.end_acc!=None and len(self.train_acc_list)!=0 and self.train_acc_list[-1]>self.end_acc:
+            return True
+        elif self.end_loss!=None and len(self.train_loss_list)!=0 and self.train_loss_list[-1]<self.end_loss:
+            return True
+        elif self.end_test_acc!=None and len(self.test_acc_list)!=0 and self.test_acc_list[-1]>self.end_test_acc:
+            return True
+        elif self.end_test_loss!=None and len(self.test_loss_list)!=0 and self.test_loss_list[-1]<self.end_test_loss:
+            return True
+        elif self.end_acc!=None and self.end_test_acc!=None:
+            if len(self.train_acc_list)!=0 and len(self.test_acc_list)!=0 and self.train_acc_list[-1]>self.end_acc and self.test_acc_list[-1]>self.end_test_acc:
+                return True
+        elif self.end_loss!=None and self.end_test_loss!=None:
+            if len(self.train_loss_list)!=0 and len(self.test_loss_list)!=0 and self.train_loss_list[-1]<self.end_loss and self.test_loss_list[-1]<self.end_test_loss:
+                return True
     
     
     def opt_p(self,data,labels,p): 
