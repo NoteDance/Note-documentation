@@ -29,7 +29,7 @@ kernel.train(32,1)            #train the network again with batch size 32 and ep
 ```
 
 ## Training with test data
-**You can get neural network example from the link below, and then you can import neural network and train with kernel, example code are below.**
+**You can get a neural network example from the link below, and then you can import neural network and train with kernel, example code are below.**
 
 https://github.com/NoteDancing/Note-documentation/blob/Note-7.0/Note%207.0%20documentation/DL/neural%20network/tensorflow/nn_acc.py
 
@@ -168,7 +168,7 @@ kernel.train(100,p=3)            #train the network for 500 episodes
 
 
 ## Parallel test:
-**You can get neural network example from the link below, and then you can import neural network and train with kernel, example code are below.**
+**You can get a neural network example from the link below, and then you can import neural network and train with kernel, example code are below.**
 
 https://github.com/NoteDancing/Note-documentation/blob/Note-7.0/Note%207.0%20documentation/DL/neural%20network/tensorflow/parallel/nn.py
 
@@ -487,7 +487,7 @@ kernel.test(x_train,y_train,32)      #test the network performance on the train 
 ### Gradient attenuation:
 **Calculate the attenuation coefficient based on the optimization counter using the attenuation function.**
 
-**You can get neural network example from the link below, and then you can import neural network and train with kernel, example code are below.**
+**You can get a neural network example from the link below, and then you can import neural network and train with kernel, example code are below.**
 
 https://github.com/NoteDancing/Note-documentation/blob/Note-7.0/Note%207.0%20documentation/DL/neural%20network/tensorflow/parallel/nn_attenuate.py
 ```python
@@ -660,7 +660,7 @@ for p in range(5):           #loop over the processes
 
 
 # Parallel test:
-**You can get neural network example from the link below, and then you can import neural network and train with kernel, example code are below.**
+**You can get a neural network example from the link below, and then you can import neural network and train with kernel, example code are below.**
 
 https://github.com/NoteDancing/Note-documentation/blob/Note-7.0/Note%207.0%20documentation/DL/neural%20network/tensorflow/parallel/nn.py
 
@@ -683,7 +683,7 @@ loss,acc=test.loss_acc()          #calculate the loss and accuracy of the test
 
 
 # Online training:
-**You can get neural network example from the link below, and then you can import neural network and train with kernel, example code are below.**
+**You can get a neural network example from the link below, and then you can import neural network and train with kernel, example code are below.**
 
 https://github.com/NoteDancing/Note-documentation/blob/Note-7.0/Note%207.0%20documentation/DL/neural%20network/tensorflow/non-parallel/nn_ol.py
 
