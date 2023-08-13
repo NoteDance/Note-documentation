@@ -766,6 +766,6 @@ check(dqn,tf,2)                        #check the network with tensorflow platfo
 
 
 # GPT:
-**Layers in the GPT directory created by GPT**
+**Layers in the Note.nn.layer.GPT package created by GPT**
 
 https://github.com/NoteDancing/Note/tree/Note-7.0/Note/nn/layer/GPT
