@@ -703,6 +703,43 @@ kernel.train_online()        #train the network online
 ```
 
 
+# Write neural network class in the interpreter:
+```python
+import Note.DL.kernel as k   #import kernel module
+import tensorflow as tf      #import tensorflow library
+
+class nn:
+    def __init__(self):
+        self.model=tf.keras.models.Sequential([
+          tf.keras.layers.Flatten(input_shape=(28, 28)),
+          tf.keras.layers.Dense(128,activation='relu'),
+          tf.keras.layers.Dropout(0.2),
+          tf.keras.layers.Dense(10)
+          ])
+        self.param=self.model.weights #parameter list,kernel uses it list for backpropagation.
+        self.loss_object=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+        self.opt=tf.keras.optimizers.Adam() #optimizer,kernel uses it to optimize.
+    
+    
+    def fp(self,data):  #forward propagation function,kernel uses it for forward propagation.
+        output=self.model(data)
+        return output
+    
+    
+    def loss(self,output,labels): #loss functino,kernel uses it to calculate loss.
+        return self.loss_object(labels,output)
+
+mnist=tf.keras.datasets.mnist #load mnist dataset
+(x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
+x_train,x_test =x_train/255.0,x_test/255.0 #normalize data
+nn=nn()                      #create neural network object
+kernel=k.kernel(nn)          #create kernel object with the network
+kernel.platform=tf           #set the platform to tensorflow
+kernel.data(x_train,y_train) #input train data to the kernel
+kernel.train(32,5)           #train the network with batch size 32 and epoch 5
+```
+
+
 # Check neural network:
 ## DL:
 You can test it before using the kernel training neural network.
