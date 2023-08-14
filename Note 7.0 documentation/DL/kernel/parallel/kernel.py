@@ -75,14 +75,9 @@ class kernel:
     
     def segment_data(self):
         # a method to segment the data for each process
-        # calculate the number of data to be sliced
-        length=len(self.train_data)-len(self.train_data)%self.process
-        # slice the front part of the data and labels
-        data=self.train_data[:length]
-        labels=self.train_labels[:length]
         # split the data and labels into subarrays
-        data=np.split(data, self.process)
-        labels=np.split(labels, self.process)
+        data=np.split(self.train_data,self.process)
+        labels=np.split(self.train_labels,self.process)
         return data,labels
     
     
