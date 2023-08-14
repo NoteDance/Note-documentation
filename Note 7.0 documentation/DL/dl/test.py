@@ -140,11 +140,8 @@ class parallel_test: # define a class for parallel testing
     
     def segment_data(self): # define a method that segments the test data and labels into equal parts for each process
         if len(self.test_data)!=self.process: # check if the length of test_data is not equal to the number of processes
-            length=len(self.test_data)-len(self.test_data)%self.process # calculate the length of test_data that can be evenly divided by the number of processes
-            data=self.test_data[:length] # slice test_data to get only that part
-            labels=self.test_labels[:length] # slice test_labels to get only that part
-            data=np.split(data,self.process) # split data into equal parts for each process
-            labels=np.split(labels,self.process) # split labels into equal parts for each process
+            data=np.split(self.test_data,self.process) # split data into equal parts for each process
+            labels=np.split(self.test_labels,self.process) # split labels into equal parts for each process
             self.test_data=data # assign data to test_data attribute
             self.test_labels=labels # assign labels to test_labels attribute
         return
