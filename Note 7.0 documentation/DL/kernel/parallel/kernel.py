@@ -17,7 +17,7 @@ class kernel:
         self.train_ds=None # the training dataset
         self.prefetch_batch_size=tf.data.AUTOTUNE # the prefetch batch size for training dataset
         self.prefetch_batch_size_t=tf.data.AUTOTUNE # the prefetch batch size for testing dataset
-        self.data_segment_flag=False # a flag to indicate whether to segment the data for each process
+        self.data_segment_flag=True # a flag to indicate whether to segment the data for each process
         self.batches=None # the number of batches per epoch
         self.buffer_size=None # the buffer size for shuffling the data
         self.priority_flag=False # a flag to indicate whether to use priority optimization
