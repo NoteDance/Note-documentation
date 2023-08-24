@@ -19,20 +19,19 @@ class cnn:
     
     def build(self):
         # Create three convolutional layers with relu activations
-        self.conv1=conv2d(weight_shape=(3,3,3,32),activation='relu')
-        self.conv2=conv2d(weight_shape=(3,3,32,64),activation='relu')
-        self.conv3=conv2d(weight_shape=(3,3,64,64),activation='relu')
+        self.conv1=conv2d(weight_shape=(3,3,3,32),strides=(1,1),padding='SAME',activation='relu')
+        self.conv2=conv2d(weight_shape=(3,3,32,64),strides=(1,1),padding='SAME',activation='relu')
+        self.conv3=conv2d(weight_shape=(3,3,64,64),strides=(1,1),padding='SAME',activation='relu')
         # Create two dense layers with relu and linear activations
         self.dense1=dense([64*4*4,64],activation='relu')
         self.dense2=dense([64,10])
         # Store the parameters of the layers in a list
-        self.param = [self.conv1.weight,
-                      self.conv2.weight,
-                      self.conv3.weight,
-                      self.dense1.weight,
-                      self.dense1.bias,
-                      self.dense2.weight,
-                      self.dense2.bias]
+        self.param = [self.conv1.param,
+                      self.conv2.param,
+                      self.conv3.param,
+                      self.dense1.param,
+                      self.dense2.param,
+                      ]
         return
     
     
@@ -43,11 +42,11 @@ class cnn:
     
     def fp(self,data):
         # Perform forward propagation on the input data
-        x=tf.nn.conv2d(data,self.conv1.weight,strides=(1,1),padding='SAME') # First convolutional layer
+        x=self.conv1.output(data) # First convolutional layer
         x=tf.nn.max_pool2d(x,ksize=(2,2),strides=(2,2),padding='VALID') # First max pooling layer
-        x=tf.nn.conv2d(x,self.conv2.weight,strides=(1,1),padding='SAME') # Second convolutional layer
+        x=self.conv2.output(x) # Second convolutional layer
         x=tf.nn.max_pool2d(x,ksize=(2,2),strides=(2,2),padding='VALID') # Second max pooling layer
-        x=tf.nn.conv2d(x,self.conv3.weight,strides=(1,1),padding='SAME') # Third convolutional layer
+        x=self.conv3.output(x) # Third convolutional layer
         x=flatten(x) # Flatten the output to a vector
         x=tf.nn.relu(tf.matmul(x,self.dense1.weight)+self.dense1.bias) # First dense layer with relu activation
         x=tf.nn.dropout(x,rate=0.5) # Apply dropout to prevent overfitting
