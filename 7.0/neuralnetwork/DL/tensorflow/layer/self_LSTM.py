@@ -25,7 +25,7 @@ class self_LSTM:
         # Create a linear layer to map the attention output to logits
         self.logits_layer = dense([self.embed_size,self.vocab_size])
         # Store the parameters of the layers in a list
-        self.param = [self.embedding_layer.embeddings]
+        self.param = [self.embedding_layer.param]
         self.param.extend(self.lstm_layer.param)
         self.param.extend(self.self_attention_layer.param)
         self.param.extend(self.logits_layer.param)
