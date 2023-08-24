@@ -25,7 +25,7 @@ class Transformer:
         # Create a linear layer to map the transformer output to logits
         self.logits_layer = dense([self.embed_size,self.vocab_size])
         # Store the parameters of the layers in a list
-        self.param = [self.embedding_layer.embeddings]
+        self.param = [self.embedding_layer.param]
         for transformer_layer in self.transformer_layers:
             self.param.extend(transformer_layer.param)
         self.param.extend(self.logits_layer.param)
