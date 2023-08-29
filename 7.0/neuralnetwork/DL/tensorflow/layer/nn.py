@@ -10,8 +10,8 @@ class nn:
     
     
     def build(self):
-        self.layer1=d.dense([784,128],activation='relu')
-        self.layer2=d.dense([128,10])
+        self.layer1=d.dense(128,784,activation='relu')
+        self.layer2=d.dense(10,128)
         self.param=[self.layer1.param,self.layer2.param]
         return
     
