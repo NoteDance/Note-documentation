@@ -13,8 +13,8 @@ class nn:               # A neural network class example, allocate device for mu
     
     def build(self): # build function, kernel uses it to create the network layers
         # Create two dense layers with relu and linear activations
-        self.layer1=d.dense([784,128],activation='relu') # the first layer with 784 input units and 128 output units and ReLU activation
-        self.layer2=d.dense([128,10]) # the second layer with 128 input units and 10 output units and linear activation
+        self.layer1=d.dense(128,784,activation='relu') # the first layer with 784 input units and 128 output units and ReLU activation
+        self.layer2=d.dense(10,128) # the second layer with 128 input units and 10 output units and linear activation
         # Store the parameters of the layers in a list
         self.param=[self.layer1.param,self.layer2.param] # parameter list of both layers, kernel uses it list for backpropagation 
         return

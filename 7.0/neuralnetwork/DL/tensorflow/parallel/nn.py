@@ -13,8 +13,8 @@ class nn:
     
     def build(self):
         # Create two dense layers with relu and linear activations
-        self.layer1=d.dense([784,128],activation='relu')
-        self.layer2=d.dense([128,10])
+        self.layer1=d.dense(128,784,activation='relu')
+        self.layer2=d.dense(10,128)
         # Store the parameters of the layers in a list
         self.param=[self.layer1.param,self.layer2.param]
         return
