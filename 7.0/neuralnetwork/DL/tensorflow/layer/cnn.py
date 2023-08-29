@@ -13,12 +13,12 @@ class cnn:
     
     def build(self):
         # Create three convolutional layers with relu activations
-        self.conv1=conv2d(weight_shape=(3,3,3,32),strides=(1,1),padding='SAME',activation='relu')
-        self.conv2=conv2d(weight_shape=(3,3,32,64),strides=(1,1),padding='SAME',activation='relu')
-        self.conv3=conv2d(weight_shape=(3,3,64,64),strides=(1,1),padding='SAME',activation='relu')
+        self.conv1=conv2d(32,[3,3],3,strides=(1,1),padding='SAME',activation='relu')
+        self.conv2=conv2d(64,[3,3],32,strides=(1,1),padding='SAME',activation='relu')
+        self.conv3=conv2d(64,[3,3],64,strides=(1,1),padding='SAME',activation='relu')
         # Create two dense layers with relu and linear activations
-        self.dense1=dense([64*4*4,64],activation='relu')
-        self.dense2=dense([64,10])
+        self.dense1=dense(64,64*4*4,activation='relu')
+        self.dense2=dense(10,64)
         # Store the parameters of the layers in a list
         self.param = [self.conv1.param,
                       self.conv2.param,
