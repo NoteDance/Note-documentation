@@ -20,13 +20,13 @@ class self_LSTM:
     
     def build(self):
         # Create an embedding layer to map input tokens to vectors
-        self.embedding_layer = embedding(self.vocab_size,self.embed_size)
+        self.embedding_layer = embedding(self.embed_size,self.vocab_size)
         # Create a LSTM layer to process the input sequence
-        self.lstm_layer = LSTM(weight_shape=[self.embed_size,self.embed_size],return_sequence=True)
+        self.lstm_layer = LSTM(self.embed_size,self.embed_size,return_sequence=True)
         # Create a self attention layer to attend to the LSTM output
-        self.self_attention_layer = self_attention(weight_shape=[self.embed_size,self.embed_size],num_heads=self.num_heads)
+        self.self_attention_layer = self_attention(self.embed_size,self.embed_size,num_heads=self.num_heads)
         # Create a linear layer to map the attention output to logits
-        self.logits_layer = dense([self.embed_size,self.vocab_size])
+        self.logits_layer = dense(self.vocab_size，self.embed_size)
         # Store the parameters of the layers in a list
         self.param = [self.embedding_layer.param]
         self.param.extend(self.lstm_layer.param)
