@@ -1,6 +1,10 @@
 # ConvNeXt:
 The ConvNeXt class is a class written in Python that implements the ConvNeXt model, which is a convolutional neural network that uses grouped convolutions and layer scaling to improve performance and efficiency. The ConvNeXt class has the following attributes and methods:
 
+```python
+ConvNeXt(model_type='base',drop_path_rate=0.0,layer_scale_init_value=1e-6,classes=1000,include_top=True,pooling=None)
+```
+
 - **model_type:** A string that indicates the type of the model, which can be one of 'tiny', 'small', 'base', 'large' or 'xlarge'. Different model types have different depths and projection dimensions.
 - **drop_path_rate:** A float that indicates the probability of stochastic depth, i.e., the probability of each convolutional block being dropped. Stochastic depth can improve the generalization and robustness of the model.
 - **layer_scale_init_value:** A float that indicates the initial value of layer scaling, i.e., the coefficient that each convolutional block's output is multiplied by. Layer scaling can stabilize the training and convergence of the model.
@@ -18,6 +22,10 @@ The ConvNeXt class is a class written in Python that implements the ConvNeXt mod
 
 # MobileNet:
 The MobileNet class is a Python class that implements the MobileNet model, which is a type of convolutional neural network that uses depthwise separable convolutions and ReLU6 activation to reduce the computational cost and model size. The MobileNet class has the following attributes and methods:
+
+```python
+MobileNet(alpha=1.0, depth_multiplier=1, dropout=1e-3, include_top=True, pooling=None, classes=1000)
+```
 
 - **alpha**: A float, indicating the width multiplier that controls the number of filters in each layer. A smaller alpha reduces the number of filters and the model size.
 - **depth_multiplier**: A float, indicating the depth multiplier that controls the number of depthwise convolution output channels. A smaller depth_multiplier reduces the number of channels and the model size.
@@ -37,6 +45,10 @@ The MobileNet class is a Python class that implements the MobileNet model, which
 # MobileNetV2:
 The MobileNetV2 class is a Python class that implements the MobileNetV2 model, which is a type of convolutional neural network that uses inverted residual blocks and linear bottlenecks to improve performance and efficiency. The MobileNetV2 class has the following attributes and methods:
 
+```python
+MobileNetV2(alpha=1.0,classes=1000,include_top=True,pooling=None)
+```
+
 - **alpha**: A float, indicating the width multiplier that controls the number of filters in each layer. A smaller alpha reduces the number of filters and the model size.
 - **classes**: An int, indicating the number of classes for the classification task. If include_top is True, the model's last layer is a fully connected layer that outputs classes neurons.
 - **include_top**: A bool, indicating whether to include the top layer for classification. If True, the model's last layer is a fully connected layer that outputs classes neurons. If False, the model's last layer is a global average pooling layer or a global max pooling layer, depending on the pooling argument.
@@ -52,6 +64,23 @@ The MobileNetV2 class is a Python class that implements the MobileNetV2 model, w
 
 # ResNetRS:
 The ResNetRS class is a Python class that implements the ResNet-RS model, which is a type of convolutional neural network that uses residual blocks and stochastic depth to achieve state-of-the-art performance on image classification tasks. The ResNet-RS class has the following attributes and methods:
+
+```python
+ResNetRS(
+            bn_momentum=0.0,
+            bn_epsilon=1e-5,
+            activation: str = "relu",
+            se_ratio=0.25,
+            dropout_rate=0.25,
+            drop_connect_rate=0.2,
+            include_top=True,
+            block_args: List[Dict[str, int]] = None,
+            model_name="resnet-rs-50",
+            pooling=None,
+            classes=1000,
+            include_preprocessing=True,
+    )
+```
 
 - **bn_momentum**: A float, indicating the momentum for the batch normalization layers.
 - **bn_epsilon**: A float, indicating the epsilon for the batch normalization layers.
