@@ -102,3 +102,104 @@ ResNetRS(
 - **fp(data, p)**: A method, used to perform forward propagation. It accepts two arguments `data` and `p`, indicating the input data and process number respectively. This method passes the input data through all the layers of the model and returns the output data.
 - **loss(output, labels, p)**: A method, used to calculate the loss value. It accepts three arguments `output`, `labels` and `p`, indicating the output data, true labels and process number respectively. This method uses the loss function to calculate the difference between output data and true labels and returns the loss value.
 - **opt(gradient, p)**: A method, used to perform optimization update. It accepts two arguments `gradient` and `p`, indicating the gradient value and process number respectively. This method uses the optimizer to update all the parameters of the model according to gradient value and returns updated parameters.
+
+# DenseNet121:
+The DenseNet121 class is a Python class that implements the DenseNet-121 model, which is a type of convolutional neural network that uses dense blocks and transition layers to improve the feature extraction and efficiency of convolutional neural networks. The DenseNet121 class has the following attributes and methods:
+
+```python
+DenseNet121(growth_rate=32, compression_factor=0.5, num_classes=1000, include_top=True, pooling=None, dtype='float32')
+```
+
+- **growth_rate**: An int, indicating the number of filters added by each dense layer. A larger growth rate increases the model size and complexity.
+- **compression_factor**: a float, indicating the compression factor for the transition layers. A smaller compression factor reduces the number of filters and the model size.
+- **num_classes**: An int, indicating the number of classes for the classification task. If include_top is True, the model's last layer is a fully connected layer that outputs num_classes neurons.
+- **include_top**: A bool, indicating whether to include the top layer for classification. If True, the model's last layer is a fully connected layer that outputs num_classes neurons. If False, the model's last layer is a global average pooling layer or a global max pooling layer, depending on the pooling argument.
+- **pooling**: A string or None, indicating the pooling method. If include_top is False, the model's last layer is a pooling layer, depending on the pooling argument. If pooling is 'avg', global average pooling is used; if pooling is 'max', global max pooling is used; if pooling is None, no pooling is used.
+- **loss_object**: A TensorFlow object, indicating the loss function. The default loss function is categorical crossentropy loss.
+- **optimizer**: A TensorFlow object, indicating the optimizer. The default optimizer is Adam optimizer.
+- **param**: A list, storing all the parameters (weights and biases) of the model.
+- **km**: An integer that indicates the kernel mode.
+- **build(dtype='float32')**: a method, used to build the model's structure. It accepts one argument `dtype`, indicating the data type, defaulting to 'float32'. This method creates all the convolutional layers, dense layers, batch normalization layers, average pooling layers and fully connected layers that are needed for the model, and stores them in corresponding attributes.
+- **fp(data, p)**: A method, used to perform forward propagation. It accepts two arguments `data` and `p`, indicating the input data and process number respectively. This method passes the input data through all the layers of the model and returns the output data.
+- **loss(output, labels, p)**: A method, used to calculate the loss value. It accepts three arguments `output`, `labels` and `p`, indicating the output data, true labels and process number respectively. This method uses the loss function to calculate the difference between output data and true labels and returns the loss value.
+- **opt(gradient, p)**: A method, used to perform optimization update. It accepts two arguments `gradient` and `p`, indicating the gradient value and process number respectively. This method uses the optimizer to update all the parameters of the model according to gradient value and returns updated parameters.
+
+# DenseNet169:
+The DenseNet169 class is a Python class that implements the DenseNet-169 model, which is a type of convolutional neural network that uses dense blocks and transition layers to improve the feature extraction and efficiency of convolutional neural networks. The DenseNet169 class has the following attributes and methods:
+
+```python
+DenseNet169(growth_rate=32, compression_factor=0.5, num_classes=1000, include_top=True, pooling=None, dtype='float32')
+```
+
+- **growth_rate**: An int, indicating the number of filters added by each dense layer. A larger growth rate increases the model size and complexity.
+- **compression_factor**: a float, indicating the compression factor for the transition layers. A smaller compression factor reduces the number of filters and the model size.
+- **num_classes**: An int, indicating the number of classes for the classification task. If include_top is True, the model's last layer is a fully connected layer that outputs num_classes neurons.
+- **include_top**: A bool, indicating whether to include the top layer for classification. If True, the model's last layer is a fully connected layer that outputs num_classes neurons. If False, the model's last layer is a global average pooling layer or a global max pooling layer, depending on the pooling argument.
+- **pooling**: A string or None, indicating the pooling method. If include_top is False, the model's last layer is a pooling layer, depending on the pooling argument. If pooling is 'avg', global average pooling is used; if pooling is 'max', global max pooling is used; if pooling is None, no pooling is used.
+- **loss_object**: A TensorFlow object, indicating the loss function. The default loss function is categorical crossentropy loss.
+- **optimizer**: A TensorFlow object, indicating the optimizer. The default optimizer is Adam optimizer.
+- **param**: A list, storing all the parameters (weights and biases) of the model.
+- **km**: An integer that indicates the kernel mode.
+- **build(dtype='float32')**: a method, used to build the model's structure. It accepts one argument `dtype`, indicating the data type, defaulting to 'float32'. This method creates all the convolutional layers, dense layers, batch normalization layers, average pooling layers and fully connected layers that are needed for the model, and stores them in corresponding attributes.
+- **fp(data, p)**: A method, used to perform forward propagation. It accepts two arguments `data` and `p`, indicating the input data and process number respectively. This method passes the input data through all the layers of the model and returns the output data.
+- **loss(output, labels, p)**: A method, used to calculate the loss value. It accepts three arguments `output`, `labels` and `p`, indicating the output data, true labels and process number respectively. This method uses the loss function to calculate the difference between output data and true labels and returns the loss value.
+- **opt(gradient, p)**: A method, used to perform optimization update. It accepts two arguments `gradient` and `p`, indicating the gradient value and process number respectively. This method uses the optimizer to update all the parameters of the model according to gradient value and returns updated parameters.
+
+# DenseNet201:
+The DenseNet201 class is a Python class that implements the DenseNet-201 model, which is a type of convolutional neural network that uses dense blocks and transition layers to improve the feature extraction and efficiency of convolutional neural networks. The DenseNet201 class has the following attributes and methods:
+
+```python
+DenseNet201(growth_rate=32, compression_factor=0.5, num_classes=1000, include_top=True, pooling=None, dtype='float32')
+```
+
+- **growth_rate**: An int, indicating the number of filters added by each dense layer. A larger growth rate increases the model size and complexity.
+- **compression_factor**: a float, indicating the compression factor for the transition layers. A smaller compression factor reduces the number of filters and the model size.
+- **num_classes**: An int, indicating the number of classes for the classification task. If include_top is True, the model's last layer is a fully connected layer that outputs num_classes neurons.
+- **include_top**: A bool, indicating whether to include the top layer for classification. If True, the model's last layer is a fully connected layer that outputs num_classes neurons. If False, the model's last layer is a global average pooling layer or a global max pooling layer, depending on the pooling argument.
+- **pooling**: A string or None, indicating the pooling method. If include_top is False, the model's last layer is a pooling layer, depending on the pooling argument. If pooling is 'avg', global average pooling is used; if pooling is 'max', global max pooling is used; if pooling is None, no pooling is used.
+- **loss_object**: A TensorFlow object, indicating the loss function. The default loss function is categorical crossentropy loss.
+- **optimizer**: A TensorFlow object, indicating the optimizer. The default optimizer is Adam optimizer.
+- **param**: A list, storing all the parameters (weights and biases) of the model.
+- **km**: An integer that indicates the kernel mode.
+- **build(dtype='float32')**: a method, used to build the model's structure. It accepts one argument `dtype`, indicating the data type, defaulting to 'float32'. This method creates all the convolutional layers, dense layers, batch normalization layers, average pooling layers and fully connected layers that are needed for the model, and stores them in corresponding attributes.
+- **fp(data, p)**: A method, used to perform forward propagation. It accepts two arguments `data` and `p`, indicating the input data and process number respectively. This method passes the input data through all the layers of the model and returns the output data.
+- **loss(output, labels, p)**: A method, used to calculate the loss value. It accepts three arguments `output`, `labels` and `p`, indicating the output data, true labels and process number respectively. This method uses the loss function to calculate the difference between output data and true labels and returns the loss value.
+- **opt(gradient, p)**: A method, used to perform optimization update. It accepts two arguments `gradient` and `p`, indicating the gradient value and process number respectively. This method uses the optimizer to update all the parameters of the model according to gradient value and returns updated parameters.
+
+# VGG16:
+The VGG16 class is a Python class that implements the VGG-16 model, which is a type of convolutional neural network that uses 16 layers of convolution, pooling and fully connected layers to achieve high performance on image classification tasks. The VGG16 class has the following attributes and methods:
+
+```python
+VGG16(include_top=True,pooling=None,classes=1000)
+```
+
+- **include_top**: A bool, indicating whether to include the top layer for classification. If True, the model's last layer is a fully connected layer that outputs classes neurons. If False, the model's last layer is a global average pooling layer or a global max pooling layer, depending on the pooling argument.
+- **pooling**: A string or None, indicating the pooling method. If include_top is False, the model's last layer is a pooling layer, depending on the pooling argument. If pooling is 'avg', global average pooling is used; if pooling is 'max', global max pooling is used; if pooling is None, no pooling is used.
+- **classes**: An int, indicating the number of classes for the classification task. If include_top is True, the model's last layer is a fully connected layer that outputs classes neurons.
+- **loss_object**: A TensorFlow object, indicating the loss function. The default loss function is categorical crossentropy loss.
+- **optimizer**: A TensorFlow object, indicating the optimizer. The default optimizer is Adam optimizer.
+- **param**: A list, storing all the parameters (weights and biases) of the model.
+- **km**: An integer that indicates the kernel mode.
+- **build(dtype='float32')**: A method, used to build the model's structure. It accepts one argument `dtype`, indicating the data type, defaulting to 'float32'. This method creates all the convolutional layers, max pooling layers and fully connected layers that are needed for the model, and stores them in corresponding attributes.
+- **fp(data, p)**: A method, used to perform forward propagation. It accepts two arguments `data` and `p`, indicating the input data and process number respectively. This method passes the input data through all the layers of the model and returns the output data.
+- **loss(output, labels, p)**: A method, used to calculate the loss value. It accepts three arguments `output`, `labels` and `p`, indicating the output data, true labels and process number respectively. This method uses the loss function to calculate the difference between output data and true labels and returns the loss value.
+- **opt(gradient, p)**: A method, used to perform optimization update. It accepts two arguments `gradient` and `p`, indicating the gradient value and process number respectively. This method uses the optimizer to update all the parameters of the model according to gradient value and returns updated parameters.
+
+# VGG19:
+The VGG19 class is a Python class that implements the VGG-19 model, which is a type of convolutional neural network that uses 19 layers of convolution, pooling and fully connected layers to achieve high performance on image classification tasks. The VGG19 class has the following attributes and methods:
+
+```python
+VGG19(include_top=True,pooling=None,classes=1000)
+```
+
+- **include_top**: A bool, indicating whether to include the top layer for classification. If True, the model's last layer is a fully connected layer that outputs classes neurons. If False, the model's last layer is a global average pooling layer or a global max pooling layer, depending on the pooling argument.
+- **pooling**: A string or None, indicating the pooling method. If include_top is False, the model's last layer is a pooling layer, depending on the pooling argument. If pooling is 'avg', global average pooling is used; if pooling is 'max', global max pooling is used; if pooling is None, no pooling is used.
+- **classes**: An int, indicating the number of classes for the classification task. If include_top is True, the model's last layer is a fully connected layer that outputs classes neurons.
+- **loss_object**: A TensorFlow object, indicating the loss function. The default loss function is categorical crossentropy loss.
+- **optimizer**: A TensorFlow object, indicating the optimizer. The default optimizer is Adam optimizer.
+- **param**: A list, storing all the parameters (weights and biases) of the model.
+- **km**: An integer that indicates the kernel mode.
+- **build(dtype='float32')**: A method, used to build the model's structure. It accepts one argument `dtype`, indicating the data type, defaulting to 'float32'. This method creates all the convolutional layers, max pooling layers and fully connected layers that are needed for the model, and stores them in corresponding attributes.
+- **fp(data, p)**: A method, used to perform forward propagation. It accepts two arguments `data` and `p`, indicating the input data and process number respectively. This method passes the input data through all the layers of the model and returns the output data.
+- **loss(output, labels, p)**: A method, used to calculate the loss value. It accepts three arguments `output`, `labels` and `p`, indicating the output data, true labels and process number respectively. This method uses the loss function to calculate the difference between output data and true labels and returns the loss value.
+- **opt(gradient, p)**: A method, used to perform optimization update. It accepts two arguments `gradient` and `p`, indicating the gradient value and process number respectively. This method uses the optimizer to update all the parameters of the model according to gradient value and returns updated parameters.
