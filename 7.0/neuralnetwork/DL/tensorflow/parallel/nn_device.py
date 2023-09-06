@@ -33,6 +33,14 @@ class nn:               # A neural network class example, allocate device for mu
             return self.loss_object(labels,output) # return the mean softmax cross entropy loss between labels and output
     
     
+    def GradientTape(self,data,labels,p):
+        with tf.device(assign_device(p,'GPU')):
+            with tf.GradientTape(persistent=True) as tape:
+                output=self.fp(data,p)
+                loss=self.loss(output,labels,p)
+        return tape,output,loss
+    
+    
     def opt(self,gradient,p): # optimization function, kernel uses it to optimize parameter
         # Perform optimization on the parameters using the gradient
         with tf.device(assign_device(p,'GPU')): # assign the device according to the process index p
