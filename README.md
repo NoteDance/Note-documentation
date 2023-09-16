@@ -17,24 +17,28 @@ output_images = conv2d.output(input_images)
 ```
 
 # attention
-This module implements an attention layer, which can compute the context vector and the attention weights based on the encoder hidden states and the decoder hidden state. The usage of this module is as follows:
+This module implements an attention layer, which can compute the context vector and the attention weights based on the query, value and key tensors. The usage of this module is as follows:
 
-- First, create an instance of the attention class, and specify the weight shape, the weight initializer, and the data type.
-- Second, call the output method of the instance, and pass the encoder hidden states and the decoder hidden state as the en_h and de_h arguments. You can also pass the score_en_h argument, which is the projection of the encoder hidden states by a query weight matrix. If you don't pass this argument, it will be computed internally.
-- The output method will return a tuple of three tensors: context_vector, score_en_h, and attention_weights. The context_vector is a tensor of shape [batch_size, hidden_size], which is the weighted sum of the encoder hidden states. The score_en_h is a tensor of shape [batch_size, seq_len, hidden_size], which is the projection of the encoder hidden states by a query weight matrix. The attention_weights is a tensor of shape [batch_size, seq_len], which is the softmax normalized score for each encoder hidden state.
+- First, create an instance of the attention class, and specify the use_scale and score_mode arguments. The use_scale argument indicates whether to use a scale factor for the score calculation. The score_mode argument indicates which mode to use for the score calculation, either "dot" or "concat". You can also specify the dtype argument, which is the data type of the tensors.
+- Second, call the output method of the instance, and pass the query, value and key tensors as the query, value and key arguments. The query tensor has a shape of [batch_size, Tq, dim], where Tq is the query sequence length and dim is the dimensionality. The value and key tensors have a shape of [batch_size, Tv, dim], where Tv is the value/key sequence length. If you don't pass the key tensor, it will be assumed to be equal to the value tensor.
+- The output method will return a tensor of shape [batch_size, Tq, dim], which is the attention output. It is computed by applying a softmax function to the score tensor of shape [batch_size, Tq, Tv], and then multiplying it with the value tensor.
 
 For example:
 
 ```python
-# Create an attention layer with weight shape [64, 128]
-attention_layer = attention(weight_shape=[64, 128])
-# Apply the attention layer to a batch of encoder hidden states of shape [32, 10, 64] and a decoder hidden state of shape [32, 64]
-encoder_hidden_states = tf.random.normal([32, 10, 64])
-decoder_hidden_state = tf.random.normal([32, 64])
-context_vector, score_en_h, attention_weights = attention_layer.output(en_h=encoder_hidden_states, de_h=decoder_hidden_state)
-# The context_vector will have a shape of [32, 128]
-# The score_en_h will have a shape of [32, 10, 128]
-# The attention_weights will have a shape of [32, 10]
+# Create an attention instance with use_scale=True and score_mode="dot"
+att = attention(use_scale=True, score_mode="dot")
+# Generate random query, value and key tensors of shape [batch_size, Tq/Tv, dim]
+batch_size = 2
+Tq = 3
+Tv = 4
+dim = 5
+query = tf.random.normal([batch_size, Tq, dim])
+value = tf.random.normal([batch_size, Tv, dim])
+key = tf.random.normal([batch_size, Tv, dim])
+# Call the output method with query, value and key as inputs
+output = att.output(query, value, key)
+# The output will have a shape of [2, 3, 5]
 ```
 
 # capsule
@@ -163,24 +167,24 @@ output_data, new_state = lstm_cell.output(data=input_data, state=prev_state)
 ```
 
 # multihead_attention
-This module defines a multihead_attention class that implements a multi-head self-attention layer. A multi-head self-attention layer is a sublayer of the standard transformer layer that can learn the relevance and dependency of different tokens in a sequence. The usage of this module is as follows:
+This module defines a multihead_attention class that implements a multi-head attention layer. A multi-head attention layer is a sublayer of the standard transformer layer that can learn the relevance and dependency of different tokens in a sequence. The usage of this module is as follows:
 
-- First, create an instance of the multihead_attention class, and specify the output size, the input size, the number of heads, and other optional parameters such as weight initializer, bias initializer, data type, and use bias flag. The weight shape should be a list of two integers: [input_size, hidden_size]. The number of heads should be a positive integer that can divide the hidden size. The use bias flag indicates whether to add a bias term to the linear transformations or not.
-- Second, call the output method of the instance, and pass the input data as the data1 argument. Optionally, you can also pass another input data as the data2 argument, which will be used as the key and value for the attention computation. If data2 is not provided, data1 will be used as the query, key, and value. You can also pass a mask argument to mask out some tokens from the attention computation. The input data should be a tensor of shape [batch_size, seq_length, input_size], where batch_size is the number of samples in a batch, seq_length is the number of time steps in a sequence, and input_size is the dimension of the input features at each time step. The mask should be a tensor of shape [batch_size, seq_length_q, seq_length_k], where seq_length_q is the number of time steps in data1 and seq_length_k is the number of time steps in data2 (or data1 if data2 is not provided).
-- The output method will return a tuple of two tensors: output_data and attention_weights. The output_data is a tensor of shape [batch_size, seq_length_q,
-  hidden_size], which is the multi-head attention output. The attention_weights is a tensor of shape [batch_size, num_heads, seq_length_q,
-  seq_length_k], which is the scaled dot product attention weights for each head. The output_data is computed by applying query, key, and value projections to the input data, followed by scaled dot product attention with optional masking, concatenation of the attention outputs from each head, and output projection. The attention_weights is computed by applying query and key projections to the input data, followed by scaled dot product attention with optional masking.
+- First, create an instance of the multihead_attention class, and specify the n_state, n_head, and other optional parameters such as weight_initializer, bias_initializer, dtype, and use_bias. The n_state is the dimensionality of the query, key, and value tensors after the linear transformation. The n_head is the number of attention heads. The use_bias indicates whether to use a bias term after the linear transformations or not.
+- Second, call the output method of the instance, and pass the input data as the x argument. Optionally, you can also pass another input data as the xa argument, which will be used as the key and value for the attention computation. If xa is not provided, x will be used as the query, key, and value. You can also pass a mask argument to mask out some tokens from the attention computation. The input data should be a tensor of shape [batch_size, seq_length, n_state], where batch_size is the number of samples in a batch, seq_length is the number of time steps in a sequence, and n_state is the dimension of the input features at each time step. The mask should be a tensor of shape [batch_size, seq_length_q, seq_length_k], where seq_length_q is the number of time steps in x and seq_length_k is the number of time steps in xa (or x if xa is not provided).
+- The output method will return a tuple of two tensors: output_data and qk. The output_data is a tensor of shape [batch_size, seq_length_q,
+  n_state], which is the multi-head attention output. The qk is a tensor of shape [batch_size, n_head, seq_length_q,
+  seq_length_k], which is the scaled dot product attention score for each head. The output_data is computed by applying query, key, and value projections to the input data, followed by scaled dot product attention with optional masking, concatenation of the attention outputs from each head, and output projection. The qk is computed by applying query and key projections to the input data, followed by scaled dot product attention with optional masking.
 
 For example:
 
 ```python
-# Create a multi-head attention layer with 4 heads and 64 hidden size
-multihead_attention_layer = multihead_attention(64, 4, 16)
-# Apply the multi-head attention layer to a batch of input data of shape [32, 20, 16]
-input_data = tf.random.normal([32, 20, 16])
-output_data, attention_weights = multihead_attention_layer.output(data1=input_data)
+# Create a multi-head attention layer with 64 n_state and 8 n_head
+multihead_attention_layer = multihead_attention(64, 8)
+# Apply the multi-head attention layer to a batch of input data of shape [32, 20, 64]
+input_data = tf.random.normal([32, 20, 64])
+output_data, qk = multihead_attention_layer.output(x=input_data)
 # The output_data will have a shape of [32, 20, 64]
-# The attention_weights will have a shape of [32, 4, 20, 20]
+# The qk will have a shape of [32, 8, 20, 20]
 ```
 
 # RNN
@@ -202,31 +206,6 @@ rnn_layer = RNN(32, 16, activation='tanh')
 input_data = tf.random.normal([64, 10, 16])
 output_data = rnn_layer.output(data=input_data)
 # The output_data will have a shape of [64, 32]
-```
-
-# self_attention
-This module implements a self-attention layer, which can learn the relevance and importance of the input data at different positions. The usage of this module is as follows:
-
-- First, create an instance of the self_attention class, and specify the weight shape, the weight initializer, and the data type. The weight shape should be a list of two integers: [input_size, hidden_size]. The hidden size should be divisible by the number of attention heads.
-- Second, call the output method of the instance, and pass the input data as the data argument. The input data should be a tensor of shape [batch_size, seq_length, input_size], where batch_size is the number of samples in a batch, seq_length is the number of time steps in a sequence, and input_size is the dimension of the input features at each time step. You can also pass the number of attention heads as the a argument, and an optional mask tensor as the mask argument. The mask tensor should have a shape of [batch_size, num_heads, seq_length_q,
-  seq_length_k], where seq_length_q and seq_length_k are the lengths of query and key sequences. The mask tensor can be used to prevent attention to some unwanted positions (such as padding tokens).
-- The output method will return a tuple of two tensors: output and attention_weights. The output is a tensor of shape [batch_size,
-  seq_length,
-  hidden_size], which is the weighted sum of the value vectors for each position. The attention_weights is a tensor of shape [batch_size,
-  num_heads,
-  seq_length_q,
-  seq_length_k], which is the normalized score for each pair of query and key positions.
-
-For example:
-
-```python
-# Create a self-attention layer with 4 heads and 64 hidden size
-self_attention_layer = self_attention(weight_shape=[16, 64])
-# Apply the self-attention layer to a batch of input data of shape [64, 10, 16]
-input_data = tf.random.normal([64, 10, 16])
-output_data, attention_weights = self_attention_layer.output(data=input_data,a=4)
-# The output_data will have a shape of [64, 10, 64]
-# The attention_weights will have a shape of [64, 4, 10, 10]
 ```
 
 # Transformer
