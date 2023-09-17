@@ -226,3 +226,52 @@ input_data = tf.random.normal([64, 10, 16])
 output_data = transformer_layer.output(data=input_data)
 # The output_data will have a shape of [64, 10, 128]
 ```
+
+# FAVOR_attention
+This module implements the FAVOR attention mechanism, which is a fast and scalable way to compute attention using positive orthogonal random features. The usage of this module is as follows:
+
+- First, create an instance of the FAVOR_attention class, and specify the key dimension, and other optional parameters such as orthonormal, causal, m, redraw, h, f, randomizer, eps, kernel_eps, and dtype.
+- Second, call the output method of the instance, and pass the keys, values, and queries tensors as arguments.
+- The output method will return a tensor of shape [batch_size, queries_locations, values_dimension], which is the FAVOR attention output.
+
+For example:
+
+```python
+# Create a FAVOR attention layer with 16 key dimension, orthonormal features, and ReLU activation
+favor = FAVOR_attention(
+    key_dim=128,
+    orthonormal=True,
+    causal=False,
+    m=64,
+    redraw=False,
+    h=lambda x: math.sqrt(64),
+    f=[tf.nn.relu],
+    randomizer=tf.random.normal,
+    eps=0.0,
+    kernel_eps=0.001,
+    dtype='float32'
+)
+# Apply the FAVOR attention layer to a batch of keys, values, and queries of shape [4, 128, 10], [4, 32, 10], and [4, 128, 8] respectively
+keys = tf.random.normal([4, 128, 10])
+values = tf.random.normal([4, 32, 10])
+queries = tf.random.normal([4, 128, 8])
+output = favor.output(keys, values, queries)
+# The output will have a shape of [4, 32, 8]
+```
+
+# Linformer_self_attention
+This module implements the Linformer self-attention mechanism, which is a fast and scalable way to compute attention using positive orthogonal random features. The usage of this module is as follows:
+
+- First, create an instance of the Linformer_self_attention class, and specify the dimension, the sequence length, and other optional parameters such as k, heads, dim_head, one_kv_head, share_kv, dropout, and dtype.
+- Second, call the output method of the instance, and pass the input tensor as the x argument. You can also pass a different tensor as the context argument if you want to use cross-attention. The output method will return a tensor of shape [batch_size, sequence_length, dimension], which is the Linformer self-attention output.
+
+For example:
+
+```python
+# Create a Linformer self-attention layer with 64 dimension, 128 sequence length, 32 k, 8 heads, and 0.1 dropout
+linformer = Linformer_self_attention(dim=64, seq_len=128, k=32, heads=8, dropout=0.1)
+# Apply the Linformer self-attention layer to a batch of input embeddings of shape [16, 128, 64]
+input_embeddings = tf.random.normal([16, 128, 64])
+output_embeddings = linformer.output(input_embeddings)
+# The output_embeddings will have a shape of [16, 128, 64]
+```
