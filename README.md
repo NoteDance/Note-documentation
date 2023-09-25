@@ -23,6 +23,24 @@ output = att.output(query, value, key)
 # The output will have a shape of [2, 3, 5]
 ```
 
+# conv1d
+This module implements a 1D convolutional layer, which can apply a set of filters to an input tensor and produce a feature vector. The usage of this module is as follows:
+
+- First, create an instance of the conv1d class, and specify the number of output filters, the kernel size, and other optional parameters such as input size, activation function, weight initializer, bias initializer, use bias, strides, padding mode, data format, and dilation rate.
+- Second, call the output method of the instance, and pass the input tensor as the data argument. You can also specify a different dilation rate for the convolution operation.
+- The output method will return a tensor of shape [batch_size, length, filters], which is the 1D convolution output.
+
+For example:
+
+```python
+# Create a 1D convolution layer with 16 output filters, 5 kernel size, sigmoid activation
+conv1d = conv1d(filters=16, kernel_size=5, input_size=100, activation='sigmoid')
+# Apply the 1D convolution layer to a batch of input sequences of shape [32, 96, 100]
+input_sequences = tf.random.normal([32, 96, 100])
+output_sequences = conv1d.output(input_sequences)
+# The output_sequences will have a shape of [32, 92, 16]
+```
+
 # conv2d
 This module implements a 2D convolutional layer, which can apply a set of filters to an input tensor and produce a feature map. The usage of this module is as follows:
 
@@ -39,6 +57,24 @@ conv2d = conv2d(input_size=28, filters=32, kernel_size=[3, 3], activation='relu'
 input_images = tf.random.normal([64, 28, 28])
 output_images = conv2d.output(input_images)
 # The output_images will have a shape of [64, 26, 26, 32]
+```
+
+# conv3d
+This module implements a 3D convolutional layer, which can apply a set of filters to an input tensor and produce a feature volume. The usage of this module is as follows:
+
+- First, create an instance of the conv3d class, and specify the number of output filters, the kernel size, and other optional parameters such as input size, activation function, weight initializer, bias initializer, use bias, strides, padding mode, data format, and dilation rate.
+- Second, call the output method of the instance, and pass the input tensor as the data argument. You can also specify a different dilation rate for the convolution operation.
+- The output method will return a tensor of shape [batch_size, depth, height, width, filters], which is the 3D convolution output.
+
+For example:
+
+```python
+# Create a 3D convolution layer with 16 output filters, 2x2x2 kernel size, tanh activation
+conv3d = conv3d(filters=16, kernel_size=[2, 2, 2], input_size=10, activation='tanh')
+# Apply the 3D convolution layer to a batch of input volumes of shape [32, 10, 10, 10, 10]
+input_volumes = tf.random.normal([32, 10, 10, 10, 10])
+output_volumes = conv3d.output(input_volumes)
+# The output_volumes will have a shape of [32, 9, 9, 9, 16]
 ```
 
 # capsule
@@ -307,10 +343,10 @@ This module implements a separable convolutional layer, which can apply a depthw
 For example:
 
 ```python
-# Apply the separable convolution layer to a batch of input sequences of shape [32, 100, 16]
-input_sequences = tf.random.normal([32, 100, 16])
 # Create a separable convolution layer with 64 output filters, 5 kernel size, 2 depth multiplier
 separable_conv1d = separable_conv1d(filters=64, kernel_size=5, depth_multiplier=2,input_size=16)
+# Apply the separable convolution layer to a batch of input sequences of shape [32, 100, 16]
+input_sequences = tf.random.normal([32, 100, 16])
 output_sequences = separable_conv1d.output(input_sequences)
 # The output_sequences will have a shape of [32, 96, 64]
 ```
@@ -325,10 +361,10 @@ This module implements a separable convolutional layer, which can apply a depthw
 For example:
 
 ```python
-# Apply the separable convolution layer to a batch of input images of shape [32, 28, 28, 3]
-input_images = tf.random.normal([32, 28, 28, 3])
 # Create a separable convolution layer with 64 output filters, 5x5 kernel size, 2 depth multiplier
 separable_conv2d = separable_conv2d(filters=64, kernel_size=[5, 5], depth_multiplier=2,input_size=3)
+# Apply the separable convolution layer to a batch of input images of shape [32, 28, 28, 3]
+input_images = tf.random.normal([32, 28, 28, 3])
 output_images = separable_conv2d.output(input_images)
 # The output_images will have a shape of [32, 24, 24, 64]
 ```
