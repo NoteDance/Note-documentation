@@ -35,10 +35,10 @@ For example:
 ```python
 # Create a 1D convolution layer with 16 output filters, 5 kernel size, sigmoid activation
 conv1d = conv1d(filters=16, kernel_size=5, input_size=100, activation='sigmoid')
-# Apply the 1D convolution layer to a batch of input sequences of shape [32, 96, 100]
-input_sequences = tf.random.normal([32, 96, 100])
-output_sequences = conv1d.output(input_sequences)
-# The output_sequences will have a shape of [32, 92, 16]
+# Apply the 1D convolution layer to a batch of input data of shape [32, 96, 100]
+input_data = tf.random.normal([32, 96, 100])
+output_data = conv1d.output(input_data)
+# The output_data will have a shape of [32, 92, 16]
 ```
 
 # conv2d
@@ -53,10 +53,10 @@ For example:
 ```python
 # Create a 2D convolution layer with 32 output filters, 3x3 kernel size, ReLU activation
 conv2d = conv2d(input_size=28, filters=32, kernel_size=[3, 3], activation='relu')
-# Apply the 2D convolution layer to a batch of input images of shape [64, 28, 28]
-input_images = tf.random.normal([64, 28, 28])
-output_images = conv2d.output(input_images)
-# The output_images will have a shape of [64, 26, 26, 32]
+# Apply the 2D convolution layer to a batch of input data of shape [64, 28, 28]
+input_data = tf.random.normal([64, 28, 28])
+output_data = conv2d.output(input_data)
+# The output_data will have a shape of [64, 26, 26, 32]
 ```
 
 # conv3d
@@ -71,10 +71,10 @@ For example:
 ```python
 # Create a 3D convolution layer with 16 output filters, 2x2x2 kernel size, tanh activation
 conv3d = conv3d(filters=16, kernel_size=[2, 2, 2], input_size=10, activation='tanh')
-# Apply the 3D convolution layer to a batch of input volumes of shape [32, 10, 10, 10, 10]
-input_volumes = tf.random.normal([32, 10, 10, 10, 10])
-output_volumes = conv3d.output(input_volumes)
-# The output_volumes will have a shape of [32, 9, 9, 9, 16]
+# Apply the 3D convolution layer to a batch of input data of shape [32, 10, 10, 10, 10]
+input_data = tf.random.normal([32, 10, 10, 10, 10])
+output_data = conv3d.output(input_data)
+# The output_data will have a shape of [32, 9, 9, 9, 16]
 ```
 
 # capsule
@@ -345,10 +345,10 @@ For example:
 ```python
 # Create a separable convolution layer with 64 output filters, 5 kernel size, 2 depth multiplier
 separable_conv1d = separable_conv1d(filters=64, kernel_size=5, depth_multiplier=2,input_size=16)
-# Apply the separable convolution layer to a batch of input sequences of shape [32, 100, 16]
-input_sequences = tf.random.normal([32, 100, 16])
-output_sequences = separable_conv1d.output(input_sequences)
-# The output_sequences will have a shape of [32, 96, 64]
+# Apply the separable convolution layer to a batch of input data of shape [32, 100, 16]
+input_data = tf.random.normal([32, 100, 16])
+output_data = separable_conv1d.output(input_data)
+# The output_data will have a shape of [32, 96, 64]
 ```
 
 # separable_conv2d
@@ -363,8 +363,8 @@ For example:
 ```python
 # Create a separable convolution layer with 64 output filters, 5x5 kernel size, 2 depth multiplier
 separable_conv2d = separable_conv2d(filters=64, kernel_size=[5, 5], depth_multiplier=2,input_size=3)
-# Apply the separable convolution layer to a batch of input images of shape [32, 28, 28, 3]
-input_images = tf.random.normal([32, 28, 28, 3])
-output_images = separable_conv2d.output(input_images)
-# The output_images will have a shape of [32, 24, 24, 64]
+# Apply the separable convolution layer to a batch of input data of shape [32, 28, 28, 3]
+input_data = tf.random.normal([32, 28, 28, 3])
+output_data = separable_conv2d.output(input_data)
+# The output_data will have a shape of [32, 24, 24, 64]
 ```
