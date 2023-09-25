@@ -1,21 +1,3 @@
-# conv2d
-This module implements a 2D convolutional layer, which can apply a set of filters to an input tensor and produce a feature map. The usage of this module is as follows:
-
-- First, create an instance of the conv2d class, and specify the input size, the number of output filters, the kernel size, and other optional parameters such as activation function, weight initializer, bias initializer, use bias, strides, padding mode, and data format.
-- Second, call the output method of the instance, and pass the input tensor as the data argument. You can also specify the dilation rate of the convolution operation.
-- The output method will return a tensor of shape [batch_size, height, width, filters], which is the 2D convolution output.
-
-For example:
-
-```python
-# Create a 2D convolution layer with 32 output filters, 3x3 kernel size, ReLU activation
-conv2d = conv2d(input_size=28, filters=32, kernel_size=[3, 3], activation='relu')
-# Apply the 2D convolution layer to a batch of input images of shape [64, 28, 28]
-input_images = tf.random.normal([64, 28, 28])
-output_images = conv2d.output(input_images)
-# The output_images will have a shape of [64, 26, 26, 32]
-```
-
 # attention
 This module implements an attention layer, which can compute the context vector and the attention weights based on the query, value and key tensors. The usage of this module is as follows:
 
@@ -39,6 +21,24 @@ key = tf.random.normal([batch_size, Tv, dim])
 # Call the output method with query, value and key as inputs
 output = att.output(query, value, key)
 # The output will have a shape of [2, 3, 5]
+```
+
+# conv2d
+This module implements a 2D convolutional layer, which can apply a set of filters to an input tensor and produce a feature map. The usage of this module is as follows:
+
+- First, create an instance of the conv2d class, and specify the input size, the number of output filters, the kernel size, and other optional parameters such as activation function, weight initializer, bias initializer, use bias, strides, padding mode, and data format.
+- Second, call the output method of the instance, and pass the input tensor as the data argument. You can also specify the dilation rate of the convolution operation.
+- The output method will return a tensor of shape [batch_size, height, width, filters], which is the 2D convolution output.
+
+For example:
+
+```python
+# Create a 2D convolution layer with 32 output filters, 3x3 kernel size, ReLU activation
+conv2d = conv2d(input_size=28, filters=32, kernel_size=[3, 3], activation='relu')
+# Apply the 2D convolution layer to a batch of input images of shape [64, 28, 28]
+input_images = tf.random.normal([64, 28, 28])
+output_images = conv2d.output(input_images)
+# The output_images will have a shape of [64, 26, 26, 32]
 ```
 
 # capsule
@@ -76,6 +76,38 @@ dense_layer = dense(32, 16, activation='sigmoid')
 input_data = tf.random.normal([64, 16])
 output_data = dense_layer.output(data=input_data)
 # The output_data will have a shape of [64, 32]
+```
+
+# FAVOR_attention
+This module implements the FAVOR attention mechanism, which is a fast and scalable way to compute attention using positive orthogonal random features. The usage of this module is as follows:
+
+- First, create an instance of the FAVOR_attention class, and specify the key dimension, and other optional parameters such as orthonormal, causal, m, redraw, h, f, randomizer, eps, kernel_eps, and dtype.
+- Second, call the output method of the instance, and pass the keys, values, and queries tensors as arguments.
+- The output method will return a tensor of shape [batch_size, queries_locations, values_dimension], which is the FAVOR attention output.
+
+For example:
+
+```python
+# Create a FAVOR attention layer with 16 key dimension, orthonormal features, and ReLU activation
+favor = FAVOR_attention(
+    key_dim=128,
+    orthonormal=True,
+    causal=False,
+    m=64,
+    redraw=False,
+    h=lambda x: math.sqrt(64),
+    f=[tf.nn.relu],
+    randomizer=tf.random.normal,
+    eps=0.0,
+    kernel_eps=0.001,
+    dtype='float32'
+)
+# Apply the FAVOR attention layer to a batch of keys, values, and queries of shape [4, 128, 10], [4, 32, 10], and [4, 128, 8] respectively
+keys = tf.random.normal([4, 128, 10])
+values = tf.random.normal([4, 32, 10])
+queries = tf.random.normal([4, 128, 8])
+output = favor.output(keys, values, queries)
+# The output will have a shape of [4, 32, 8]
 ```
 
 # GRU
@@ -166,6 +198,23 @@ output_data, new_state = lstm_cell.output(data=input_data, state=prev_state)
 # The new_state will have a shape of [64, 32]
 ```
 
+# Linformer_self_attention
+This module implements the Linformer self-attention mechanism, which is a fast and scalable way to compute attention using positive orthogonal random features. The usage of this module is as follows:
+
+- First, create an instance of the Linformer_self_attention class, and specify the dimension, the sequence length, and other optional parameters such as k, heads, dim_head, one_kv_head, share_kv, dropout, and dtype.
+- Second, call the output method of the instance, and pass the input tensor as the x argument. You can also pass a different tensor as the context argument if you want to use cross-attention. The output method will return a tensor of shape [batch_size, sequence_length, dimension], which is the Linformer self-attention output.
+
+For example:
+
+```python
+# Create a Linformer self-attention layer with 64 dimension, 128 sequence length, 32 k, 8 heads, and 0.1 dropout
+linformer = Linformer_self_attention(dim=64, seq_len=128, k=32, heads=8, dropout=0.1)
+# Apply the Linformer self-attention layer to a batch of input embeddings of shape [16, 128, 64]
+input_embeddings = tf.random.normal([16, 128, 64])
+output_embeddings = linformer.output(input_embeddings)
+# The output_embeddings will have a shape of [16, 128, 64]
+```
+
 # multihead_attention
 This module defines a multihead_attention class that implements a multi-head attention layer. A multi-head attention layer is a sublayer of the standard transformer layer that can learn the relevance and dependency of different tokens in a sequence. The usage of this module is as follows:
 
@@ -208,6 +257,27 @@ output_data = rnn_layer.output(data=input_data)
 # The output_data will have a shape of [64, 32]
 ```
 
+# RNNCell
+This module implements a recurrent neural network (RNN) cell, which can process the input data and the previous state in a sequential manner and learn short-term dependencies. The usage of this module is as follows:
+
+- First, create an instance of the RNNCell class, and specify the weight shape, the weight initializer, the bias initializer, the activation function, the use bias flag, the trainable flag, and the data type. The weight shape should be a list of two integers: [input_size, output_size]. The activation function should be a string that matches one of the keys in the activation function dictionary. The use bias flag indicates whether to add a bias term to the linear transformations or not. The trainable flag indicates whether to update the parameters during training or not. The data type should be a string that represents a valid TensorFlow data type.
+- Second, call the output method of the instance, and pass the input data and the previous state as the data and state arguments. The input data should be a tensor of shape [batch_size, input_size], where batch_size is the number of samples in a batch and input_size is the dimension of the input features. The previous state should be a tensor of shape [batch_size,
+  output_size], where output_size is the dimension of the output state.
+- The output method will return a tensor of shape [batch_size,
+  output_size], which is the output of the cell at the current time step.
+
+For example:
+
+```python
+# Create an RNN cell with 32 output units and tanh activation function
+rnn_cell = RNNCell(weight_shape=[16, 32], activation='tanh')
+# Apply the RNN cell to a batch of input data of shape [64, 16] and a previous state of shape [64, 32]
+input_data = tf.random.normal([64, 16])
+prev_state = tf.random.normal([64, 32])
+output_data = rnn_cell.output(data=input_data,state=prev_state)
+# The output_data will have a shape of [64, 32]
+```
+
 # Transformer
 This module implements a Transformer layer, which can learn the self-attention and feed-forward features of the input data. The usage of this module is as follows:
 
@@ -227,51 +297,38 @@ output_data = transformer_layer.output(data=input_data)
 # The output_data will have a shape of [64, 10, 128]
 ```
 
-# FAVOR_attention
-This module implements the FAVOR attention mechanism, which is a fast and scalable way to compute attention using positive orthogonal random features. The usage of this module is as follows:
+# separable_conv1d
+This module implements a separable convolutional layer, which can apply a depthwise convolution and a pointwise convolution to an input tensor and produce a feature map. The usage of this module is as follows:
 
-- First, create an instance of the FAVOR_attention class, and specify the key dimension, and other optional parameters such as orthonormal, causal, m, redraw, h, f, randomizer, eps, kernel_eps, and dtype.
-- Second, call the output method of the instance, and pass the keys, values, and queries tensors as arguments.
-- The output method will return a tensor of shape [batch_size, queries_locations, values_dimension], which is the FAVOR attention output.
+- First, create an instance of the separable_conv1d class, and specify the number of output filters, the kernel size, the depth multiplier, and other optional parameters such as input size, strides, padding mode, data format, dilation rate, weight initializer, bias initializer, activation function, use bias flag, and data type.
+- Second, call the output method of the instance, and pass the input tensor as the data argument. The input tensor should be a three-dimensional tensor of shape [batch_size, length, channels], where batch_size is the number of samples in a batch, length is the dimension of the input sequence, and channels is the dimension of the input features.
+- The output method will return a tensor of shape [batch_size, new_length, filters], where new_length is the dimension of the output sequence after applying the convolution operation, and filters is the number of output filters.
 
 For example:
 
 ```python
-# Create a FAVOR attention layer with 16 key dimension, orthonormal features, and ReLU activation
-favor = FAVOR_attention(
-    key_dim=128,
-    orthonormal=True,
-    causal=False,
-    m=64,
-    redraw=False,
-    h=lambda x: math.sqrt(64),
-    f=[tf.nn.relu],
-    randomizer=tf.random.normal,
-    eps=0.0,
-    kernel_eps=0.001,
-    dtype='float32'
-)
-# Apply the FAVOR attention layer to a batch of keys, values, and queries of shape [4, 128, 10], [4, 32, 10], and [4, 128, 8] respectively
-keys = tf.random.normal([4, 128, 10])
-values = tf.random.normal([4, 32, 10])
-queries = tf.random.normal([4, 128, 8])
-output = favor.output(keys, values, queries)
-# The output will have a shape of [4, 32, 8]
+# Apply the separable convolution layer to a batch of input sequences of shape [32, 100, 16]
+input_sequences = tf.random.normal([32, 100, 16])
+# Create a separable convolution layer with 64 output filters, 5 kernel size, 2 depth multiplier
+separable_conv1d = separable_conv1d(filters=64, kernel_size=5, depth_multiplier=2,input_size=16)
+output_sequences = separable_conv1d.output(input_sequences)
+# The output_sequences will have a shape of [32, 96, 64]
 ```
 
-# Linformer_self_attention
-This module implements the Linformer self-attention mechanism, which is a fast and scalable way to compute attention using positive orthogonal random features. The usage of this module is as follows:
+# separable_conv2d
+This module implements a separable convolutional layer, which can apply a depthwise convolution and a pointwise convolution to an input tensor and produce a feature map. The usage of this module is as follows:
 
-- First, create an instance of the Linformer_self_attention class, and specify the dimension, the sequence length, and other optional parameters such as k, heads, dim_head, one_kv_head, share_kv, dropout, and dtype.
-- Second, call the output method of the instance, and pass the input tensor as the x argument. You can also pass a different tensor as the context argument if you want to use cross-attention. The output method will return a tensor of shape [batch_size, sequence_length, dimension], which is the Linformer self-attention output.
+- First, create an instance of the separable_conv2d class, and specify the number of output filters, the kernel size, the depth multiplier, and other optional parameters such as input size, strides, padding mode, data format, dilation rate, weight initializer, bias initializer, activation function, use bias flag, and data type.
+- Second, call the output method of the instance, and pass the input tensor as the data argument. The input tensor should be a four-dimensional tensor of shape [batch_size, height, width, channels], where batch_size is the number of samples in a batch, height and width are the dimensions of the input image, and channels is the dimension of the input features.
+- The output method will return a tensor of shape [batch_size, new_height, new_width, filters], where new_height and new_width are the dimensions of the output image after applying the convolution operation, and filters is the number of output filters.
 
 For example:
 
 ```python
-# Create a Linformer self-attention layer with 64 dimension, 128 sequence length, 32 k, 8 heads, and 0.1 dropout
-linformer = Linformer_self_attention(dim=64, seq_len=128, k=32, heads=8, dropout=0.1)
-# Apply the Linformer self-attention layer to a batch of input embeddings of shape [16, 128, 64]
-input_embeddings = tf.random.normal([16, 128, 64])
-output_embeddings = linformer.output(input_embeddings)
-# The output_embeddings will have a shape of [16, 128, 64]
+# Apply the separable convolution layer to a batch of input images of shape [32, 28, 28, 3]
+input_images = tf.random.normal([32, 28, 28, 3])
+# Create a separable convolution layer with 64 output filters, 5x5 kernel size, 2 depth multiplier
+separable_conv2d = separable_conv2d(filters=64, kernel_size=[5, 5], depth_multiplier=2,input_size=3)
+output_images = separable_conv2d.output(input_images)
+# The output_images will have a shape of [32, 24, 24, 64]
 ```
