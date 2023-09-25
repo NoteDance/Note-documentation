@@ -114,6 +114,42 @@ output_data = dense_layer.output(data=input_data)
 # The output_data will have a shape of [64, 32]
 ```
 
+# depthwise_conv1d
+This module implements a depthwise convolutional layer, which can apply a set of filters to each input channel and produce a feature vector. The usage of this module is as follows:
+
+- First, create an instance of the depthwise_conv1d class, and specify the kernel size, the depth multiplier, and other optional parameters such as input size, activation function, weight initializer, bias initializer, use bias, strides, padding mode, data format, and dilation rate.
+- Second, call the output method of the instance, and pass the input tensor as the data argument. You can also specify a different dilation rate for the convolution operation.
+- The output method will return a tensor of shape [batch_size, length, depth_multiplier * input_channels], which is the depthwise convolution output.
+
+For example:
+
+```python
+# Create a depthwise convolution layer with 3 kernel size, 2 depth multiplier, relu activation
+depthwise_conv1d = depthwise_conv1d(kernel_size=3, depth_multiplier=2, input_size=64, activation='relu')
+# Apply the depthwise convolution layer to a batch of input data of shape [10, 100, 64]
+input_data = tf.random.normal([10, 100, 64])
+output_data = depthwise_conv1d.output(input_data)
+# The output_data will have a shape of [10, 98, 128]
+```
+
+# depthwise_conv2d
+This module implements a depthwise convolutional layer, which can apply a set of filters to each input channel and produce a feature map. The usage of this module is as follows:
+
+- First, create an instance of the depthwise_conv2d class, and specify the depth multiplier, the kernel size, and other optional parameters such as input size, activation function, weight initializer, bias initializer, use bias, strides, padding mode, data format, and dilation rate.
+- Second, call the output method of the instance, and pass the input tensor as the data argument. You can also specify a different dilation rate for the convolution operation.
+- The output method will return a tensor of shape [batch_size, height, width, depth_multiplier * input_channels], which is the depthwise convolution output.
+
+For example:
+
+```python
+# Create a depthwise convolution layer with 2 depth multiplier, 3x3 kernel size, softmax activation
+depthwise_conv2d = depthwise_conv2d(kernel_size=[3, 3], depth_multiplier=2, input_size=3, activation='softmax')
+# Apply the depthwise convolution layer to a batch of input data of shape [64, 28, 28, 3]
+input_data = tf.random.normal([64, 28, 28, 3])
+output_data = depthwise_conv2d.output(input_data)
+# The output_data will have a shape of [64, 26, 26, 6]
+```
+
 # FAVOR_attention
 This module implements the FAVOR attention mechanism, which is a fast and scalable way to compute attention using positive orthogonal random features. The usage of this module is as follows:
 
