@@ -150,6 +150,24 @@ output_data = depthwise_conv2d.output(input_data)
 # The output_data will have a shape of [64, 26, 26, 6]
 ```
 
+# dropout
+This module implements a dropout layer, which can randomly drop out some units of an input tensor and scale the remaining units by a factor of 1/(1-rate). The usage of this module is as follows:
+
+- First, create an instance of the dropout class, and specify the dropout rate, and other optional parameters such as noise shape, seed, and data type.
+- Second, call the output method of the instance, and pass the input tensor as the data argument. You can also specify a boolean flag to indicate whether the dropout layer is in training mode or inference mode.
+- The output method will return a tensor of the same shape as the input tensor, which is the dropout output.
+
+For example:
+
+```python
+# Create a dropout layer with 0.5 dropout rate
+dropout = dropout(rate=0.5)
+# Apply the dropout layer to a batch of input data of shape [32, 100]
+input_data = tf.random.normal([32, 100])
+output_data = dropout.output(input_data)
+# The output_data will have a shape of [32, 100], and some elements will be zeroed out
+```
+
 # FAVOR_attention
 This module implements the FAVOR attention mechanism, which is a fast and scalable way to compute attention using positive orthogonal random features. The usage of this module is as follows:
 
@@ -403,4 +421,22 @@ separable_conv2d = separable_conv2d(filters=64, kernel_size=[5, 5], depth_multip
 input_data = tf.random.normal([32, 28, 28, 3])
 output_data = separable_conv2d.output(input_data)
 # The output_data will have a shape of [32, 24, 24, 64]
+```
+
+# stochastic_depth
+This module implements a stochastic depth layer, which can randomly skip some layers of a neural network and scale the remaining layers by a factor of 1/(1-drop_path_rate). The usage of this module is as follows:
+
+- First, create an instance of the stochastic_depth class, and specify the drop path rate, and other optional parameters such as noise shape, seed, and data type.
+- Second, call the output method of the instance, and pass the input tensor as the data argument. You can also specify a boolean flag to indicate whether the stochastic depth layer is in training mode or inference mode.
+- The output method will return a tensor of the same shape as the input tensor, which is the stochastic depth output.
+
+For example:
+
+```python
+# Create a stochastic depth layer with 0.2 drop path rate
+stochastic_depth = stochastic_depth(drop_path_rate=0.2)
+# Apply the stochastic depth layer to a batch of input data of shape [32, 100]
+input_data = tf.random.normal([32, 100])
+output_data = stochastic_depth.output(input_data)
+# The output_data will have a shape of [32, 100], and some vectors will be zeroed out
 ```
