@@ -41,6 +41,24 @@ output_data = conv1d.output(input_data)
 # The output_data will have a shape of [32, 92, 16]
 ```
 
+# conv1d_transpose
+This module implements a 1D transposed convolutional layer, which can apply a set of filters to an input tensor and produce a feature vector with a larger length. The usage of this module is as follows:
+
+- First, create an instance of the conv1d_transpose class, and specify the number of output filters, the kernel size, and other optional parameters such as input size, activation function, weight initializer, bias initializer, use bias, strides, padding mode, output padding, data format, and dilation rate.
+- Second, call the output method of the instance, and pass the input tensor as the data argument. You can also specify a different dilation rate for the transposed convolution operation.
+- The output method will return a tensor of shape [batch_size, new_length, filters], which is the 1D transposed convolution output.
+
+For example:
+
+```python
+# Create a 1D transposed convolution layer with 16 output filters, 5 kernel size, relu activation
+conv1d_transpose = conv1d_transpose(filters=16, kernel_size=5, input_size=100, activation='relu')
+# Apply the 1D transposed convolution layer to a batch of input data of shape [32, 92, 100]
+input_data = tf.random.normal([32, 92, 100])
+output_data = conv1d_transpose.output(input_data)
+# The output_data will have a shape of [32, 96, 16]
+```
+
 # conv2d
 This module implements a 2D convolutional layer, which can apply a set of filters to an input tensor and produce a feature map. The usage of this module is as follows:
 
@@ -59,6 +77,24 @@ output_data = conv2d.output(input_data)
 # The output_data will have a shape of [64, 26, 26, 32]
 ```
 
+# conv2d_transpose
+This module implements a 2D transposed convolutional layer, which can apply a set of filters to an input tensor and produce a feature vector with a larger height and width. The usage of this module is as follows:
+
+- First, create an instance of the conv2d_transpose class, and specify the number of output filters, the kernel size, and other optional parameters such as input size, new height and width, activation function, weight initializer, bias initializer, use bias, strides, padding mode, output padding, data format, and dilation rate.
+- Second, call the output method of the instance, and pass the input tensor as the data argument. You can also specify a different dilation rate for the transposed convolution operation.
+- The output method will return a tensor of shape [batch_size, new_height, new_width, filters], which is the 2D transposed convolution output.
+
+For example:
+
+```python
+# Create a 2D transposed convolution layer with 16 output filters, 5x5 kernel size, relu activation
+conv2d_transpose = conv2d_transpose(filters=16, kernel_size=[5, 5], input_size=100, activation='relu')
+# Apply the 2D transposed convolution layer to a batch of input data of shape [32, 28, 28, 100]
+input_data = tf.random.normal([32, 28, 28, 100])
+output_data = conv2d_transpose.output(input_data)
+# The output_data will have a shape of [32, 32, 32, 16]
+```
+
 # conv3d
 This module implements a 3D convolutional layer, which can apply a set of filters to an input tensor and produce a feature volume. The usage of this module is as follows:
 
@@ -75,6 +111,24 @@ conv3d = conv3d(filters=16, kernel_size=[2, 2, 2], input_size=10, activation='ta
 input_data = tf.random.normal([32, 10, 10, 10, 10])
 output_data = conv3d.output(input_data)
 # The output_data will have a shape of [32, 9, 9, 9, 16]
+```
+
+# conv3d_transpose
+This module implements a 3D transposed convolutional layer, which can apply a set of filters to an input tensor and produce a feature vector with a larger depth, height and width. The usage of this module is as follows:
+
+- First, create an instance of the conv3d_transpose class, and specify the number of output filters, the kernel size, and other optional parameters such as input size, new depth, height and width, activation function, weight initializer, bias initializer, use bias, strides, padding mode, output padding, data format, and dilation rate.
+- Second, call the output method of the instance, and pass the input tensor as the data argument. You can also specify a different dilation rate for the transposed convolution operation.
+- The output method will return a tensor of shape [batch_size, new_depth, new_height, new_width, filters], which is the 3D transposed convolution output.
+
+For example:
+
+```python
+# Create a 3D transposed convolution layer with 16 output filters, 5x5x5 kernel size, relu activation
+conv3d_transpose = conv3d_transpose(filters=16, kernel_size=[5, 5, 5], input_size=100, activation='relu')
+# Apply the 3D transposed convolution layer to a batch of input data of shape [32, 24, 24, 24, 100]
+input_data = tf.random.normal([32, 24, 24, 24, 100])
+output_data = conv3d_transpose.output(input_data)
+# The output_data will have a shape of [32, 28, 28, 28, 16]
 ```
 
 # capsule
