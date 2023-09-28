@@ -4,6 +4,7 @@ from Note.nn.layer.transformer import transformer
 from Note.nn.layer.dense import dense
 from Note.nn.layer.emdedding import embedding
 from Note.nn.positional_encoding import positional_encoding
+from Note.nn.Module import Module
 
 # Define a positional encoding transformer neural network class
 class Transformer:
@@ -28,10 +29,7 @@ class Transformer:
         # Create a linear layer to map the transformer output to logits
         self.logits_layer = dense([self.embed_size,self.vocab_size])
         # Store the parameters of the layers in a list
-        self.param = [self.embedding_layer.param]
-        for transformer_layer in self.transformer_layers:
-            self.param.extend(transformer_layer.param)
-        self.param.extend(self.logits_layer.param)
+        self.param=Module.param
     
     
     def fp(self,data):
