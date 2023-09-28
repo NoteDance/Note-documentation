@@ -3,6 +3,7 @@ import Note.nn.layer.dense as d
 from Note.nn.parallel.optimizer import Momentum
 from Note.nn.layer.flatten import flatten
 from Note.nn.accuracy import sparse_categorical_accuracy
+from Note.nn.Module import Module
 
 # Define a neural network class
 class nn:
@@ -17,7 +18,7 @@ class nn:
         self.layer1=d.dense(128,784,activation='relu')
         self.layer2=d.dense(10,128)
         # Store the parameters of the layers in a list
-        self.param=[self.layer1.param,self.layer2.param]
+        self.param=Module.param
         return
     
     
