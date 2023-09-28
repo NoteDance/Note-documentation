@@ -4,6 +4,7 @@ from Note.nn.layer.dense import dense
 from Note.nn.layer.flatten import flatten
 from Note.nn.parallel.optimizer import Adam
 from Note.nn.layer.LMix import lmix
+from Note.nn.Module import Module
 
 # Define a convolutional neural network class with mixup augmentation
 class cnn:
@@ -26,12 +27,7 @@ class cnn:
         self.dense1=dense(64,64*4*4,activation='relu')
         self.dense2=dense(10,64)
         # Store the parameters of the layers in a list
-        self.param = [self.conv1.param,
-                      self.conv2.param,
-                      self.conv3.param,
-                      self.dense1.param,
-                      self.dense2.param,
-                      ]
+        self.param=Module.param
         return
     
     
