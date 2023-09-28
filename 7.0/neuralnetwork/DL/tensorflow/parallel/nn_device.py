@@ -3,6 +3,7 @@ import Note.nn.layer.dense as d # import Note's dense layer module
 from Note.nn.layer.flatten import flatten # import Note's flatten layer function
 from Note.nn.parallel.optimizer import Momentum # import Note's momentum optimizer module
 from Note.nn.parallel.assign_device import assign_device # import the function to assign device according to the process index and the device type
+from Note.nn.Module import Module
 
 
 class nn:               # A neural network class example, allocate device for multiple threads
@@ -16,7 +17,7 @@ class nn:               # A neural network class example, allocate device for mu
         self.layer1=d.dense(128,784,activation='relu') # the first layer with 784 input units and 128 output units and ReLU activation
         self.layer2=d.dense(10,128) # the second layer with 128 input units and 10 output units and linear activation
         # Store the parameters of the layers in a list
-        self.param=[self.layer1.param,self.layer2.param] # parameter list of both layers, kernel uses it list for backpropagation 
+        self.param=Module.param # parameter list of both layers, kernel uses it list for backpropagation 
         return
     
     
