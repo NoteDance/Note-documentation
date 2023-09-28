@@ -254,6 +254,26 @@ output = favor.output(keys, values, queries)
 # The output will have a shape of [4, 32, 8]
 ```
 
+# group_normalization
+This module implements a group normalization layer, which is an alternative to batch normalization for deep learning models. Group normalization divides the channel dimension into groups and normalizes each group separately, reducing the dependency of model performance on the batch size. This method was proposed by Wu and He in 2018.
+
+The usage of this module is as follows:
+
+- First, create an instance of the group_normalization class, and specify the number of groups, the axis to normalize, and other optional parameters such as input size, epsilon, center, scale, beta initializer, gamma initializer, mask, and dtype.
+- Second, call the output method of the instance, and pass the input tensor as the data argument. The output method will apply group normalization to the input tensor and return a normalized tensor of the same shape.
+- The output method also supports a different mask argument, which is a boolean tensor that indicates which elements of the input tensor should be included in the normalization.
+
+For example:
+
+```python
+# Create a group normalization layer with 32 groups and axis -1
+gn = group_normalization(input_size=256, groups=32, axis=-1)
+# Apply the group normalization layer to a batch of input data of shape [64, 128, 256]
+input_data = tf.random.normal([64, 128, 256])
+output_data = gn.output(input_data)
+# The output_data will have a shape of [64, 128, 256]
+```
+
 # GRU
 This module implements a gated recurrent unit (GRU) layer, which can process the input data in a sequential manner and learn long-term dependencies. The usage of this module is as follows:
 
