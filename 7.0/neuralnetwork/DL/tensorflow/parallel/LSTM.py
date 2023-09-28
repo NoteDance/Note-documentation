@@ -2,6 +2,7 @@ import tensorflow as tf
 from Note.nn.layer.LSTM import LSTM
 from Note.nn.layer.dense import dense
 from Note.nn.parallel.optimizer import Adam
+from Note.nn.Module import Module
 
 # Define a recurrent neural network class with LSTM layers
 class lstm:
@@ -20,10 +21,7 @@ class lstm:
         # Create a dense layer with 10 output units
         self.dense=dense(10,50)
         # Store the parameters of the layers in a list
-        self.param=[self.lstm1.param,
-                      self.lstm2.param,
-                      self.dense.param,
-                      ]
+        self.param=Module.param
         return
     
 
