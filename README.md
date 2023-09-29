@@ -23,6 +23,26 @@ output = att.output(query, value, key)
 # The output will have a shape of [2, 3, 5]
 ```
 
+# batch_normalization
+This module implements a batch normalization layer, which is a common technique for deep learning models. Batch normalization can reduce the internal covariate shift, accelerate the model convergence, and improve the model generalization ability. This method was proposed by Ioffe and Szegedy in 2015.
+
+The usage of this module is as follows:
+
+- First, create an instance of the batch_normalization class, and specify the axis or axes to normalize, the momentum, the epsilon, and other optional parameters such as input size, center, scale, beta initializer, gamma initializer, moving mean initializer, moving variance initializer, keepdims, trainable, and dtype.
+- Second, call the output method of the instance, and pass the input tensor as the data argument. You can also specify a different train_flag argument, which is a boolean value that indicates whether to use the batch statistics or the moving statistics for normalization.
+- The output method will return a tensor of the same shape as the input tensor, which is the batch normalization output.
+
+For example:
+
+```python
+# Create a batch normalization layer with axis -1 and momentum 0.99
+bn = batch_normalization(128, axis=-1, momentum=0.99)
+# Apply the batch normalization layer to a batch of input data of shape [64, 128]
+input_data = tf.random.normal([64, 128])
+output_data = bn.output(input_data)
+# The output_data will have a shape of [64, 128]
+```
+
 # conv1d
 This module implements a 1D convolutional layer, which can apply a set of filters to an input tensor and produce a feature vector. The usage of this module is as follows:
 
@@ -377,6 +397,26 @@ linformer = Linformer_self_attention(dim=64, seq_len=128, k=32, heads=8, dropout
 input_embeddings = tf.random.normal([16, 128, 64])
 output_embeddings = linformer.output(input_embeddings)
 # The output_embeddings will have a shape of [16, 128, 64]
+```
+
+# layer_normalization
+This module implements a layer normalization layer, which is a common technique for deep learning models. Layer normalization can normalize each neuron of each sample, making its mean 0 and variance 1. This can avoid the internal covariate shift, accelerate the model convergence, and improve the model generalization ability. This method was proposed by Ba et al. in 2016.
+
+The usage of this module is as follows:
+
+- First, create an instance of the layer_normalization class, and specify the axis or axes to normalize, the epsilon, and other optional parameters such as input size, center, scale, beta initializer, gamma initializer, and dtype.
+- Second, call the output method of the instance, and pass the input tensor as the data argument. The output method will apply layer normalization to the input tensor and return a normalized tensor of the same shape.
+- The output method does not support a different train_flag argument, as layer normalization does not use moving statistics.
+
+For example:
+
+```python
+# Create a layer normalization layer with axis -1
+ln = layer_normalization(128, axis=-1)
+# Apply the layer normalization layer to a batch of input data of shape [64, 128]
+input_data = tf.random.normal([64, 128])
+output_data = ln.output(input_data)
+# The output_data will have a shape of [64, 128]
 ```
 
 # multihead_attention
