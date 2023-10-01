@@ -36,7 +36,7 @@ For example:
 
 ```python
 # Create a batch normalization layer with axis -1 and momentum 0.99
-bn = batch_normalization(128, axis=-1, momentum=0.99)
+bn = batch_normalization(axis=-1, momentum=0.99)
 # Apply the batch normalization layer to a batch of input data of shape [64, 128]
 input_data = tf.random.normal([64, 128])
 output_data = bn.output(input_data)
@@ -54,7 +54,7 @@ For example:
 
 ```python
 # Create a 1D convolution layer with 16 output filters, 5 kernel size, sigmoid activation
-conv1d = conv1d(filters=16, kernel_size=5, input_size=100, activation='sigmoid')
+conv1d = conv1d(filters=16, kernel_size=5, activation='sigmoid')
 # Apply the 1D convolution layer to a batch of input data of shape [32, 96, 100]
 input_data = tf.random.normal([32, 96, 100])
 output_data = conv1d.output(input_data)
@@ -90,7 +90,7 @@ For example:
 
 ```python
 # Create a 2D convolution layer with 32 output filters, 3x3 kernel size, ReLU activation
-conv2d = conv2d(input_size=28, filters=32, kernel_size=[3, 3], activation='relu')
+conv2d = conv2d(filters=32, kernel_size=[3, 3], activation='relu')
 # Apply the 2D convolution layer to a batch of input data of shape [64, 28, 28]
 input_data = tf.random.normal([64, 28, 28])
 output_data = conv2d.output(input_data)
@@ -126,7 +126,7 @@ For example:
 
 ```python
 # Create a 3D convolution layer with 16 output filters, 2x2x2 kernel size, tanh activation
-conv3d = conv3d(filters=16, kernel_size=[2, 2, 2], input_size=10, activation='tanh')
+conv3d = conv3d(filters=16, kernel_size=[2, 2, 2], activation='tanh')
 # Apply the 3D convolution layer to a batch of input data of shape [32, 10, 10, 10, 10]
 input_data = tf.random.normal([32, 10, 10, 10, 10])
 output_data = conv3d.output(input_data)
@@ -181,7 +181,7 @@ For example:
 
 ```python
 # Create a dense layer with 32 output units and sigmoid activation
-dense_layer = dense(32, 16, activation='sigmoid')
+dense_layer = dense(32, activation='sigmoid')
 # Apply the dense layer to a batch of input data of shape [64, 16]
 input_data = tf.random.normal([64, 16])
 output_data = dense_layer.output(data=input_data)
@@ -412,7 +412,7 @@ For example:
 
 ```python
 # Create a layer normalization layer with axis -1
-ln = layer_normalization(128, axis=-1)
+ln = layer_normalization(axis=-1)
 # Apply the layer normalization layer to a batch of input data of shape [64, 128]
 input_data = tf.random.normal([64, 128])
 output_data = ln.output(input_data)
