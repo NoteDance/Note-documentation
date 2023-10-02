@@ -72,7 +72,7 @@ For example:
 
 ```python
 # Create a 1D transposed convolution layer with 16 output filters, 5 kernel size, relu activation
-conv1d_transpose = conv1d_transpose(filters=16, kernel_size=5, input_size=100, activation='relu')
+conv1d_transpose = conv1d_transpose(filters=16, kernel_size=5, activation='relu')
 # Apply the 1D transposed convolution layer to a batch of input data of shape [32, 92, 100]
 input_data = tf.random.normal([32, 92, 100])
 output_data = conv1d_transpose.output(input_data)
@@ -108,7 +108,7 @@ For example:
 
 ```python
 # Create a 2D transposed convolution layer with 16 output filters, 5x5 kernel size, relu activation
-conv2d_transpose = conv2d_transpose(filters=16, kernel_size=[5, 5], input_size=100, activation='relu')
+conv2d_transpose = conv2d_transpose(filters=16, kernel_size=[5, 5], activation='relu')
 # Apply the 2D transposed convolution layer to a batch of input data of shape [32, 28, 28, 100]
 input_data = tf.random.normal([32, 28, 28, 100])
 output_data = conv2d_transpose.output(input_data)
@@ -144,7 +144,7 @@ For example:
 
 ```python
 # Create a 3D transposed convolution layer with 16 output filters, 5x5x5 kernel size, relu activation
-conv3d_transpose = conv3d_transpose(filters=16, kernel_size=[5, 5, 5], input_size=100, activation='relu')
+conv3d_transpose = conv3d_transpose(filters=16, kernel_size=[5, 5, 5], activation='relu')
 # Apply the 3D transposed convolution layer to a batch of input data of shape [32, 24, 24, 24, 100]
 input_data = tf.random.normal([32, 24, 24, 24, 100])
 output_data = conv3d_transpose.output(input_data)
@@ -162,7 +162,7 @@ For example:
 
 ```python
 # Create a capsule layer with 10 output capsules and 16 dimensions for each output capsule
-capsule_layer = capsule(input_shape=[64, 1152, 8], num_capsules=10, dim_capsules=16)
+capsule_layer = capsule(num_capsules=10, dim_capsules=16)
 # Apply the capsule layer to a batch of input data of shape [64, 1152, 8]
 input_data = tf.random.normal([64, 1152, 8])
 output_data = capsule_layer.output(data=input_data)
@@ -199,7 +199,7 @@ For example:
 
 ```python
 # Create a depthwise convolution layer with 3 kernel size, 2 depth multiplier, relu activation
-depthwise_conv1d = depthwise_conv1d(kernel_size=3, depth_multiplier=2, input_size=64, activation='relu')
+depthwise_conv1d = depthwise_conv1d(kernel_size=3, depth_multiplier=2, activation='relu')
 # Apply the depthwise convolution layer to a batch of input data of shape [10, 100, 64]
 input_data = tf.random.normal([10, 100, 64])
 output_data = depthwise_conv1d.output(input_data)
@@ -217,7 +217,7 @@ For example:
 
 ```python
 # Create a depthwise convolution layer with 2 depth multiplier, 3x3 kernel size, softmax activation
-depthwise_conv2d = depthwise_conv2d(kernel_size=[3, 3], depth_multiplier=2, input_size=3, activation='softmax')
+depthwise_conv2d = depthwise_conv2d(kernel_size=[3, 3], depth_multiplier=2, activation='softmax')
 # Apply the depthwise convolution layer to a batch of input data of shape [64, 28, 28, 3]
 input_data = tf.random.normal([64, 28, 28, 3])
 output_data = depthwise_conv2d.output(input_data)
@@ -287,7 +287,7 @@ For example:
 
 ```python
 # Create a group normalization layer with 32 groups and axis -1
-gn = group_normalization(input_size=256, groups=32, axis=-1)
+gn = group_normalization(groups=32, axis=-1)
 # Apply the group normalization layer to a batch of input data of shape [64, 128, 256]
 input_data = tf.random.normal([64, 128, 256])
 output_data = gn.output(input_data)
@@ -308,7 +308,7 @@ For example:
 
 ```python
 # Create a GRU layer with 32 hidden units and tanh activation
-gru_layer = GRU(32, 16)
+gru_layer = GRU(32)
 # Apply the GRU layer to a batch of input data of shape [64, 10, 16]
 input_data = tf.random.normal([64, 10, 16])
 output_data = gru_layer.output(data=input_data)
@@ -352,7 +352,7 @@ For example:
 
 ```python
 # Create an LSTM layer with 32 hidden units
-lstm_layer = LSTM(32, 16)
+lstm_layer = LSTM(32)
 # Apply the LSTM layer to a batch of input data of shape [64, 10, 16]
 input_data = tf.random.normal([64, 10, 16])
 output_data = lstm_layer.output(data=input_data)
@@ -432,7 +432,7 @@ For example:
 
 ```python
 # Create a multi-head attention layer with 64 n_state and 8 n_head
-multihead_attention_layer = multihead_attention(64, 8)
+multihead_attention_layer = multihead_attention(8)
 # Apply the multi-head attention layer to a batch of input data of shape [32, 20, 64]
 input_data = tf.random.normal([32, 20, 64])
 output_data, qk = multihead_attention_layer.output(x=input_data)
@@ -454,7 +454,7 @@ For example:
 
 ```python
 # Create an RNN layer with 32 hidden units and tanh activation
-rnn_layer = RNN(32, 16, activation='tanh')
+rnn_layer = RNN(32, activation='tanh')
 # Apply the RNN layer to a batch of input data of shape [64, 10, 16]
 input_data = tf.random.normal([64, 10, 16])
 output_data = rnn_layer.output(data=input_data)
