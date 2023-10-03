@@ -1,6 +1,7 @@
 import tensorflow as tf # import TensorFlow library
 import numpy as np # import NumPy library
 import gym # import OpenAI Gym library
+import Note.nn.parallel.optimizer as o # import Note's optimizer module
 
 
 class actor: # define a class for the actor network
@@ -51,7 +52,7 @@ class DDPG: # define a class for the DDPG agent
         self.sigma=sigma  # noise scale 
         self.gamma=gamma  # discount factor 
         self.tau=tau  # soft update factor 
-        self.opt=tf.keras.optimizers.Adam()  # optimizer, kernel uses it to optimize. Here we use Adam optimizer
+        self.optimizer=o.SGD(param=self.param) # optimizer, kernel uses it to optimize. Here we use a custom SGD optimizer
     
     
     def noise(self):  # noise function, kernel uses it to generate exploration noise

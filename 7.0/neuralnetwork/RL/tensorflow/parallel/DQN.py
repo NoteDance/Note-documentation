@@ -21,7 +21,7 @@ class DQN: # define a class for the DQN agent
         self.nn=Qnet(state_dim,hidden_dim,action_dim) # create a Q-network for the agent
         self.target_q_net=Qnet(state_dim,hidden_dim,action_dim) # create a target Q-network for the agent
         self.param=self.nn.param   # parameter list, kernel uses it list for backpropagation
-        self.optimizer=o.Momentum(0.07,0.7) # optimizer, kernel uses it to optimize. Here we use a custom momentum optimizer with learning rate 0.07 and momentum 0.7
+        self.optimizer=o.SGD(param=self.param) # optimizer, kernel uses it to optimize. Here we use a custom SGD optimizer
         self.genv=[gym.make('CartPole-v0') for _ in range(5)] # create a list of 5 environments
     
     
