@@ -1,7 +1,7 @@
 import tensorflow as tf
 from tensorflow.python.util import nest
 import Note.nn.layer.dense as d
-from Note.nn.parallel.optimizer import Momentum
+from Note.nn.parallel.optimizer import SGD
 from Note.nn.layer.flatten import flatten
 from Note.nn.accuracy import sparse_categorical_accuracy
 from Note.nn.Module import Module
@@ -11,7 +11,6 @@ class nn:
     def __init__(self):
         # Initialize the loss function and the optimizer
         self.loss_object=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-        self.optimizer=Momentum(0.07,0.7)
         # Initialize a variable to keep track of the number of optimization steps
         self.opt_counter=tf.Variable(tf.zeros(3,dtype=tf.float32))
     
@@ -20,6 +19,7 @@ class nn:
         # Create two dense layers with relu and linear activations
         self.layer1=d.dense(128,784,activation='relu')
         self.layer2=d.dense(10,128)
+        self.optimizer=SGD()
         # Store the parameters of the layers in a list
         self.param=Module.param
         return

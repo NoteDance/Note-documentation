@@ -1,6 +1,6 @@
 import tensorflow as tf
 import Note.nn.layer.dense as d
-from Note.nn.parallel.optimizer import Momentum
+from Note.nn.parallel.optimizer import SGD
 from Note.nn.layer.flatten import flatten
 from Note.nn.gradient_clipping import gradient_clipping
 from Note.nn.Module import Module
@@ -10,13 +10,13 @@ class nn:
     def __init__(self):
         # Initialize the loss function and the optimizer
         self.loss_object=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-        self.optimizer=Momentum(0.07,0.7)
     
     
     def build(self):
         # Create two dense layers with relu and linear activations
         self.layer1=d.dense(128,784,activation='relu')
         self.layer2=d.dense(10,128)
+        self.optimizer=SGD()
         # Store the parameters of the layers in a list
         self.param=Module.param
         return

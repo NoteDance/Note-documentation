@@ -11,7 +11,6 @@ class cnn:
     def __init__(self):
         # Initialize the loss function and the optimizer
         self.loss_object=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-        self.optimizer=Adam()
         # Initialize the alpha parameter for mixup
         self.alpha=1.0
         # Initialize a variable to keep track of the batch count
@@ -26,6 +25,7 @@ class cnn:
         # Create two dense layers with relu and linear activations
         self.dense1=dense(64,64*4*4,activation='relu')
         self.dense2=dense(10,64)
+        self.optimizer=Adam()
         # Store the parameters of the layers in a list
         self.param=Module.param
         return
