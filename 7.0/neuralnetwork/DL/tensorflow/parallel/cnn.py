@@ -10,8 +10,6 @@ class cnn:
     def __init__(self):
         # Initialize the loss function and the optimizer
         self.loss_object=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-        # Initialize a variable to keep track of the batch count
-        self.bc=tf.Variable(0,dtype=tf.float32)
     
     
     def build(self):
