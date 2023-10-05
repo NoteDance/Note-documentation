@@ -1,5 +1,5 @@
 import tensorflow as tf
-import Note.nn.layer.dense as d
+from Note.nn.layer.dense import dense
 from Note.nn.parallel.optimizer import SGD
 from Note.nn.layer.flatten import flatten
 from Note.nn.accuracy import sparse_categorical_accuracy
@@ -14,8 +14,8 @@ class nn:
     
     def build(self):
         # Create two dense layers with relu and linear activations
-        self.layer1=d.dense(128,784,activation='relu')
-        self.layer2=d.dense(10,128)
+        self.layer1=dense(128,784,activation='relu')
+        self.layer2=dense(10,128)
         self.optimizer=SGD()
         # Store the parameters of the layers in a list
         self.param=Module.param
