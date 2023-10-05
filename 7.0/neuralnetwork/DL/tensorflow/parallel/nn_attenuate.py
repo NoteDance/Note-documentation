@@ -1,6 +1,6 @@
 import tensorflow as tf
 from tensorflow.python.util import nest
-import Note.nn.layer.dense as d
+from Note.nn.layer.dense import dense
 from Note.nn.parallel.optimizer import SGD
 from Note.nn.layer.flatten import flatten
 from Note.nn.accuracy import sparse_categorical_accuracy
@@ -11,14 +11,12 @@ class nn:
     def __init__(self):
         # Initialize the loss function and the optimizer
         self.loss_object=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
-        # Initialize a variable to keep track of the number of optimization steps
-        self.opt_counter=tf.Variable(tf.zeros(3,dtype=tf.float32))
     
     
     def build(self):
         # Create two dense layers with relu and linear activations
-        self.layer1=d.dense(128,784,activation='relu')
-        self.layer2=d.dense(10,128)
+        self.layer1=dense(128,784,activation='relu')
+        self.layer2=dense(10,128)
         self.optimizer=SGD()
         # Store the parameters of the layers in a list
         self.param=Module.param
@@ -47,7 +45,7 @@ class nn:
         ac=0.9**oc[0][p]                   #ac:attenuation coefficient
         gradient_flat=nest.flatten(gradient) # Flatten the gradient to a one-dimensional vector
         for i in range(len(gradient_flat)):  #oc:optimization counter
-            gradient_flat[i]=ac*gradient_flat[i]  #p:process number
+            gradient_flat[i].assign(tf.cast(ac,gradient_flat[i].dtype)*gradient_flat[i])  #p:process number
         gradient=nest.pack_sequence_as(gradient,gradient_flat) # Restore the gradient to its original shape
         return gradient  
     
