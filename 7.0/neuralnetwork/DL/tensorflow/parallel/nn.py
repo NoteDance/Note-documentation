@@ -23,7 +23,7 @@ class nn:
     
     def fp(self,data):
         # Perform forward propagation on the input data
-        data=flatten(data)
+        data=flatten().output(data)
         output1=self.layer1.output(data)
         output2=self.layer2.output(output1)
         return output2
