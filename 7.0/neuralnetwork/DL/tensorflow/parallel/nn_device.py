@@ -23,7 +23,7 @@ class nn:               # A neural network class example, allocate device for mu
     
     def fp(self,data,p): # forward propagation function, kernel uses it for forward propagation
         with tf.device(assign_device(p,'GPU')): # assign the device according to the process index p
-            data=flatten(data) # flatten the data to a vector of 784 elements
+            data=flatten().output(data) # flatten the data to a vector of 784 elements
             output1=self.layer1.output(data) # pass the data through the first layer and get the output
             output2=self.layer2.output(output1) # pass the output of the first layer through the second layer and get the final output logits
         return output2
