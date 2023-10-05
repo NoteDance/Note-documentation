@@ -25,7 +25,7 @@ class nn:
     
     def fp(self,data):
         # Perform forward propagation on the input data
-        data=flatten(data) # Flatten the data to a one-dimensional vector
+        data=flatten().output(data) # Flatten the data to a one-dimensional vector
         output1=self.layer1.output(data) # Apply the first layer to the data and get the output
         output2=self.layer2.output(output1) # Apply the second layer to the output of the first layer and get the final output
         return output2
@@ -45,7 +45,7 @@ class nn:
         ac=0.9**oc[0][p]                   #ac:attenuation coefficient
         gradient_flat=nest.flatten(gradient) # Flatten the gradient to a one-dimensional vector
         for i in range(len(gradient_flat)):  #oc:optimization counter
-            gradient_flat[i].assign(tf.cast(ac,gradient_flat[i].dtype)*gradient_flat[i])  #p:process number
+            gradient_flat[i]=tf.cast(ac,gradient_flat[i].dtype)*gradient_flat[i]  #p:process number
         gradient=nest.pack_sequence_as(gradient,gradient_flat) # Restore the gradient to its original shape
         return gradient  
     
