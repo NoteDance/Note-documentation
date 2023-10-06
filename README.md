@@ -432,9 +432,8 @@ kernel.PO=3                          #use PO3 algorithm for parallel optimizatio
 kernel.data(x_train,y_train)         #input train data to the kernel
 manager=Manager()                    #create manager object to share data among processes
 kernel.init(manager)                 #initialize shared data with the manager
-lock=Lock()                          #create a lock for synchronization
 for p in range(3):                   #loop over the processes
-	Process(target=kernel.train,args=(p,lock)).start() #start each process with the train function and pass the process id and locks as arguments
+	Process(target=kernel.train,args=(p,)).start() #start each process with the train function and pass the process id as arguments
 ```
 
 ### Process priority:
