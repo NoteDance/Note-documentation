@@ -91,10 +91,10 @@ For example:
 ```python
 # Create a 2D convolution layer with 32 output filters, 3x3 kernel size, ReLU activation
 conv2d = conv2d(input_size=28, filters=32, kernel_size=[3, 3], activation='relu')
-# Apply the 2D convolution layer to a batch of input data of shape [64, 28, 28]
-input_data = tf.random.normal([64, 28, 28])
+# Apply the 2D convolution layer to a batch of input data of shape [32, 28, 28, 28]
+input_data = tf.random.normal([32, 28, 28, 28])
 output_data = conv2d.output(input_data)
-# The output_data will have a shape of [64, 26, 26, 32]
+# The output_data will have a shape of [32, 26, 26, 32]
 ```
 
 # conv2d_transpose
