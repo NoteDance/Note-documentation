@@ -208,26 +208,6 @@ GPT2(one_hot=True)
 - **fp(X, past=None)**: A method, used to perform forward propagation. It accepts two arguments `X` and `past`, indicating the input data and previous hidden states respectively. This method passes the input data through all the layers of the model and returns a dictionary with keys 'present' and 'logits'. The 'present' value is a tensor that contains the current hidden states of the model, which can be used as past for the next iteration. The 'logits' value is a tensor that contains the output logits of the model for each token in the input data.
 - **loss(output, labels)**: A method, used to calculate the loss value. It accepts two arguments `output` and `labels`, indicating the output data and true labels respectively. This method uses the categorical crossentropy loss function to calculate the difference between output logits and true labels and returns the loss value. If one_hot is True, this method converts the labels to one-hot vectors before computing the loss.
 
-# GPT2_parallel:
-The GPT2_ class is a Python class that implements the GPT-2 model, which is a type of transformer-based language model that can generate coherent and diverse texts on various topics and tasks. The GPT-2 model has several variants, such as small, medium, large and XL, that differ in their number of parameters and layers. The GPT2_ class has the following attributes and methods:
-
-```python
-GPT2_(one_hot=True, device='GPU')
-```
-
-- **one_hot**: A bool, indicating whether to use one-hot encoding for the labels. If True, the labels are converted to one-hot vectors before computing the loss. If False, the labels are used as indices for the logits.
-- **device**: A string, indicating the device to use for computation. The default value is 'GPU', which means using GPU if available. Other value is 'CPU'.
-- **norm**: A norm object, indicating the layer normalization layer for the model output.
-- **block**: A dictionary, storing the block objects for each layer of the model. Each block object contains the attention layer, the feed-forward layer and the residual connections for that layer.
-- **optimizer**: A parallel optimizer for Note. The default optimizer is Adam.
-- **param**: A list, storing all the parameters (weights and biases) of the model.
-- **flag**: An integer that indicates whether the model has been built or not.
-- **build()**: A method, used to build the model's structure. It accepts no arguments. This method creates all the weights and biases for the model, and initializes them with random values or pre-trained values if available.
-- **fp(X, p=None, past=None)**: A method, used to perform forward propagation. It accepts three arguments `X`, `p` and `past`, indicating the input data, process number and previous hidden states respectively. This method passes the input data through all the layers of the model and returns a dictionary with keys 'present' and 'logits'. The 'present' value is a tensor that contains the current hidden states of the model, which can be used as past for the next iteration. The 'logits' value is a tensor that contains the output logits of the model for each token in the input data.
-- **loss(output, labels, p)**: A method, used to calculate the loss value. It accepts three arguments `output`, `labels` and `p`, indicating the output data, true labels and process number respectively. This method uses the categorical crossentropy loss function to calculate the difference between output logits and true labels and returns the loss value. If one_hot is True, this method converts the labels to one-hot vectors before computing the loss.
-- **GradientTape(data, labels, p)**: A method, used to calculate the gradient value. It accepts three arguments `data`, `labels` and `p`, indicating the input data, true labels and process number respectively. This method uses a persistent gradient tape to record the operations and compute the gradient of the loss with respect to the parameters. It returns the tape, output data and loss value.
-- **opt(gradient, p)**: A method, used to perform optimization update. It accepts two arguments `gradient` and `p`, indicating the gradient value and process number respectively. This method uses the optimizer to update all the parameters of the model according to gradient value and returns updated parameters.
-
 # MobileNet:
 The MobileNet class is a Python class that implements the MobileNet model, which is a type of convolutional neural network that uses depthwise separable convolutions and ReLU6 activation to reduce the computational cost and model size. The MobileNet class has the following attributes and methods:
 
