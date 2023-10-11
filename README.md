@@ -208,7 +208,7 @@ GPT2(one_hot=True)
 - **fp(X, past=None)**: A method, used to perform forward propagation. It accepts two arguments `X` and `past`, indicating the input data and previous hidden states respectively. This method passes the input data through all the layers of the model and returns a dictionary with keys 'present' and 'logits'. The 'present' value is a tensor that contains the current hidden states of the model, which can be used as past for the next iteration. The 'logits' value is a tensor that contains the output logits of the model for each token in the input data.
 - **loss(output, labels)**: A method, used to calculate the loss value. It accepts two arguments `output` and `labels`, indicating the output data and true labels respectively. This method uses the categorical crossentropy loss function to calculate the difference between output logits and true labels and returns the loss value. If one_hot is True, this method converts the labels to one-hot vectors before computing the loss.
 
-# GPT2_:
+# GPT2_parallel:
 The GPT2_ class is a Python class that implements the GPT-2 model, which is a type of transformer-based language model that can generate coherent and diverse texts on various topics and tasks. The GPT-2 model has several variants, such as small, medium, large and XL, that differ in their number of parameters and layers. The GPT2_ class has the following attributes and methods:
 
 ```python
