@@ -38,15 +38,13 @@ class cnn:
     def fp(self,data):
         # Perform forward propagation on the input data
         x=self.conv1.output(data) # First convolutional layer
-        x=tf.nn.max_pool2d(x,ksize=(2,2)) # First max pooling layer
+        x=tf.nn.max_pool2d(x,ksize=(2,2),strides=(2,2),padding='VALID') # First max pooling layer
         x=self.conv2.output(x) # Second convolutional layer
         x=tf.nn.max_pool2d(x,ksize=(2,2),strides=(2,2),padding='VALID') # Second max pooling layer
         x=self.conv3.output(x) # Third convolutional layer
         x=self.flatten.output(x) # Flatten the output to a vector
         x=self.dense1.output(x) # First dense layer with relu activation
-        x=tf.nn.dropout(x,rate=0.5) # Apply dropout to prevent overfitting
         output=self.dense2.output(x) # Output layer with linear activation
-        output=tf.nn.dropout(output,rate=0.5) # Apply dropout to prevent overfitting
         return output
     
     
