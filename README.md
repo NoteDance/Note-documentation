@@ -286,6 +286,33 @@ MobileNetV2(alpha=1.0,classes=1000,include_top=True,pooling=None)
 - **GradientTape(data, labels, p):** A method, used to calculate the gradient value. It accepts three arguments data, labels and p, indicating the instance input data, true labels and device number respectively. This method uses a persistent gradient tape to record the operations and compute the gradient of the loss with respect to the parameters. This method returns the tape, output data and loss value.
 - **opt(gradient, p):** A method, used to perform optimization update. It accepts two arguments `gradient` and `p`, indicating the gradient value and process number respectively. This method uses the optimizer to update all the parameters of the model according to gradient value and returns updated parameters.
 
+# MobileNetV3:
+The MobileNetV3 class is a Python class that implements the MobileNetV3 model, which is a type of convolutional neural network that uses inverted residual blocks and attention mechanisms to achieve high performance on image classification and object detection tasks. The MobileNetV3 class has the following attributes and methods:
+
+```python
+MobileNetV3(alpha=1.0, model_type="large", minimalistic=False, include_top=True, classes=1000, pooling=None, dropout_rate=0.2, classifier_activation="softmax", include_preprocessing=True, device='GPU')
+```
+
+- **alpha:** A float, indicating the width multiplier for the network. A larger alpha increases the number of filters in each layer and the model size and complexity.
+- **model_type:** A string, indicating the type of the MobileNetV3 model. It can be either "large" or "small", corresponding to different configurations of inverted residual blocks and attention mechanisms.
+- **minimalistic:** A bool, indicating whether to use a minimalistic version of the MobileNetV3 model. If True, the model uses smaller kernel size, ReLU activation and no squeeze-and-excitation modules. If False, the model uses larger kernel size, hard swish activation and squeeze-and-excitation modules.
+- **include_top:** A bool, indicating whether to include the top layer for classification. If True, the model's last layer is a fully connected layer that outputs classes neurons. If False, the model's last layer is a global average pooling layer or a global max pooling layer, depending on the pooling argument.
+- **classes:** An int, indicating the number of classes for the classification task. If include_top is True, the model's last layer is a fully connected layer that outputs classes neurons.
+- **pooling:** A string or None, indicating the pooling method. If include_top is False, the model's last layer is a pooling layer, depending on the pooling argument. If pooling is 'avg', global average pooling is used; if pooling is 'max', global max pooling is used; if pooling is None, no pooling is used.
+- **dropout_rate:** A float, indicating the dropout rate for the top layer. Dropout is a regularization technique that randomly drops out some units during training to prevent overfitting.
+- **classifier_activation:** A string or TensorFlow object, indicating the activation function for the top layer. The default activation function is softmax.
+- **include_preprocessing:** A bool, indicating whether to include preprocessing for the input data. If True, the input data will be rescaled by 1/127.5 and offset by -1.
+- **device:** A string, indicating the device to use for computation. The default value is 'GPU', which means using GPU if available. Other value is 'CPU'.
+- **loss_object:** A TensorFlow object, indicating the loss function. The default loss function is categorical crossentropy loss.
+- **optimizer:** A parallel optimizer for Note. The default optimizer is Adam.
+- **param:** A list, storing all the parameters (weights and biases) of the model.
+- **km:** An integer that indicates the kernel mode.
+- **build():** a method, used to build the model's structure. This method creates all the convolutional layers, inverted residual blocks, attention mechanisms and fully connected layers that are needed for the model, and stores them in corresponding attributes.
+- **fp(data, p):** A method, used to perform forward propagation. It accepts two arguments `data` and `p`, indicating the input data and process number respectively. This method passes the input data through all the layers of the model and returns the output data.
+- **loss(output, labels, p):** A method, used to calculate the loss value. It accepts three arguments `output`, `labels` and `p`, indicating the output data, true labels and process number respectively. This method uses the loss function to calculate the difference between output data and true labels and returns the loss value.
+- **GradientTape(data, labels, p):** A method, used to calculate the gradient value. It accepts three arguments `data`, `labels` and `p`, indicating the input data, true labels and process number respectively. This method uses a persistent gradient tape to record the operations and compute the gradient of the loss with respect to the parameters. This method returns the tape, output data and loss value.
+- **opt(gradient, p):** A method, used to perform optimization update. It accepts two arguments `gradient` and `p`, indicating the gradient value and process number respectively. This method uses the optimizer to update all the parameters of the model according to gradient value and returns updated parameters.
+
 # ResNetRS:
 The ResNetRS class is a Python class that implements the ResNet-RS model, which is a type of convolutional neural network that uses residual blocks and stochastic depth to achieve state-of-the-art performance on image classification tasks. The ResNet-RS class has the following attributes and methods:
 
@@ -327,6 +354,59 @@ ResNetRS(
 - **fp(data, p):** A method, used to perform forward propagation. It accepts two arguments `data` and `p`, indicating the input data and process number respectively. This method passes the input data through all the layers of the model and returns the output data.
 - **loss(output, labels, p):** A method, used to calculate the loss value. It accepts three arguments `output`, `labels` and `p`, indicating the output data, true labels and process number respectively. This method uses the loss function to calculate the difference between output data and true labels and returns the loss value.
 - **GradientTape(data, labels, p):** A method, used to calculate the gradient value. It accepts three arguments data, labels and p, indicating the instance input data, true labels and device number respectively. This method uses a persistent gradient tape to record the operations and compute the gradient of the loss with respect to the parameters. This method returns the tape, output data and loss value.
+- **opt(gradient, p):** A method, used to perform optimization update. It accepts two arguments `gradient` and `p`, indicating the gradient value and process number respectively. This method uses the optimizer to update all the parameters of the model according to gradient value and returns updated parameters.
+
+# SwiftFormer:
+The SwiftFormer class is a Python class that implements the SwiftFormer model, which is a type of convolutional neural network that uses convolution and self-attention to achieve high performance on image classification and segmentation tasks. The SwiftFormer class has the following attributes and methods:
+
+```python
+SwiftFormer(model_type,
+            mlp_ratios=4, downsamples=[True, True, True, True],
+            act_layer=activation_dict['gelu'],
+            num_classes=1000,
+            down_patch_size=3, down_stride=2, down_pad=1,
+            drop_rate=0., drop_path_rate=0.,
+            use_layer_scale=True, layer_scale_init_value=1e-5,
+            fork_feat=False,
+            init_cfg=None,
+            pretrained=None,
+            vit_num=1,
+            distillation=True,
+            include_top=True,
+            pooling=None,
+            device='GPU',
+            dtype='float32')
+```
+
+- **model_type:** A string, indicating the type of the SwiftFormer model. It can be one of 'swiftformer_tiny', 'swiftformer_small', 'swiftformer_base', 'swiftformer_large', or 'swiftformer_xlarge'.
+- **mlp_ratios:** An int or a list of ints, indicating the ratio of hidden dimension to input dimension for the MLP layers. A larger ratio increases the model size and complexity.
+- **downsamples:** A list of bools, indicating whether to perform downsampling between each stage. Downsampling reduces the spatial resolution and increases the number of channels.
+- **act_layer:** A TensorFlow object, indicating the activation function for the MLP layers. The default activation function is GELU.
+- **num_classes:** An int, indicating the number of classes for the classification task. If include_top is True, the model's last layer is a fully connected layer that outputs num_classes neurons.
+- **down_patch_size:** An int or a tuple of two ints, indicating the patch size for the downsampling layers. A larger patch size reduces the spatial resolution more.
+- **down_stride:** An int or a tuple of two ints, indicating the stride for the downsampling layers. A larger stride reduces the spatial resolution more.
+- **down_pad:** An int or a tuple of two ints, indicating the padding for the downsampling layers. A larger padding preserves more information at the edges.
+- **drop_rate:** A float, indicating the dropout rate for the MLP layers. Dropout is a regularization technique that randomly drops out some units during training to prevent overfitting.
+- **drop_path_rate:** A float, indicating the drop path rate for the residual connections. Drop path is a regularization technique that randomly drops out some paths during training to prevent overfitting.
+- **use_layer_scale:** A bool, indicating whether to use layer scale for the residual connections. Layer scale is a technique that scales up the residual connections by a learnable factor to improve gradient flow and stability.
+- **layer_scale_init_value:** A float, indicating the initial value for the layer scale factors. A smaller value reduces the impact of layer scale at the beginning of training.
+- **fork_feat:** A bool, indicating whether to fork features from different stages for dense prediction. If True, the model's output is a list of tensors with different resolutions and channels. If False, the model's output is a single tensor with the final resolution and channels.
+- **init_cfg:** A dict or None, indicating the initialization configuration for the model parameters. If None, use default initialization methods.
+- **pretrained:** A string or None, indicating the path to a pretrained checkpoint file for loading weights. If None, use random initialization.
+- **vit_num:** An int, indicating the number of self-attention layers in each stage. Self-attention is a technique that allows each unit to attend to all other units in its receptive field and learn long-range dependencies.
+- **distillation:** A bool, indicating whether to use distillation for knowledge transfer from teacher model to student model. Distillation is a technique that improves the performance of a smaller model (student) by learning from a larger model (teacher).
+- **include_top:** A bool, indicating whether to include the top layer for classification. If True, the model's last layer is a fully connected layer that outputs num_classes neurons. If False, the model's last layer is a global average pooling layer or a global max pooling layer, depending on the pooling argument.
+- **pooling:** A string or None, indicating the pooling method. If include_top is False, the model's last layer is a pooling layer, depending on the pooling argument. If pooling is 'avg', global average pooling is used; if pooling is 'max', global max pooling is used; if pooling is None, no pooling is used.
+- **device:** A string, indicating the device to use for computation. The default value is 'GPU', which means using GPU if available. Other value is 'CPU'.
+- **dtype:** A string or TensorFlow dtype object, indicating the data type for computation. The default value is 'float32', which corresponds to 32-bit floating point numbers.
+- **loss_object:** A TensorFlow object, indicating the loss function. The default loss function is categorical crossentropy loss.
+- **optimizer:** A parallel optimizer for Note. The default optimizer is AdamW.
+- **param:** A list, storing all the parameters (weights and biases) of the model.
+- **km:** An integer that indicates the kernel mode.
+- **build():** a method, used to build the model's structure. This method creates all the convolutional layers, self-attention layers, MLP layers, batch normalization layers, and fully connected layers that are needed for the model, and stores them in corresponding attributes.
+- **fp(data, p):** A method, used to perform forward propagation. It accepts two arguments `data` and `p`, indicating the input data and process number respectively. This method passes the input data through all the layers of the model and returns the output data.
+- **loss(output, labels, p):** A method, used to calculate the loss value. It accepts three arguments `output`, `labels` and `p`, indicating the output data, true labels and process number respectively. This method uses the loss function to calculate the difference between output data and true labels and returns the loss value.
+- **GradientTape(data, labels, p):** A method, used to calculate the gradient value. It accepts three arguments `data`, `labels` and `p`, indicating the input data, true labels and process number respectively. This method uses a persistent gradient tape to record the operations and compute the gradient of the loss with respect to the parameters. This method returns the tape, output data and loss value.
 - **opt(gradient, p):** A method, used to perform optimization update. It accepts two arguments `gradient` and `p`, indicating the gradient value and process number respectively. This method uses the optimizer to update all the parameters of the model according to gradient value and returns updated parameters.
 
 # VGG16:
