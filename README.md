@@ -338,6 +338,24 @@ output_data, new_state = gru_cell.output(data=input_data,state=prev_state)
 # The new_state will have a shape of [64, 32]
 ```
 
+# identity
+This module implements an identity layer, which can return the input tensor as it is without any modification. The usage of this module is as follows:
+
+- First, create an instance of the identity class, and optionally specify the input size. If the input size is given, the output size will be the same as the input size.
+- Second, call the output method of the instance, and pass the input tensor as the data argument.
+- The output method will return a tensor of the same shape and type as the input tensor.
+
+For example:
+
+```python
+# Create an identity layer with input size 100
+identity = identity(input_size=100)
+# Apply the identity layer to a batch of input data of shape [32, 96, 100]
+input_data = tf.random.normal([32, 96, 100])
+output_data = identity.output(input_data)
+# The output_data will have the same shape and type as the input_data
+```
+
 # LSTM
 This module implements a long short-term memory (LSTM) layer, which can process the input data in a sequential manner and learn long-term dependencies. The usage of this module is as follows:
 
@@ -553,4 +571,58 @@ stochastic_depth = stochastic_depth(drop_path_rate=0.2)
 input_data = tf.random.normal([32, 100])
 output_data = stochastic_depth.output(input_data)
 # The output_data will have a shape of [32, 100], and some vectors will be zeroed out
+```
+
+# zeropadding1d
+This module implements a 1D zero-padding layer, which can add zeros at the beginning and end of a 1D input tensor (e.g. temporal sequence). The usage of this module is as follows:
+
+- First, create an instance of the zeropadding1d class, and optionally specify the input size and the padding size. If the input size is given, the output size will be the same as the input size. If the padding size is given, it can be either an integer or a tuple of two integers. If it is an integer, it will use the same padding for both sides. If it is a tuple of two integers, it will use the first integer for the left padding and the second integer for the right padding.
+- Second, call the output method of the instance, and pass the input tensor as the data argument. You can also specify a different padding size for this method, which will override the padding size given in the constructor.
+- The output method will return a tensor of shape [batch_size, length + padding, channels], which is the 1D zero-padded output.
+
+For example:
+
+```python
+# Create a 1D zero-padding layer with padding size 2
+zeropadding1d = zeropadding1d(padding=2)
+# Apply the 1D zero-padding layer to a batch of input data of shape [32, 96, 100]
+input_data = tf.random.normal([32, 96, 100])
+output_data = zeropadding1d.output(input_data)
+# The output_data will have a shape of [32, 100, 100]
+```
+
+# zeropadding2d
+This module implements a 2D zero-padding layer, which can add rows and columns of zeros at the top, bottom, left and right side of a 2D input tensor (e.g. image). The usage of this module is as follows:
+
+- First, create an instance of the zeropadding2d class, and optionally specify the input size and the padding size. If the input size is given, the output size will be the same as the input size. If the padding size is given, it can be either an integer or a tuple of two tuples. If it is an integer, it will use the same padding for all sides. If it is a tuple of two tuples, it will use the first tuple for the height padding and the second tuple for the width padding. Each tuple should have two elements, representing the padding before and after the dimension.
+- Second, call the output method of the instance, and pass the input tensor as the data argument. You can also specify a different padding size for this method, which will override the padding size given in the constructor.
+- The output method will return a tensor of shape [batch_size, height, width, channels], which is the 2D zero-padded output.
+
+For example:
+
+```python
+# Create a 2D zero-padding layer with padding size 2
+zeropadding2d = zeropadding2d(padding=2)
+# Apply the 2D zero-padding layer to a batch of input data of shape [32, 96, 100, 3]
+input_data = tf.random.normal([32, 96, 100, 3])
+output_data = zeropadding2d.output(input_data)
+# The output_data will have a shape of [32, 100, 104, 3]
+```
+
+# zeropadding3d
+This module implements a 3D zero-padding layer, which can add rows, columns and slices of zeros at the top, bottom, left, right, front and back side of a 3D input tensor (e.g. volumetric image). The usage of this module is as follows:
+
+- First, create an instance of the zeropadding3d class, and optionally specify the input size and the padding size. If the input size is given, the output size will be the same as the input size. If the padding size is given, it can be either an integer or a tuple of three tuples. If it is an integer, it will use the same padding for all sides. If it is a tuple of three tuples, it will use the first tuple for the depth padding, the second tuple for the height padding and the third tuple for the width padding. Each tuple should have two elements, representing the padding before and after the dimension.
+- Second, call the output method of the instance, and pass the input tensor as the data argument. You can also specify a different padding size for this method, which will override the padding size given in the constructor.
+- The output method will return a tensor of shape [batch_size, depth + padding, height + padding, width + padding, channels], which is the 3D zero-padded output.
+
+For example:
+
+```python
+# Create a 3D zero-padding layer with padding size 2
+zeropadding3d = zeropadding3d(padding=2)
+# Apply the 3D zero-padding layer to a batch of input data of shape [32, 96, 100, 100, 3]
+input_data = tf.random.normal([32, 96, 100, 100, 3])
+output_data = zeropadding3d.output(input_data)
+# The output_data will have a shape of [32, 100, 104, 104, 3]
 ```
