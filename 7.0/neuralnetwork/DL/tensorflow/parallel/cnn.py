@@ -19,7 +19,7 @@ class cnn:
         self.conv3=conv2d(64,[3,3],64,strides=(1,1),padding='SAME',activation='relu')
         self.flatten=flatten()
         # Create two dense layers with relu and linear activations
-        self.dense1=dense(64,64*4*4,activation='relu')
+        self.dense1=dense(64,64,activation='relu')
         self.dense2=dense(10,64)
         self.optimizer=Adam()
         # Store the parameters of the layers in a list
