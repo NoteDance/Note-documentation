@@ -15,6 +15,7 @@ class nn:               # A neural network class example, allocate device for mu
         # Create two dense layers with relu and linear activations
         self.layer1=dense(128,784,activation='relu') # the first layer with 784 input units and 128 output units and ReLU activation
         self.layer2=dense(10,128) # the second layer with 128 input units and 10 output units and linear activation
+        self.flatten=flatten()
         self.optimizer=SGD()
         # Store the parameters of the layers in a list
         self.param=Module.param # parameter list of both layers, kernel uses it list for backpropagation 
@@ -23,7 +24,7 @@ class nn:               # A neural network class example, allocate device for mu
     
     def fp(self,data,p): # forward propagation function, kernel uses it for forward propagation
         with tf.device(assign_device(p,'GPU')): # assign the device according to the process index p
-            data=flatten().output(data) # flatten the data to a vector of 784 elements
+            data=self.flatten.output(data) # flatten the data to a vector of 784 elements
             output1=self.layer1.output(data) # pass the data through the first layer and get the output
             output2=self.layer2.output(output1) # pass the output of the first layer through the second layer and get the final output logits
         return output2
