@@ -17,6 +17,7 @@ class nn:
         # Create two dense layers with relu and linear activations
         self.layer1=dense(128,784,activation='relu')
         self.layer2=dense(10,128)
+        self.flatten=flatten()
         self.optimizer=SGD()
         # Store the parameters of the layers in a list
         self.param=Module.param
@@ -25,7 +26,7 @@ class nn:
     
     def fp(self,data):
         # Perform forward propagation on the input data
-        data=flatten().output(data) # Flatten the data to a one-dimensional vector
+        data=self.flatten.output(data) # Flatten the data to a one-dimensional vector
         output1=self.layer1.output(data) # Apply the first layer to the data and get the output
         output2=self.layer2.output(output1) # Apply the second layer to the output of the first layer and get the final output
         return output2
