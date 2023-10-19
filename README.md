@@ -450,7 +450,7 @@ For example:
 
 ```python
 # Create a multi-head attention layer with 64 n_state and 8 n_head
-multihead_attention_layer = multihead_attention(64, 8)
+multihead_attention_layer = multihead_attention(8, 64)
 # Apply the multi-head attention layer to a batch of input data of shape [32, 20, 64]
 input_data = tf.random.normal([32, 20, 64])
 output_data, qk = multihead_attention_layer.output(x=input_data)
