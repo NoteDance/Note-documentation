@@ -521,6 +521,30 @@ output = transformer.output(src, tgt)
 # The output will have a shape of [10, 50, 512]
 ```
 
+# talking_heads_attention
+This module implements a talking heads attention mechanism, which can enhance the expressiveness and diversity of self-attention and multi-head attention. The usage of this module is as follows:
+
+- First, create an instance of the talking_heads_attention class, and specify the qkv_rank, attention_axes, dropout_rate, initializer, dtype, and other optional parameters. The qkv_rank is the rank of the query, key, and value tensors. The attention_axes is a tuple of axes over which the attention is computed. The dropout_rate is the probability of dropping out attention scores. The initializer is the name of the weight initializer. The dtype is the data type of the tensors.
+- Second, call the output method of the instance, and pass the query_tensor, key_tensor, value_tensor, and attention_mask as arguments. You can also specify a different train_flag to indicate whether to apply dropout or not. The query_tensor, key_tensor, and value_tensor are tensors of shape [batch_size, ..., num_heads, depth]. The attention_mask is a tensor of shape [batch_size, ..., 1, 1] or [batch_size, ..., 1, key_length], where key_length is the size of the last dimension of key_tensor.
+- The output method will return a tuple of (attention_output, attention_scores). The attention_output is a tensor of shape [batch_size, ..., num_heads, depth], which is the result of applying attention to value_tensor. The attention_scores is a tensor of shape [batch_size, num_heads, ..., ...], which is the normalized and projected attention scores.
+
+For example:
+
+```python
+# Create a talking heads attention layer with qkv_rank=4, attention_axes=(1,), dropout_rate=0.1
+tha = talking_heads_attention(qkv_rank=4, attention_axes=(1,), dropout_rate=0.1)
+# Apply the talking heads attention layer to a batch of query, key, and value tensors of shape [32, 64, 8, 128]
+query_tensor = tf.random.normal([32, 64, 8, 128])
+key_tensor = tf.random.normal([32, 64, 8, 128])
+value_tensor = tf.random.normal([32, 64, 8, 128])
+# The attention_mask is None by default
+attention_output, attention_scores = tha.output(query_tensor,
+                                                key_tensor,
+                                                value_tensor)
+# The attention_output will have a shape of [32, 64, 8, 128]
+# The attention_scores will have a shape of [32, 8, 64, 64]
+```
+
 # separable_conv1d
 This module implements a separable convolutional layer, which can apply a depthwise convolution and a pointwise convolution to an input tensor and produce a feature map. The usage of this module is as follows:
 
