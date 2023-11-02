@@ -41,11 +41,11 @@ class nn:
         return sparse_categorical_accuracy(labels,output)
     
     
-    def attenuate(self,gradient,oc,p):  #gradient attenuation function,kernel uses it to calculate attenuation coefficient.
+    def attenuate(self,gradient,p):  #gradient attenuation function,kernel uses it to calculate attenuation coefficient.
         # Apply an exponential decay to the gradient based on the optimization counter
-        ac=0.9**oc[0][p]                   #ac:attenuation coefficient
+        ac=0.9**self.opt_counter[0][p]                   #ac:attenuation coefficient
         gradient_flat=nest.flatten(gradient) # Flatten the gradient to a one-dimensional vector
-        for i in range(len(gradient_flat)):  #oc:optimization counter
+        for i in range(len(gradient_flat)):  #self.opt_counter:optimization counter
             gradient_flat[i]=tf.cast(ac,gradient_flat[i].dtype)*gradient_flat[i]  #p:process number
         gradient=nest.pack_sequence_as(gradient,gradient_flat) # Restore the gradient to its original shape
         return gradient  
