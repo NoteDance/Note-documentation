@@ -691,9 +691,3 @@ import neuralnetwork.RL.tensorflow.non_parallrl.DQN as d   #import deep Q-networ
 dqn=d.DQN(4,128,2)                     #create neural network object with 4 inputs, 128 hidden units and 2 outputs
 check(dqn,tf,2)                        #check the network with tensorflow platform and 2 actions
 ```
-
-
-# GPT:
-**Layers in the Note.nn.layer.GPT package created by GPT**
-
-https://github.com/NoteDancing/Note/tree/Note-7.0/Note/nn/layer/GPT
