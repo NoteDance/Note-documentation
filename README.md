@@ -691,3 +691,10 @@ import neuralnetwork.RL.tensorflow.non_parallrl.DQN as d   #import deep Q-networ
 dqn=d.DQN(4,128,2)                     #create neural network object with 4 inputs, 128 hidden units and 2 outputs
 check(dqn,tf,2)                        #check the network with tensorflow platform and 2 actions
 ```
+
+
+# Module:
+You can initialize the param list by calling the init function of the Module class, which can clear the neural network parameters stored in the param list.
+```python
+Module.init()
+```
