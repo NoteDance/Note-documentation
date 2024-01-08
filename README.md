@@ -1,3 +1,6 @@
+**The usage of the layer module is similar to pytorch, which is to create an object first and then get the output, but the output of the layer module in Note needs to call the output method.**
+
+
 # attention
 This module implements an attention layer, which can compute the context vector and the attention weights based on the query, value and key tensors. The usage of this module is as follows:
 
