@@ -16,11 +16,11 @@ class actor:
 
 
 class critic:
-    def __init__(self,state_dim,hidden_dim):
+    def __init__(self,state_dim,hidden_dim,action_dim):
         self.weight1=tf.Variable(tf.random.normal([state_dim,hidden_dim]))
         self.bias1=tf.Variable(tf.random.normal([hidden_dim]))
-        self.weight2=tf.Variable(tf.random.normal([hidden_dim,1]))
-        self.bias2=tf.Variable(tf.random.normal([1]))
+        self.weight2=tf.Variable(tf.random.normal([hidden_dim,action_dim]))
+        self.bias2=tf.Variable(tf.random.normal([action_dim]))
         self.param=[self.weight1,self.bias1,self.weight2,self.bias2]
     
     def fp(self,x):
@@ -31,7 +31,7 @@ class critic:
 class PPO:
     def __init__(self,state_dim,hidden_dim,action_dim,clip_eps):
         self.nn=actor(state_dim,hidden_dim,action_dim)
-        self.critic=critic(state_dim,hidden_dim)
+        self.critic=critic(state_dim,hidden_dim,action_dim)
         self.actor_old=actor(state_dim,hidden_dim,action_dim)
         self.clip_eps=clip_eps
         self.param=[self.actor.param,self.critic.param]
