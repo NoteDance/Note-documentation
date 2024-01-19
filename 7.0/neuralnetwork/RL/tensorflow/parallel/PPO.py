@@ -33,7 +33,7 @@ class PPO:
     def __init__(self,state_dim,hidden_dim,action_dim,clip_eps):
         self.nn=actor(state_dim,hidden_dim,action_dim)
         self.critic=critic(state_dim,hidden_dim)
-        self.actor_old=actor(state_dim,hidden_dim,action_dim)
+        self.actor=actor(state_dim,hidden_dim,action_dim)
         self.clip_eps=clip_eps
         self.param=[self.actor.param,self.critic.param]
         self.opt=SGD(param=self.param)
@@ -51,7 +51,7 @@ class PPO:
     
     def loss(self,s,a,next_s,r,d):
         a=tf.expand_dims(a,axis=1)
-        raito=tf.gather(self.actor.fp(s),a,axis=1,batch_dims=1)/tf.gather(self.actor_old.fp(s),a,axis=1,batch_dims=1)
+        raito=tf.gather(self.actor.fp(s),a,axis=1,batch_dims=1)/tf.gather(self.nn.fp(s),a,axis=1,batch_dims=1)
         value=self.critic.fp(s)
         value_tar=r+self.critic.fp(next_s)
         TD=r+0.98*value_tar*(1-d)-value
@@ -73,5 +73,5 @@ class PPO:
     
     
     def update_param(self):
-        self.actor_old.param=self.actor.param.copy()
+        self.nn.param=self.actor.param.copy()
         return
