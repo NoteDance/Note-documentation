@@ -65,11 +65,7 @@ class PPO:
     
     
     def opt(self,gradient):
-        self.opt.opt(zip(gradient[0],self.param[0]))
-        self.opt.opt(zip(gradient[1],self.param[1]))
-        return
-        
-    
-    def update_param(self):
+        self.opt.apply_gradients(zip(gradient[0],self.param[0]))
+        self.opt.apply_gradients(zip(gradient[1],self.param[1]))
         self.actor_old.param=self.actor.param.copy()
         return
