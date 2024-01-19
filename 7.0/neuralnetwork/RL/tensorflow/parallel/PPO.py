@@ -31,9 +31,10 @@ class critic:
     
 class PPO:
     def __init__(self,state_dim,hidden_dim,action_dim,clip_eps):
-        self.nn=actor(state_dim,hidden_dim,action_dim)
-        self.critic=critic(state_dim,hidden_dim)
         self.actor=actor(state_dim,hidden_dim,action_dim)
+        self.nn=actor(state_dim,hidden_dim,action_dim)
+        self.nn.param=self.actor.param.copy()
+        self.critic=critic(state_dim,hidden_dim)
         self.clip_eps=clip_eps
         self.param=[self.actor.param,self.critic.param]
         self.opt=SGD(param=self.param)
@@ -55,8 +56,10 @@ class PPO:
         value=self.critic.fp(s)
         value_tar=r+self.critic.fp(next_s)
         TD=r+0.98*value_tar*(1-d)-value
-        clip=tf.clip_by_value(raito,clip_value_min=1-self.clip_eps,clip_value_max=1+self.clip_eps)*TD
-        return [tf.reduce_mean(clip),tf.reduce_mean((TD)**2)]
+        sur1=raito*TD
+        sur2=tf.clip_by_value(raito,clip_value_min=1-self.clip_eps,clip_value_max=1+self.clip_eps)*TD
+        clip_loss=-tf.math.minimum(sur1,sur2)
+        return [tf.reduce_mean(clip_loss),tf.reduce_mean((TD)**2)]
     
     
     def gradient(self,tape,loss):
