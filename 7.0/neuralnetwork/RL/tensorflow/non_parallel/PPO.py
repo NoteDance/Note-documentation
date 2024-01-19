@@ -16,11 +16,11 @@ class actor:
 
 
 class critic:
-    def __init__(self,state_dim,hidden_dim,action_dim):
+    def __init__(self,state_dim,hidden_dim):
         self.weight1=tf.Variable(tf.random.normal([state_dim,hidden_dim]))
         self.bias1=tf.Variable(tf.random.normal([hidden_dim]))
-        self.weight2=tf.Variable(tf.random.normal([hidden_dim,action_dim]))
-        self.bias2=tf.Variable(tf.random.normal([action_dim]))
+        self.weight2=tf.Variable(tf.random.normal([hidden_dim,1]))
+        self.bias2=tf.Variable(tf.random.normal([1]))
         self.param=[self.weight1,self.bias1,self.weight2,self.bias2]
     
     def fp(self,x):
@@ -31,7 +31,7 @@ class critic:
 class PPO:
     def __init__(self,state_dim,hidden_dim,action_dim,clip_eps):
         self.nn=actor(state_dim,hidden_dim,action_dim)
-        self.critic=critic(state_dim,hidden_dim,action_dim)
+        self.critic=critic(state_dim,hidden_dim)
         self.actor_old=actor(state_dim,hidden_dim,action_dim)
         self.clip_eps=clip_eps
         self.param=[self.actor.param,self.critic.param]
@@ -51,8 +51,8 @@ class PPO:
     def loss(self,s,a,next_s,r,d):
         a=tf.expand_dims(a,axis=1)
         raito=tf.gather(self.actor.fp(s),a,axis=1,batch_dims=1)/tf.gather(self.actor_old.fp(s),a,axis=1,batch_dims=1)
-        value=tf.gather(self.critic.fp(s),a,axis=1,batch_dims=1)
-        value_tar=r+tf.gather(self.critic.fp(next_s),a,axis=1,batch_dims=1)
+        value=self.critic.fp(s)
+        value_tar=r+self.critic.fp(next_s)
         TD=r+0.98*value_tar*(1-d)-value
         clip=tf.clip_by_value(raito,clip_value_min=1-self.clip_eps,clip_value_max=1+self.clip_eps)*TD
         return [tf.reduce_mean(clip),tf.reduce_mean((TD)**2)]
