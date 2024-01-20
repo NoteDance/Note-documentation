@@ -53,8 +53,8 @@ class PPO:
         a=tf.expand_dims(a,axis=1)
         raito=tf.gather(self.actor.fp(s),a,axis=1,batch_dims=1)/tf.gather(self.nn.fp(s),a,axis=1,batch_dims=1)
         value=self.critic.fp(s)
-        value_tar=r+self.critic.fp(next_s)
-        TD=r+0.98*value_tar*(1-d)-value
+        value_tar=r+0.98*self.critic.fp(next_s)*(1-d)
+        TD=value_tar-value
         sur1=raito*TD
         sur2=tf.clip_by_value(raito,clip_value_min=1-self.clip_eps,clip_value_max=1+self.clip_eps)*TD
         clip_loss=-tf.math.minimum(sur1,sur2)
