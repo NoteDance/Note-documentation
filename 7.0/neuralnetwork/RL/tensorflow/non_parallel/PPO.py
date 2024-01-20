@@ -52,14 +52,16 @@ class PPO:
     
     def loss(self,s,a,next_s,r,d):
         a=tf.expand_dims(a,axis=1)
-        raito=tf.gather(self.actor.fp(s),a,axis=1,batch_dims=1)/tf.gather(self.nn.fp(s),a,axis=1,batch_dims=1)
+        action_prob=tf.gather(self.actor.fp(s),a,axis=1,batch_dims=1)
+        action_prob_old=tf.gather(self.nn.fp(s),a,axis=1,batch_dims=1)
+        raito=action_prob/action_prob_old
         value=self.critic.fp(s)
         value_tar=r+0.98*self.critic.fp(next_s)*(1-d)
         TD=value_tar-value
         sur1=raito*TD
         sur2=tf.clip_by_value(raito,clip_value_min=1-self.clip_eps,clip_value_max=1+self.clip_eps)*TD
         clip_loss=-tf.math.minimum(sur1,sur2)
-        entropy=self.actor.fp(s)*tf.math.log(self.actor.fp(s)+1e-8)
+        entropy=action_prob*tf.math.log(action_prob+1e-8)
         clip_loss=clip_loss-self.alpha*entropy
         return [tf.reduce_mean(clip_loss),tf.reduce_mean((TD)**2)]
 
