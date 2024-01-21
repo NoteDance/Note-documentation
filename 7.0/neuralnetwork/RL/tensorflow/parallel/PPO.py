@@ -41,12 +41,12 @@ class PPO:
         self.genv=[gym.make('CartPole-v0') for _ in range(5)]
     
     
-    def env(self,a=None,initial=None):
+    def env(self,a=None,p=None,initial=None):
         if initial==True:
-            state=self.genv.reset(seed=0)
+            state=self.genv[p].reset(seed=0)
             return state
         else:
-            next_state,reward,done,_=self.genv.step(a)
+            next_state,reward,done,_=self.genv[p].step(a)
             return next_state,reward,done
     
     
