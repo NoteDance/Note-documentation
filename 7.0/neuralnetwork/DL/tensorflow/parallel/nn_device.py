@@ -24,9 +24,9 @@ class nn:               # A neural network class example, allocate device for mu
     
     def fp(self,data,p): # forward propagation function, kernel uses it for forward propagation
         with tf.device(assign_device(p,'GPU')): # assign the device according to the process index p
-            data=self.flatten.output(data) # flatten the data to a vector of 784 elements
-            output1=self.layer1.output(data) # pass the data through the first layer and get the output
-            output2=self.layer2.output(output1) # pass the output of the first layer through the second layer and get the final output logits
+            data=self.flatten(data) # flatten the data to a vector of 784 elements
+            output1=self.layer1(data) # pass the data through the first layer and get the output
+            output2=self.layer2(output1) # pass the output of the first layer through the second layer and get the final output logits
         return output2
     
     
@@ -46,5 +46,5 @@ class nn:               # A neural network class example, allocate device for mu
     def opt(self,gradient,p): # optimization function, kernel uses it to optimize parameter
         # Perform optimization on the parameters using the gradient
         with tf.device(assign_device(p,'GPU')): # assign the device according to the process index p
-            param=self.optimizer.opt(gradient,self.param) # apply the Note's momentum optimizer to update the parameters using the gradient
+            param=self.optimizer(gradient,self.param) # apply the Note's momentum optimizer to update the parameters using the gradient
         return param
