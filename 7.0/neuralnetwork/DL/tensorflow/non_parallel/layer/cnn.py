@@ -32,13 +32,13 @@ class cnn:
     
     def fp(self,data):
         # Perform forward propagation on the input data
-        x=self.conv1.output(data) # First convolutional layer
+        x=self.conv1(data) # First convolutional layer
         x=tf.nn.max_pool2d(x,ksize=(2,2),strides=(2,2),padding='VALID') # First max pooling layer
-        x=self.conv2.output(x) # Second convolutional layer
+        x=self.conv2(x) # Second convolutional layer
         x=tf.nn.max_pool2d(x,ksize=(2,2),strides=(2,2),padding='VALID') # Second max pooling layer
-        x=self.conv3.output(x) # Third convolutional layer
-        x=self.flatten.output(x) # Flatten the output to a vector
-        x=self.dense1.output(x) # First dense layer with relu activation
+        x=self.conv3(x) # Third convolutional layer
+        x=self.flatten(x) # Flatten the output to a vector
+        x=self.dense1(x) # First dense layer with relu activation
         output=self.dense2.output(x) # Output layer with linear activation
         return output
     
