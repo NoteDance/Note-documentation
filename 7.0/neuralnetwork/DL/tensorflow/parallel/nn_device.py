@@ -40,11 +40,11 @@ class nn:               # A neural network class example, allocate device for mu
             with tf.GradientTape(persistent=True) as tape:
                 output=self.fp(data,p)
                 loss=self.loss(output,labels,p)
-        return tape,output,loss
+            return tape,output,loss
     
     
     def opt(self,gradient,p): # optimization function, kernel uses it to optimize parameter
         # Perform optimization on the parameters using the gradient
         with tf.device(assign_device(p,'GPU')): # assign the device according to the process index p
             param=self.optimizer(gradient,self.param) # apply the Note's momentum optimizer to update the parameters using the gradient
-        return param
+            return param
