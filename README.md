@@ -4,7 +4,7 @@
 
 # Train:
 ```python
-from neuralnetwork.tf.ConvNeXtV2 import ConvNeXtV2
+from Note.neuralnetwork.tf.ConvNeXtV2 import ConvNeXtV2
 convnext_atto=ConvNeXtV2(model_type='atto',classes=1000)
 convnext_atto.build()
 
@@ -40,7 +40,7 @@ for epoch in range(EPOCHS):
 
 # Distributed training:
 ```python
-from neuralnetwork.tf.ConvNeXtV2 import ConvNeXtV2
+from Note.neuralnetwork.tf.ConvNeXtV2 import ConvNeXtV2
 
 strategy = tf.distribute.MirroredStrategy()
 
@@ -142,8 +142,8 @@ input_file.close()
 # Assign the trained parameters to the model:
 ```python
 import pickle
-from neuralnetwork.tf.ConvNeXtV2 import ConvNeXtV2
-from neuralnetwork.tf.assign_param import assign_param
+from Note.neuralnetwork.tf.ConvNeXtV2 import ConvNeXtV2
+from Note.neuralnetwork.tf.assign_param import assign_param
 convnext_atto=ConvNeXtV2(model_type='atto',classes=10)
 convnext_atto.build()
 input_file=open('param.dat','rb')
@@ -176,21 +176,21 @@ Here are some examples of building various neural networks, all in a similar way
 
 ConvNeXt_tiny:
 ```python
-from neuralnetwork.tf.ConvNeXt import ConvNeXt
+from Note.neuralnetwork.tf.ConvNeXt import ConvNeXt
 convnext_tiny=ConvNeXt(model_type='tiny',classes=1000)
 convnext_tiny.build()
 ```
 
 ConvNeXtV2_atto:
 ```python
-from neuralnetwork.tf.ConvNeXtV2 import ConvNeXtV2
+from Note.neuralnetwork.tf.ConvNeXtV2 import ConvNeXtV2
 convnext_atto=ConvNeXtV2(model_type='atto',classes=1000)
 convnext_atto.build()
 ```
 
 CLIP_large:
 ```python
-from neuralnetwork.tf.CLIP import CLIP
+from Note.neuralnetwork.tf.CLIP import CLIP
 clip=CLIP(
     embed_dim=1024,
     image_resolution=224,
@@ -207,48 +207,48 @@ clip=CLIP(
 
 EfficientNetB0:
 ```python
-from neuralnetwork.tf.EfficientNet import EfficientNet
+from Note.neuralnetwork.tf.EfficientNet import EfficientNet
 efficientnetb0=EfficientNet(model_name='B0',classes=1000)
 efficientnetb0.build()
 ```
 
 EfficientNetV2S:
 ```python
-from neuralnetwork.tf.EfficientNetV2 import EfficientNetV2
+from Note.neuralnetwork.tf.EfficientNetV2 import EfficientNetV2
 efficientnetv2s=EfficientNetV2(model_name='efficientnetv2-s',classes=1000)
 efficientnetv2s.build()
 ```
 
 Llama2_7B:
 ```python
-from neuralnetwork.tf.Llama2 import Llama2
+from Note.neuralnetwork.tf.Llama2 import Llama2
 llama=Llama2()
 ```
 
 MobileNetV2:
 ```python
-from neuralnetwork.tf.MobileNetV2 import MobileNetV2
+from Note.neuralnetwork.tf.MobileNetV2 import MobileNetV2
 mobilenet=MobileNetV2(classes=1000)
 mobilenet.build()
 ```
 
 MobileNetV3_large:
 ```python
-from neuralnetwork.tf.MobileNetV3 import MobileNetV3
+from Note.neuralnetwork.tf.MobileNetV3 import MobileNetV3
 mobilenet=MobileNetV3(model_type="large",classes=1000)
 mobilenet.build()
 ```
 
 ResNet50:
 ```python
-from neuralnetwork.tf.ResNet.ResNet50 import ResNet50
+from Note.neuralnetwork.tf.ResNet.ResNet50 import ResNet50
 resnet50=ResNet50(classes=1000)
 resnet50.build()
 ```
 
 ViT
 ```python
-from neuralnetwork.tf.ViT import ViT
+from Note.neuralnetwork.tf.ViT import ViT
 vit=ViT(
     image_size=224,
     patch_size=16,
