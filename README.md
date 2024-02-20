@@ -205,6 +205,12 @@ clip=CLIP(
   )
 ```
 
+DiT_B_4:
+```python
+from Note.neuralnetwork.tf.DiT import DiT_B_4
+dit=DiT_B_4()
+```
+
 EfficientNetB0:
 ```python
 from Note.neuralnetwork.tf.EfficientNet import EfficientNet
