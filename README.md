@@ -117,10 +117,10 @@ for epoch in range(EPOCHS):
   )
 ```
 flag=0:
-Replace the pre-trained layer and assign the parameters of the replacement layer to self.param.
+Replace the pre-trained layer and assign the parameters of the fine-tuning layer to self.param.
 
 flag=1:
-Assign the parameters of the pre-trained layer and the parameters of the replacement layer to self.param.
+Assign the parameters of the pre-trained layer and the parameters of the fine-tuning layer to self.param.
 
 flag=2:
 Restore the pre-trained layer and assign the parameters of the pre-trained layer to self.param.
