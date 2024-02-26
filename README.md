@@ -98,7 +98,7 @@ for epoch in range(EPOCHS):
 
 # Fine-tuning:
 ```python
-convnext_atto.fine_tuning(10)
+convnext_atto.fine_tuning(10,flag=0)
 optimizer.lr=0.0001
 fine_ds = tf.data.Dataset.from_tensor_slices((x_fine, y_fine)).batch(32)
 
@@ -116,6 +116,14 @@ for epoch in range(EPOCHS):
     f'Loss: {train_loss.result()}, '
   )
 ```
+flag=0:
+Replace the pre-trained layer and assign the parameters of the replacement layer to self.param.
+
+flag=1:
+Assign the parameters of the pre-trained layer and the parameters of the replacement layer to self.param.
+
+flag=2:
+Restore the pre-trained layer and assign the parameters of the pre-trained layer to self.param.
 
 
 # Use neural network:
