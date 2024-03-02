@@ -13,7 +13,7 @@ convnext_atto=ConvNeXtV2(model_type='atto',classes=1000)
 convnext_atto.build()
 
 train_ds = tf.data.Dataset.from_tensor_slices((x_train, y_train)).batch(32)
-loss_object = tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True)
+loss_object = tf.keras.losses.SparseCategoricalCrossentropy()
 optimizer = tf.keras.optimizers.Adam()
 train_loss = tf.keras.metrics.Mean(name='train_loss')
 
@@ -57,7 +57,6 @@ train_dist_dataset = strategy.experimental_distribute_dataset(train_dataset)
 
 with strategy.scope():
   loss_object = tf.keras.losses.SparseCategoricalCrossentropy(
-      from_logits=True,
       reduction=tf.keras.losses.Reduction.NONE)
   def compute_loss(labels, predictions):
     per_example_loss = loss_object(labels, predictions)
