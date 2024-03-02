@@ -278,7 +278,7 @@ vit=ViT(
     pool='cls',
     channels=3,
     dim_head=64,
-    dropout=0.1,
+    drop_rate=0.1,
     emb_dropout=0.1
 )
 ```
