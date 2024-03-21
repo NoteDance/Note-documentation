@@ -743,6 +743,18 @@ check(dqn,tf,2)                        #check the network with tensorflow platfo
 ```
 
 
+# Note.nn.initializer.initializer:
+This function returns a TensorFlow variable.
+
+
+# Note.nn.initializer.initializer_:
+This function returns a TensorFlow variable and stores the variable in Module.param.
+
+
+# Note.nn.Layers.Layers:
+This class is used similarly to the tf.keras.Sequential class.
+
+
 # Module:
 You can initialize the param list by calling the init function of the Module class, which can clear the neural network parameters stored in the param list.
 ```python
