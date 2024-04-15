@@ -111,6 +111,19 @@ kernel.train(32,5,p=3)           #train the network with batch size 32 and epoch
 
 
 ## RL:
+### DDPG:
+```python
+import Note.RL.kernel as k   #import kernel module
+import tensorflow as tf           #import tensorflow library
+import neuralnetwork.RL.tensorflow.non_parallrl.DDPG as d   #import deep deterministic policy gradient module
+ddpg=d.DDPG(64,0.01,0.98,0.005,5e-4,5e-3) #create neural network object with 64 inputs, 0.01 learning rate, 0.98 discount factor, 0.005 noise scale, 5e-4 actor learning rate and 5e-3 critic learning rate
+kernel=k.kernel(ddpg)             #create kernel object with the network
+kernel.platform=tf                #set the platform to tensorflow
+kernel.set_up(pool_size=10000,batch=64) #set up the hyperparameters for training
+kernel.train(200)                 #train the network for 200 episodes
+kernel.visualize_train()
+kernel.visualize_reward()
+```
 ### Saving multiple files in training:
 ```python
 import Note.RL.kernel as k   #import kernel module
