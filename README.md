@@ -281,3 +281,81 @@ vit=ViT(
     emb_dropout=0.1
 )
 ```
+
+CaiT
+```python
+import tensorflow as tf
+from Note.neuralnetwork.tf.CaiT import CaiT
+
+v = CaiT(
+    image_size = 256,
+    patch_size = 32,
+    num_classes = 1000,
+    dim = 1024,
+    depth = 12,             # depth of transformer for patch to patch attention only
+    cls_depth = 2,          # depth of cross attention of CLS tokens to patch
+    heads = 16,
+    mlp_dim = 2048,
+    dropout = 0.1,
+    emb_dropout = 0.1,
+    layer_dropout = 0.05    # randomly dropout 5% of the layers
+)
+
+img = tf.random.normal((1, 256, 256, 3))
+
+preds = v(img) # (1, 1000)
+```
+
+PiT
+```python
+import tensorflow as tf
+from Note.neuralnetwork.tf.PiT import PiT
+
+v = PiT(
+    image_size = 224,
+    patch_size = 14,
+    dim = 256,
+    num_classes = 1000,
+    depth = (3, 3, 3),     # list of depths, indicating the number of rounds of each stage before a downsample
+    heads = 16,
+    mlp_dim = 2048,
+    dropout = 0.1,
+    emb_dropout = 0.1
+)
+
+# forward pass now returns predictions and the attention maps
+
+img = tf.random.normal((1, 224, 224, 3))
+
+preds = v(img) # (1, 1000)
+```
+
+Cross ViT
+```python
+import tensorflow as tf
+from Note.neuralnetwork.tf.CrossViT import CrossViT
+
+v = CrossViT(
+    image_size = 256,
+    num_classes = 1000,
+    depth = 4,               # number of multi-scale encoding blocks
+    sm_dim = 192,            # high res dimension
+    sm_patch_size = 16,      # high res patch size (should be smaller than lg_patch_size)
+    sm_enc_depth = 2,        # high res depth
+    sm_enc_heads = 8,        # high res heads
+    sm_enc_mlp_dim = 2048,   # high res feedforward dimension
+    lg_dim = 384,            # low res dimension
+    lg_patch_size = 64,      # low res patch size
+    lg_enc_depth = 3,        # low res depth
+    lg_enc_heads = 8,        # low res heads
+    lg_enc_mlp_dim = 2048,   # low res feedforward dimensions
+    cross_attn_depth = 2,    # cross attention rounds
+    cross_attn_heads = 8,    # cross attention heads
+    dropout = 0.1,
+    emb_dropout = 0.1
+)
+
+img = tf.random.normal((1, 256, 256, 3))
+
+pred = v(img) # (1, 1000)
+```
