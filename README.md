@@ -296,7 +296,7 @@ v = CaiT(
     cls_depth = 2,          # depth of cross attention of CLS tokens to patch
     heads = 16,
     mlp_dim = 2048,
-    dropout = 0.1,
+    dropout_rate = 0.1,
     emb_dropout = 0.1,
     layer_dropout = 0.05    # randomly dropout 5% of the layers
 )
@@ -319,7 +319,7 @@ v = PiT(
     depth = (3, 3, 3),     # list of depths, indicating the number of rounds of each stage before a downsample
     heads = 16,
     mlp_dim = 2048,
-    dropout = 0.1,
+    dropout_rate = 0.1,
     emb_dropout = 0.1
 )
 
@@ -358,4 +358,26 @@ v = CrossViT(
 img = tf.random.normal((1, 256, 256, 3))
 
 pred = v(img) # (1, 1000)
+```
+
+Deep ViT
+```python
+import tensorflow as tf
+from Note.neuralnetwork.tf.DeepViT import DeepViT
+
+v = DeepViT(
+    image_size = 256,
+    patch_size = 32,
+    num_classes = 1000,
+    dim = 1024,
+    depth = 6,
+    heads = 16,
+    mlp_dim = 2048,
+    dropout_rate = 0.1,
+    emb_dropout = 0.1
+)
+
+img = tf.random.normal((1, 256, 256, 3))
+
+preds = v(img) # (1, 1000)
 ```
