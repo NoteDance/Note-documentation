@@ -381,3 +381,26 @@ img = tf.random.normal((1, 256, 256, 3))
 
 preds = v(img) # (1, 1000)
 ```
+
+ViViT
+```python
+import tensorflow as tf
+from Note.neuralnetwork.tf.ViViT import ViViT
+
+v = ViViT(
+    image_size = 128,          # image size
+    frames = 16,               # number of frames
+    image_patch_size = 16,     # image patch size
+    frame_patch_size = 2,      # frame patch size
+    num_classes = 1000,
+    dim = 1024,
+    spatial_depth = 6,         # depth of the spatial transformer
+    temporal_depth = 6,        # depth of the temporal transformer
+    heads = 8,
+    mlp_dim = 2048
+)
+
+video = tf.random.normal((4, 16, 128, 128, 3)) # (batch, frames, height, width, channels)
+
+preds = v(video) # (4, 1000)
+```
