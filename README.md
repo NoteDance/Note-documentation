@@ -404,3 +404,28 @@ video = tf.random.normal((4, 16, 128, 128, 3)) # (batch, frames, height, width, 
 
 preds = v(video) # (4, 1000)
 ```
+
+XCiT
+```python
+import tensorflow as tf
+from Note.neuralnetwork.tf.XCiT import XCiT
+
+v = XCiT(
+    image_size = 256,
+    patch_size = 32,
+    num_classes = 1000,
+    dim = 1024,
+    depth = 12,                     # depth of xcit transformer
+    cls_depth = 2,                  # depth of cross attention of CLS tokens to patch, attention pool at end
+    heads = 16,
+    mlp_dim = 2048,
+    dropout = 0.1,
+    emb_dropout = 0.1,
+    layer_dropout = 0.05,           # randomly dropout 5% of the layers
+    local_patch_kernel_size = 3     # kernel size of the local patch interaction module (depthwise convs)
+)
+
+img = tf.random.normal([1, 256, 256, 3])
+
+preds = v(img) # (1, 1000)
+```
