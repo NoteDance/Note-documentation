@@ -151,6 +151,7 @@ input_file.close()
 
 
 # Assign the trained parameters to the model:
+The assign_param function allows you to assign trained parameters, such as downloaded pre-trained parameters, to the parameters of a neural network. These parameters should be stored in a list.
 ```python
 import pickle
 from Note.neuralnetwork.tf.ConvNeXtV2 import ConvNeXtV2
