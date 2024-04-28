@@ -469,3 +469,29 @@ img = tf.random.normal((1, 224, 224, 3))
 
 pred = v(img) # (1, 1000)
 ```
+
+CCT
+```python
+import tensorflow as tf
+from Note.neuralnetwork.tf.CCT import CCT
+
+cct = CCT(
+    img_size = (224, 448),
+    embedding_dim = 384,
+    n_conv_layers = 2,
+    kernel_size = 7,
+    stride = 2,
+    padding = 3,
+    pooling_kernel_size = 3,
+    pooling_stride = 2,
+    pooling_padding = 1,
+    num_layers = 14,
+    num_heads = 6,
+    mlp_ratio = 3.,
+    num_classes = 1000,
+    positional_embedding = 'learnable', # ['sine', 'learnable', 'none']
+)
+
+img = tf.random.normal((1, 224, 448, 3))
+pred = cct(img) # (1, 1000)
+```
