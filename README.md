@@ -186,21 +186,21 @@ input_file.close()
 # Build models:
 Here are some examples of building various neural networks, all in a similar way.
 
-ConvNeXt_tiny:
+**ConvNeXt_tiny:**
 ```python
 from Note.neuralnetwork.tf.ConvNeXt import ConvNeXt
 convnext_tiny=ConvNeXt(model_type='tiny',classes=1000)
 convnext_tiny.build()
 ```
 
-ConvNeXtV2_atto:
+**ConvNeXtV2_atto:**
 ```python
 from Note.neuralnetwork.tf.ConvNeXtV2 import ConvNeXtV2
 convnext_atto=ConvNeXtV2(model_type='atto',classes=1000)
 convnext_atto.build()
 ```
 
-CLIP_large:
+**CLIP_large:**
 ```python
 from Note.neuralnetwork.tf.CLIP import CLIP
 clip=CLIP(
@@ -217,54 +217,54 @@ clip=CLIP(
   )
 ```
 
-DiT_B_4:
+**DiT_B_4:**
 ```python
 from Note.neuralnetwork.tf.DiT import DiT_B_4
 dit=DiT_B_4()
 ```
 
-EfficientNetB0:
+**EfficientNetB0:**
 ```python
 from Note.neuralnetwork.tf.EfficientNet import EfficientNet
 efficientnetb0=EfficientNet(model_name='B0',classes=1000)
 efficientnetb0.build()
 ```
 
-EfficientNetV2S:
+**EfficientNetV2S:**
 ```python
 from Note.neuralnetwork.tf.EfficientNetV2 import EfficientNetV2
 efficientnetv2s=EfficientNetV2(model_name='efficientnetv2-s',classes=1000)
 efficientnetv2s.build()
 ```
 
-Llama2_7B:
+**Llama2_7B:**
 ```python
 from Note.neuralnetwork.tf.Llama2 import Llama2
 llama=Llama2()
 ```
 
-MobileNetV2:
+**MobileNetV2:**
 ```python
 from Note.neuralnetwork.tf.MobileNetV2 import MobileNetV2
 mobilenet=MobileNetV2(classes=1000)
 mobilenet.build()
 ```
 
-MobileNetV3_large:
+**MobileNetV3_large:**
 ```python
 from Note.neuralnetwork.tf.MobileNetV3 import MobileNetV3
 mobilenet=MobileNetV3(model_type="large",classes=1000)
 mobilenet.build()
 ```
 
-ResNet50:
+**ResNet50:**
 ```python
 from Note.neuralnetwork.tf.ResNet.ResNet50 import ResNet50
 resnet50=ResNet50(classes=1000)
 resnet50.build()
 ```
 
-ViT
+**ViT**
 ```python
 from Note.neuralnetwork.tf.ViT import ViT
 vit=ViT(
@@ -283,7 +283,7 @@ vit=ViT(
 )
 ```
 
-CaiT
+**CaiT**
 ```python
 import tensorflow as tf
 from Note.neuralnetwork.tf.CaiT import CaiT
@@ -307,7 +307,7 @@ img = tf.random.normal((1, 256, 256, 3))
 preds = v(img) # (1, 1000)
 ```
 
-PiT
+**PiT**
 ```python
 import tensorflow as tf
 from Note.neuralnetwork.tf.PiT import PiT
@@ -331,7 +331,7 @@ img = tf.random.normal((1, 224, 224, 3))
 preds = v(img) # (1, 1000)
 ```
 
-Cross ViT
+**Cross ViT**
 ```python
 import tensorflow as tf
 from Note.neuralnetwork.tf.CrossViT import CrossViT
@@ -361,7 +361,7 @@ img = tf.random.normal((1, 256, 256, 3))
 pred = v(img) # (1, 1000)
 ```
 
-Deep ViT
+**Deep ViT**
 ```python
 import tensorflow as tf
 from Note.neuralnetwork.tf.DeepViT import DeepViT
@@ -383,7 +383,7 @@ img = tf.random.normal((1, 256, 256, 3))
 preds = v(img) # (1, 1000)
 ```
 
-ViViT
+**ViViT**
 ```python
 import tensorflow as tf
 from Note.neuralnetwork.tf.ViViT import ViViT
@@ -406,7 +406,7 @@ video = tf.random.normal((4, 16, 128, 128, 3)) # (batch, frames, height, width, 
 preds = v(video) # (4, 1000)
 ```
 
-XCiT
+**XCiT**
 ```python
 import tensorflow as tf
 from Note.neuralnetwork.tf.XCiT import XCiT
@@ -431,7 +431,7 @@ img = tf.random.normal([1, 256, 256, 3])
 preds = v(img) # (1, 1000)
 ```
 
-CvT
+**CvT**
 ```python
 import tensorflow as tf
 from Note.neuralnetwork.tf.CvT import CvT
@@ -470,7 +470,7 @@ img = tf.random.normal((1, 224, 224, 3))
 pred = v(img) # (1, 1000)
 ```
 
-CCT
+**CCT**
 ```python
 import tensorflow as tf
 from Note.neuralnetwork.tf.CCT import CCT
@@ -494,4 +494,21 @@ cct = CCT(
 
 img = tf.random.normal((1, 224, 448, 3))
 pred = cct(img) # (1, 1000)
+```
+Alternatively you can use one of several pre-defined models [2,4,6,7,8,14,16] which pre-define the number of layers, number of attention heads, the mlp ratio, and the embedding dimension.
+```python
+from Note.neuralnetwork.tf.CCT import cct_14
+
+cct = cct_14(
+    img_size = 224,
+    n_conv_layers = 1,
+    kernel_size = 7,
+    stride = 2,
+    padding = 3,
+    pooling_kernel_size = 3,
+    pooling_stride = 2,
+    pooling_padding = 1,
+    num_classes = 1000,
+    positional_embedding = 'learnable', # ['sine', 'learnable', 'none']
+)
 ```
