@@ -512,3 +512,17 @@ cct = cct_14(
     positional_embedding = 'learnable', # ['sine', 'learnable', 'none']
 )
 ```
+
+**MiT**
+```python
+import tensorflow as tf
+from Note.neuralnetwork.tf.MiT import mit_b0
+model = mit_b0()
+
+batch_size = 10
+img_size = 224
+in_chans = 3
+random_data = tf.random.normal([batch_size, img_size, img_size, in_chans])
+
+output = model(random_data)
+```
