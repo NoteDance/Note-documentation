@@ -522,7 +522,21 @@ model = mit_b0()
 batch_size = 10
 img_size = 224
 in_chans = 3
-random_data = tf.random.normal([batch_size, img_size, img_size, in_chans])
+img = tf.random.normal([batch_size, img_size, img_size, in_chans])
 
-output = model(random_data)
+output = model(img)
+```
+
+**BEiT**
+```python
+import tensorflow as tf
+from Note.neuralnetwork.tf.BEiT import beit_base_patch16_224
+model = beit_base_patch16_224()
+
+batch_size = 10
+img_size = 224
+in_chans = 3
+img = tf.random.normal([batch_size, img_size, img_size,in_chans])
+
+output = model(img)
 ```
