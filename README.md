@@ -540,3 +540,31 @@ img = tf.random.normal([batch_size, img_size, img_size,in_chans])
 
 output = model(img)
 ```
+
+**SwinMLP**
+```python
+import tensorflow as tf
+from Note.neuralnetwork.tf.SwinMLP import SwinMLP
+model = SwinMLP()
+
+batch_size = 10
+img_size = 224
+in_chans = 3
+img = tf.random.normal([batch_size, img_size, img_size,in_chans])
+
+output = model(img)
+```
+
+**SwinTransformerV2**
+```python
+import tensorflow as tf
+from Note.neuralnetwork.tf.SwinTransformerV2 import SwinTransformerV2
+model = SwinTransformerV2()
+
+batch_size = 10
+img_size = 224
+in_chans = 3
+img = tf.random.normal([batch_size, img_size, img_size,in_chans])
+
+output = model(img)
+```
