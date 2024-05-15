@@ -568,3 +568,17 @@ img = tf.random.normal([batch_size, img_size, img_size,in_chans])
 
 output = model(img)
 ```
+
+**ConViT**
+```python
+import tensorflow as tf
+from Note.neuralnetwork.tf.ConViT import convit_tiny
+model = convit_tiny(embed_dim=48)
+
+batch_size = 10
+img_size = 224
+in_chans = 3
+img = tf.random.normal([batch_size, img_size, img_size,in_chans])
+
+output = model(img)
+```
