@@ -8,9 +8,8 @@
 
 # Train:
 ```python
-from Note.neuralnetwork.tf.ConvNeXtV2 import ConvNeXtV2
-convnext_atto=ConvNeXtV2(model_type='atto',classes=1000)
-convnext_atto.build()
+from Note.neuralnetwork.tf.ConViT import convit_tiny
+model=convit_tiny(embed_dim=48)
 
 train_ds = tf.data.Dataset.from_tensor_slices((x_train, y_train)).batch(32)
 loss_object = tf.keras.losses.SparseCategoricalCrossentropy()
@@ -20,10 +19,10 @@ train_loss = tf.keras.metrics.Mean(name='train_loss')
 @tf.function(jit_compile=True)
 def train_step(images, labels):
   with tf.GradientTape() as tape:
-    predictions = convnext_atto(images)
+    predictions = model(images)
     loss = loss_object(labels, predictions)
-  gradients = tape.gradient(loss, convnext_atto.param)
-  optimizer.apply_gradients(zip(gradients, convnext_atto.param))
+  gradients = tape.gradient(loss, model.param)
+  optimizer.apply_gradients(zip(gradients, model.param))
   train_loss(loss)
 
 EPOCHS = 5
@@ -44,7 +43,7 @@ for epoch in range(EPOCHS):
 
 # Distributed training:
 ```python
-from Note.neuralnetwork.tf.ConvNeXtV2 import ConvNeXtV2
+from Note.neuralnetwork.tf.ConViT import convit_tiny
 
 strategy = tf.distribute.MirroredStrategy()
 
@@ -63,17 +62,16 @@ with strategy.scope():
     return tf.nn.compute_average_loss(per_example_loss, global_batch_size=GLOBAL_BATCH_SIZE)
 
 with strategy.scope():
-  convnext_atto=ConvNeXtV2(model_type='atto',classes=10)
-  convnext_atto.build()
+  model=convit_tiny(embed_dim=48)
   optimizer = tf.keras.optimizers.Adam()
 
 def train_step(inputs):
   images, labels = inputs
   with tf.GradientTape() as tape:
-    predictions = convnext_atto(images)
+    predictions = model(images)
     loss = compute_loss(labels, predictions)
-  gradients = tape.gradient(loss, convnext_atto.param)
-  optimizer.apply_gradients(zip(gradients, convnext_atto.param))
+  gradients = tape.gradient(loss, model.param)
+  optimizer.apply_gradients(zip(gradients, model.param))
   return loss
 
 @tf.function(jit_compile=True)
@@ -90,14 +88,14 @@ for epoch in range(EPOCHS):
     num_batches += 1
   train_loss = total_loss / num_batches
 
-  template = ("Epoch {}, Loss: {})
+  template = ("Epoch {}, Loss: {}")
   print(template.format(epoch + 1, train_loss)
 ```
 
 
 # Fine-tuning:
 ```python
-convnext_atto.fine_tuning(10,flag=0)
+model.fine_tuning(10,flag=0)
 optimizer.lr=0.0001
 fine_ds = tf.data.Dataset.from_tensor_slices((x_fine, y_fine)).batch(32)
 
@@ -127,8 +125,8 @@ Restore the pre-trained layer and assign the parameters of the pre-trained layer
 
 # Use neural network:
 ```python
-convnext_atto.training=False
-output=convnext_atto(data)
+model.training=False # If model has training attribute.
+output=model(data)
 ```
 
 
@@ -136,7 +134,7 @@ output=convnext_atto(data)
 ```python
 import pickle
 output_file=open('param.dat','wb')
-pickle.dump(convnext_atto.param,output_file)
+pickle.dump(model.param,output_file)
 output_file.close()
 ```
 
@@ -154,14 +152,13 @@ input_file.close()
 The assign_param function allows you to assign trained parameters, such as downloaded pre-trained parameters, to the parameters of a neural network. These parameters should be stored in a list.
 ```python
 import pickle
-from Note.neuralnetwork.tf.ConvNeXtV2 import ConvNeXtV2
+from Note.neuralnetwork.tf.ConViT import convit_tiny
 from Note.neuralnetwork.tf.assign_param import assign_param
-convnext_atto=ConvNeXtV2(model_type='atto',classes=10)
-convnext_atto.build()
+model=convit_tiny(embed_dim=48)
 input_file=open('param.dat','rb')
 param=pickle.load(input_file)
 input_file.close()
-assign_param(convnext_atto.param,param)
+assign_param(model.param,param)
 ```
 
 
@@ -169,7 +166,7 @@ assign_param(convnext_atto.param,param)
 ```python
 import pickle
 output_file=open('model.dat','wb')
-pickle.dump(convnext_atto,output_file)
+pickle.dump(model,output_file)
 output_file.close()
 ```
 
@@ -178,7 +175,7 @@ output_file.close()
 ```python
 import pickle
 input_file=open('model.dat','rb')
-convnext_atto=pickle.load(input_file)
+model=pickle.load(input_file)
 input_file.close()
 ```
 
