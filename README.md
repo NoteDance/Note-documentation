@@ -283,23 +283,11 @@ vit=ViT(
 **CaiT**
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.tf.CaiT import CaiT
+from Note.neuralnetwork.tf.CaiT import cait_XXS24_224
 
-v = CaiT(
-    image_size = 256,
-    patch_size = 32,
-    num_classes = 1000,
-    dim = 1024,
-    depth = 12,             # depth of transformer for patch to patch attention only
-    cls_depth = 2,          # depth of cross attention of CLS tokens to patch
-    heads = 16,
-    mlp_dim = 2048,
-    dropout_rate = 0.1,
-    emb_dropout = 0.1,
-    layer_dropout = 0.05    # randomly dropout 5% of the layers
-)
+v = cait_XXS24_224()
 
-img = tf.random.normal((1, 256, 256, 3))
+img = tf.random.normal((1, 224, 224, 3))
 
 preds = v(img) # (1, 1000)
 ```
