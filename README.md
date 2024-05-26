@@ -1,9 +1,9 @@
 # Introduction:
-**Deep learning models built with Note are compatible with TensorFlow and can be trained with TensorFlow.**
+Deep learning models built with Note are compatible with TensorFlow and can be trained with TensorFlow.
 
 
 # Installation:
-**Download Note from https://github.com/NoteDance/Note and then unzip it to the site-packages folder of your Python environment.**
+Download Note from https://github.com/NoteDance/Note and then unzip it to the site-packages folder of your Python environment.
 
 
 # Train:
