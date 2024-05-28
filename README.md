@@ -181,23 +181,21 @@ input_file.close()
 
 
 # Build models:
-Here are some examples of building various neural networks, all in a similar way.
-
-**ConvNeXt_tiny:**
+## ConvNeXt_tiny
 ```python
 from Note.neuralnetwork.tf.ConvNeXt import ConvNeXt
 convnext_tiny=ConvNeXt(model_type='tiny',classes=1000)
 convnext_tiny.build()
 ```
 
-**ConvNeXtV2_atto:**
+## ConvNeXtV2_atto
 ```python
 from Note.neuralnetwork.tf.ConvNeXtV2 import ConvNeXtV2
 convnext_atto=ConvNeXtV2(model_type='atto',classes=1000)
 convnext_atto.build()
 ```
 
-**CLIP_large:**
+## CLIP_large
 ```python
 from Note.neuralnetwork.tf.CLIP import CLIP
 clip=CLIP(
@@ -214,54 +212,54 @@ clip=CLIP(
   )
 ```
 
-**DiT_B_4:**
+## DiT_B_4
 ```python
 from Note.neuralnetwork.tf.DiT import DiT_B_4
 dit=DiT_B_4()
 ```
 
-**EfficientNetB0:**
+## EfficientNetB0
 ```python
 from Note.neuralnetwork.tf.EfficientNet import EfficientNet
 efficientnetb0=EfficientNet(model_name='B0',classes=1000)
 efficientnetb0.build()
 ```
 
-**EfficientNetV2S:**
+## EfficientNetV2S
 ```python
 from Note.neuralnetwork.tf.EfficientNetV2 import EfficientNetV2
 efficientnetv2s=EfficientNetV2(model_name='efficientnetv2-s',classes=1000)
 efficientnetv2s.build()
 ```
 
-**Llama2_7B:**
+## Llama2_7B
 ```python
 from Note.neuralnetwork.tf.Llama2 import Llama2
 llama=Llama2()
 ```
 
-**MobileNetV2:**
+## MobileNetV2
 ```python
 from Note.neuralnetwork.tf.MobileNetV2 import MobileNetV2
 mobilenet=MobileNetV2(classes=1000)
 mobilenet.build()
 ```
 
-**MobileNetV3_large:**
+## MobileNetV3_large
 ```python
 from Note.neuralnetwork.tf.MobileNetV3 import MobileNetV3
 mobilenet=MobileNetV3(model_type="large",classes=1000)
 mobilenet.build()
 ```
 
-**ResNet50:**
+## ResNet50
 ```python
 from Note.neuralnetwork.tf.ResNet.ResNet50 import ResNet50
 resnet50=ResNet50(classes=1000)
 resnet50.build()
 ```
 
-**ViT**
+## ViT
 ```python
 from Note.neuralnetwork.tf.ViT import ViT
 vit=ViT(
@@ -280,43 +278,33 @@ vit=ViT(
 )
 ```
 
-**CaiT**
+## CaiT
 ```python
 import tensorflow as tf
 from Note.neuralnetwork.tf.CaiT import cait_XXS24_224
 
-v = cait_XXS24_224()
+model = cait_XXS24_224()
 
 img = tf.random.normal((1, 224, 224, 3))
 
-preds = v(img) # (1, 1000)
+preds = model(img) # (1, 1000)
 ```
 
-**PiT**
+## PiT
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.tf.PiT import PiT
+from Note.neuralnetwork.tf.PiT import pit_b
 
-v = PiT(
-    image_size = 224,
-    patch_size = 14,
-    dim = 256,
-    num_classes = 1000,
-    depth = (3, 3, 3),     # list of depths, indicating the number of rounds of each stage before a downsample
-    heads = 16,
-    mlp_dim = 2048,
-    dropout_rate = 0.1,
-    emb_dropout = 0.1
-)
+model = pit_b()
 
 # forward pass now returns predictions and the attention maps
 
 img = tf.random.normal((1, 224, 224, 3))
 
-preds = v(img) # (1, 1000)
+preds = model(img) # (1, 1000)
 ```
 
-**Cross ViT**
+## Cross ViT
 ```python
 import tensorflow as tf
 from Note.neuralnetwork.tf.CrossViT import crossvit_tiny_224()
@@ -328,7 +316,7 @@ img = tf.random.normal((1, 240, 240, 3))
 pred = model(img) # (1, 1000)
 ```
 
-**Deep ViT**
+## Deep ViT
 ```python
 import tensorflow as tf
 from Note.neuralnetwork.tf.DeepViT import DeepViT
@@ -350,7 +338,7 @@ img = tf.random.normal((1, 256, 256, 3))
 preds = v(img) # (1, 1000)
 ```
 
-**ViViT**
+## ViViT
 ```python
 import tensorflow as tf
 from Note.neuralnetwork.tf.ViViT import ViViT
@@ -373,7 +361,7 @@ video = tf.random.normal((4, 16, 128, 128, 3)) # (batch, frames, height, width, 
 preds = v(video) # (4, 1000)
 ```
 
-**XCiT**
+## XCiT
 ```python
 import tensorflow as tf
 from Note.neuralnetwork.tf.XCiT import XCiT
@@ -398,7 +386,7 @@ img = tf.random.normal([1, 256, 256, 3])
 preds = v(img) # (1, 1000)
 ```
 
-**CvT**
+## CvT
 ```python
 import tensorflow as tf
 from Note.neuralnetwork.tf.CvT import CvT
@@ -437,7 +425,7 @@ img = tf.random.normal((1, 224, 224, 3))
 pred = v(img) # (1, 1000)
 ```
 
-**CCT**
+## CCT
 ```python
 import tensorflow as tf
 from Note.neuralnetwork.tf.CCT import CCT
@@ -480,7 +468,7 @@ cct = cct_14(
 )
 ```
 
-**MiT**
+## MiT
 ```python
 import tensorflow as tf
 from Note.neuralnetwork.tf.MiT import mit_b0
@@ -494,7 +482,7 @@ img = tf.random.normal([batch_size, img_size, img_size, in_chans])
 output = model(img)
 ```
 
-**BEiT**
+## BEiT
 ```python
 import tensorflow as tf
 from Note.neuralnetwork.tf.BEiT import beit_base_patch16_224
@@ -508,7 +496,7 @@ img = tf.random.normal([batch_size, img_size, img_size,in_chans])
 output = model(img)
 ```
 
-**SwinMLP**
+## SwinMLP
 ```python
 import tensorflow as tf
 from Note.neuralnetwork.tf.SwinMLP import SwinMLP
@@ -522,7 +510,7 @@ img = tf.random.normal([batch_size, img_size, img_size,in_chans])
 output = model(img)
 ```
 
-**SwinTransformerV2**
+## SwinTransformerV2
 ```python
 import tensorflow as tf
 from Note.neuralnetwork.tf.SwinTransformerV2 import SwinTransformerV2
@@ -536,7 +524,7 @@ img = tf.random.normal([batch_size, img_size, img_size,in_chans])
 output = model(img)
 ```
 
-**ConViT**
+## ConViT
 ```python
 import tensorflow as tf
 from Note.neuralnetwork.tf.ConViT import convit_tiny
