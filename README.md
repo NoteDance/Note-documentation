@@ -124,8 +124,14 @@ Restore the pre-trained layer and assign the parameters of the pre-trained layer
 
 
 # Use neural network:
+If the model's training attribute is a bool.
 ```python
-model.training=False # If model has training attribute.
+model.training=False
+output=model(data)
+```
+otherwise
+```python
+model.training()
 output=model(data)
 ```
 
