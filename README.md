@@ -370,26 +370,13 @@ preds = v(video) # (4, 1000)
 ## XCiT
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.tf.XCiT import XCiT
+from Note.neuralnetwork.tf.XCiT import xcit_nano_12_p16
 
-v = XCiT(
-    image_size = 256,
-    patch_size = 32,
-    num_classes = 1000,
-    dim = 1024,
-    depth = 12,                     # depth of xcit transformer
-    cls_depth = 2,                  # depth of cross attention of CLS tokens to patch, attention pool at end
-    heads = 16,
-    mlp_dim = 2048,
-    dropout = 0.1,
-    emb_dropout = 0.1,
-    layer_dropout = 0.05,           # randomly dropout 5% of the layers
-    local_patch_kernel_size = 3     # kernel size of the local patch interaction module (depthwise convs)
-)
+model = xcit_nano_12_p16()
 
-img = tf.random.normal([1, 256, 256, 3])
+img = tf.random.normal([1, 224, 224, 3])
 
-preds = v(img) # (1, 1000)
+preds = model(img) # (1, 1000)
 ```
 
 ## CvT
@@ -542,4 +529,16 @@ in_chans = 3
 img = tf.random.normal([batch_size, img_size, img_size,in_chans])
 
 output = model(img)
+```
+
+## PVT
+```python
+import tensorflow as tf
+from Note.neuralnetwork.tf.PVT import pvt_v2_b0
+
+model = pvt_v2_b0()
+
+img = tf.random.normal([1, 224, 224, 3])
+
+preds = model(img) # (1, 1000)
 ```
