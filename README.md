@@ -658,7 +658,6 @@ from tensorflow.keras import datasets
 (train_images,train_labels),(test_images,test_labels)=datasets.cifar10.load_data()
 train_images,test_images=train_images/255.0,test_images/255.0
 convnext_atto=ConvNeXtV2(model_type='atto',classes=10)  #create neural network object
-convnext_atto.build()                           #build the network structure
 kernel=k.kernel(convnext_atto)                  #create kernel object with the network
 kernel.platform=tf           #set the platform to tensorflow
 kernel.data(train_images,train_labels)         #input train data to the kernel
@@ -676,7 +675,6 @@ output=convnext_atto.fp(data)
 import Note.DL.kernel as k   #import kernel module
 from Note.nn.neuralnetwork.ConvNeXtV2 import ConvNeXtV2 #import neural network class
 convnext_atto=ConvNeXtV2(model_type='atto',classes=1000)  #create neural network object
-convnext_atto.build()                           #build the network structure
 kernel=k.kernel(convnext_atto)                  #create kernel object with the network
 kernel.platform=tf           #set the platform to tensorflow
 kernel.data(train_images,train_labels)         #input train data to the kernel
