@@ -191,14 +191,12 @@ input_file.close()
 ```python
 from Note.neuralnetwork.tf.ConvNeXt import ConvNeXt
 convnext_tiny=ConvNeXt(model_type='tiny',classes=1000)
-convnext_tiny.build()
 ```
 
 ## ConvNeXtV2_atto
 ```python
 from Note.neuralnetwork.tf.ConvNeXtV2 import ConvNeXtV2
 convnext_atto=ConvNeXtV2(model_type='atto',classes=1000)
-convnext_atto.build()
 ```
 
 ## CLIP_large
@@ -228,14 +226,12 @@ dit=DiT_B_4()
 ```python
 from Note.neuralnetwork.tf.EfficientNet import EfficientNet
 efficientnetb0=EfficientNet(model_name='B0',classes=1000)
-efficientnetb0.build()
 ```
 
 ## EfficientNetV2S
 ```python
 from Note.neuralnetwork.tf.EfficientNetV2 import EfficientNetV2
 efficientnetv2s=EfficientNetV2(model_name='efficientnetv2-s',classes=1000)
-efficientnetv2s.build()
 ```
 
 ## Llama2_7B
@@ -248,21 +244,18 @@ llama=Llama2()
 ```python
 from Note.neuralnetwork.tf.MobileNetV2 import MobileNetV2
 mobilenet=MobileNetV2(classes=1000)
-mobilenet.build()
 ```
 
 ## MobileNetV3_large
 ```python
 from Note.neuralnetwork.tf.MobileNetV3 import MobileNetV3
 mobilenet=MobileNetV3(model_type="large",classes=1000)
-mobilenet.build()
 ```
 
 ## ResNet50
 ```python
 from Note.neuralnetwork.tf.ResNet.ResNet50 import ResNet50
 resnet50=ResNet50(classes=1000)
-resnet50.build()
 ```
 
 ## ViT
