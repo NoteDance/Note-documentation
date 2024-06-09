@@ -81,12 +81,10 @@ The `batch_norm` class implements batch normalization, which helps to stabilize 
 **Example Usage**
 
 ```python
-import tensorflow as tf
-from Note.nn.initializer import initializer
-from Note.nn.Model import Model
+from Note import nn
 
 # Create an instance of the batch normalization layer
-bn = batch_norm(input_size=10)
+bn = nn.batch_norm(input_size=10)
 
 # Generate some sample data
 data = tf.random.normal((2, 5, 10))
@@ -128,12 +126,10 @@ The `conv1d` class implements a 1D convolutional layer, which is commonly used i
 **Example Usage**
 
 ```python
-import tensorflow as tf
-from Note.nn.Model import Model
-from Note.nn.conv1d import conv1d
+from Note import nn
 
 # Create an instance of the conv1d layer
-conv_layer = conv1d(filters=32, kernel_size=3, input_size=64, strides=1, padding='SAME', activation='relu')
+conv_layer = nn.conv1d(filters=32, kernel_size=3, input_size=64, strides=1, padding='SAME', activation='relu')
 
 # Generate some sample data
 data = tf.random.normal((10, 100, 64))
@@ -177,12 +173,10 @@ The `conv1d_transpose` class implements a 1D transposed convolutional layer, oft
 **Example Usage**
 
 ```python
-import tensorflow as tf
-from Note.nn.Model import Model
-from Note.nn.conv1d_transpose import conv1d_transpose
+from Note import nn
 
 # Create an instance of the conv1d_transpose layer
-conv_transpose_layer = conv1d_transpose(filters=32, kernel_size=3, input_size=64, strides=[1], padding='SAME', activation='relu')
+conv_transpose_layer = nn.conv1d_transpose(filters=32, kernel_size=3, input_size=64, strides=[1], padding='SAME', activation='relu')
 
 # Generate some sample data
 data = tf.random.normal((10, 100, 64))
@@ -226,12 +220,10 @@ The `conv2d` class implements a 2D convolutional layer, which is commonly used i
 **Example Usage**
 
 ```python
-import tensorflow as tf
-from Note.nn.Model import Model
-from Note.nn.conv2d import conv2d
+from Note import nn
 
 # Create an instance of the conv2d layer
-conv_layer = conv2d(filters=32, kernel_size=3, input_size=64, strides=2, padding='SAME', activation='relu')
+conv_layer = nn.conv2d(filters=32, kernel_size=3, input_size=64, strides=2, padding='SAME', activation='relu')
 
 # Generate some sample data
 data = tf.random.normal((10, 128, 128, 64))  # Batch of 10 images, 128x128 pixels, 64 channels
@@ -275,12 +267,10 @@ The `conv2d_transpose` class implements a 2D transposed convolutional layer, whi
 **Example Usage**
 
 ```python
-import tensorflow as tf
-from Note.nn.Model import Model
-from Note.nn.conv2d_transpose import conv2d_transpose
+from Note import nn
 
 # Create an instance of the conv2d_transpose layer
-conv_transpose_layer = conv2d_transpose(filters=32, kernel_size=3, input_size=64, strides=2, padding='SAME', activation='relu')
+conv_transpose_layer = nn.conv2d_transpose(filters=32, kernel_size=3, input_size=64, strides=2, padding='SAME', activation='relu')
 
 # Generate some sample data
 data = tf.random.normal((10, 64, 64, 64))  # Batch of 10 images, 64x64 pixels, 64 channels
