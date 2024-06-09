@@ -1,118 +1,294 @@
 # attention
-This module implements an attention layer, which can compute the context vector and the attention weights based on the query, value and key tensors. The usage of this module is as follows:
 
-- First, create an instance of the attention class, and specify the use_scale and score_mode arguments. The use_scale argument indicates whether to use a scale factor for the score calculation. The score_mode argument indicates which mode to use for the score calculation, either "dot" or "concat". You can also specify the dtype argument, which is the data type of the tensors.
-- Second, pass the query, value and key tensors as the query, value and key arguments. The query tensor has a shape of [batch_size, Tq, dim], where Tq is the query sequence length and dim is the dimensionality. The value and key tensors have a shape of [batch_size, Tv, dim], where Tv is the value/key sequence length. If you don't pass the key tensor, it will be assumed to be equal to the value tensor.
-- Last, return a tensor of shape [batch_size, Tq, dim], which is the attention output. It is computed by applying a softmax function to the score tensor of shape [batch_size, Tq, Tv], and then multiplying it with the value tensor.
+This class implements an attention mechanism for neural networks, supporting both dot-product and concatenation-based attention scoring methods. It also allows for optional scaling of attention scores.
 
-For example:
+**Initialization Parameters**
+
+- `use_scale` (bool): If `True`, scales the attention scores. Default is `False`.
+- `score_mode` (str): The method to calculate attention scores. Options are `"dot"` (default) and `"concat"`.
+- `dtype` (str): The data type for computations. Default is `'float32'`.
+
+**Methods**
+
+**`__init__(self, use_scale=False, score_mode="dot", dtype='float32')`**
+
+Initializes the attention mechanism with the specified parameters.
+
+- `use_scale` (bool): Whether to scale the attention scores.
+- `score_mode` (str): The scoring method to use ("dot" or "concat").
+- `dtype` (str): The data type for computations.
+
+**`__call__(self, query, value, key=None)`**
+
+Applies the attention mechanism to the provided tensors.
+
+- `query` (Tensor): The query tensor.
+- `value` (Tensor): The value tensor.
+- `key` (Tensor, optional): The key tensor. If not provided, `value` is used as the key.
+
+Returns:
+- `Tensor`: The result of the attention mechanism applied to the input tensors.
+
+**Example Usage**
 
 ```python
-# Create an attention instance with use_scale=True and score_mode="dot"
-att = attention(use_scale=True, score_mode="dot")
-# Generate random query, value and key tensors of shape [batch_size, Tq/Tv, dim]
-batch_size = 2
-Tq = 3
-Tv = 4
-dim = 5
-query = tf.random.normal([batch_size, Tq, dim])
-value = tf.random.normal([batch_size, Tv, dim])
-key = tf.random.normal([batch_size, Tv, dim])
-# Call the output method with query, value and key as inputs
-output = att(query, value, key)
-# The output will have a shape of [2, 3, 5]
+from Note import nn
+
+# Instantiate the attention class
+att = nn.attention(use_scale=True, score_mode="dot", dtype='float32')
+
+# Define sample query and value tensors
+query = tf.random.normal(shape=(2, 5, 10))  # (batch_size, query_length, dim)
+value = tf.random.normal(shape=(2, 6, 10))  # (batch_size, value_length, dim)
+
+# Compute attention output
+output = att(query, value)
+
+print(output.shape)  # Should be (2, 5, 10)
 ```
 
 # batch_norm
-This module implements a batch normalization layer, which is a common technique for deep learning models. Batch normalization can reduce the internal covariate shift, accelerate the model convergence, and improve the model generalization ability. This method was proposed by Ioffe and Szegedy in 2015.
 
-The usage of this module is as follows:
+The `batch_norm` class implements batch normalization, which helps to stabilize and accelerate training by normalizing the input layer by adjusting and scaling the activations.
 
-- First, create an instance of the batch_normalization class, and specify the axis or axes to normalize, the momentum, the epsilon, and other optional parameters such as input size, center, scale, beta initializer, gamma initializer, moving mean initializer, moving variance initializer, keepdims, trainable, and dtype.
-- Second, pass the input tensor as the data argument. You can also specify a different train_flag argument, which is a boolean value that indicates whether to use the batch statistics or the moving statistics for normalization.
-- Last, return a tensor of the same shape as the input tensor, which is the batch normalization output.
+**Initialization Parameters**
 
-For example:
+- **`input_size`** (int, optional): Size of the input.
+- **`axis`** (int): Axis along which to normalize. Default is `-1`.
+- **`momentum`** (float): Momentum for the moving average. Default is `0.99`.
+- **`epsilon`** (float): Small constant to avoid division by zero. Default is `0.001`.
+- **`center`** (bool): If `True`, add offset of `beta` to the normalized tensor. Default is `True`.
+- **`scale`** (bool): If `True`, multiply by `gamma`. Default is `True`.
+- **`beta_initializer`** (str): Initializer for the beta weight. Default is `'zeros'`.
+- **`gamma_initializer`** (str): Initializer for the gamma weight. Default is `'ones'`.
+- **`moving_mean_initializer`** (str): Initializer for the moving mean. Default is `'zeros'`.
+- **`moving_variance_initializer`** (str): Initializer for the moving variance. Default is `'ones'`.
+- **`synchronized`** (bool): If `True`, synchronize the moments across replicas. Default is `False`.
+- **`trainable`** (bool): If `True`, add variables to the trainable variables collection. Default is `True`.
+- **`dtype`** (str): Data type for the layer. Default is `'float32'`.
+
+**Methods**
+
+- **`__call__(self, data, train_flag=None, mask=None)`**: Applies batch normalization to the input `data`.
+
+  - **Parameters**:
+    - **`data`**: Input tensor.
+    - **`train_flag`** (bool, optional): Specifies whether the layer is in training mode.
+    - **`mask`** (tensor, optional): Mask tensor for weighted moments calculation.
+
+  - **Returns**: Normalized output tensor.
+
+**Example Usage**
 
 ```python
-# Create a batch normalization layer with axis -1 and momentum 0.99
-bn = batch_norm(128, axis=-1, momentum=0.99)
-# Apply the batch normalization layer to a batch of input data of shape [64, 128]
-input_data = tf.random.normal([64, 128])
-output_data = bn(input_data)
-# The output_data will have a shape of [64, 128]
+import tensorflow as tf
+from Note.nn.initializer import initializer
+from Note.nn.Model import Model
+
+# Create an instance of the batch normalization layer
+bn = batch_norm(input_size=10)
+
+# Generate some sample data
+data = tf.random.normal((2, 5, 10))
+
+# Apply batch normalization
+output = bn(data)
 ```
 
 # conv1d
-This module implements a 1D convolutional layer, which can apply a set of filters to an input tensor and produce a feature vector. The usage of this module is as follows:
 
-- First, create an instance of the conv1d class, and specify the number of output filters, the kernel size, and other optional parameters such as input size, activation function, weight initializer, bias initializer, use bias, strides, padding mode, data format, and dilation rate.
-- Second, pass the input tensor as the data argument. You can also specify a different dilation rate for the convolution operation.
-- Last, return a tensor of shape [batch_size, length, filters], which is the 1D convolution output.
+The `conv1d` class implements a 1D convolutional layer, which is commonly used in processing sequential data such as time series or audio.
 
-For example:
+**Initialization Parameters**
+
+- **`filters`** (int): Number of output filters in the convolution.
+- **`kernel_size`** (int or list of int): Size of the convolutional kernel.
+- **`input_size`** (int, optional): Size of the input channels.
+- **`strides`** (int or list of int): Stride size for the convolution. Default is `[1]`.
+- **`padding`** (str or list of int): Padding type or size. Default is `'VALID'`.
+- **`weight_initializer`** (str): Initializer for the weight tensor. Default is `'Xavier'`.
+- **`bias_initializer`** (str): Initializer for the bias vector. Default is `'zeros'`.
+- **`activation`** (str, optional): Activation function to use. Default is `None`.
+- **`data_format`** (str): Data format, either `'NWC'` or `'NCW'`. Default is `'NWC'`.
+- **`dilations`** (int or list of int, optional): Dilation rate for dilated convolution. Default is `None`.
+- **`groups`** (int): Number of groups for grouped convolution. Default is `1`.
+- **`use_bias`** (bool): Whether to use a bias vector. Default is `True`.
+- **`trainable`** (bool): Whether the layer's variables should be trainable. Default is `True`.
+- **`dtype`** (str): Data type for the layer. Default is `'float32'`.
+
+**Methods**
+
+- **`__call__(self, data)`**: Applies the 1D convolution to the input `data`.
+
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor.
+
+  - **Returns**: Output tensor after applying the 1D convolution and activation function (if specified).
+
+**Example Usage**
 
 ```python
-# Create a 1D convolution layer with 16 output filters, 5 kernel size, sigmoid activation
-conv1d = conv1d(filters=16, kernel_size=5, input_size=100, activation='sigmoid')
-# Apply the 1D convolution layer to a batch of input data of shape [32, 96, 100]
-input_data = tf.random.normal([32, 96, 100])
-output_data = conv1d(input_data)
-# The output_data will have a shape of [32, 92, 16]
+import tensorflow as tf
+from Note.nn.Model import Model
+from Note.nn.conv1d import conv1d
+
+# Create an instance of the conv1d layer
+conv_layer = conv1d(filters=32, kernel_size=3, input_size=64, strides=1, padding='SAME', activation='relu')
+
+# Generate some sample data
+data = tf.random.normal((10, 100, 64))
+
+# Apply the convolutional layer
+output = conv_layer(data)
+
+print(output.shape)  # Output shape will be (10, 100, 32) if padding is 'SAME'
 ```
 
 # conv1d_transpose
-This module implements a 1D transposed convolutional layer, which can apply a set of filters to an input tensor and produce a feature vector with a larger length. The usage of this module is as follows:
 
-- First, create an instance of the conv1d_transpose class, and specify the number of output filters, the kernel size, and other optional parameters such as input size, activation function, weight initializer, bias initializer, use bias, strides, padding mode, output padding, data format, and dilation rate.
-- Second, pass the input tensor as the data argument. You can also specify a different dilation rate for the transposed convolution operation.
-- Last, return a tensor of shape [batch_size, new_length, filters], which is the 1D transposed convolution output.
+The `conv1d_transpose` class implements a 1D transposed convolutional layer, often used for tasks like upsampling in sequence data.
 
-For example:
+**Initialization Parameters**
+
+- **`filters`** (int): Number of output filters in the transposed convolution.
+- **`kernel_size`** (int or list of int): Size of the convolutional kernel.
+- **`input_size`** (int, optional): Size of the input channels.
+- **`strides`** (int or list of int): Stride size for the transposed convolution. Default is `[1]`.
+- **`padding`** (str): Padding type. Default is `'VALID'`.
+- **`output_padding`** (int, optional): Additional size added to the output shape.
+- **`weight_initializer`** (str): Initializer for the weight tensor. Default is `'Xavier'`.
+- **`bias_initializer`** (str): Initializer for the bias vector. Default is `'zeros'`.
+- **`activation`** (str, optional): Activation function to use. Default is `None`.
+- **`data_format`** (str): Data format, either `'NWC'` or `'NCW'`. Default is `'NWC'`.
+- **`dilations`** (int or list of int, optional): Dilation rate for dilated convolution. Default is `None`.
+- **`use_bias`** (bool): Whether to use a bias vector. Default is `True`.
+- **`trainable`** (bool): Whether the layer's variables should be trainable. Default is `True`.
+- **`dtype`** (str): Data type for the layer. Default is `'float32'`.
+
+**Methods**
+
+- **`__call__(self, data)`**: Applies the 1D transposed convolution to the input `data`.
+
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor.
+
+  - **Returns**: Output tensor after applying the 1D transposed convolution and activation function (if specified).
+
+**Example Usage**
 
 ```python
-# Create a 1D transposed convolution layer with 16 output filters, 5 kernel size, relu activation
-conv1d_transpose = conv1d_transpose(filters=16, kernel_size=5, input_size=100, activation='relu')
-# Apply the 1D transposed convolution layer to a batch of input data of shape [32, 92, 100]
-input_data = tf.random.normal([32, 92, 100])
-output_data = conv1d_transpose(input_data)
-# The output_data will have a shape of [32, 96, 16]
+import tensorflow as tf
+from Note.nn.Model import Model
+from Note.nn.conv1d_transpose import conv1d_transpose
+
+# Create an instance of the conv1d_transpose layer
+conv_transpose_layer = conv1d_transpose(filters=32, kernel_size=3, input_size=64, strides=[1], padding='SAME', activation='relu')
+
+# Generate some sample data
+data = tf.random.normal((10, 100, 64))
+
+# Apply the transposed convolutional layer
+output = conv_transpose_layer(data)
+
+print(output.shape)  # Output shape will depend on strides and padding
 ```
 
 # conv2d
-This module implements a 2D convolutional layer, which can apply a set of filters to an input tensor and produce a feature map. The usage of this module is as follows:
 
-- First, create an instance of the conv2d class, and specify the input size, the number of output filters, the kernel size, and other optional parameters such as activation function, weight initializer, bias initializer, use bias, strides, padding mode, and data format.
-- Second, pass the input tensor as the data argument. You can also specify the dilation rate of the convolution operation.
-- Last, return a tensor of shape [batch_size, height, width, filters], which is the 2D convolution output.
+The `conv2d` class implements a 2D convolutional layer, which is commonly used in image processing tasks.
 
-For example:
+**Initialization Parameters**
+
+- **`filters`** (int): Number of output filters in the convolution.
+- **`kernel_size`** (int or list of int): Size of the convolutional kernel. If a single integer is provided, it is used for both dimensions.
+- **`input_size`** (int, optional): Number of input channels. If not provided, it will be inferred from the input data.
+- **`strides`** (int or list of int): Stride size for the convolution. Default is `[1, 1]`.
+- **`padding`** (str or list of int): Padding type or size. Default is `'VALID'`.
+- **`weight_initializer`** (str): Initializer for the weight tensor. Default is `'Xavier'`.
+- **`bias_initializer`** (str): Initializer for the bias vector. Default is `'zeros'`.
+- **`activation`** (str, optional): Activation function to use. Default is `None`.
+- **`data_format`** (str): Data format, either `'NHWC'` or `'NCHW'`. Default is `'NHWC'`.
+- **`dilations`** (int or list of int, optional): Dilation rate for dilated convolution. Default is `None`.
+- **`groups`** (int): Number of groups for group convolution. Default is `1`.
+- **`use_bias`** (bool): Whether to use a bias vector. Default is `True`.
+- **`trainable`** (bool): Whether the layer's variables should be trainable. Default is `True`.
+- **`dtype`** (str): Data type for the layer. Default is `'float32'`.
+
+**Methods**
+
+- **`__call__(self, data)`**: Applies the 2D convolution to the input `data`.
+
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor.
+
+  - **Returns**: Output tensor after applying the 2D convolution and activation function (if specified).
+
+**Example Usage**
 
 ```python
-# Create a 2D convolution layer with 32 output filters, 3x3 kernel size, ReLU activation
-conv2d = conv2d(input_size=28, filters=32, kernel_size=[3, 3], activation='relu')
-# Apply the 2D convolution layer to a batch of input data of shape [32, 28, 28, 28]
-input_data = tf.random.normal([32, 28, 28, 28])
-output_data = conv2d(input_data)
-# The output_data will have a shape of [32, 26, 26, 32]
+import tensorflow as tf
+from Note.nn.Model import Model
+from Note.nn.conv2d import conv2d
+
+# Create an instance of the conv2d layer
+conv_layer = conv2d(filters=32, kernel_size=3, input_size=64, strides=2, padding='SAME', activation='relu')
+
+# Generate some sample data
+data = tf.random.normal((10, 128, 128, 64))  # Batch of 10 images, 128x128 pixels, 64 channels
+
+# Apply the convolutional layer
+output = conv_layer(data)
+
+print(output.shape)  # Output shape will depend on strides and padding
 ```
 
 # conv2d_transpose
-This module implements a 2D transposed convolutional layer, which can apply a set of filters to an input tensor and produce a feature vector with a larger height and width. The usage of this module is as follows:
 
-- First, create an instance of the conv2d_transpose class, and specify the number of output filters, the kernel size, and other optional parameters such as input size, new height and width, activation function, weight initializer, bias initializer, use bias, strides, padding mode, output padding, data format, and dilation rate.
-- Second, pass the input tensor as the data argument. You can also specify a different dilation rate for the transposed convolution operation.
-- Last, return a tensor of shape [batch_size, new_height, new_width, filters], which is the 2D transposed convolution output.
+The `conv2d_transpose` class implements a 2D transposed convolutional layer, which is commonly used for upsampling in image processing tasks.
 
-For example:
+**Initialization Parameters**
+
+- **`filters`** (int): Number of output filters in the transposed convolution.
+- **`kernel_size`** (int or list of int): Size of the transposed convolutional kernel. If a single integer is provided, it is used for both dimensions.
+- **`input_size`** (int, optional): Number of input channels. If not provided, it will be inferred from the input data.
+- **`strides`** (int or list of int): Stride size for the transposed convolution. Default is `[1, 1]`.
+- **`padding`** (str): Padding type, either `'VALID'` or `'SAME'`. Default is `'VALID'`.
+- **`output_padding`** (int or list of int, optional): Additional size added to one side of each dimension in the output shape. Default is `None`.
+- **`weight_initializer`** (str): Initializer for the weight tensor. Default is `'Xavier'`.
+- **`bias_initializer`** (str): Initializer for the bias vector. Default is `'zeros'`.
+- **`activation`** (str, optional): Activation function to use. Default is `None`.
+- **`data_format`** (str): Data format, either `'NHWC'` or `'NCHW'`. Default is `'NHWC'`.
+- **`dilations`** (int or list of int, optional): Dilation rate for dilated transposed convolution. Default is `None`.
+- **`use_bias`** (bool): Whether to use a bias vector. Default is `True`.
+- **`trainable`** (bool): Whether the layer's variables should be trainable. Default is `True`.
+- **`dtype`** (str): Data type for the layer. Default is `'float32'`.
+
+**Methods**
+
+- **`__call__(self, data)`**: Applies the 2D transposed convolution to the input `data`.
+
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor.
+
+  - **Returns**: Output tensor after applying the 2D transposed convolution and activation function (if specified).
+
+**Example Usage**
 
 ```python
-# Create a 2D transposed convolution layer with 16 output filters, 5x5 kernel size, relu activation
-conv2d_transpose = conv2d_transpose(filters=16, kernel_size=[5, 5], input_size=100, activation='relu')
-# Apply the 2D transposed convolution layer to a batch of input data of shape [32, 28, 28, 100]
-input_data = tf.random.normal([32, 28, 28, 100])
-output_data = conv2d_transpose(input_data)
-# The output_data will have a shape of [32, 32, 32, 16]
+import tensorflow as tf
+from Note.nn.Model import Model
+from Note.nn.conv2d_transpose import conv2d_transpose
+
+# Create an instance of the conv2d_transpose layer
+conv_transpose_layer = conv2d_transpose(filters=32, kernel_size=3, input_size=64, strides=2, padding='SAME', activation='relu')
+
+# Generate some sample data
+data = tf.random.normal((10, 64, 64, 64))  # Batch of 10 images, 64x64 pixels, 64 channels
+
+# Apply the transposed convolutional layer
+output = conv_transpose_layer(data)
+
+print(output.shape)  # Output shape will depend on strides and padding
 ```
 
 # conv3d
