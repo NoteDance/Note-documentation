@@ -713,227 +713,370 @@ print(tf.reduce_all(tf.equal(data, output)))  # Should print True, indicating th
 ```
 
 # LSTM
-This module implements a long short-term memory (LSTM) layer, which can process the input data in a sequential manner and learn long-term dependencies. The usage of this module is as follows:
 
-- First, create an instance of the LSTM class, and specify the output size, the input size, the weight initializer, the bias initializer, the data type, the return sequence flag, the use bias flag, and the activation functions. The weight shape should be a list of two integers: [input_size, hidden_size]. The return sequence flag indicates whether to return the output at each time step or only at the last time step. The use bias flag indicates whether to add a bias term to the linear transformations or not. The activation functions should be callable objects that take a tensor as input and return a tensor as output.
-- Second, pass the input data as the data argument. The input data should be a tensor of shape [batch_size, seq_length, input_size], where batch_size is the number of samples in a batch, seq_length is the number of time steps in a sequence, and input_size is the dimension of the input features at each time step.
-- Last, return a tensor of shape [batch_size,
-  seq_length,
-  hidden_size] if the return sequence flag is True, or [batch_size,
-  hidden_size] if the return sequence flag is False. This is the LSTM output after applying the input gate, forget gate, output gate and cell state update to the input data and the previous hidden state and cell state.
+The `LSTM` class implements a long short-term memory (LSTM) layer, which is a type of recurrent neural network (RNN) used for processing sequential data. LSTMs are designed to capture long-term dependencies and are commonly used in tasks such as time series forecasting, natural language processing, and more.
 
-For example:
+**Initialization Parameters**
+
+- **`output_size`** (int): The size of the output vector for each time step.
+- **`input_size`** (int, optional): The size of the input vector. If not provided, it will be inferred from the input data.
+- **`weight_initializer`** (str, default='Xavier'): The method to initialize weights.
+- **`bias_initializer`** (str, default='zeros'): The method to initialize biases.
+- **`return_sequence`** (bool, default=False): Whether to return the full sequence of outputs or just the last output.
+- **`use_bias`** (bool, default=True): Whether to use bias vectors.
+- **`trainable`** (bool, default=True): Whether the layer parameters are trainable.
+- **`dtype`** (str, default='float32'): The data type of the layer parameters.
+
+**Methods**
+
+- **`__call__(self, data)`**: Processes the input data through the LSTM layer and returns the output.
+
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor of shape `[batch_size, time_steps, input_size]`.
+    
+  - **Returns**: 
+    - **`output`** (tensor): Output tensor. If `return_sequence` is `True`, the shape is `[batch_size, time_steps, output_size]`. Otherwise, the shape is `[batch_size, output_size]`.
+
+**Example Usage**
 
 ```python
-# Create an LSTM layer with 32 hidden units
-lstm_layer = LSTM(32, 16)
-# Apply the LSTM layer to a batch of input data of shape [64, 10, 16]
-input_data = tf.random.normal([64, 10, 16])
-output_data = lstm_layer(data=input_data)
-# The output_data will have a shape of [64, 32]
+from Note import nn
+
+# Create an instance of the LSTM layer
+lstm_layer = nn.LSTM(output_size=128, input_size=64, return_sequence=True)
+
+# Generate some sample data
+data = tf.random.normal((32, 10, 64))  # Batch of 32 samples, each with 10 time steps and 64 features
+
+# Apply the LSTM layer
+output = lstm_layer(data)
+
+print(output.shape)  # Output shape will be (32, 10, 128) if return_sequence is True
 ```
 
 # LSTMCell
-This module implements a long short-term memory (LSTM) cell, which can process the input data and the previous state in a sequential manner and learn long-term dependencies. The usage of this module is as follows:
 
-- First, create an instance of the LSTMCell class, and specify the weight shape, the weight initializer, the bias initializer, the data type, the use bias flag, and the activation functions. The weight shape should be a list of two integers: [input_size, hidden_size]. The activation functions should be callable objects that take a tensor as input and return a tensor as output. The use bias flag indicates whether to add a bias term to the linear transformations or not.
-- Second, pass the input data and the previous state as the data and state arguments. The input data should be a tensor of shape [batch_size, input_size], where batch_size is the number of samples in a batch and input_size is the dimension of the input features. The previous state should be a tensor of shape [batch_size,
-  hidden_size], where hidden_size is the dimension of the hidden state.
-- Last, return a tuple of two tensors: output and new_state. The output is a tensor of shape [batch_size,
-  hidden_size], which is the output of the cell at the current time step. The new_state is a tensor of shape [batch_size,
-  hidden_size], which is the updated hidden state for the next time step.
+The `LSTMCell` class implements a long short-term memory (LSTM) cell, a fundamental building block for LSTM layers in recurrent neural networks (RNNs). LSTM cells are designed to capture long-term dependencies in sequential data, making them suitable for tasks such as time series forecasting, natural language processing, and more.
 
-For example:
+**Initialization Parameters**
 
-```python
-# Create an LSTM cell with 32 hidden units
-lstm_cell = LSTMCell(weight_shape=[16, 32])
-# Apply the LSTM cell to a batch of input data of shape [64, 16] and a previous state of shape [64, 32]
-input_data = tf.random.normal([64, 16])
-prev_state = tf.random.normal([64, 32])
-output_data, new_state = lstm_cell(data=input_data, state=prev_state)
-# The output_data will have a shape of [64, 32]
-# The new_state will have a shape of [64, 32]
-```
+- **`weight_shape`** (tuple): Shape of the weights. Should be `[input_size, hidden_size]`.
+- **`weight_initializer`** (str, default='Xavier'): Method for weight initialization.
+- **`bias_initializer`** (str, default='zeros'): Method for bias initialization.
+- **`use_bias`** (bool, default=True): Whether to use bias vectors.
+- **`trainable`** (bool, default=True): Whether the layer parameters are trainable.
+- **`dtype`** (str, default='float32'): Data type of the layer parameters.
 
-# Linformer_self_attention
-This module implements the Linformer self-attention mechanism, which is a fast and scalable way to compute attention using positive orthogonal random features. The usage of this module is as follows:
+**Methods**
 
-- First, create an instance of the Linformer_self_attention class, and specify the dimension, the sequence length, and other optional parameters such as k, heads, dim_head, one_kv_head, share_kv, dropout, and dtype.
-- Second, pass the input tensor as the x argument. You can also pass a different tensor as the context argument if you want to use cross-attention. The output method will return a tensor of shape [batch_size, sequence_length, dimension], which is the Linformer self-attention output.
+- **`__call__(self, data, state)`**: Processes the input data through the LSTM cell and returns the output and new cell state.
 
-For example:
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor of shape `[batch_size, input_size]`.
+    - **`state`** (tensor): Previous hidden state tensor of shape `[batch_size, hidden_size]`.
+    
+  - **Returns**: 
+    - **`output`** (tensor): Output tensor of shape `[batch_size, hidden_size]`.
+    - **`c_new`** (tensor): New cell state tensor of shape `[batch_size, hidden_size]`.
+
+**Example Usage**
 
 ```python
-# Create a Linformer self-attention layer with 64 dimension, 128 sequence length, 32 k, 8 heads, and 0.1 dropout
-linformer = Linformer_self_attention(dim=64, seq_len=128, k=32, heads=8, dropout=0.1)
-# Apply the Linformer self-attention layer to a batch of input embeddings of shape [16, 128, 64]
-input_embeddings = tf.random.normal([16, 128, 64])
-output_embeddings = linformer(input_embeddings)
-# The output_embeddings will have a shape of [16, 128, 64]
+from Note import nn
+
+# Define input size and hidden size
+input_size = 64
+hidden_size = 128
+
+# Create an instance of the LSTMCell
+lstm_cell = nn.LSTMCell(weight_shape=(input_size, hidden_size))
+
+# Generate some sample data
+data = tf.random.normal((32, input_size))  # Batch of 32 samples, each with 64 features
+state = tf.random.normal((32, hidden_size))  # Batch of 32 samples, each with 128 features for the previous state
+
+# Apply the LSTM cell
+output, new_state = lstm_cell(data, state)
+
+print(output.shape)  # Output shape will be (32, 128)
+print(new_state.shape)  # New state shape will be (32, 128)
 ```
 
 # layer_norm
-This module implements a layer normalization layer, which is a common technique for deep learning models. Layer normalization can normalize each neuron of each sample, making its mean 0 and variance 1. This can avoid the internal covariate shift, accelerate the model convergence, and improve the model generalization ability. This method was proposed by Ba et al. in 2016.
 
-The usage of this module is as follows:
+The `layer_norm` class implements layer normalization, a technique used to normalize the inputs across the features of a layer. This normalization helps stabilize and accelerate the training of deep neural networks.
 
-- First, create an instance of the layer_normalization class, and specify the axis or axes to normalize, the epsilon, and other optional parameters such as input size, center, scale, beta initializer, gamma initializer, and dtype.
-- Second, pass the input tensor as the data argument. The output method will apply layer normalization to the input tensor and return a normalized tensor of the same shape.
+**Initialization Parameters**
 
-For example:
+- **`input_size`** (int, default=None): Size of the input features.
+- **`axis`** (int or list of ints, default=-1): Axis or axes along which to normalize.
+- **`momentum`** (float, default=0.99): Momentum for the moving average.
+- **`epsilon`** (float, default=0.001): Small value to avoid division by zero.
+- **`center`** (bool, default=True): Whether to include a beta parameter.
+- **`scale`** (bool, default=True): Whether to include a gamma parameter.
+- **`rms_scaling`** (bool, default=False): Whether to use RMS scaling.
+- **`beta_initializer`** (str, default='zeros'): Initializer for the beta parameter.
+- **`gamma_initializer`** (str, default='ones'): Initializer for the gamma parameter.
+- **`dtype`** (str, default='float32'): Data type of the layer parameters.
+
+**Methods**
+
+- **`__call__(self, data)`**: Applies layer normalization to the input data.
+
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor of shape `[batch_size, ..., input_size]`.
+
+  - **Returns**: 
+    - **`outputs`** (tensor): Normalized tensor of the same shape as input.
+
+**Example Usage**
 
 ```python
-# Create a layer normalization layer with axis -1
-ln = layer_normalization(128, axis=-1)
-# Apply the layer normalization layer to a batch of input data of shape [64, 128]
-input_data = tf.random.normal([64, 128])
-output_data = ln(input_data)
-# The output_data will have a shape of [64, 128]
+from Note import nn
+
+# Create an instance of layer_norm
+layer_norm_layer = nn.layer_norm(input_size=128)
+
+# Generate some sample data
+data = tf.random.normal((32, 10, 128))  # Batch of 32 samples, 10 timesteps, 128 features
+
+# Apply layer normalization
+normalized_data = layer_norm_layer(data)
+
+print(normalized_data.shape)  # Output shape will be (32, 10, 128)
 ```
 
 # multihead_attention
-This module defines a multihead_attention class that implements a multi-head attention layer. A multi-head attention layer is a sublayer of the standard transformer layer that can learn the relevance and dependency of different tokens in a sequence. The usage of this module is as follows:
 
-- First, create an instance of the multihead_attention class, and specify the n_state, n_head, and other optional parameters such as weight_initializer, bias_initializer, dtype, and use_bias. The n_state is the dimensionality of the query, key, and value tensors after the linear transformation. The n_head is the number of attention heads. The use_bias indicates whether to use a bias term after the linear transformations or not.
-- Second, pass the input data as the x argument. Optionally, you can also pass another input data as the xa argument, which will be used as the key and value for the attention computation. If xa is not provided, x will be used as the query, key, and value. You can also pass a mask argument to mask out some tokens from the attention computation. The input data should be a tensor of shape [batch_size, seq_length, n_state], where batch_size is the number of samples in a batch, seq_length is the number of time steps in a sequence, and n_state is the dimension of the input features at each time step. The mask should be a tensor of shape [batch_size, seq_length_q, seq_length_k], where seq_length_q is the number of time steps in x and seq_length_k is the number of time steps in xa (or x if xa is not provided).
-- Last, return a tuple of two tensors: output_data and qk. The output_data is a tensor of shape [batch_size, seq_length_q,
-  n_state], which is the multi-head attention output. The qk is a tensor of shape [batch_size, n_head, seq_length_q,
-  seq_length_k], which is the scaled dot product attention score for each head. The output_data is computed by applying query, key, and value projections to the input data, followed by scaled dot product attention with optional masking, concatenation of the attention outputs from each head, and output projection. The qk is computed by applying query and key projections to the input data, followed by scaled dot product attention with optional masking.
+The `multihead_attention` class implements multi-head attention, a core component in transformer models that allows the model to focus on different parts of the input sequence when generating each part of the output sequence.
 
-For example:
+**Initialization Parameters**
+
+- **`n_head`** (int): Number of attention heads.
+- **`input_size`** (int, default=None): Size of the input features.
+- **`kdim`** (int, default=None): Dimension of the key vectors (defaults to `input_size` if not specified).
+- **`vdim`** (int, default=None): Dimension of the value vectors (defaults to `input_size` if not specified).
+- **`weight_initializer`** (str, default='Xavier'): Initializer for the weights.
+- **`bias_initializer`** (str, default='zeros'): Initializer for the biases.
+- **`use_bias`** (bool, default=True): Whether to use biases in the dense layers.
+- **`dtype`** (str, default='float32'): Data type of the layer parameters.
+
+**Methods**
+
+- **`__call__(self, target, source=None, mask=None)`**: Applies multi-head attention to the input data.
+
+  - **Parameters**:
+    - **`target`** (tensor): Target sequence tensor of shape `[batch_size, seq_length, input_size]`.
+    - **`source`** (tensor, default=None): Source sequence tensor of shape `[batch_size, seq_length, input_size]`. If `None`, self-attention is applied.
+    - **`mask`** (tensor, default=None): Mask tensor to apply during attention calculation.
+
+  - **Returns**: 
+    - **`output`** (tensor): Output tensor of shape `[batch_size, seq_length, input_size]`.
+    - **`attention_weights`** (tensor): Attention weights tensor of shape `[batch_size, n_head, seq_length, seq_length]`.
+
+**Example Usage**
 
 ```python
-# Create a multi-head attention layer with 64 n_state and 8 n_head
-multihead_attention_layer = multihead_attention(8, 64)
-# Apply the multi-head attention layer to a batch of input data of shape [32, 20, 64]
-input_data = tf.random.normal([32, 20, 64])
-output_data, qk = multihead_attention_layer(x=input_data)
-# The output_data will have a shape of [32, 20, 64]
-# The qk will have a shape of [32, 8, 20, 20]
+from Note import nn
+
+# Create an instance of multihead_attention
+mha_layer = nn.multihead_attention(n_head=8, input_size=128)
+
+# Generate some sample data
+target = tf.random.normal((32, 10, 128))  # Batch of 32 samples, 10 timesteps, 128 features
+
+# Apply multihead attention
+output, attention_weights = mha_layer(target)
+
+print(output.shape)  # Output shape will be (32, 10, 128)
+print(attention_weights.shape)  # Attention weights shape will be (32, 8, 10, 10)
 ```
 
 # RNN
-This module implements a simple recurrent neural network (RNN) layer, which can process the input data in a sequential manner and learn short-term dependencies. The usage of this module is as follows:
 
-- First, create an instance of the RNN class, and specify the output size, the input size, the weight initializer, the bias initializer, the activation function, the data type, the return sequence flag, and the use bias flag. The weight shape should be a list of two integers: [input_size, hidden_size]. The activation function should be a string that matches one of the keys in the activation_dict dictionary. The return sequence flag indicates whether to return the output at each time step or only at the last time step. The use bias flag indicates whether to add a bias term to the linear transformation or not.
-- Second, pass the input data as the data argument. The input data should be a tensor of shape [batch_size, seq_length, input_size], where batch_size is the number of samples in a batch, seq_length is the number of time steps in a sequence, and input_size is the dimension of the input features at each time step.
-- Last, return a tensor of shape [batch_size,
-  seq_length,
-  hidden_size] if the return sequence flag is True, or [batch_size,
-  hidden_size] if the return sequence flag is False. This is the RNN output after applying the activation function to the linear combination of the input data and the previous hidden state.
+The `RNN` class implements a simple Recurrent Neural Network (RNN) layer, which processes sequential data one timestep at a time and maintains a state that is updated at each timestep.
 
-For example:
+**Initialization Parameters**
+
+- **`output_size`** (int): Size of the output features.
+- **`input_size`** (int, default=None): Size of the input features. If not specified, it will be inferred from the input data.
+- **`weight_initializer`** (str, default='Xavier'): Initializer for the weights.
+- **`bias_initializer`** (str, default='zeros'): Initializer for the biases.
+- **`activation`** (str, default=None): Activation function to use (should be a key in `activation_dict`).
+- **`return_sequence`** (bool, default=False): Whether to return the full sequence of outputs or just the last output.
+- **`use_bias`** (bool, default=True): Whether to use biases in the RNN cell.
+- **`trainable`** (bool, default=True): Whether the layer parameters are trainable.
+- **`dtype`** (str, default='float32'): Data type of the layer parameters.
+
+**Methods**
+
+- **`__call__(self, data)`**: Applies the RNN layer to the input data.
+
+  - **Parameters**:
+    - **`data`** (tensor): Input data tensor of shape `[batch_size, timestep, input_size]`.
+
+  - **Returns**:
+    - **`output`** (tensor): Output tensor of shape `[batch_size, timestep, output_size]` if `return_sequence=True`, otherwise `[batch_size, output_size]`.
+
+**Example Usage**
 
 ```python
-# Create an RNN layer with 32 hidden units and tanh activation
-rnn_layer = RNN(32, 16, activation='tanh')
-# Apply the RNN layer to a batch of input data of shape [64, 10, 16]
-input_data = tf.random.normal([64, 10, 16])
-output_data = rnn_layer(data=input_data)
-# The output_data will have a shape of [64, 32]
+from Note import nn
+
+# Create an instance of RNN
+rnn_layer = nn.RNN(output_size=64, input_size=128, activation='tanh')
+
+# Generate some sample data
+data = tf.random.normal((32, 10, 128))  # Batch of 32 samples, 10 timesteps, 128 features
+
+# Apply the RNN layer
+output = rnn_layer(data)
+
+print(output.shape)  # Output shape will be (32, 10, 64) if return_sequence=True, otherwise (32, 64)
 ```
 
 # RNNCell
-This module implements a recurrent neural network (RNN) cell, which can process the input data and the previous state in a sequential manner and learn short-term dependencies. The usage of this module is as follows:
 
-- First, create an instance of the RNNCell class, and specify the weight shape, the weight initializer, the bias initializer, the activation function, the use bias flag, the trainable flag, and the data type. The weight shape should be a list of two integers: [input_size, output_size]. The activation function should be a string that matches one of the keys in the activation function dictionary. The use bias flag indicates whether to add a bias term to the linear transformations or not. The trainable flag indicates whether to update the parameters during training or not. The data type should be a string that represents a valid TensorFlow data type.
-- Second, pass the input data and the previous state as the data and state arguments. The input data should be a tensor of shape [batch_size, input_size], where batch_size is the number of samples in a batch and input_size is the dimension of the input features. The previous state should be a tensor of shape [batch_size,
-  output_size], where output_size is the dimension of the output state.
-- Last, return a tensor of shape [batch_size,
-  output_size], which is the output of the cell at the current time step.
+The `RNNCell` class implements a basic Recurrent Neural Network (RNN) cell, which processes a single timestep of input data and maintains a state that is updated at each step.
 
-For example:
+**Initialization Parameters**
 
-```python
-# Create an RNN cell with 32 output units and tanh activation function
-rnn_cell = RNNCell(weight_shape=[16, 32], activation='tanh')
-# Apply the RNN cell to a batch of input data of shape [64, 16] and a previous state of shape [64, 32]
-input_data = tf.random.normal([64, 16])
-prev_state = tf.random.normal([64, 32])
-output_data = rnn_cell(data=input_data,state=prev_state)
-# The output_data will have a shape of [64, 32]
-```
+- **`weight_shape`** (tuple): Shape of the weight matrix for input data.
+- **`weight_initializer`** (str, default='Xavier'): Initializer for the weights.
+- **`bias_initializer`** (str, default='zeros'): Initializer for the biases.
+- **`activation`** (str, default=None): Activation function to use (should be a key in `activation_dict`).
+- **`use_bias`** (bool, default=True): Whether to use biases in the RNN cell.
+- **`trainable`** (bool, default=True): Whether the layer parameters are trainable.
+- **`dtype`** (str, default='float32'): Data type of the layer parameters.
 
-# Transformer
-This class implements a Transformer model, which is a type of neural network that can handle sequential data, such as natural language or speech. The usage of this class is as follows:
+**Methods**
 
-- First, create an instance of the Transformer class, and specify the dimension of the input and output vectors, the number of attention heads, the number of encoder and decoder layers, and other optional parameters such as feedforward dimension, dropout probability, activation function, custom encoder and decoder submodules, layer normalization epsilon, norm first flag, bias flag, device, and data type.
-- Second, pass the source and target sequences as the src and tgt arguments. You can also specify optional masks for the source, target, and memory sequences.
-- Last, return a tensor of shape [batch_size, tgt_len, d_model], which is the output sequence generated by the Transformer model.
+- **`__call__(self, data, state)`**: Applies the RNN cell to the input data and updates the state.
 
-For example:
+  - **Parameters**:
+    - **`data`** (tensor): Input data tensor of shape `[batch_size, input_size]`.
+    - **`state`** (tensor): Previous state tensor of shape `[batch_size, output_size]`.
+
+  - **Returns**:
+    - **`output`** (tensor): Output tensor of shape `[batch_size, output_size]`.
+
+**Example Usage**
 
 ```python
-# Create a Transformer model with 512 input and output dimension, 8 attention heads,
-# 6 encoder and decoder layers, ReLU activation
-transformer = Transformer(d_model=512, nhead=8, num_encoder_layers=6,
-                          num_decoder_layers=6, activation='relu')
-# Apply the Transformer model to a batch of source and target data of shape [10, 50, 512]
-src = tf.random.normal([10, 50, 512])
-tgt = tf.random.normal([10, 50, 512])
-output = transformer(src, tgt)
-# The output will have a shape of [10, 50, 512]
-```
+from Note import nn
 
-# talking_heads_attention
-This module implements a talking heads attention mechanism, which can enhance the expressiveness and diversity of self-attention and multi-head attention. The usage of this module is as follows:
+# Create an instance of RNNCell
+rnn_cell = nn.RNNCell(weight_shape=(128, 64), activation='tanh')
 
-- First, create an instance of the talking_heads_attention class, and specify the qkv_rank, attention_axes, dropout_rate, initializer, dtype, and other optional parameters. The qkv_rank is the rank of the query, key, and value tensors. The attention_axes is a tuple of axes over which the attention is computed. The dropout_rate is the probability of dropping out attention scores. The initializer is the name of the weight initializer. The dtype is the data type of the tensors.
-- Second, pass the query_tensor, key_tensor, value_tensor, and attention_mask as arguments. You can also specify a different train_flag to indicate whether to apply dropout or not. The query_tensor, key_tensor, and value_tensor are tensors of shape [batch_size, ..., num_heads, depth]. The attention_mask is a tensor of shape [batch_size, ..., 1, 1] or [batch_size, ..., 1, key_length], where key_length is the size of the last dimension of key_tensor.
-- Last, return a tuple of (attention_output, attention_scores). The attention_output is a tensor of shape [batch_size, ..., num_heads, depth], which is the result of applying attention to value_tensor. The attention_scores is a tensor of shape [batch_size, num_heads, ..., ...], which is the normalized and projected attention scores.
+# Generate some sample data
+data = tf.random.normal((32, 128))  # Batch of 32 samples, 128 features
+state = tf.zeros((32, 64))  # Initial state of zeros
 
-For example:
+# Apply the RNN cell
+output = rnn_cell(data, state)
 
-```python
-# Create a talking heads attention layer with qkv_rank=4, attention_axes=(1,), dropout_rate=0.1
-tha = talking_heads_attention(qkv_rank=4, attention_axes=(1,), dropout_rate=0.1)
-# Apply the talking heads attention layer to a batch of query, key, and value tensors of shape [32, 64, 8, 128]
-query_tensor = tf.random.normal([32, 64, 8, 128])
-key_tensor = tf.random.normal([32, 64, 8, 128])
-value_tensor = tf.random.normal([32, 64, 8, 128])
-# The attention_mask is None by default
-attention_output, attention_scores = tha(query_tensor,
-                                                key_tensor,
-                                                value_tensor)
-# The attention_output will have a shape of [32, 64, 8, 128]
-# The attention_scores will have a shape of [32, 8, 64, 64]
+print(output.shape)  # Output shape will be (32, 64)
 ```
 
 # separable_conv1d
-This module implements a separable convolutional layer, which can apply a depthwise convolution and a pointwise convolution to an input tensor and produce a feature map. The usage of this module is as follows:
 
-- First, create an instance of the separable_conv1d class, and specify the number of output filters, the kernel size, the depth multiplier, and other optional parameters such as input size, strides, padding mode, data format, dilation rate, weight initializer, bias initializer, activation function, use bias flag, and data type.
-- Second, pass the input tensor as the data argument. The input tensor should be a three-dimensional tensor of shape [batch_size, length, channels], where batch_size is the number of samples in a batch, length is the dimension of the input sequence, and channels is the dimension of the input features.
-- Last, return a tensor of shape [batch_size, new_length, filters], where new_length is the dimension of the output sequence after applying the convolution operation, and filters is the number of output filters.
+The `separable_conv1d` class implements a 1D separable convolutional layer, which is a depthwise separable convolution that reduces the number of parameters and computation cost compared to a regular convolutional layer. This layer is often used in neural network models for processing sequential data, such as time-series or audio signals.
 
-For example:
+**Initialization Parameters**
+
+- **`filters`** (int): The number of output filters in the convolution.
+- **`kernel_size`** (int): The length of the convolution window.
+- **`depth_multiplier`** (int): The number of depthwise convolution output channels for each input channel.
+- **`input_size`** (int, default=None): The number of input channels. If not specified, it will be inferred from the input data.
+- **`strides`** (list, default=[1]): The stride length of the convolution.
+- **`padding`** (str, default='VALID'): One of `"VALID"` or `"SAME"`.
+- **`data_format`** (str, default='NHWC'): The data format, either `"NHWC"` or `"NCHW"`.
+- **`dilations`** (int or list, default=None): The dilation rate to use for dilated convolution.
+- **`weight_initializer`** (str, default='Xavier'): Initializer for the weights.
+- **`bias_initializer`** (str, default='zeros'): Initializer for the biases.
+- **`activation`** (str, default=None): Activation function to apply.
+- **`use_bias`** (bool, default=True): Whether to use a bias vector.
+- **`trainable`** (bool, default=True): Whether the layer's variables should be trainable.
+- **`dtype`** (str, default='float32'): Data type of the layer parameters.
+
+**Methods**
+
+- **`__call__(self, data)`**: Applies the separable convolution to the input data.
+
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor of shape `[batch_size, seq_length, input_size]`.
+
+  - **Returns**:
+    - **`output`** (tensor): Output tensor of shape `[batch_size, new_seq_length, filters]`, where `new_seq_length` depends on the padding and strides.
+
+**Example Usage**
 
 ```python
-# Create a separable convolution layer with 64 output filters, 5 kernel size, 2 depth multiplier
-separable_conv1d = separable_conv1d(filters=64, kernel_size=5, depth_multiplier=2,input_size=16)
-# Apply the separable convolution layer to a batch of input data of shape [32, 100, 16]
-input_data = tf.random.normal([32, 100, 16])
-output_data = separable_conv1d(input_data)
-# The output_data will have a shape of [32, 96, 64]
+from Note import nn
+
+# Create an instance of separable_conv1d
+sep_conv_layer = nn.separable_conv1d(filters=64, kernel_size=3, depth_multiplier=2, input_size=128)
+
+# Generate some sample data
+data = tf.random.normal((32, 10, 128))  # Batch of 32 samples, 10 timesteps, 128 features
+
+# Apply the separable convolution
+output = sep_conv_layer(data)
+
+print(output.shape)  # Output shape will depend on the padding and strides
 ```
 
-# separable_conv2d
-This module implements a separable convolutional layer, which can apply a depthwise convolution and a pointwise convolution to an input tensor and produce a feature map. The usage of this module is as follows:
+# Transformer
 
-- First, create an instance of the separable_conv2d class, and specify the number of output filters, the kernel size, the depth multiplier, and other optional parameters such as input size, strides, padding mode, data format, dilation rate, weight initializer, bias initializer, activation function, use bias flag, and data type.
-- Second, pass the input tensor as the data argument. The input tensor should be a four-dimensional tensor of shape [batch_size, height, width, channels], where batch_size is the number of samples in a batch, height and width are the dimensions of the input image, and channels is the dimension of the input features.
-- Last, return a tensor of shape [batch_size, new_height, new_width, filters], where new_height and new_width are the dimensions of the output image after applying the convolution operation, and filters is the number of output filters.
+The `Transformer` class implements the Transformer model, which is widely used in natural language processing tasks due to its efficiency and scalability in handling sequential data. This class combines both the encoder and decoder components of the Transformer architecture.
 
-For example:
+**Initialization Parameters**
+
+- **`d_model`** (int, default=512): The number of expected features in the input.
+- **`nhead`** (int, default=8): The number of heads in the multihead attention mechanism.
+- **`num_encoder_layers`** (int, default=6): The number of encoder layers in the Transformer.
+- **`num_decoder_layers`** (int, default=6): The number of decoder layers in the Transformer.
+- **`dim_feedforward`** (int, default=2048): The dimension of the feedforward network model.
+- **`dropout`** (float, default=0.1): The dropout value.
+- **`activation`** (function, default=tf.nn.relu): The activation function of the intermediate layer.
+- **`custom_encoder`** (optional): Custom encoder instance to override the default encoder.
+- **`custom_decoder`** (optional): Custom decoder instance to override the default decoder.
+- **`layer_norm_eps`** (float, default=1e-5): The epsilon value for layer normalization.
+- **`norm_first`** (bool, default=False): Whether to apply normalization before or after each sub-layer.
+- **`bias`** (bool, default=True): Whether to use bias in the layers.
+- **`dtype`** (str, default='float32'): Data type of the layer parameters.
+
+**Methods**
+
+- **`__call__(self, src, tgt, src_mask=None, tgt_mask=None, memory_mask=None, train_flag=True)`**: Applies the Transformer model to the input data.
+
+  - **Parameters**:
+    - **`src`** (tensor): Source sequence tensor of shape `[batch_size, src_seq_length, d_model]`.
+    - **`tgt`** (tensor): Target sequence tensor of shape `[batch_size, tgt_seq_length, d_model]`.
+    - **`src_mask`** (tensor, default=None): Optional mask for the source sequence.
+    - **`tgt_mask`** (tensor, default=None): Optional mask for the target sequence.
+    - **`memory_mask`** (tensor, default=None): Optional mask for the memory sequence.
+    - **`train_flag`** (bool, default=True): Flag indicating whether the model is in training mode.
+
+  - **Returns**:
+    - **`output`** (tensor): Output tensor of shape `[batch_size, tgt_seq_length, d_model]`.
+
+**Example Usage**
 
 ```python
-# Create a separable convolution layer with 64 output filters, 5x5 kernel size, 2 depth multiplier
-separable_conv2d = separable_conv2d(filters=64, kernel_size=[5, 5], depth_multiplier=2,input_size=3)
-# Apply the separable convolution layer to a batch of input data of shape [32, 28, 28, 3]
-input_data = tf.random.normal([32, 28, 28, 3])
-output_data = separable_conv2d(input_data)
-# The output_data will have a shape of [32, 24, 24, 64]
+from Note import nn
+
+# Create an instance of Transformer
+transformer = nn.Transformer(d_model=512, nhead=8, num_encoder_layers=6, num_decoder_layers=6)
+
+# Generate some sample data
+src = tf.random.normal((32, 10, 512))  # Batch of 32 samples, 10 source timesteps, 512 features
+tgt = tf.random.normal((32, 10, 512))  # Batch of 32 samples, 10 target timesteps, 512 features
+
+# Apply the Transformer model
+output = transformer(src, tgt)
+
+print(output.shape)  # Output shape will be (32, 10, 512)
 ```
 
 # stochastic_depth
