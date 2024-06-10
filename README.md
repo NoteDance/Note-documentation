@@ -282,225 +282,434 @@ print(output.shape)  # Output shape will depend on strides and padding
 ```
 
 # conv3d
-This module implements a 3D convolutional layer, which can apply a set of filters to an input tensor and produce a feature volume. The usage of this module is as follows:
 
-- First, create an instance of the conv3d class, and specify the number of output filters, the kernel size, and other optional parameters such as input size, activation function, weight initializer, bias initializer, use bias, strides, padding mode, data format, and dilation rate.
-- Second, pass the input tensor as the data argument. You can also specify a different dilation rate for the convolution operation.
-- Last, return a tensor of shape [batch_size, depth, height, width, filters], which is the 3D convolution output.
+The `conv3d` class implements a 3D convolutional layer, which is commonly used for volumetric data such as videos or 3D medical images.
 
-For example:
+**Initialization Parameters**
+
+- **`filters`** (int): Number of output filters in the convolution.
+- **`kernel_size`** (int or list of int): Size of the convolutional kernel. If a single integer is provided, it is used for all three dimensions.
+- **`input_size`** (int, optional): Number of input channels. If not provided, it will be inferred from the input data.
+- **`strides`** (int or list of int): Stride size for the convolution. Default is `[1, 1, 1]`.
+- **`padding`** (str): Padding type, either `'VALID'` or `'SAME'`. Default is `'VALID'`.
+- **`weight_initializer`** (str): Initializer for the weight tensor. Default is `'Xavier'`.
+- **`bias_initializer`** (str): Initializer for the bias vector. Default is `'zeros'`.
+- **`activation`** (str, optional): Activation function to use. Default is `None`.
+- **`data_format`** (str): Data format, either `'NDHWC'` or `'NCDHW'`. Default is `'NDHWC'`.
+- **`dilations`** (int or list of int, optional): Dilation rate for dilated convolution. Default is `None`.
+- **`use_bias`** (bool): Whether to use a bias vector. Default is `True`.
+- **`trainable`** (bool): Whether the layer's variables should be trainable. Default is `True`.
+- **`dtype`** (str): Data type for the layer. Default is `'float32'`.
+
+**Methods**
+
+- **`__call__(self, data)`**: Applies the 3D convolution to the input `data`.
+
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor.
+
+  - **Returns**: Output tensor after applying the 3D convolution and activation function (if specified).
+
+**Example Usage**
 
 ```python
-# Create a 3D convolution layer with 16 output filters, 2x2x2 kernel size, tanh activation
-conv3d = conv3d(filters=16, kernel_size=[2, 2, 2], input_size=10, activation='tanh')
-# Apply the 3D convolution layer to a batch of input data of shape [32, 10, 10, 10, 10]
-input_data = tf.random.normal([32, 10, 10, 10, 10])
-output_data = conv3d(input_data)
-# The output_data will have a shape of [32, 9, 9, 9, 16]
+from Note import nn
+
+# Create an instance of the conv3d layer
+conv_layer = nn.conv3d(filters=32, kernel_size=3, input_size=64, strides=2, padding='SAME', activation='relu')
+
+# Generate some sample data
+data = tf.random.normal((10, 64, 64, 64, 64))  # Batch of 10 volumetric data, 64x64x64 voxels, 64 channels
+
+# Apply the convolutional layer
+output = conv_layer(data)
+
+print(output.shape)  # Output shape will depend on strides and padding
 ```
 
 # conv3d_transpose
-This module implements a 3D transposed convolutional layer, which can apply a set of filters to an input tensor and produce a feature vector with a larger depth, height and width. The usage of this module is as follows:
 
-- First, create an instance of the conv3d_transpose class, and specify the number of output filters, the kernel size, and other optional parameters such as input size, new depth, height and width, activation function, weight initializer, bias initializer, use bias, strides, padding mode, output padding, data format, and dilation rate.
-- Second, pass the input tensor as the data argument. You can also specify a different dilation rate for the transposed convolution operation.
-- Last, return a tensor of shape [batch_size, new_depth, new_height, new_width, filters], which is the 3D transposed convolution output.
+The `conv3d_transpose` class implements a 3D transposed convolutional (also known as deconvolutional) layer, which is commonly used for upsampling volumetric data such as videos or 3D medical images.
 
-For example:
+**Initialization Parameters**
+
+- **`filters`** (int): Number of output filters in the transposed convolution.
+- **`kernel_size`** (int or list of int): Size of the transposed convolutional kernel. If a single integer is provided, it is used for all three dimensions.
+- **`input_size`** (int, optional): Number of input channels. If not provided, it will be inferred from the input data.
+- **`strides`** (int or list of int): Stride size for the transposed convolution. Default is `[1, 1, 1]`.
+- **`padding`** (str): Padding type, either `'VALID'` or `'SAME'`. Default is `'VALID'`.
+- **`output_padding`** (int or list of int, optional): Additional size added to each dimension of the output shape. Default is `None`.
+- **`weight_initializer`** (str): Initializer for the weight tensor. Default is `'Xavier'`.
+- **`bias_initializer`** (str): Initializer for the bias vector. Default is `'zeros'`.
+- **`activation`** (str, optional): Activation function to use. Default is `None`.
+- **`data_format`** (str): Data format, either `'NDHWC'` or `'NCDHW'`. Default is `'NDHWC'`.
+- **`dilations`** (int or list of int, optional): Dilation rate for dilated transposed convolution. Default is `None`.
+- **`use_bias`** (bool): Whether to use a bias vector. Default is `True`.
+- **`trainable`** (bool): Whether the layer's variables should be trainable. Default is `True`.
+- **`dtype`** (str): Data type for the layer. Default is `'float32'`.
+
+**Methods**
+
+- **`__call__(self, data)`**: Applies the 3D transposed convolution to the input `data`.
+
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor.
+
+  - **Returns**: Output tensor after applying the 3D transposed convolution and activation function (if specified).
+
+**Example Usage**
 
 ```python
-# Create a 3D transposed convolution layer with 16 output filters, 5x5x5 kernel size, relu activation
-conv3d_transpose = conv3d_transpose(filters=16, kernel_size=[5, 5, 5], input_size=100, activation='relu')
-# Apply the 3D transposed convolution layer to a batch of input data of shape [32, 24, 24, 24, 100]
-input_data = tf.random.normal([32, 24, 24, 24, 100])
-output_data = conv3d_transpose(input_data)
-# The output_data will have a shape of [32, 28, 28, 28, 16]
+from Note import nn
+
+# Create an instance of the conv3d_transpose layer
+conv_layer = nn.conv3d_transpose(filters=32, kernel_size=3, input_size=64, strides=2, padding='SAME', activation='relu')
+
+# Generate some sample data
+data = tf.random.normal((10, 16, 16, 16, 64))  # Batch of 10 volumetric data, 16x16x16 voxels, 64 channels
+
+# Apply the transposed convolutional layer
+output = conv_layer(data)
+
+print(output.shape)  # Output shape will depend on strides and padding
 ```
 
 # dense
-This module implements a dense layer, which can apply a linear transformation and an optional activation function to the input data. The usage of this module is as follows:
 
-- First, create an instance of the dense class, and specify the output size, the input size, the weight initializer, the bias initializer, the activation function, the data type, and the use bias flag. The weight shape should be a list of two integers: [input_size, output_size]. The activation function can be any callable object that takes a tensor as input and returns a tensor as output. The use bias flag indicates whether to add a bias term to the linear transformation or not.
-- Second, pass the input data as the data argument. The input data should be a tensor of shape [batch_size, input_size], where batch_size is the number of samples in a batch and input_size is the dimension of the input features.
-- Last, return a tensor of shape [batch_size,
-  output_size], which is the dense output after applying the linear transformation and the activation function.
+The `dense` class implements a fully connected layer, which is a core component of many neural networks. This layer is used to perform a linear transformation on the input data, optionally followed by an activation function.
 
-For example:
+**Initialization Parameters**
+
+- **`output_size`** (int): Number of output units (neurons) in the dense layer.
+- **`input_size`** (int, optional): Number of input units (neurons) in the dense layer. If not provided, it will be inferred from the input data.
+- **`weight_initializer`** (str): Initializer for the weight matrix. Default is `'Xavier'`.
+- **`bias_initializer`** (str): Initializer for the bias vector. Default is `'zeros'`.
+- **`activation`** (str, optional): Activation function to use. Default is `None`.
+- **`use_bias`** (bool): Whether to use a bias vector. Default is `True`.
+- **`trainable`** (bool): Whether the layer's variables should be trainable. Default is `True`.
+- **`dtype`** (str): Data type for the layer. Default is `'float32'`.
+- **`name`** (str, optional): Name for the layer. Default is `None`.
+
+**Methods**
+
+- **`__call__(self, data)`**: Applies the dense layer to the input `data`.
+
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor.
+
+  - **Returns**: Output tensor after applying the linear transformation and activation function (if specified).
+
+**Example Usage**
 
 ```python
-# Create a dense layer with 32 output units and sigmoid activation
-dense_layer = dense(32, 16, activation='sigmoid')
-# Apply the dense layer to a batch of input data of shape [64, 16]
-input_data = tf.random.normal([64, 16])
-output_data = dense_layer(data=input_data)
-# The output_data will have a shape of [64, 32]
+from Note import nn
+
+# Create an instance of the dense layer
+dense_layer = nn.dense(output_size=64, input_size=128, activation='relu')
+
+# Generate some sample data
+data = tf.random.normal((10, 128))  # Batch of 10 samples, each with 128 features
+
+# Apply the dense layer
+output = dense_layer(data)
+
+print(output.shape)  # Output shape will be (10, 64)
 ```
 
 # depthwise_conv1d
-This module implements a depthwise convolutional layer, which can apply a set of filters to each input channel and produce a feature vector. The usage of this module is as follows:
 
-- First, create an instance of the depthwise_conv1d class, and specify the kernel size, the depth multiplier, and other optional parameters such as input size, activation function, weight initializer, bias initializer, use bias, strides, padding mode, data format, and dilation rate.
-- Second, pass the input tensor as the data argument. You can also specify a different dilation rate for the convolution operation.
-- Last, return a tensor of shape [batch_size, length, depth_multiplier * input_channels], which is the depthwise convolution output.
+The `depthwise_conv1d` class implements a depthwise 1D convolutional layer, which applies a single convolutional filter per input channel (channel-wise convolution), followed by an optional activation function.
 
-For example:
+**Initialization Parameters**
+
+- **`kernel_size`** (int): Size of the convolutional kernel.
+- **`depth_multiplier`** (int): Multiplier for the depth of the output tensor. Default is `1`.
+- **`input_size`** (int, optional): Number of input channels. If not provided, it will be inferred from the input data.
+- **`strides`** (int or list of int): Stride of the convolution. Default is `1`.
+- **`padding`** (str): Padding algorithm to use. Default is `'VALID'`.
+- **`weight_initializer`** (str): Initializer for the weight tensor. Default is `'Xavier'`.
+- **`bias_initializer`** (str): Initializer for the bias vector. Default is `'zeros'`.
+- **`activation`** (str, optional): Activation function to use. Default is `None`.
+- **`data_format`** (str): Data format of the input and output data. Default is `'NHWC'`.
+- **`dilations`** (int or list of int, optional): Dilation rate for the convolution. Default is `None`.
+- **`use_bias`** (bool): Whether to use a bias vector. Default is `True`.
+- **`trainable`** (bool): Whether the layer's variables should be trainable. Default is `True`.
+- **`dtype`** (str): Data type for the layer. Default is `'float32'`.
+
+**Methods**
+
+- **`__call__(self, data)`**: Applies the depthwise 1D convolutional layer to the input `data`.
+
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor.
+
+  - **Returns**: Output tensor after applying the depthwise convolution and activation function (if specified).
+
+**Example Usage**
 
 ```python
-# Create a depthwise convolution layer with 3 kernel size, 2 depth multiplier, relu activation
-depthwise_conv1d = depthwise_conv1d(kernel_size=3, depth_multiplier=2, input_size=64, activation='relu')
-# Apply the depthwise convolution layer to a batch of input data of shape [10, 100, 64]
-input_data = tf.random.normal([10, 100, 64])
-output_data = depthwise_conv1d(input_data)
-# The output_data will have a shape of [10, 98, 128]
+from Note import nn
+
+# Create an instance of the depthwise_conv1d layer
+depthwise_layer = nn.depthwise_conv1d(kernel_size=3, input_size=128, depth_multiplier=2, activation='relu')
+
+# Generate some sample data
+data = tf.random.normal((10, 128))  # Batch of 10 samples, each with 128 features
+
+# Apply the depthwise 1D convolutional layer
+output = depthwise_layer(data)
+
+print(output.shape)  # Output shape will depend on the stride, padding, and depth_multiplier
 ```
 
 # depthwise_conv2d
-This module implements a depthwise convolutional layer, which can apply a set of filters to each input channel and produce a feature map. The usage of this module is as follows:
 
-- First, create an instance of the depthwise_conv2d class, and specify the depth multiplier, the kernel size, and other optional parameters such as input size, activation function, weight initializer, bias initializer, use bias, strides, padding mode, data format, and dilation rate.
-- Second, pass the input tensor as the data argument. You can also specify a different dilation rate for the convolution operation.
-- Last, return a tensor of shape [batch_size, height, width, depth_multiplier * input_channels], which is the depthwise convolution output.
+The `depthwise_conv2d` class implements a depthwise 2D convolutional layer, which applies a single convolutional filter per input channel (channel-wise convolution), followed by an optional activation function.
 
-For example:
+**Initialization Parameters**
+
+- **`kernel_size`** (int or list of int): Size of the convolutional kernel. If an integer is provided, the same value will be used for both height and width.
+- **`depth_multiplier`** (int): Multiplier for the depth of the output tensor. Default is `1`.
+- **`input_size`** (int, optional): Number of input channels. If not provided, it will be inferred from the input data.
+- **`strides`** (int or list of int): Stride of the convolution. Default is `1`.
+- **`padding`** (str or list of int): Padding algorithm to use. Can be a string (`'VALID'` or `'SAME'`) or a list of integers for custom padding. Default is `'VALID'`.
+- **`weight_initializer`** (str): Initializer for the weight tensor. Default is `'Xavier'`.
+- **`bias_initializer`** (str): Initializer for the bias vector. Default is `'zeros'`.
+- **`activation`** (str, optional): Activation function to use. Default is `None`.
+- **`data_format`** (str): Data format of the input and output data. Default is `'NHWC'`.
+- **`dilations`** (int or list of int, optional): Dilation rate for the convolution. Default is `None`.
+- **`use_bias`** (bool): Whether to use a bias vector. Default is `True`.
+- **`trainable`** (bool): Whether the layer's variables should be trainable. Default is `True`.
+- **`dtype`** (str): Data type for the layer. Default is `'float32'`.
+
+**Methods**
+
+- **`__call__(self, data)`**: Applies the depthwise 2D convolutional layer to the input `data`.
+
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor.
+
+  - **Returns**: Output tensor after applying the depthwise convolution and activation function (if specified).
+
+**Example Usage**
 
 ```python
-# Create a depthwise convolution layer with 2 depth multiplier, 3x3 kernel size, softmax activation
-depthwise_conv2d = depthwise_conv2d(kernel_size=[3, 3], depth_multiplier=2, input_size=3, activation='softmax')
-# Apply the depthwise convolution layer to a batch of input data of shape [64, 28, 28, 3]
-input_data = tf.random.normal([64, 28, 28, 3])
-output_data = depthwise_conv2d(input_data)
-# The output_data will have a shape of [64, 26, 26, 6]
+from Note import nn
+
+# Create an instance of the depthwise_conv2d layer
+depthwise_layer = nn.depthwise_conv2d(kernel_size=3, input_size=128, depth_multiplier=2, activation='relu')
+
+# Generate some sample data
+data = tf.random.normal((10, 64, 64, 128))  # Batch of 10 samples, each with 64x64 size and 128 channels
+
+# Apply the depthwise 2D convolutional layer
+output = depthwise_layer(data)
+
+print(output.shape)  # Output shape will depend on the stride, padding, and depth_multiplier
 ```
 
 # dropout
-This module implements a dropout layer, which can randomly drop out some units of an input tensor and scale the remaining units by a factor of 1/(1-rate). The usage of this module is as follows:
 
-- First, create an instance of the dropout class, and specify the dropout rate, and other optional parameters such as noise shape, seed, and data type.
-- Second, pass the input tensor as the data argument. You can also specify a boolean flag to indicate whether the dropout layer is in training mode or inference mode.
-- Last, return a tensor of the same shape as the input tensor, which is the dropout output.
+The `dropout` class applies dropout to the input data, randomly dropping elements with a specified probability during training.
 
-For example:
+**Initialization Parameters**
 
-```python
-# Create a dropout layer with 0.5 dropout rate
-dropout = dropout(rate=0.5)
-# Apply the dropout layer to a batch of input data of shape [32, 100]
-input_data = tf.random.normal([32, 100])
-output_data = dropout(input_data)
-# The output_data will have a shape of [32, 100], and some elements will be zeroed out
-```
+- **`rate`** (float): The fraction of input units to drop, between 0 and 1.
+- **`noise_shape`** (tensor, optional): A 1-D tensor representing the shape of the binary dropout mask that will be multiplied with the input. If `None`, the mask will have the same shape as the input.
+- **`seed`** (int, optional): A random seed to ensure reproducibility.
 
-# FAVOR_attention
-This module implements the FAVOR attention mechanism, which is a fast and scalable way to compute attention using positive orthogonal random features. The usage of this module is as follows:
+**Methods**
 
-- First, create an instance of the FAVOR_attention class, and specify the key dimension, and other optional parameters such as orthonormal, causal, m, redraw, h, f, randomizer, eps, kernel_eps, and dtype.
-- Second, pass the keys, values, and queries tensors as arguments.
-- Last, return a tensor of shape [batch_size, queries_locations, values_dimension], which is the FAVOR attention output.
+- **`__call__(self, data, train_flag=None)`**: Applies dropout to the input `data`.
 
-For example:
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor.
+    - **`train_flag`** (bool, optional): If `True`, dropout is applied; if `False`, the input is returned unchanged. If `None`, the layer uses its internal `train_flag` attribute. Default is `None`.
+
+  - **Returns**: The tensor after applying dropout during training or the original tensor during inference.
+
+**Example Usage**
 
 ```python
-# Create a FAVOR attention layer with 16 key dimension, orthonormal features, and ReLU activation
-favor = FAVOR_attention(
-    key_dim=128,
-    orthonormal=True,
-    causal=False,
-    m=64,
-    redraw=False,
-    h=lambda x: math.sqrt(64),
-    f=[tf.nn.relu],
-    randomizer=tf.random.normal,
-    eps=0.0,
-    kernel_eps=0.001,
-    dtype='float32'
-)
-# Apply the FAVOR attention layer to a batch of keys, values, and queries of shape [4, 128, 10], [4, 32, 10], and [4, 128, 8] respectively
-keys = tf.random.normal([4, 128, 10])
-values = tf.random.normal([4, 32, 10])
-queries = tf.random.normal([4, 128, 8])
-output = favor(keys, values, queries)
-# The output will have a shape of [4, 32, 8]
+from Note import nn
+
+# Create an instance of the dropout layer
+dropout_layer = nn.dropout(rate=0.5)
+
+# Generate some sample data
+data = tf.random.normal((10, 64))  # Batch of 10 samples, each with 64 features
+
+# Apply the dropout layer
+output = dropout_layer(data, train_flag=True)
+
+print(output.shape)  # Output shape will be the same as the input shape
 ```
 
 # group_norm
-This module implements a group normalization layer, which is an alternative to batch normalization for deep learning models. Group normalization divides the channel dimension into groups and normalizes each group separately, reducing the dependency of model performance on the batch size. This method was proposed by Wu and He in 2018.
 
-The usage of this module is as follows:
+The `group_norm` class implements Group Normalization, a technique that divides channels into groups and normalizes each group independently. This can be more stable than batch normalization for small batch sizes.
 
-- First, create an instance of the group_normalization class, and specify the number of groups, the axis to normalize, and other optional parameters such as input size, epsilon, center, scale, beta initializer, gamma initializer, mask, and dtype.
-- Second, pass the input tensor as the data argument. The output method will apply group normalization to the input tensor and return a normalized tensor of the same shape.
+**Initialization Parameters**
 
-For example:
+- **`groups`** (int, default=32): Number of groups for normalization. Must be a divisor of the number of channels.
+- **`input_size`** (int, optional): Size of the input dimension. If not provided, it will be inferred from the input data.
+- **`axis`** (int or list/tuple, default=-1): Axis or axes to normalize across. Typically the feature axis.
+- **`epsilon`** (float, default=1e-3): Small constant to avoid division by zero.
+- **`center`** (bool, default=True): If `True`, add offset `beta`.
+- **`scale`** (bool, default=True): If `True`, multiply by `gamma`.
+- **`beta_initializer`** (str, default="zeros"): Initializer for the beta parameter.
+- **`gamma_initializer`** (str, default="ones"): Initializer for the gamma parameter.
+- **`mask`** (tensor, optional): Mask tensor for weighted mean and variance calculation.
+- **`dtype`** (str, default='float32'): Data type for the layer parameters.
+
+**Methods**
+
+- **`__call__(self, data)`**: Applies group normalization to the input `data`.
+
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor of any rank.
+
+  - **Returns**: The normalized tensor with the same shape as the input.
+
+**Example Usage**
 
 ```python
-# Create a group normalization layer with 32 groups and axis -1
-gn = group_normalization(input_size=256, groups=32, axis=-1)
-# Apply the group normalization layer to a batch of input data of shape [64, 128, 256]
-input_data = tf.random.normal([64, 128, 256])
-output_data = gn(input_data)
-# The output_data will have a shape of [64, 128, 256]
+from Note import nn
+
+# Create an instance of the group normalization layer
+group_norm_layer = nn.group_norm(groups=32, input_size=64)
+
+# Generate some sample data
+data = tf.random.normal((10, 64))  # Batch of 10 samples, each with 64 features
+
+# Apply the group normalization layer
+output = group_norm_layer(data)
+
+print(output.shape)  # Output shape will be the same as the input shape
 ```
 
 # GRU
-This module implements a gated recurrent unit (GRU) layer, which can process the input data in a sequential manner and learn long-term dependencies. The usage of this module is as follows:
 
-- First, create an instance of the GRU class, and specify the output size, the input size, the weight initializer, the bias initializer, the data type, the return sequence flag, the use bias flag, and the activation functions. The weight shape should be a list of two integers: [input_size, hidden_size]. The return sequence flag indicates whether to return the output at each time step or only at the last time step. The use bias flag indicates whether to add a bias term to the linear transformations or not. The activation functions should be callable objects that take a tensor as input and return a tensor as output.
-- Second, pass the input data as the data argument. The input data should be a tensor of shape [batch_size, seq_length, input_size], where batch_size is the number of samples in a batch, seq_length is the number of time steps in a sequence, and input_size is the dimension of the input features at each time step.
-- Last, return a tensor of shape [batch_size,
-  seq_length,
-  hidden_size] if the return sequence flag is True, or [batch_size,
-  hidden_size] if the return sequence flag is False. This is the GRU output after applying the update gate and reset gate to the input data and the previous hidden state.
+The `GRU` class implements a Gated Recurrent Unit (GRU) layer, a type of recurrent neural network layer designed to handle sequential data. GRUs are known for their efficiency in learning and processing long sequences.
 
-For example:
+**Initialization Parameters**
+
+- **`output_size`** (int): Size of the output dimension.
+- **`input_size`** (int, optional): Size of the input dimension. If not provided, it will be inferred from the input data.
+- **`weight_initializer`** (str, default='Xavier'): Initializer for the weight matrices.
+- **`bias_initializer`** (str, default='zeros'): Initializer for the bias vectors.
+- **`return_sequence`** (bool, default=False): If `True`, returns the full sequence of outputs. If `False`, returns only the final output.
+- **`use_bias`** (bool, default=True): If `True`, includes bias terms in the calculations.
+- **`trainable`** (bool, default=True): If `True`, the layer's parameters will be trainable.
+- **`dtype`** (str, default='float32'): Data type for the layer's parameters.
+
+**Methods**
+
+- **`__call__(self, data)`**: Applies the GRU layer to the input `data`.
+
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor of shape `[batch_size, timesteps, input_size]`.
+
+  - **Returns**: 
+    - If `return_sequence` is `True`, returns a tensor of shape `[batch_size, timesteps, output_size]`.
+    - If `return_sequence` is `False`, returns a tensor of shape `[batch_size, output_size]`.
+
+**Example Usage**
 
 ```python
-# Create a GRU layer with 32 hidden units and tanh activation
-gru_layer = GRU(32, 16)
-# Apply the GRU layer to a batch of input data of shape [64, 10, 16]
-input_data = tf.random.normal([64, 10, 16])
-output_data = gru_layer(data=input_data)
-# The output_data will have a shape of [64, 32]
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the GRU layer
+gru_layer = nn.GRU(output_size=64, input_size=128, return_sequence=True)
+
+# Generate some sample data
+data = tf.random.normal((32, 10, 128))  # Batch of 32 sequences, each with 10 timesteps, each timestep with 128 features
+
+# Apply the GRU layer
+output = gru_layer(data)
+
+print(output.shape)  # Output shape will be (32, 10, 64) if return_sequence is True
 ```
 
 # GRUCell
-This module implements a gated recurrent unit (GRU) cell, which can process the input data and the previous state in a sequential manner and learn long-term dependencies. The usage of this module is as follows:
 
-- First, create an instance of the GRUCell class, and specify the weight shape, the weight initializer, the bias initializer, the data type, the use bias flag, and the activation functions. The weight shape should be a list of two integers: [input_size, hidden_size]. The activation functions should be callable objects that take a tensor as input and return a tensor as output. The use bias flag indicates whether to add a bias term to the linear transformations or not.
-- Second, pass the input data and the previous state as the data and state arguments. The input data should be a tensor of shape [batch_size, input_size], where batch_size is the number of samples in a batch and input_size is the dimension of the input features. The previous state should be a tensor of shape [batch_size,
-  hidden_size], where hidden_size is the dimension of the hidden state.
-- Last, return a tuple of two tensors: output and new_state. The output is a tensor of shape [batch_size,
-  hidden_size], which is the output of the cell at the current time step. The new_state is a tensor of shape [batch_size,
-  hidden_size], which is the updated hidden state for the next time step.
+The `GRUCell` class implements a single Gated Recurrent Unit (GRU) cell, a building block for recurrent neural networks designed to handle sequential data. GRU cells are efficient in learning and processing long sequences by controlling the flow of information with reset and update gates.
 
-For example:
+**Initialization Parameters**
+
+- **`weight_shape`** (tuple): Shape of the weight matrix, typically `[input_size + output_size, output_size]`.
+- **`weight_initializer`** (str, default='Xavier'): Initializer for the weight matrix.
+- **`bias_initializer`** (str, default='zeros'): Initializer for the bias vector.
+- **`use_bias`** (bool, default=True): If `True`, includes bias terms in the calculations.
+- **`trainable`** (bool, default=True): If `True`, the cell's parameters will be trainable.
+- **`dtype`** (str, default='float32'): Data type for the cell's parameters.
+
+**Methods**
+
+- **`__call__(self, data, state)`**: Applies the GRU cell to the input `data` and previous `state`.
+
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor of shape `[batch_size, input_size]`.
+    - **`state`** (tensor): Previous hidden state tensor of shape `[batch_size, output_size]`.
+
+  - **Returns**: 
+    - **`output`** (tensor): Output tensor of shape `[batch_size, output_size]`, same as the new hidden state.
+    - **`h_new`** (tensor): New hidden state tensor of shape `[batch_size, output_size]`.
+
+**Example Usage**
 
 ```python
-# Create a GRU cell with 32 hidden units
-gru_cell = GRUCell(weight_shape=[16, 32])
-# Apply the GRU cell to a batch of input data of shape [64, 16] and a previous state of shape [64, 32]
-input_data = tf.random.normal([64, 16])
-prev_state = tf.random.normal([64, 32])
-output_data, new_state = gru_cell(data=input_data,state=prev_state)
-# The output_data will have a shape of [64, 32]
-# The new_state will have a shape of [64, 32]
+from Note import nn
+
+# Create an instance of the GRUCell
+gru_cell = nn.GRUCell(weight_shape=(128, 64))
+
+# Generate some sample data
+data = tf.random.normal((32, 128))  # Batch of 32 samples, each with 128 features
+state = tf.zeros((32, 64))          # Initial state with 32 samples, each with 64 features
+
+# Apply the GRU cell
+output, new_state = gru_cell(data, state)
+
+print(output.shape)  # Output shape will be (32, 64)
+print(new_state.shape)  # New state shape will be (32, 64)
 ```
 
 # identity
-This module implements an identity layer, which can return the input tensor as it is without any modification. The usage of this module is as follows:
 
-- First, create an instance of the identity class, and optionally specify the input size. If the input size is given, the output size will be the same as the input size.
-- Second, pass the input tensor as the data argument.
-- Last, return a tensor of the same shape and type as the input tensor.
+The `identity` class implements an identity layer, which is a simple layer that outputs the input data unchanged. This layer can be useful in various neural network architectures for maintaining the shape of data or as a placeholder.
 
-For example:
+**Initialization Parameters**
+
+- **`input_size`** (int, optional): Size of the input. If provided, it will set the `output_size` to be the same as the `input_size`.
+
+**Methods**
+
+- **`__call__(self, data)`**: Returns the input data unchanged.
+
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor of any shape.
+    
+  - **Returns**: 
+    - **`data`** (tensor): Output tensor, which is identical to the input tensor.
+
+**Example Usage**
 
 ```python
-# Create an identity layer with input size 100
-identity = identity(input_size=100)
-# Apply the identity layer to a batch of input data of shape [32, 96, 100]
-input_data = tf.random.normal([32, 96, 100])
-output_data = identity(input_data)
-# The output_data will have the same shape and type as the input_data
+from Note import nn
+
+# Create an instance of the identity layer
+identity_layer = nn.identity(input_size=128)
+
+# Generate some sample data
+data = tf.random.normal((32, 128))  # Batch of 32 samples, each with 128 features
+
+# Apply the identity layer
+output = identity_layer(data)
+
+print(output.shape)  # Output shape will be (32, 128), same as input shape
+print(tf.reduce_all(tf.equal(data, output)))  # Should print True, indicating the output is the same as input
 ```
 
 # LSTM
