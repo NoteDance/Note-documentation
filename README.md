@@ -1,3 +1,225 @@
+# adaptive_avg_pooling1d
+
+The `adaptive_avg_pooling1d` class implements a 1D adaptive average pooling layer. This layer reduces the input tensor along the specified dimension to a new size defined by `output_size`.
+
+**Initialization Parameters**
+
+- **`output_size`** (int or iterable of int): Specifies the desired size of the output features. This can be an integer or a list/tuple of a single integer.
+- **`data_format`** (str, default='channels_last'): Specifies the ordering of the dimensions in the input data. `channels_last` corresponds to inputs with shape `(batch, steps, features)` while `channels_first` corresponds to inputs with shape `(batch, features, steps)`.
+
+**Methods**
+
+- **`__call__(self, data)`**: Applies the adaptive average pooling operation to the input data.
+
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor to be pooled.
+  
+  - **Returns**:
+    - **`out_vect`** (tensor): Output tensor after adaptive average pooling.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of adaptive_avg_pooling1d
+pooling_layer = adaptive_avg_pooling1d(output_size=4)
+
+# Generate some sample data
+data = tf.random.normal((32, 16, 8))  # Batch of 32 samples, 16 timesteps, 8 features
+
+# Apply adaptive average pooling
+output = pooling_layer(data)
+
+print(output.shape)  # Output shape will be (32, 4, 8) for 'channels_last' data format
+```
+
+# adaptive_avg_pooling2d
+
+The `adaptive_avg_pooling2d` class implements a 2D adaptive average pooling layer. This layer reduces the input tensor along the specified dimensions to a new size defined by `output_size`.
+
+**Initialization Parameters**
+
+- **`output_size`** (int or iterable of int): Specifies the desired size of the output features as (pooled_rows, pooled_cols). This can be an integer or a list/tuple of two integers.
+- **`data_format`** (str, default='channels_last'): Specifies the ordering of the dimensions in the input data. `channels_last` corresponds to inputs with shape `(batch, height, width, channels)` while `channels_first` corresponds to inputs with shape `(batch, channels, height, width)`.
+
+**Methods**
+
+- **`__call__(self, data)`**: Applies the adaptive average pooling operation to the input data.
+
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor to be pooled.
+  
+  - **Returns**:
+    - **`out_vect`** (tensor): Output tensor after adaptive average pooling.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of adaptive_avg_pooling2d
+pooling_layer = nn.adaptive_avg_pooling2d(output_size=(4, 4))
+
+# Generate some sample data
+data = tf.random.normal((32, 16, 16, 8))  # Batch of 32 samples, 16x16 spatial dimensions, 8 channels
+
+# Apply adaptive average pooling
+output = pooling_layer(data)
+
+print(output.shape)  # Output shape will be (32, 4, 4, 8) for 'channels_last' data format
+```
+
+# adaptive_avg_pooling3d
+
+The `adaptive_avg_pooling3d` class implements a 3D adaptive average pooling layer. This layer reduces the input tensor along the specified dimensions to a new size defined by `output_size`.
+
+**Initialization Parameters**
+
+- **`output_size`** (int or iterable of int): Specifies the desired size of the output features as (pooled_dim1, pooled_dim2, pooled_dim3). This can be an integer or a list/tuple of three integers.
+- **`data_format`** (str, default='channels_last'): Specifies the ordering of the dimensions in the input data. `channels_last` corresponds to inputs with shape `(batch, spatial_dim1, spatial_dim2, spatial_dim3, channels)` while `channels_first` corresponds to inputs with shape `(batch, channels, spatial_dim1, spatial_dim2, spatial_dim3)`.
+
+**Methods**
+
+- **`__call__(self, data)`**: Applies the adaptive average pooling operation to the input data.
+
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor to be pooled.
+  
+  - **Returns**:
+    - **`out_vect`** (tensor): Output tensor after adaptive average pooling.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of adaptive_avg_pooling3d
+pooling_layer = nn.adaptive_avg_pooling3d(output_size=(4, 4, 4))
+
+# Generate some sample data
+data = tf.random.normal((32, 16, 16, 16, 8))  # Batch of 32 samples, 16x16x16 spatial dimensions, 8 channels
+
+# Apply adaptive average pooling
+output = pooling_layer(data)
+
+print(output.shape)  # Output shape will be (32, 4, 4, 4, 8) for 'channels_last' data format
+```
+
+# adaptive_max_pooling1d
+
+The `adaptive_max_pooling1d` class implements a 1D adaptive max pooling layer. This layer reduces the input tensor along the specified dimension to a new size defined by `output_size`.
+
+**Initialization Parameters**
+
+- **`output_size`** (int or iterable of int): Specifies the desired size of the output features as a single integer. This can be an integer or a list/tuple containing a single integer.
+- **`data_format`** (str, default='channels_last'): Specifies the ordering of the dimensions in the input data. `channels_last` corresponds to inputs with shape `(batch, steps, features)` while `channels_first` corresponds to inputs with shape `(batch, features, steps)`.
+
+**Methods**
+
+- **`__call__(self, data)`**: Applies the adaptive max pooling operation to the input data.
+
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor to be pooled.
+  
+  - **Returns**:
+    - **`out_vect`** (tensor): Output tensor after adaptive max pooling.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of adaptive_max_pooling1d
+pooling_layer = nn.adaptive_max_pooling1d(output_size=4)
+
+# Generate some sample data
+data = tf.random.normal((32, 16, 8))  # Batch of 32 samples, 16 steps, 8 features
+
+# Apply adaptive max pooling
+output = pooling_layer(data)
+
+print(output.shape)  # Output shape will be (32, 4, 8) for 'channels_last' data format
+```
+
+# adaptive_max_pooling2d
+
+The `adaptive_max_pooling2d` class implements a 2D adaptive max pooling layer. This layer reduces the input tensor along the specified dimensions to a new size defined by `output_size`.
+
+**Initialization Parameters**
+
+- **`output_size`** (int or iterable of int): Specifies the desired size of the output features as two integers, representing the number of pooled rows and columns. This can be an integer or a list/tuple containing two integers.
+- **`data_format`** (str, default='channels_last'): Specifies the ordering of the dimensions in the input data. `channels_last` corresponds to inputs with shape `(batch, height, width, channels)` while `channels_first` corresponds to inputs with shape `(batch, channels, height, width)`.
+
+**Methods**
+
+- **`__call__(self, data)`**: Applies the adaptive max pooling operation to the input data.
+
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor to be pooled.
+  
+  - **Returns**:
+    - **`out_vect`** (tensor): Output tensor after adaptive max pooling.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of adaptive_max_pooling2d
+pooling_layer = adaptive_max_pooling2d(output_size=(4, 4))
+
+# Generate some sample data
+data = tf.random.normal((32, 16, 16, 8))  # Batch of 32 samples, 16x16 spatial dimensions, 8 channels
+
+# Apply adaptive max pooling
+output = pooling_layer(data)
+
+print(output.shape)  # Output shape will be (32, 4, 4, 8) for 'channels_last' data format
+```
+
+# adaptive_max_pooling3d
+
+The `adaptive_max_pooling3d` class implements a 3D adaptive max pooling layer. This layer reduces the input tensor along the specified dimensions to a new size defined by `output_size`.
+
+**Initialization Parameters**
+
+- **`output_size`** (int or iterable of int): Specifies the desired size of the output features as three integers, representing the number of pooled dimensions. This can be an integer or a list/tuple containing three integers.
+- **`data_format`** (str, default='channels_last'): Specifies the ordering of the dimensions in the input data. `channels_last` corresponds to inputs with shape `(batch, spatial_dim1, spatial_dim2, spatial_dim3, channels)` while `channels_first` corresponds to inputs with shape `(batch, channels, spatial_dim1, spatial_dim2, spatial_dim3)`.
+
+**Methods**
+
+- **`__call__(self, data)`**: Applies the adaptive max pooling operation to the input data.
+
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor to be pooled.
+  
+  - **Returns**:
+    - **`out_vect`** (tensor): Output tensor after adaptive max pooling.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of adaptive_max_pooling3d
+pooling_layer = nn.adaptive_max_pooling3d(output_size=(4, 4, 4))
+
+# Generate some sample data
+data = tf.random.normal((32, 16, 16, 16, 8))  # Batch of 32 samples, 16x16x16 spatial dimensions, 8 channels
+
+# Apply adaptive max pooling
+output = pooling_layer(data)
+
+print(output.shape)  # Output shape will be (32, 4, 4, 4, 8) for 'channels_last' data format
+```
+
 # attention
 
 This class implements an attention mechanism for neural networks, supporting both dot-product and concatenation-based attention scoring methods. It also allows for optional scaling of attention scores.
@@ -32,6 +254,7 @@ Returns:
 **Example Usage**
 
 ```python
+import tensorflow as tf
 from Note import nn
 
 # Instantiate the attention class
@@ -81,6 +304,7 @@ The `batch_norm` class implements batch normalization, which helps to stabilize 
 **Example Usage**
 
 ```python
+import tensorflow as tf
 from Note import nn
 
 # Create an instance of the batch normalization layer
@@ -126,6 +350,7 @@ The `conv1d` class implements a 1D convolutional layer, which is commonly used i
 **Example Usage**
 
 ```python
+import tensorflow as tf
 from Note import nn
 
 # Create an instance of the conv1d layer
@@ -173,6 +398,7 @@ The `conv1d_transpose` class implements a 1D transposed convolutional layer, oft
 **Example Usage**
 
 ```python
+import tensorflow as tf
 from Note import nn
 
 # Create an instance of the conv1d_transpose layer
@@ -220,6 +446,7 @@ The `conv2d` class implements a 2D convolutional layer, which is commonly used i
 **Example Usage**
 
 ```python
+import tensorflow as tf
 from Note import nn
 
 # Create an instance of the conv2d layer
@@ -267,6 +494,7 @@ The `conv2d_transpose` class implements a 2D transposed convolutional layer, whi
 **Example Usage**
 
 ```python
+import tensorflow as tf
 from Note import nn
 
 # Create an instance of the conv2d_transpose layer
@@ -313,6 +541,7 @@ The `conv3d` class implements a 3D convolutional layer, which is commonly used f
 **Example Usage**
 
 ```python
+import tensorflow as tf
 from Note import nn
 
 # Create an instance of the conv3d layer
@@ -360,6 +589,7 @@ The `conv3d_transpose` class implements a 3D transposed convolutional (also know
 **Example Usage**
 
 ```python
+import tensorflow as tf
 from Note import nn
 
 # Create an instance of the conv3d_transpose layer
@@ -402,6 +632,7 @@ The `dense` class implements a fully connected layer, which is a core component 
 **Example Usage**
 
 ```python
+import tensorflow as tf
 from Note import nn
 
 # Create an instance of the dense layer
@@ -448,6 +679,7 @@ The `depthwise_conv1d` class implements a depthwise 1D convolutional layer, whic
 **Example Usage**
 
 ```python
+import tensorflow as tf
 from Note import nn
 
 # Create an instance of the depthwise_conv1d layer
@@ -494,6 +726,7 @@ The `depthwise_conv2d` class implements a depthwise 2D convolutional layer, whic
 **Example Usage**
 
 ```python
+import tensorflow as tf
 from Note import nn
 
 # Create an instance of the depthwise_conv2d layer
@@ -531,6 +764,7 @@ The `dropout` class applies dropout to the input data, randomly dropping element
 **Example Usage**
 
 ```python
+import tensorflow as tf
 from Note import nn
 
 # Create an instance of the dropout layer
@@ -574,6 +808,7 @@ The `group_norm` class implements Group Normalization, a technique that divides 
 **Example Usage**
 
 ```python
+import tensorflow as tf
 from Note import nn
 
 # Create an instance of the group normalization layer
@@ -660,6 +895,7 @@ The `GRUCell` class implements a single Gated Recurrent Unit (GRU) cell, a build
 **Example Usage**
 
 ```python
+import tensorflow as tf
 from Note import nn
 
 # Create an instance of the GRUCell
@@ -697,6 +933,7 @@ The `identity` class implements an identity layer, which is a simple layer that 
 **Example Usage**
 
 ```python
+import tensorflow as tf
 from Note import nn
 
 # Create an instance of the identity layer
@@ -740,6 +977,7 @@ The `LSTM` class implements a long short-term memory (LSTM) layer, which is a ty
 **Example Usage**
 
 ```python
+import tensorflow as tf
 from Note import nn
 
 # Create an instance of the LSTM layer
@@ -782,6 +1020,7 @@ The `LSTMCell` class implements a long short-term memory (LSTM) cell, a fundamen
 **Example Usage**
 
 ```python
+import tensorflow as tf
 from Note import nn
 
 # Define input size and hidden size
@@ -832,6 +1071,7 @@ The `layer_norm` class implements layer normalization, a technique used to norma
 **Example Usage**
 
 ```python
+import tensorflow as tf
 from Note import nn
 
 # Create an instance of layer_norm
@@ -877,6 +1117,7 @@ The `multihead_attention` class implements multi-head attention, a core componen
 **Example Usage**
 
 ```python
+import tensorflow as tf
 from Note import nn
 
 # Create an instance of multihead_attention
@@ -921,6 +1162,7 @@ The `RNN` class implements a simple Recurrent Neural Network (RNN) layer, which 
 **Example Usage**
 
 ```python
+import tensorflow as tf
 from Note import nn
 
 # Create an instance of RNN
@@ -963,6 +1205,7 @@ The `RNNCell` class implements a basic Recurrent Neural Network (RNN) cell, whic
 **Example Usage**
 
 ```python
+import tensorflow as tf
 from Note import nn
 
 # Create an instance of RNNCell
@@ -1012,6 +1255,7 @@ The `separable_conv1d` class implements a 1D separable convolutional layer, whic
 **Example Usage**
 
 ```python
+import tensorflow as tf
 from Note import nn
 
 # Create an instance of separable_conv1d
@@ -1024,6 +1268,43 @@ data = tf.random.normal((32, 10, 128))  # Batch of 32 samples, 10 timesteps, 128
 output = sep_conv_layer(data)
 
 print(output.shape)  # Output shape will depend on the padding and strides
+```
+
+# stochastic_depth
+
+The `stochastic_depth` class implements a layer that randomly drops entire paths (blocks of layers) during training, helping to regularize the model and prevent overfitting. This technique is also known as DropPath.
+
+**Initialization Parameters**
+
+- **`drop_path_rate`** (float): The probability of dropping a path. Must be between 0 and 1.
+
+**Methods**
+
+- **`__call__(self, x, train_flag=None)`**: Applies stochastic depth to the input tensor during training.
+
+  - **Parameters**:
+    - **`x`** (tensor): Input tensor.
+    - **`train_flag`** (bool, default=None): Whether to apply stochastic depth (drop paths). If `None`, uses the internal training flag.
+
+  - **Returns**:
+    - **`output`** (tensor): Output tensor with some paths randomly dropped during training.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of stochastic_depth
+drop_layer = nn.stochastic_depth(drop_path_rate=0.2)
+
+# Generate some sample data
+data = tf.random.normal((32, 10, 128))  # Batch of 32 samples, 10 timesteps, 128 features
+
+# Apply stochastic depth during training
+output = drop_layer(data, train_flag=True)
+
+print(output.shape)  # Output shape will be the same as input shape
 ```
 
 # Transformer
@@ -1064,6 +1345,7 @@ The `Transformer` class implements the Transformer model, which is widely used i
 **Example Usage**
 
 ```python
+import tensorflow as tf
 from Note import nn
 
 # Create an instance of Transformer
@@ -1079,74 +1361,116 @@ output = transformer(src, tgt)
 print(output.shape)  # Output shape will be (32, 10, 512)
 ```
 
-# stochastic_depth
-This module implements a stochastic depth layer, which can randomly skip some layers of a neural network and scale the remaining layers by a factor of 1/(1-drop_path_rate). The usage of this module is as follows:
-
-- First, create an instance of the stochastic_depth class, and specify the drop path rate, and other optional parameters such as noise shape, seed, and data type.
-- Second, pass the input tensor as the data argument. You can also specify a boolean flag to indicate whether the stochastic depth layer is in training mode or inference mode.
-- Last, return a tensor of the same shape as the input tensor, which is the stochastic depth output.
-
-For example:
-
-```python
-# Create a stochastic depth layer with 0.2 drop path rate
-stochastic_depth = stochastic_depth(drop_path_rate=0.2)
-# Apply the stochastic depth layer to a batch of input data of shape [32, 100]
-input_data = tf.random.normal([32, 100])
-output_data = stochastic_depth(input_data)
-# The output_data will have a shape of [32, 100], and some vectors will be zeroed out
-```
-
 # zeropadding1d
-This module implements a 1D zero-padding layer, which can add zeros at the beginning and end of a 1D input tensor (e.g. temporal sequence). The usage of this module is as follows:
 
-- First, create an instance of the zeropadding1d class, and optionally specify the input size and the padding size. If the input size is given, the output size will be the same as the input size. If the padding size is given, it can be either an integer or a tuple of two integers. If it is an integer, it will use the same padding for both sides. If it is a tuple of two integers, it will use the first integer for the left padding and the second integer for the right padding.
-- Second, pass the input tensor as the data argument. You can also specify a different padding size for this method, which will override the padding size given in the constructor.
-- Last, return a tensor of shape [batch_size, length + padding, channels], which is the 1D zero-padded output.
+The `zeropadding1d` class implements a 1D zero-padding layer, which pads the input tensor along the second dimension (time steps) with zeros.
 
-For example:
+**Initialization Parameters**
+
+- **`input_size`** (int, default=None): Size of the input features. If provided, `output_size` is set to `input_size`.
+- **`padding`** (int or tuple of 2 ints, default=None): Amount of padding to add to the beginning and end of the time steps. If not specified, padding can be set during the `__call__` method.
+
+**Methods**
+
+- **`__call__(self, data, padding=1)`**: Applies zero-padding to the input data.
+
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor of shape `[batch_size, time_steps, features]`.
+    - **`padding`** (int or tuple of 2 ints, default=1): Amount of padding to add if not specified during initialization.
+
+  - **Returns**:
+    - **`output`** (tensor): Output tensor with zero-padding applied.
+
+**Example Usage**
 
 ```python
-# Create a 1D zero-padding layer with padding size 2
-zeropadding1d = zeropadding1d(padding=2)
-# Apply the 1D zero-padding layer to a batch of input data of shape [32, 96, 100]
-input_data = tf.random.normal([32, 96, 100])
-output_data = zeropadding1d(input_data)
-# The output_data will have a shape of [32, 100, 100]
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of zeropadding1d
+padding_layer = nn.zeropadding1d(padding=(1, 2))
+
+# Generate some sample data
+data = tf.random.normal((32, 10, 128))  # Batch of 32 samples, 10 timesteps, 128 features
+
+# Apply zero-padding
+output = padding_layer(data)
+
+print(output.shape)  # Output shape will be (32, 13, 128)
 ```
 
 # zeropadding2d
-This module implements a 2D zero-padding layer, which can add rows and columns of zeros at the top, bottom, left and right side of a 2D input tensor (e.g. image). The usage of this module is as follows:
 
-- First, create an instance of the zeropadding2d class, and optionally specify the input size and the padding size. If the input size is given, the output size will be the same as the input size. If the padding size is given, it can be either an integer or a tuple of two tuples. If it is an integer, it will use the same padding for all sides. If it is a tuple of two tuples, it will use the first tuple for the height padding and the second tuple for the width padding. Each tuple should have two elements, representing the padding before and after the dimension.
-- Second, pass the input tensor as the data argument. You can also specify a different padding size for this method, which will override the padding size given in the constructor.
-- Last, return a tensor of shape [batch_size, height, width, channels], which is the 2D zero-padded output.
+The `zeropadding2d` class implements a 2D zero-padding layer, which pads the input tensor along the height and width dimensions with zeros.
 
-For example:
+**Initialization Parameters**
+
+- **`input_size`** (int, default=None): Size of the input features. If provided, `output_size` is set to `input_size`.
+- **`padding`** (int or tuple of 2 tuples, default=None): Amount of padding to add to the height and width dimensions. Each tuple contains two integers representing the padding before and after each dimension. If not specified, padding can be set during the `__call__` method.
+
+**Methods**
+
+- **`__call__(self, data, padding=(1, 1))`**: Applies zero-padding to the input data.
+
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor of shape `[batch_size, height, width, channels]`.
+    - **`padding`** (int or tuple of 2 tuples, default=(1, 1)): Amount of padding to add if not specified during initialization.
+
+  - **Returns**:
+    - **`output`** (tensor): Output tensor with zero-padding applied.
+
+**Example Usage**
 
 ```python
-# Create a 2D zero-padding layer with padding size 2
-zeropadding2d = zeropadding2d(padding=2)
-# Apply the 2D zero-padding layer to a batch of input data of shape [32, 96, 100, 3]
-input_data = tf.random.normal([32, 96, 100, 3])
-output_data = zeropadding2d(input_data)
-# The output_data will have a shape of [32, 100, 104, 3]
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of zeropadding2d
+padding_layer = nn.zeropadding2d(padding=((1, 2), (3, 4)))
+
+# Generate some sample data
+data = tf.random.normal((32, 28, 28, 3))  # Batch of 32 samples, 28x28 image size, 3 channels
+
+# Apply zero-padding
+output = padding_layer(data)
+
+print(output.shape)  # Output shape will be (32, 31, 35, 3)
 ```
 
 # zeropadding3d
-This module implements a 3D zero-padding layer, which can add rows, columns and slices of zeros at the top, bottom, left, right, front and back side of a 3D input tensor (e.g. volumetric image). The usage of this module is as follows:
 
-- First, create an instance of the zeropadding3d class, and optionally specify the input size and the padding size. If the input size is given, the output size will be the same as the input size. If the padding size is given, it can be either an integer or a tuple of three tuples. If it is an integer, it will use the same padding for all sides. If it is a tuple of three tuples, it will use the first tuple for the depth padding, the second tuple for the height padding and the third tuple for the width padding. Each tuple should have two elements, representing the padding before and after the dimension.
-- Second, pass the input tensor as the data argument. You can also specify a different padding size for this method, which will override the padding size given in the constructor.
-- Last, return a tensor of shape [batch_size, depth + padding, height + padding, width + padding, channels], which is the 3D zero-padded output.
+The `zeropadding3d` class implements a 3D zero-padding layer, which pads the input tensor along three spatial dimensions with zeros.
 
-For example:
+**Initialization Parameters**
+
+- **`input_size`** (int, default=None): Size of the input features. If provided, `output_size` is set to `input_size`.
+- **`padding`** (int or tuple of 3 ints or tuple of 3 tuples of 2 ints, default=(1, 1, 1)): Amount of padding to add to each of the three spatial dimensions. If not specified, padding can be set during the `__call__` method.
+
+**Methods**
+
+- **`__call__(self, data, padding=(1, 1, 1))`**: Applies zero-padding to the input data.
+
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor of shape `[batch_size, depth, height, width, channels]`.
+    - **`padding`** (int or tuple of 3 ints or tuple of 3 tuples of 2 ints, default=(1, 1, 1)): Amount of padding to add if not specified during initialization.
+
+  - **Returns**:
+    - **`output`** (tensor): Output tensor with zero-padding applied.
+
+**Example Usage**
 
 ```python
-# Create a 3D zero-padding layer with padding size 2
-zeropadding3d = zeropadding3d(padding=2)
-# Apply the 3D zero-padding layer to a batch of input data of shape [32, 96, 100, 100, 3]
-input_data = tf.random.normal([32, 96, 100, 100, 3])
-output_data = zeropadding3d(input_data)
-# The output_data will have a shape of [32, 100, 104, 104, 3]
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of zeropadding3d
+padding_layer = nn.zeropadding3d(padding=(2, 3, 4))
+
+# Generate some sample data
+data = tf.random.normal((32, 10, 10, 10, 3))  # Batch of 32 samples, 10x10x10 volumes, 3 channels
+
+# Apply zero-padding
+output = padding_layer(data)
+
+print(output.shape)  # Output shape will be (32, 14, 16, 18, 3)
 ```
