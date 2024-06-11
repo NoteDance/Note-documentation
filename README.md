@@ -2876,7 +2876,7 @@ The `multi_cls_heads` class implements multiple classification heads sharing the
 - **`cls_token_idx`** (int, optional): Index inside the sequence to pool. Default is `0`.
 - **`activation`** (str, optional): Activation function to use. Default is `"tanh"`.
 - **`dropout_rate`** (float, optional): Dropout probability. Default is `0.0`.
-- **`initializer`** (str, optional): Initializer for dense layer kernels. Default is `"Xavier"`.
+- **`initializer`** (str, list, tuple): Initializer for dense layer kernels. Default is `"Xavier"`.
 - **`dtype`** (str, optional): Data type for the layer. Default is `'float32'`.
 
 **Methods**
@@ -2916,8 +2916,8 @@ The `multichannel_attention` class implements a Multi-channel Attention layer.
 - **`value_dim`** (int, optional): Dimensionality of the value. If `None`, defaults to `key_dim`.
 - **`input_size`** (int, optional): Size of the input.
 - **`dropout_rate`** (float, optional): Dropout probability. Default is `0.0`.
-- **`weight_initializer`** (str, optional): Initializer for the weights. Default is `'Xavier'`.
-- **`bias_initializer`** (str, optional): Initializer for the bias. Default is `'zeros'`.
+- **`weight_initializer`** (str, list, tuple): Initializer for the weights. Default is `'Xavier'`.
+- **`bias_initializer`** (str, list, tuple): Initializer for the bias. Default is `'zeros'`.
 - **`use_bias`** (bool, optional): If `True`, use bias in dense layers. Default is `True`.
 - **`dtype`** (str, optional): Data type for the layer. Default is `'float32'`.
 
@@ -3010,8 +3010,8 @@ The `multiheadrelative_attention` class implements a multi-head attention layer 
 - **`input_size`** (int, optional): Size of the input. If not provided, it will be inferred from the input data.
 - **`attention_axes`** (tuple of int, optional): Axes over which the attention is applied. Defaults to the last axis.
 - **`dropout_rate`** (float): Dropout rate for the attention probabilities. Default is `0.0`.
-- **`weight_initializer`** (list): Initializer for the weight matrices. Default is `['VarianceScaling', 1.0, 'fan_in', 'truncated_normal']`.
-- **`bias_initializer`** (str): Initializer for the bias parameters. Default is `'zeros'`.
+- **`weight_initializer`** (str, list, tuple): Initializer for the weight matrices. Default is `['VarianceScaling', 1.0, 'fan_in', 'truncated_normal']`.
+- **`bias_initializer`** (str, list, tuple): Initializer for the bias parameters. Default is `'zeros'`.
 - **`use_bias`** (bool): Whether to use bias parameters. Default is `True`.
 - **`dtype`** (str): Data type of the parameters. Default is `'float32'`.
 
@@ -3067,6 +3067,354 @@ output = attention_layer(
     positional_attention_bias=positional_attention_bias,
     relative_position_encoding=relative_position_encoding
 )
+```
+
+# norm
+
+The `norm` class is a preprocessing layer that normalizes continuous features by shifting and scaling inputs into a distribution centered around 0 with a standard deviation of 1.
+
+**Initialization Parameters**
+
+- **`input_shape`** (tuple, optional): Shape of the input data.
+- **`axis`** (int, tuple of ints, None): The axis or axes along which to normalize. Defaults to `-1`.
+- **`mean`** (float, optional): The mean value to use during normalization.
+- **`variance`** (float, optional): The variance value to use during normalization.
+- **`invert`** (bool): If `True`, applies the inverse transformation to the inputs. Default is `False`.
+- **`dtype`** (str): Data type for the layer. Default is `'float32'`.
+
+**Methods**
+
+- **`adapt(self, data)`**: Learns the mean and variance from the provided data and stores them as the layer's weights.
+- **`__call__(self, data)`**: Normalizes the input `data`.
+
+  - **Parameters**:
+    - **`data`**: Input tensor to be normalized.
+
+  - **Returns**: Normalized output tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the normalization layer
+normalizer = nn.norm()
+
+# Generate some sample data
+data = tf.random.normal((2, 5, 10))
+
+# Learn the normalization parameters
+normalizer.adapt(data)
+
+# Apply normalization
+output = normalizer(data)
+```
+
+# perdimscale_attention
+
+The `perdimscale_attention` class implements scaled dot-product attention with learned scales for individual dimensions, which can improve quality but might affect training stability.
+
+**Initialization Parameters**
+
+- **`n_head`** (int): Number of attention heads.
+- **`key_dim`** (int): Dimension of the key.
+- **`value_dim`** (int, optional): Dimension of the value. Defaults to `key_dim`.
+- **`input_size`** (int, optional): Size of the input.
+- **`attention_axes`** (tuple of ints, optional): Axes over which the attention is applied.
+- **`dropout_rate`** (float): Dropout rate. Default is `0.0`.
+- **`weight_initializer`** (str): Initializer for weights. Default is `'Xavier'`.
+- **`bias_initializer`** (str): Initializer for biases. Default is `'zeros'`.
+- **`use_bias`** (bool): If `True`, adds bias to the dense layers. Default is `True`.
+- **`dtype`** (str): Data type for the layer. Default is `'float32'`.
+
+**Methods**
+
+- **`__call__(self, query, value, key=None, attention_mask=None, return_attention_scores=False, train_flag=True)`**: Applies attention mechanism to the inputs.
+
+  - **Parameters**:
+    - **`query`**: Query tensor.
+    - **`value`**: Value tensor.
+    - **`key`** (optional): Key tensor. If not provided, `value` is used as the key.
+    - **`attention_mask`** (optional): Mask tensor for attention scores.
+    - **`return_attention_scores`** (bool): If `True`, returns the attention scores. Default is `False`.
+    - **`train_flag`** (bool): Specifies whether the layer is in training mode. Default is `True`.
+
+  - **Returns**: Attention output tensor and optionally the attention scores.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the attention layer
+attention = nn.perdimscale_attention(n_head=8, key_dim=64, input_size=128)
+
+# Generate some sample data
+query = tf.random.normal((2, 10, 128))
+value = tf.random.normal((2, 10, 128))
+
+# Apply attention
+output = attention(query, value)
+```
+
+# permute
+
+The `permute` class reorders the dimensions of the input according to a specified pattern.
+
+**Initialization Parameters**
+
+- **`dims`** (tuple of ints): Permutation pattern, indexing starts at 1.
+
+**Methods**
+
+- **`__call__(self, data)`**: Permutes the dimensions of the input `data`.
+
+  - **Parameters**:
+    - **`data`**: Input tensor to be permuted.
+
+  - **Returns**: Permuted output tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the permute layer
+permuter = nn.permute(dims=(2, 1))
+
+# Generate some sample data
+data = tf.random.normal((2, 5, 10))
+
+# Apply permutation
+output = permuter(data)
+```
+
+# position_embedding
+
+The `position_embedding` class creates a positional embedding for the input sequence.
+
+**Initialization Parameters**
+
+- **`max_length`** (int): Maximum length of the sequence.
+- **`input_size`** (int, optional): Size of the input.
+- **`initializer`** (str, list, tuple): Initializer for the embedding weights. Default is `'Xavier'`.
+- **`seq_axis`** (int): Axis of the input tensor where embeddings are added. Default is `1`.
+- **`dtype`** (str): Data type for the layer. Default is `'float32'`.
+
+**Methods**
+
+- **`__call__(self, data)`**: Adds positional embeddings to the input `data`.
+
+  - **Parameters**:
+    - **`data`**: Input tensor to which positional embeddings are added.
+
+  - **Returns**: Tensor with added positional embeddings.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the positional embedding layer
+pos_embedding = nn.position_embedding(max_length=50, input_size=128)
+
+# Generate some sample data
+data = tf.random.normal((2, 50, 128))
+
+# Add positional embeddings
+output = pos_embedding(data)
+```
+
+# PReLU
+
+The `PReLU` class implements the Parametric Rectified Linear Unit activation function.
+
+**Initialization Parameters**
+
+- **`input_shape`** (tuple, optional): Shape of the input data.
+- **`alpha_initializer`** (str, list, tuple): Initializer for the `alpha` weights. Default is `'zeros'`.
+- **`shared_axes`** (list, tuple, optional): Axes along which to share learnable parameters.
+- **`dtype`** (str): Data type for the layer. Default is `'float32'`.
+
+**Methods**
+
+- **`__call__(self, data)`**: Applies the PReLU activation function to the input `data`.
+
+  - **Parameters**:
+    - **`data`**: Input tensor to which the PReLU activation function is applied.
+
+  - **Returns**: Output tensor with PReLU activation applied.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the PReLU layer
+prelu = nn.PReLU(input_shape=(None, 128))
+
+# Generate some sample data
+data = tf.random.normal((2, 128))
+
+# Apply PReLU activation
+output = prelu(data)
+```
+
+Here's the documentation for the classes `repeat_vector`, `reshape`, `reuse_multihead_attention`, and `RMSNorm` in the specified format for the README on GitHub. Only the imports from `Note` are included as requested.
+
+```markdown
+# Note Neural Network Layers
+
+This repository contains custom neural network layers implemented for TensorFlow. Below is the documentation for each layer.
+
+## repeat_vector
+
+The `repeat_vector` class repeats the input tensor `n` times along a new axis.
+
+**Initialization Parameters**
+
+- **`n`** (int): The number of repetitions.
+
+**Methods**
+
+- **`__call__(self, data)`**: Repeats the input tensor.
+
+  - **Parameters**:
+    - **`data`**: Input 2D tensor of shape `(num_samples, features)`.
+  - **Returns**: A 3D tensor of shape `(num_samples, n, features)`.
+
+**Example Usage**
+
+```python
+from Note import nn
+
+# Create an instance of the repeat vector layer
+rv = nn.repeat_vector(3)
+
+# Generate some sample data
+data = tf.random.normal((2, 5))
+
+# Apply repeat vector
+output = rv(data)
+```
+
+# reshape
+
+The `reshape` class reshapes the input tensor to the specified target shape.
+
+**Initialization Parameters**
+
+- **`target_shape`** (tuple of int): The desired output shape.
+
+**Methods**
+
+- **`__call__(self, data)`**: Reshapes the input tensor.
+
+  - **Parameters**:
+    - **`data`**: Input tensor.
+  - **Returns**: A reshaped tensor.
+
+**Example Usage**
+
+```python
+from Note import nn
+
+# Create an instance of the reshape layer
+reshape_layer = nn.reshape((10, 10))
+
+# Generate some sample data
+data = tf.random.normal((2, 100))
+
+# Apply reshape
+output = reshape_layer(data)
+```
+
+# reuse_multihead_attention
+
+The `reuse_multihead_attention` class implements multi-head attention with optional reuse of attention heads.
+
+**Initialization Parameters**
+
+- **`n_head`** (int): Number of attention heads.
+- **`key_dim`** (int): Size of each attention head for query and key.
+- **`value_dim`** (int, optional): Size of each attention head for value. Defaults to `key_dim`.
+- **`input_size`** (int, optional): Size of the input.
+- **`dropout`** (float): Dropout rate.
+- **`reuse_attention`** (int): Number of heads to reuse. -1 for all heads.
+- **`use_relative_pe`** (bool): Whether to use relative position bias.
+- **`pe_max_seq_length`** (int): Maximum sequence length for relative position encodings.
+- **`use_bias`** (bool): Whether to use bias in the dense layers.
+- **`attention_axes`** (tuple of int, optional): Axes over which the attention is applied.
+- **`weight_initializer`** (str, list, tuple): Initializer for the dense layer kernels.
+- **`bias_initializer`** (str, list, tuple): Initializer for the dense layer biases.
+- **`dtype`** (str): Data type for the layer. Default is `'float32'`.
+
+**Methods**
+
+- **`__call__(self, query, value, key=None, attention_mask=None, return_attention_scores=False, train_flag=True, reuse_attention_scores=None)`**: Applies multi-head attention.
+
+  - **Parameters**:
+    - **`query`**: Query tensor of shape `(B, T, dim)`.
+    - **`value`**: Value tensor of shape `(B, S, dim)`.
+    - **`key`** (optional): Key tensor of shape `(B, S, dim)`. Defaults to `value`.
+    - **`attention_mask`** (optional): Boolean mask tensor.
+    - **`return_attention_scores`** (bool, optional): Whether to return attention scores.
+    - **`train_flag`** (bool, optional): Training mode flag.
+    - **`reuse_attention_scores`** (optional): Precomputed attention scores for reuse.
+  - **Returns**: Attention output tensor, and optionally attention scores.
+
+**Example Usage**
+
+```python
+from Note import nn
+
+# Create an instance of the multi-head attention layer
+mha = nn.reuse_multihead_attention(n_head=8, key_dim=64, input_size=128)
+
+# Generate some sample data
+query = tf.random.normal((2, 10, 128))
+value = tf.random.normal((2, 10, 128))
+
+# Apply multi-head attention
+output = mha(query, value)
+```
+
+# RMSNorm
+
+The `RMSNorm` class implements Root Mean Square Layer Normalization.
+
+**Initialization Parameters**
+
+- **`dims`** (int): Dimensionality of the input.
+- **`eps`** (float): Small constant to avoid division by zero. Default is `1e-6`.
+- **`dtype`** (str): Data type for the layer. Default is `'float32'`.
+
+**Methods**
+
+- **`__call__(self, x)`**: Applies RMS normalization.
+
+  - **Parameters**:
+    - **`x`**: Input tensor.
+  - **Returns**: Normalized output tensor.
+
+**Example Usage**
+
+```python
+from Note import nn
+
+# Create an instance of the RMSNorm layer
+rms_norm = nn.RMSNorm(dims=128)
+
+# Generate some sample data
+data = tf.random.normal((2, 10, 128))
+
+# Apply RMS normalization
+output = rms_norm(data)
 ```
 
 # RNN
@@ -3157,6 +3505,166 @@ output = rnn_cell(data, state)
 print(output.shape)  # Output shape will be (32, 64)
 ```
 
+# RoPE (Rotary Positional Encoding)
+
+The `RoPE` class implements Rotary Positional Encoding, a technique used to encode positional information in transformer models.
+
+**Initialization Parameters**
+
+- **`dims`** (int): Dimensionality of the input vectors.
+- **`traditional`** (bool, optional): If `True`, use traditional positional encoding. Default is `False`.
+- **`base`** (float, optional): Base value used for frequency calculations. Default is `10000`.
+
+**Methods**
+
+- **`__call__(self, x, offset=0)`**: Applies Rotary Positional Encoding to the input `x`.
+
+  - **Parameters**:
+    - **`x`** (tf.Tensor): Input tensor to encode.
+    - **`offset`** (int, optional): Positional offset for encoding. Default is `0`.
+  - **Returns**: Tensor with positional encoding applied.
+
+- **`create_cos_sin_theta(N, D, offset=0, base=10000, dtype=tf.float32)`**: Static method to create cosine and sine theta values for encoding.
+  - **Parameters**:
+    - **`N`** (int): Number of positions.
+    - **`D`** (int): Dimensionality.
+    - **`offset`** (int, optional): Offset for positional encoding. Default is `0`.
+    - **`base`** (float, optional): Base value for frequency calculation. Default is `10000`.
+    - **`dtype`** (tf.DType, optional): Data type for the encoding. Default is `tf.float32`.
+  - **Returns**: Tuple of cosine and sine theta values.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of RoPE
+rope = nn.RoPE(dims=64)
+
+# Generate some sample data
+data = tf.random.normal((2, 5, 64))
+
+# Apply RoPE
+output = rope(data)
+```
+
+# router
+
+The `router` class provides an abstract base class for implementing token routing in Mixture of Experts (MoE) models.
+
+**Initialization Parameters**
+
+- **`num_experts`** (int): Number of experts.
+- **`input_size`** (int, optional): Size of the input.
+- **`jitter_noise`** (float, optional): Amplitude of jitter noise applied to router logits. Default is `0.0`.
+- **`use_bias`** (bool, optional): Whether to use bias in the router weights. Default is `True`.
+- **`kernel_initializer`** (str, list, tuple): Initializer for kernel weights. Default is `'Xavier'`.
+- **`bias_initializer`** (str, list, tuple): Initializer for bias weights. Default is `'zeros'`.
+- **`router_z_loss_weight`** (float, optional): Weight for router z-loss. Default is `0.0`.
+- **`export_metrics`** (bool, optional): Whether to export metrics. Default is `True`.
+
+**Methods**
+
+- **`__call__(self, inputs, expert_capacity, train_flag=True)`**: Computes dispatch and combine arrays for routing to experts.
+
+  - **Parameters**:
+    - **`inputs`** (tf.Tensor): Input tensor.
+    - **`expert_capacity`** (int): Capacity of each expert.
+    - **`train_flag`** (bool, optional): Whether to apply jitter noise during routing. Default is `True`.
+  - **Returns**: Routing instructions for the experts.
+
+- **`_compute_router_probabilities(self, inputs, apply_jitter)`**: Computes router probabilities from input tokens.
+  - **Parameters**:
+    - **`inputs`** (tf.Tensor): Input tensor.
+    - **`apply_jitter`** (bool): Whether to apply jitter noise.
+  - **Returns**: Router probabilities and raw logits.
+
+- **`_compute_routing_instructions(self, router_probs, expert_capacity)`**: Abstract method to compute routing instructions.
+  - **Parameters**:
+    - **`router_probs`** (tf.Tensor): Router probabilities.
+    - **`expert_capacity`** (int): Capacity of each expert.
+  - **Returns**: Routing instructions.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the router
+r = nn.router(num_experts=4, input_size=128)
+
+# Generate some sample data
+data = tf.random.normal((2, 5, 128))
+
+# Apply routing
+output = r(data, expert_capacity=2)
+```
+
+# select_topk
+
+The `select_topk` class selects top-k tokens according to importance, optionally with random selection.
+
+**Initialization Parameters**
+
+- **`top_k`** (int, optional): Number of top-k tokens to select.
+- **`random_k`** (int, optional): Number of random tokens to select.
+
+**Methods**
+
+- **`__call__(self, data)`**: Selects top-k and/or random tokens from the input `data`.
+
+  - **Parameters**:
+    - **`data`** (tf.Tensor): Input tensor from which to select tokens.
+  - **Returns**: Indices of selected and not-selected tokens.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of select_topk
+selector = nn.select_topk(top_k=3, random_k=2)
+
+# Generate some sample data
+data = tf.random.normal((2, 5))
+
+# Apply selection
+selected, not_selected = selector(data)
+```
+
+# self_attention_mask
+
+The `self_attention_mask` class creates a 3D attention mask from a 2D tensor mask.
+
+**Methods**
+
+- **`__call__(self, inputs, to_mask=None)`**: Creates the attention mask.
+
+  - **Parameters**:
+    - **`inputs`** (list or tf.Tensor): Input tensors. If `list`, the first element is the from_tensor and the second is the to_mask.
+    - **`to_mask`** (tf.Tensor, optional): Mask tensor.
+  - **Returns**: Attention mask tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of self_attention_mask
+mask = nn.self_attention_mask()
+
+# Generate some sample data
+from_tensor = tf.random.normal((2, 5, 10))
+to_mask = tf.ones((2, 5))
+
+# Create the attention mask
+attention_mask = mask([from_tensor, to_mask])
+```
+
 # separable_conv1d
 
 The `separable_conv1d` class implements a 1D separable convolutional layer, which is a depthwise separable convolution that reduces the number of parameters and computation cost compared to a regular convolutional layer. This layer is often used in neural network models for processing sequential data, such as time-series or audio signals.
@@ -3206,6 +3714,273 @@ output = sep_conv_layer(data)
 print(output.shape)  # Output shape will depend on the padding and strides
 ```
 
+# separable_conv2d
+
+The `separable_conv2d` class implements a separable convolutional layer, which performs depthwise convolution followed by pointwise convolution, reducing computational cost and model size.
+
+**Initialization Parameters**
+
+- **`filters`** (int): Number of output filters.
+- **`kernel_size`** (tuple): Size of the convolutional kernel.
+- **`depth_multiplier`** (int): Multiplier for the depthwise convolution output channels.
+- **`input_size`** (int, optional): Number of input channels.
+- **`strides`** (list): Stride size for the convolution. Default is `[1,1]`.
+- **`padding`** (str): Padding method, either `'VALID'` or `'SAME'`. Default is `'VALID'`.
+- **`data_format`** (str): Data format, either `'NHWC'` or `'NCHW'`. Default is `'NHWC'`.
+- **`dilations`** (list, optional): Dilation rate for dilated convolution.
+- **`weight_initializer`** (str, list, tuple): Initializer for the weight matrices. Default is `'Xavier'`.
+- **`bias_initializer`** (str, list, tuple): Initializer for the bias vector. Default is `'zeros'`.
+- **`activation`** (str, optional): Activation function to apply.
+- **`use_bias`** (bool): Whether to use a bias vector. Default is `True`.
+- **`trainable`** (bool): Whether the layer is trainable. Default is `True`.
+- **`dtype`** (str): Data type for the layer. Default is `'float32'`.
+
+**Methods**
+
+- **`__call__(self, data)`**: Applies the separable convolution to the input `data`.
+
+  - **Parameters**:
+    - **`data`**: Input tensor.
+
+  - **Returns**: Output tensor after applying depthwise and pointwise convolution.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the separable convolutional layer
+conv = nn.separable_conv2d(filters=32, kernel_size=(3, 3), depth_multiplier=1, input_size=3)
+
+# Generate some sample data
+data = tf.random.normal((2, 64, 64, 3))
+
+# Apply separable convolution
+output = conv(data)
+```
+
+# spatial_dropout1d
+
+The `spatial_dropout1d` class implements spatial dropout for 1D inputs, setting entire feature maps to zero.
+
+**Initialization Parameters**
+
+- **`rate`** (float): Fraction of the input units to drop. Between 0 and 1.
+- **`seed`** (int): Random seed for reproducibility. Default is `7`.
+
+**Methods**
+
+- **`__call__(self, data, train_flag=True)`**: Applies spatial dropout to the input `data`.
+
+  - **Parameters**:
+    - **`data`**: Input tensor.
+    - **`train_flag`** (bool): Whether to apply dropout. Default is `True`.
+
+  - **Returns**: Output tensor after applying dropout.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the spatial dropout layer
+dropout = nn.spatial_dropout1d(rate=0.5)
+
+# Generate some sample data
+data = tf.random.normal((2, 64, 3))
+
+# Apply spatial dropout
+output = dropout(data, train_flag=True)
+```
+
+# spatial_dropout2d
+
+The `spatial_dropout2d` class implements spatial dropout for 2D inputs, setting entire feature maps to zero.
+
+**Initialization Parameters**
+
+- **`rate`** (float): Fraction of the input units to drop. Between 0 and 1.
+- **`seed`** (int): Random seed for reproducibility. Default is `7`.
+
+**Methods**
+
+- **`__call__(self, data, train_flag=True)`**: Applies spatial dropout to the input `data`.
+
+  - **Parameters**:
+    - **`data`**: Input tensor.
+    - **`train_flag`** (bool): Whether to apply dropout. Default is `True`.
+
+  - **Returns**: Output tensor after applying dropout.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the spatial dropout layer
+dropout = nn.spatial_dropout2d(rate=0.5)
+
+# Generate some sample data
+data = tf.random.normal((2, 64, 64, 3))
+
+# Apply spatial dropout
+output = dropout(data, train_flag=True)
+```
+
+# spatial_dropout3d
+
+The `spatial_dropout3d` class implements spatial dropout for 3D inputs, setting entire feature maps to zero.
+
+**Initialization Parameters**
+
+- **`rate`** (float): Fraction of the input units to drop. Between 0 and 1.
+- **`seed`** (int): Random seed for reproducibility. Default is `7`.
+
+**Methods**
+
+- **`__call__(self, data, train_flag=True)`**: Applies spatial dropout to the input `data`.
+
+  - **Parameters**:
+    - **`data`**: Input tensor.
+    - **`train_flag`** (bool): Whether to apply dropout. Default is `True`.
+
+  - **Returns**: Output tensor after applying dropout.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the spatial dropout layer
+dropout = nn.spatial_dropout3d(rate=0.5)
+
+# Generate some sample data
+data = tf.random.normal((2, 10, 64, 64, 3))
+
+# Apply spatial dropout
+output = dropout(data, train_flag=True)
+```
+
+# spectral_norm
+
+The `spectral_norm` class performs spectral normalization on the weights of a target layer, which helps to stabilize training by controlling the Lipschitz constant of the weights.
+
+**Initialization Parameters**
+
+- **`layer`** (Layer): Target layer to be normalized.
+- **`power_iterations`** (int): Number of iterations during normalization. Default is `1`.
+
+**Methods**
+
+- **`__call__(self, data, train_flag=True)`**: Applies spectral normalization to the target layer's weights.
+
+  - **Parameters**:
+    - **`data`**: Input tensor.
+    - **`train_flag`** (bool): Whether to apply spectral normalization. Default is `True`.
+
+  - **Returns**: Output tensor from the target layer.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of a target layer (e.g., Conv2D)
+conv_layer = nn.conv2d(filters=32, kernel_size=(3, 3), input_size=3)
+
+# Wrap the target layer with spectral normalization
+sn_layer = nn.spectral_norm(layer=conv_layer)
+
+# Generate some sample data
+data = tf.random.normal((2, 64, 64, 3))
+
+# Apply spectral normalization and get the output
+output = sn_layer(data, train_flag=True)
+```
+
+# SEModule
+
+The `SEModule` class implements a Squeeze-and-Excitation module, which adaptively recalibrates channel-wise feature responses.
+
+**Initialization Parameters**
+
+- **`channels`** (int): Number of input channels.
+- **`rd_ratio`** (float): Reduction ratio for the bottleneck. Default is `1/16`.
+- **`rd_channels`** (int, optional): Number of reduction channels.
+- **`rd_divisor`** (int): Divisor to ensure reduction channels are divisible. Default is `8`.
+- **`add_maxpool`** (bool): Whether to add global max pooling. Default is `False`.
+- **`bias`** (bool): Whether to use bias in convolutional layers. Default is `True`.
+- **`act_layer`** (function): Activation function. Default is `tf.nn.relu`.
+- **`norm_layer`** (Layer, optional): Normalization layer.
+- **`gate_layer`** (function): Gate function for excitation. Default is `tf.nn.sigmoid`.
+
+**Methods**
+
+- **`__call__(self, x)`**: Applies the Squeeze-and-Excitation module to the input `x`.
+
+  - **Parameters**:
+    - **`x`**: Input tensor.
+
+  - **Returns**: Output tensor after Squeeze-and-Excitation.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the SE module
+se_module = nn.SEModule(channels=64)
+
+# Generate some sample data
+data = tf.random.normal((2, 64, 64, 64))
+
+# Apply the SE module
+output = se_module(data)
+```
+
+# EffectiveSEModule
+
+The `EffectiveSEModule` class implements an effective Squeeze-and-Excitation module as described in "CenterMask: Real-Time Anchor-Free Instance Segmentation".
+
+**Initialization Parameters**
+
+- **`channels`** (int): Number of input channels.
+- **`add_maxpool`** (bool): Whether to add global max pooling. Default is `False`.
+- **`gate_layer`** (function): Gate function for excitation. Default is `tf.nn.hard_sigmoid`.
+
+**Methods**
+
+- **`__call__(self, x)`**: Applies the effective Squeeze-and-Excitation module to the input `x`.
+
+  - **Parameters**:
+    - **`x`**: Input tensor.
+
+  - **Returns
+
+**: Output tensor after effective Squeeze-and-Excitation.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the effective SE module
+effective_se_module = nn.EffectiveSEModule(channels=64)
+
+# Generate some sample data
+data = tf.random.normal((2, 64, 64, 64))
+
+# Apply the effective SE module
+output = effective_se_module(data)
+```
+
 # stochastic_depth
 
 The `stochastic_depth` class implements a layer that randomly drops entire paths (blocks of layers) during training, helping to regularize the model and prevent overfitting. This technique is also known as DropPath.
@@ -3241,6 +4016,196 @@ data = tf.random.normal((32, 10, 128))  # Batch of 32 samples, 10 timesteps, 128
 output = drop_layer(data, train_flag=True)
 
 print(output.shape)  # Output shape will be the same as input shape
+```
+
+# SwitchLinear
+
+The `SwitchLinear` class implements a linear layer with multiple experts, where each expert has its own set of weights and biases. This is useful in mixture-of-experts models.
+
+**Initialization Parameters**
+
+- **`input_dims`** (int): Number of input dimensions.
+- **`output_dims`** (int): Number of output dimensions.
+- **`num_experts`** (int): Number of experts.
+- **`bias`** (bool): Whether to include a bias term. Default is `True`.
+
+**Methods**
+
+- **`__call__(self, x, indices)`**: Applies the layer to the input `x` using the experts specified by `indices`.
+
+  - **Parameters**:
+    - **`x`**: Input tensor.
+    - **`indices`**: Indices of the experts to use for each sample in the batch.
+
+  - **Returns**: Output tensor after applying the selected experts.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the SwitchLinear layer
+switch_linear = nn.SwitchLinear(input_dims=10, output_dims=20, num_experts=4)
+
+# Generate some sample data
+data = tf.random.normal((2, 10))
+indices = tf.constant([0, 1])
+
+# Apply SwitchLinear
+output = switch_linear(data, indices)
+```
+
+# SwitchGLU
+
+The `SwitchGLU` class implements a Gated Linear Unit (GLU) with multiple experts, where each expert has its own set of weights. This is useful in mixture-of-experts models.
+
+**Initialization Parameters**
+
+- **`input_dims`** (int): Number of input dimensions.
+- **`hidden_dims`** (int): Number of hidden dimensions.
+- **`num_experts`** (int): Number of experts.
+- **`activation`** (function): Activation function to apply. Default is `tf.nn.silu`.
+- **`bias`** (bool): Whether to include a bias term. Default is `False`.
+
+**Methods**
+
+- **`__call__(self, x, indices)`**: Applies the layer to the input `x` using the experts specified by `indices`.
+
+  - **Parameters**:
+    - **`x`**: Input tensor.
+    - **`indices`**: Indices of the experts to use for each sample in the batch.
+
+  - **Returns**: Output tensor after applying the selected experts.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the SwitchGLU layer
+switch_glu = nn.SwitchGLU(input_dims=10, hidden_dims=20, num_experts=4)
+
+# Generate some sample data
+data = tf.random.normal((2, 10))
+indices = tf.constant([0, 1])
+
+# Apply SwitchGLU
+output = switch_glu(data, indices)
+```
+
+# talking_heads_attention
+
+The `talking_heads_attention` class implements a form of multi-head attention with linear projections applied to the attention scores before and after the softmax operation.
+
+**Initialization Parameters**
+
+- **`attention_axes`** (tuple): Axes over which to apply attention.
+- **`dropout_rate`** (float): Dropout rate to apply to the attention scores. Default is `0.0`.
+- **`initializer`** (str, list, tuple): Initializer for the attention weights. Default is `'Xavier'`.
+- **`dtype`** (str): Data type for the layer. Default is `'float32'`.
+
+**Methods**
+
+- **`__call__(self, query_tensor, key_tensor, value_tensor, attention_mask=None, train_flag=True)`**: Applies the attention mechanism to the input tensors.
+
+  - **Parameters**:
+    - **`query_tensor`**: Query tensor.
+    - **`key_tensor`**: Key tensor.
+    - **`value_tensor`**: Value tensor.
+    - **`attention_mask`** (tensor, optional): Mask to apply to the attention scores.
+    - **`train_flag`** (bool): Whether the layer is in training mode. Default is `True`.
+
+  - **Returns**: Tuple of the attention output and the attention scores.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the talking_heads_attention layer
+attention_layer = nn.talking_heads_attention()
+
+# Generate some sample data
+query = tf.random.normal((2, 5, 10))
+key = tf.random.normal((2, 5, 10))
+value = tf.random.normal((2, 5, 10))
+
+# Apply attention
+output, scores = attention_layer(query, key, value)
+```
+
+# thresholded_relu
+
+The `thresholded_relu` class is a deprecated activation function that applies a thresholded ReLU activation.
+
+**Initialization Parameters**
+
+- **`theta`** (float): Threshold value. Default is `1.0`.
+- **`dtype`** (str): Data type for the layer. Default is `'float32'`.
+
+**Methods**
+
+- **`__call__(self, data)`**: Applies the thresholded ReLU activation to the input `data`.
+
+  - **Parameters**:
+    - **`data`**: Input tensor.
+
+  - **Returns**: Output tensor after applying the activation.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the thresholded ReLU layer
+threshold_relu = nn.thresholded_relu(theta=1.0)
+
+# Generate some sample data
+data = tf.random.normal((2, 10))
+
+# Apply thresholded ReLU
+output = threshold_relu(data)
+```
+
+# TLU
+
+The `TLU` (Thresholded Linear Unit) class implements an activation function similar to ReLU but with a learned threshold, beneficial for models using Filter Response Normalization (FRN).
+
+**Initialization Parameters**
+
+- **`input_shape`** (tuple, optional): Shape of the input.
+- **`affine`** (bool): Whether to make it TLU-Affine, which has the form `max(x, α*x + τ)`. Default is `False`.
+- **`tau_initializer`** (str, list, tuple): Initializer for the tau parameter. Default is `'zeros'`.
+- **`alpha_initializer`** (str, list, tuple): Initializer for the alpha parameter. Default is `'zeros'`.
+- **`dtype`** (str): Data type for the layer. Default is `'float32'`.
+
+**Methods**
+
+- **`__call__(self, data)`**: Applies the TLU activation to the input `data`.
+
+  - **Parameters**:
+    - **`data`**: Input tensor.
+
+  - **Returns**: Output tensor after applying the activation.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the TLU layer
+tlu = nn.TLU(input_shape=(None, 10))
+
+# Generate some sample data
+data = tf.random.normal((2, 10))
+
+# Apply TLU
+output = tlu(data)
 ```
 
 # Transformer
@@ -3295,6 +4260,439 @@ tgt = tf.random.normal((32, 10, 512))  # Batch of 32 samples, 10 target timestep
 output = transformer(src, tgt)
 
 print(output.shape)  # Output shape will be (32, 10, 512)
+```
+
+# two_stream_relative_attention
+
+The `two_stream_relative_attention` class implements the two-stream relative self-attention mechanism used in XLNet. This attention mechanism involves two streams of attention: the content stream and the query stream. The content stream captures both the context and content, while the query stream focuses on contextual information and position, excluding the content.
+
+**Initialization Parameters**
+
+- **`n_head`** (int): Number of attention heads.
+- **`key_dim`** (int): Size of each attention head for query, key, and value.
+- **`input_size`** (int, optional): Size of the input dimension.
+- **`attention_axes`** (tuple, optional): Axes over which to apply attention.
+- **`dropout_rate`** (float): Dropout rate to apply after attention. Default is `0.0`.
+- **`weight_initializer`** (str, list, tuple): Initializer for the attention weights. Default is `'Xavier'`.
+- **`bias_initializer`** (str, list, tuple): Initializer for the attention bias. Default is `'zeros'`.
+- **`use_bias`** (bool): Whether to use a bias in the attention calculation. Default is `True`.
+- **`dtype`** (str): Data type for the layer. Default is `'float32'`.
+
+**Methods**
+
+- **`__call__(self, content_stream, content_attention_bias, positional_attention_bias, query_stream, relative_position_encoding, target_mapping=None, segment_matrix=None, segment_encoding=None, segment_attention_bias=None, state=None, content_attention_mask=None, query_attention_mask=None)`**: Computes the two-stream relative attention.
+
+  - **Parameters**:
+    - **`content_stream`**: Tensor of shape `[B, T, dim]` representing the content stream.
+    - **`content_attention_bias`**: Bias tensor for content-based attention.
+    - **`positional_attention_bias`**: Bias tensor for position-based attention.
+    - **`query_stream`**: Tensor of shape `[B, P, dim]` representing the query stream.
+    - **`relative_position_encoding`**: Tensor of relative positional encodings.
+    - **`target_mapping`** (optional): Tensor for target mapping in partial prediction.
+    - **`segment_matrix`** (optional): Tensor representing segmentation IDs.
+    - **`segment_encoding`** (optional): Tensor representing the segmentation encoding.
+    - **`segment_attention_bias`** (optional): Bias tensor for segment-based attention.
+    - **`state`** (optional): Tensor representing the state or memory.
+    - **`content_attention_mask`** (optional): Boolean mask for content attention.
+    - **`query_attention_mask`** (optional): Boolean mask for query attention.
+
+  - **Returns**: Tuple containing the content attention output and the query attention output, both of shape `[B, T, E]`.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the two-stream relative attention layer
+attention_layer = nn.two_stream_relative_attention(n_head=8, key_dim=64, input_size=128)
+
+# Generate some sample data
+content_stream = tf.random.normal((2, 10, 128))
+query_stream = tf.random.normal((2, 10, 128))
+relative_position_encoding = tf.random.normal((2, 10, 64))
+content_attention_bias = tf.random.normal((8, 64))
+positional_attention_bias = tf.random.normal((8, 64))
+
+# Apply two-stream relative attention
+content_attention_output, query_attention_output = attention_layer(
+    content_stream=content_stream,
+    content_attention_bias=content_attention_bias,
+    positional_attention_bias=positional_attention_bias,
+    query_stream=query_stream,
+    relative_position_encoding=relative_position_encoding
+)
+```
+
+# unfold
+
+The `unfold` class extracts patches from the input tensor and flattens them, useful for operations like convolutional layers in neural networks.
+
+**Initialization Parameters**
+
+- **`kernel`** (int): Size of the extraction kernel.
+- **`stride`** (int): Stride for the sliding window. Default is `1`.
+- **`padding`** (int): Amount of padding to add to the input. Default is `0`.
+- **`dilation`** (int): Dilation rate for the sliding window. Default is `1`.
+
+**Methods**
+
+- **`__call__(self, x)`**: Applies the unfolding operation to the input `x`.
+
+  - **Parameters**:
+    - **`x`**: Input tensor.
+
+  - **Returns**: Tensor with extracted patches.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the unfold layer
+unfold = nn.unfold(kernel=3, stride=1, padding=1)
+
+# Generate some sample data
+data = tf.random.normal((2, 5, 5, 3))
+
+# Apply unfolding
+output = unfold(data)
+```
+
+# unit_norm
+
+The `unit_norm` class normalizes the input tensor along specified axes so that each input in the batch has a unit L2 norm.
+
+**Initialization Parameters**
+
+- **`axis`** (int or list/tuple of ints): The axis or axes to normalize across. Default is `-1`.
+
+**Methods**
+
+- **`__call__(self, inputs)`**: Normalizes the input tensor.
+
+  - **Parameters**:
+    - **`inputs`**: Input tensor.
+
+  - **Returns**: Normalized tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the unit normalization layer
+unit_norm = nn.unit_norm(axis=-1)
+
+# Generate some sample data
+data = tf.random.normal((2, 3))
+
+# Apply unit normalization
+output = unit_norm(data)
+```
+
+# up_sampling1d
+
+The `up_sampling1d` class repeats each time step of the input tensor along the temporal axis.
+
+**Initialization Parameters**
+
+- **`size`** (int): The number of repetitions for each time step.
+
+**Methods**
+
+- **`__call__(self, inputs)`**: Applies 1D up-sampling to the input `inputs`.
+
+  - **Parameters**:
+    - **`inputs`**: Input tensor.
+
+  - **Returns**: Up-sampled tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the up-sampling 1D layer
+up_sampling1d = nn.up_sampling1d(size=2)
+
+# Generate some sample data
+data = tf.random.normal((2, 5, 3))
+
+# Apply 1D up-sampling
+output = up_sampling1d(data)
+```
+
+# up_sampling2d
+
+The `up_sampling2d` class repeats each spatial dimension of the input tensor along the height and width axes.
+
+**Initialization Parameters**
+
+- **`size`** (int or tuple of ints): The number of repetitions for each spatial dimension. If an integer, the same value is used for both dimensions.
+
+**Methods**
+
+- **`__call__(self, inputs)`**: Applies 2D up-sampling to the input `inputs`.
+
+  - **Parameters**:
+    - **`inputs`**: Input tensor.
+
+  - **Returns**: Up-sampled tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the up-sampling 2D layer
+up_sampling2d = nn.up_sampling2d(size=(2, 2))
+
+# Generate some sample data
+data = tf.random.normal((2, 5, 5, 3))
+
+# Apply 2D up-sampling
+output = up_sampling2d(data)
+```
+
+# up_sampling3d
+
+The `up_sampling3d` class repeats each spatial dimension of the input tensor along the depth, height, and width axes.
+
+**Initialization Parameters**
+
+- **`size`** (int or tuple of ints): The number of repetitions for each spatial dimension. If an integer, the same value is used for all dimensions.
+
+**Methods**
+
+- **`__call__(self, inputs)`**: Applies 3D up-sampling to the input `inputs`.
+
+  - **Parameters**:
+    - **`inputs`**: Input tensor.
+
+  - **Returns**: Up-sampled tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the up-sampling 3D layer
+up_sampling3d = nn.up_sampling3d(size=2)
+
+# Generate some sample data
+data = tf.random.normal((2, 5, 5, 5, 3))
+
+# Apply 3D up-sampling
+output = up_sampling3d(data)
+```
+
+# vector_quantizer
+
+The `vector_quantizer` class implements vector quantization, a technique often used in neural network-based image and signal processing.
+
+**Initialization Parameters**
+
+- **`embedding_dim`** (int): Dimension of the embedding vectors.
+- **`num_embeddings`** (int): Number of embedding vectors.
+- **`commitment_cost`** (float): Commitment cost used in the loss term.
+- **`dtype`** (str): Data type for the embeddings. Default is `'float32'`.
+
+**Methods**
+
+- **`__call__(self, data, is_training)`**: Applies vector quantization to the input `data`.
+
+  - **Parameters**:
+    - **`data`**: Input tensor.
+    - **`is_training`** (bool): Indicates whether the layer is in training mode.
+
+  - **Returns**: Dictionary containing quantized tensor, loss, perplexity, encodings, encoding indices, and distances.
+
+- **`quantize(self, encoding_indices)`**: Converts encoding indices to quantized embeddings.
+
+  - **Parameters**:
+    - **`encoding_indices`**: Indices of the embeddings.
+
+  - **Returns**: Quantized embeddings tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the vector quantizer layer
+vector_quantizer = nn.vector_quantizer(embedding_dim=64, num_embeddings=512, commitment_cost=0.25)
+
+# Generate some sample data
+data = tf.random.normal((2, 10, 64))
+
+# Apply vector quantization
+output = vector_quantizer(data, is_training=True)
+```
+
+# PatchEmbed
+
+The `PatchEmbed` class converts 2D images to patch embeddings, typically used in vision transformers.
+
+**Initialization Parameters**
+
+- **`img_size`** (int, optional): Size of the input image. Default is `224`.
+- **`patch_size`** (int): Size of the patch. Default is `16`.
+- **`in_chans`** (int): Number of input channels. Default is `3`.
+- **`embed_dim`** (int): Dimension of the embedding. Default is `768`.
+- **`flatten`** (bool): If `True`, flatten the output. Default is `True`.
+- **`bias`** (bool): If `True`, add bias in the convolution layer. Default is `True`.
+
+**Methods**
+
+- **`__call__(self, x)`**: Converts the input image to patch embeddings.
+
+  - **Parameters**:
+    - **`x`**: Input tensor of shape `(batch_size, height, width, channels)`.
+
+  - **Returns**: Patch embeddings tensor.
+
+**Example Usage**
+
+```python
+from Note import nn
+
+# Create an instance of the PatchEmbed layer
+patch_embed = nn.PatchEmbed(img_size=224, patch_size=16)
+
+# Generate some sample data
+data = tf.random.normal((2, 224, 224, 3))
+
+# Apply patch embedding
+output = patch_embed(data)
+```
+
+# Attention
+
+The `Attention` class implements multi-head self-attention, used in transformer models.
+
+**Initialization Parameters**
+
+- **`dim`** (int): Input dimension.
+- **`num_heads`** (int): Number of attention heads. Default is `8`.
+- **`qkv_bias`** (bool): If `True`, add bias in the query, key, value projections. Default is `False`.
+- **`qk_norm`** (bool): If `True`, apply normalization to the query and key. Default is `False`.
+- **`attn_drop`** (float): Dropout rate for attention weights. Default is `0.0`.
+- **`proj_drop`** (float): Dropout rate for the output projection. Default is `0.0`.
+- **`norm_layer`** (class): Normalization layer to use. Default is `nn.layer_norm`.
+- **`use_fused_attn`** (bool): If `True`, use fused attention for efficiency. Default is `True`.
+
+**Methods**
+
+- **`__call__(self, x)`**: Applies multi-head self-attention to the input.
+
+  - **Parameters**:
+    - **`x`**: Input tensor of shape `(batch_size, seq_length, dim)`.
+
+  - **Returns**: Output tensor after applying attention.
+
+**Example Usage**
+
+```python
+from Note import nn
+
+# Create an instance of the Attention layer
+attention = nn.Attention(dim=768, num_heads=8)
+
+# Generate some sample data
+data = tf.random.normal((2, 10, 768))
+
+# Apply attention
+output = attention(data)
+```
+
+# Block
+
+The `Block` class implements a transformer block with multi-head attention and MLP.
+
+**Initialization Parameters**
+
+- **`dim`** (int): Input dimension.
+- **`num_heads`** (int): Number of attention heads.
+- **`mlp_ratio`** (float): Ratio of hidden dimension in the MLP. Default is `4.0`.
+- **`qkv_bias`** (bool): If `True`, add bias in the query, key, value projections. Default is `False`.
+- **`qk_norm`** (bool): If `True`, apply normalization to the query and key. Default is `False`.
+- **`proj_drop`** (float): Dropout rate for the output projection. Default is `0.0`.
+- **`attn_drop`** (float): Dropout rate for attention weights. Default is `0.0`.
+- **`init_values`** (float, optional): Initialization value for LayerScale. Default is `None`.
+- **`drop_path`** (float): Dropout rate for stochastic depth. Default is `0.0`.
+- **`act_layer`** (class): Activation function to use. Default is `tf.nn.gelu`.
+- **`norm_layer`** (class): Normalization layer to use. Default is `nn.layer_norm`.
+- **`mlp_layer`** (class): MLP layer to use. Default is `nn.Mlp`.
+
+**Methods**
+
+- **`__call__(self, x)`**: Applies the transformer block to the input.
+
+  - **Parameters**:
+    - **`x`**: Input tensor of shape `(batch_size, seq_length, dim)`.
+
+  - **Returns**: Output tensor after applying the transformer block.
+
+**Example Usage**
+
+```python
+from Note import nn
+
+# Create an instance of the Block layer
+block = nn.Block(dim=768, num_heads=8)
+
+# Generate some sample data
+data = tf.random.normal((2, 10, 768))
+
+# Apply the transformer block
+output = block(data)
+```
+
+# voting_attention
+
+The `voting_attention` class implements a voting attention mechanism.
+
+**Initialization Parameters**
+
+- **`n_head`** (int): Number of attention heads.
+- **`head_size`** (int): Size of each attention head.
+- **`input_size`** (int, optional): Size of the input. Default is `None`.
+- **`weight_initializer`** (str, list, tuple): Initializer for the dense layer weights. Default is `"Xavier"`.
+- **`bias_initializer`** (str, list, tuple): Initializer for the dense layer biases. Default is `"zeros"`.
+- **`use_bias`** (bool): If `True`, add bias in the dense layers. Default is `True`.
+- **`dtype`** (str): Data type for the layer. Default is `'float32'`.
+
+**Methods**
+
+- **`__call__(self, encoder_outputs, doc_attention_mask)`**: Applies voting attention to the encoder outputs.
+
+  - **Parameters**:
+    - **`encoder_outputs`**: Encoder output tensor of shape `(batch_size, num_docs, seq_length, dim)`.
+    - **`doc_attention_mask`**: Mask tensor for the attention mechanism.
+
+  - **Returns**: Attention probabilities tensor.
+
+**Example Usage**
+
+```python
+from Note import nn
+
+# Create an instance of the voting_attention layer
+voting_att = nn.voting_attention(n_head=8, head_size=64)
+
+# Generate some sample data
+encoder_outputs = tf.random.normal((2, 5, 10, 512))
+doc_attention_mask = tf.ones((2, 5))
+
+# Apply voting attention
+output = voting_att(encoder_outputs, doc_attention_mask)
 ```
 
 # zeropadding1d
