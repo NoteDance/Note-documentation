@@ -220,6 +220,200 @@ output = pooling_layer(data)
 print(output.shape)  # Output shape will be (32, 4, 4, 4, 8) for 'channels_last' data format
 ```
 
+# additive_attention
+
+The `additive_attention` class implements an additive attention mechanism, which calculates attention scores as a nonlinear sum of query and key tensors.
+
+**Initialization Parameters**
+
+- **`input_size`** (int, optional): The size of the input tensor. If provided, it is used to initialize the scale parameter.
+- **`use_scale`** (bool, default=True): Whether to use a learnable scale parameter.
+- **`dtype`** (str, default='float32'): The data type of the input and scale parameter.
+
+**Methods**
+
+- **`__call__(self, query, key)`**: Computes the attention scores.
+
+  - **Parameters**:
+    - **`query`** (tensor): Query tensor of shape `[batch_size, Tq, dim]`.
+    - **`key`** (tensor): Key tensor of shape `[batch_size, Tv, dim]`.
+  
+  - **Returns**:
+    - **`Tensor`**: Attention scores of shape `[batch_size, Tq, Tv]`.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of additive_attention
+attention_layer = nn.additive_attention(input_size=128)
+
+# Generate some sample data
+query = tf.random.normal((32, 10, 128))  # Batch of 32 samples, 10 query steps, 128 dimensions
+key = tf.random.normal((32, 20, 128))    # Batch of 32 samples, 20 key steps, 128 dimensions
+
+# Apply attention
+output = attention_layer(query, key)
+
+print(output.shape)  # Output shape will be (32, 10, 20)
+```
+
+# avg_pool1d
+
+The `avg_pool1d` class performs 1D average pooling on the input tensor.
+
+**Initialization Parameters**
+
+- **`ksize`** (int): Size of the window for each dimension of the input tensor.
+- **`strides`** (int): Stride of the sliding window for each dimension of the input tensor.
+- **`padding`** (str): Padding algorithm to use ('SAME' or 'VALID').
+
+**Methods**
+
+- **`__call__(self, data)`**: Applies 1D average pooling to the input data.
+
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor of shape `[batch_size, length, channels]`.
+  
+  - **Returns**:
+    - **`Tensor`**: Pooled output tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of avg_pool1d
+pooling_layer = nn.avg_pool1d(ksize=2, strides=2, padding='SAME')
+
+# Generate some sample data
+data = tf.random.normal((32, 100, 64))  # Batch of 32 samples, 100 steps, 64 channels
+
+# Apply 1D average pooling
+output = pooling_layer(data)
+
+print(output.shape)  # Output shape will be (32, 50, 64)
+```
+
+# avg_pool2d
+
+The `avg_pool2d` class performs 2D average pooling on the input tensor.
+
+**Initialization Parameters**
+
+- **`ksize`** (int or tuple of 2 ints): Size of the window for each dimension of the input tensor.
+- **`strides`** (int or tuple of 2 ints): Stride of the sliding window for each dimension of the input tensor.
+- **`padding`** (str): Padding algorithm to use ('SAME' or 'VALID').
+
+**Methods**
+
+- **`__call__(self, data)`**: Applies 2D average pooling to the input data.
+
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor of shape `[batch_size, height, width, channels]`.
+  
+  - **Returns**:
+    - **`Tensor`**: Pooled output tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of avg_pool2d
+pooling_layer = nn.avg_pool2d(ksize=(2, 2), strides=(2, 2), padding='SAME')
+
+# Generate some sample data
+data = tf.random.normal((32, 64, 64, 3))  # Batch of 32 samples, 64x64 spatial dimensions, 3 channels
+
+# Apply 2D average pooling
+output = pooling_layer(data)
+
+print(output.shape)  # Output shape will be (32, 32, 32, 3)
+```
+
+# avg_pool3d
+
+The `avg_pool3d` class performs 3D average pooling on the input tensor.
+
+**Initialization Parameters**
+
+- **`ksize`** (int or tuple of 3 ints): Size of the window for each dimension of the input tensor.
+- **`strides`** (int or tuple of 3 ints): Stride of the sliding window for each dimension of the input tensor.
+- **`padding`** (str): Padding algorithm to use ('SAME' or 'VALID').
+
+**Methods**
+
+- **`__call__(self, data)`**: Applies 3D average pooling to the input data.
+
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor of shape `[batch_size, depth, height, width, channels]`.
+  
+  - **Returns**:
+    - **`Tensor`**: Pooled output tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of avg_pool3d
+pooling_layer = nn.avg_pool3d(ksize=(2, 2, 2), strides=(2, 2, 2), padding='SAME')
+
+# Generate some sample data
+data = tf.random.normal((16, 32, 32, 32, 3))  # Batch of 16 samples, 32x32x32 spatial dimensions, 3 channels
+
+# Apply 3D average pooling
+output = pooling_layer(data)
+
+print(output.shape)  # Output shape will depend on the input shape, ksize, strides, and padding
+```
+
+# axial_positional_encoding
+
+The `axial_positional_encoding` class generates axial positional encodings for Reformer models.
+
+**Initialization Parameters**
+
+- **`d_model`** (int): The dimension of the model embeddings.
+- **`axial_shape`** (tuple of int): The shape of the input sequence, such as `(batch_size, seq_length)`.
+- **`initializer`** (str): The initializer to use for the positional encoding weights (default is 'Xavier').
+- **`trainable`** (bool): Whether the positional encodings are trainable (default is `True`).
+- **`dtype`** (str): The data type of the positional encodings (default is 'float32').
+
+**Methods**
+
+- **`__call__(self, data)`**: Generates the axial positional encoding for the input tensor.
+
+  - **Parameters**:
+    - **`data`** (tensor): Input tensor of shape `[batch_size, seq_length, d_model]`.
+  
+  - **Returns**:
+    - **`Tensor`**: Output tensor with axial positional encoding added.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of axial_positional_encoding
+axial_pe = nn.axial_positional_encoding(d_model=512, axial_shape=(32, 128))
+
+# Generate some sample data
+data = tf.random.normal((32, 128, 512))  # Batch of 32 samples, 128 sequence length, 512 dimensions
+
+# Apply axial positional encoding
+output = axial_pe(data)
+
+print(output.shape)  # Output shape will be (32, 128, 512)
+```
+
 # attention
 
 This class implements an attention mechanism for neural networks, supporting both dot-product and concatenation-based attention scoring methods. It also allows for optional scaling of attention scores.
