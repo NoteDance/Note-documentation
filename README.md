@@ -511,6 +511,291 @@ data = tf.random.normal((2, 5, 10))
 output = bn(data)
 ```
 
+# cached_attention
+
+The `cached_attention` class implements an attention mechanism with caching, primarily used for autoregressive decoding.
+
+**Initialization Parameters**
+
+- **`n_head`** (int): Number of attention heads.
+- **`key_dim`** (int): Dimension of the keys.
+- **`value_dim`** (int, optional): Dimension of the values. Defaults to the same as `key_dim` if not specified.
+- **`input_size`** (int, optional): Size of the input. If not specified, it will be inferred from the input data.
+- **`attention_axes`** (list or tuple of ints, optional): Axes along which to apply attention. Defaults to the last axis.
+- **`dropout_rate`** (float, optional): Dropout rate to apply to the attention scores. Defaults to 0.0.
+- **`weight_initializer`** (str, optional): Initializer for the weights. Defaults to "Xavier".
+- **`bias_initializer`** (str, optional): Initializer for the biases. Defaults to "zeros".
+- **`use_bias`** (bool, optional): Whether to use bias in the dense layers. Defaults to True.
+- **`dtype`** (str, optional): Data type of the layer. Defaults to 'float32'.
+
+**Methods**
+
+- **`build(self)`**: Builds the internal dense layers if `input_size` was not provided during initialization.
+
+- **`_masked_softmax(self, attention_scores, attention_mask=None)`**: Applies a softmax operation to the attention scores with an optional mask.
+  - **Parameters**:
+    - **`attention_scores`** (tensor): Raw attention scores.
+    - **`attention_mask`** (tensor, optional): Mask to apply to the attention scores.
+  - **Returns**:
+    - **`Tensor`**: Normalized attention scores.
+
+- **`_update_cache(self, key, value, cache, decode_loop_step)`**: Updates the cache with new keys and values during decoding.
+  - **Parameters**:
+    - **`key`** (tensor): New keys.
+    - **`value`** (tensor): New values.
+    - **`cache`** (dict): Cache containing previous keys and values.
+    - **`decode_loop_step`** (int, optional): Current step in the decoding loop.
+  - **Returns**:
+    - **`Tensor`**: Updated keys.
+    - **`Tensor`**: Updated values.
+
+- **`__call__(self, query, value, key=None, attention_mask=None, cache=None, decode_loop_step=None, return_attention_scores=False)`**: Computes the attention output and optionally returns the attention scores and updated cache.
+  - **Parameters**:
+    - **`query`** (tensor): Query tensor.
+    - **`value`** (tensor): Value tensor.
+    - **`key`** (tensor, optional): Key tensor. If not provided, the value tensor will be used.
+    - **`attention_mask`** (tensor, optional): Mask to apply to the attention scores.
+    - **`cache`** (dict, optional): Cache for storing previous keys and values.
+    - **`decode_loop_step`** (int, optional): Current step in the decoding loop.
+    - **`return_attention_scores`** (bool, optional): Whether to return the attention scores.
+  - **Returns**:
+    - **`Tensor`**: Attention output.
+    - **`dict`**: Updated cache.
+    - **`Tensor`** (optional): Attention scores if `return_attention_scores` is True.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of cached_attention
+attention_layer = nn.cached_attention(
+    n_head=8,
+    key_dim=64,
+    input_size=128,
+    attention_axes=[1],
+    dropout_rate=0.1
+)
+
+# Generate some sample data
+query = tf.random.normal((32, 10, 128))  # Batch of 32 samples, 10 sequence length, 128 input size
+value = tf.random.normal((32, 10, 128))
+
+# Apply the cached attention layer
+output, cache = attention_layer(query, value)
+
+print(output.shape)  # Output shape will be (32, 10, 128)
+```
+
+# capsule
+
+This class implements a Capsule layer for neural networks, supporting both fully connected (FC) and convolutional (CONV) capsule layers with routing mechanisms.
+
+**Initialization Parameters**
+
+- `num_outputs` (int): The number of output capsules in this layer.
+- `vec_len` (int): The length of the output vector of a capsule.
+- `input_shape` (tuple, optional): The shape of the input tensor. Required for layer building.
+- `kernel_size` (int, optional): The kernel size for convolutional capsule layers.
+- `stride` (int, optional): The stride for convolutional capsule layers.
+- `with_routing` (bool): Whether this capsule layer uses routing with the lower-level capsules. Default is `True`.
+- `layer_type` (str): The type of capsule layer. Options are `'FC'` for fully connected or `'CONV'` for convolutional. Default is `'FC'`.
+- `iter_routing` (int): The number of routing iterations. Default is `3`.
+- `steddev` (float): The standard deviation for initializing the weights. Default is `0.01`.
+
+**Methods**
+
+**`__init__(self, num_outputs, vec_len, input_shape=None, kernel_size=None, stride=None, with_routing=True, layer_type='FC', iter_routing=3, steddev=0.01)`**
+
+Initializes the Capsule layer with the specified parameters.
+
+- `num_outputs` (int): Number of output capsules.
+- `vec_len` (int): Length of the output vector of a capsule.
+- `input_shape` (tuple, optional): Shape of the input tensor.
+- `kernel_size` (int, optional): Kernel size for CONV layer.
+- `stride` (int, optional): Stride for CONV layer.
+- `with_routing` (bool): If the capsule is routing with the lower-level capsules.
+- `layer_type` (str): Type of the layer, either `'FC'` or `'CONV'`.
+- `iter_routing` (int): Number of routing iterations.
+- `steddev` (float): Standard deviation for initializing weights.
+
+**`build(self)`**
+
+Builds the layer based on the type and input shape. Should be called if `input_shape` is provided during initialization.
+
+**`__call__(self, data)`**
+
+Applies the capsule layer to the provided input tensor.
+
+- `data` (Tensor): The input tensor.
+
+Returns:
+- `Tensor`: The output tensor after applying the capsule layer.
+
+**`routing(self, input, b_IJ, num_outputs=10, num_dims=16)`**
+
+The routing algorithm for the capsule layer.
+
+- `input` (Tensor): Input tensor with shape `[batch_size, num_caps_l, 1, length(u_i), 1]`.
+- `b_IJ` (Tensor): Initial logits for routing.
+- `num_outputs` (int): Number of output capsules.
+- `num_dims` (int): Number of dimensions for output capsule.
+
+Returns:
+- `Tensor`: The output tensor after applying routing.
+
+**`squash(self, vector)`**
+
+Squashing function to ensure that the length of the output vector is between 0 and 1.
+
+- `vector` (Tensor): Input tensor to be squashed.
+
+Returns:
+- `Tensor`: Squashed output tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Define input tensor
+input_tensor = tf.random.normal(shape=(32, 28, 28, 256))  # Example shape
+
+# Instantiate the capsule class
+caps_layer = nn.capsule(num_outputs=10, vec_len=16, input_shape=input_tensor.shape, layer_type='FC', with_routing=True)
+
+# Apply the capsule layer to the input tensor
+output = caps_layer(input_tensor)
+
+print(output.shape)  # Should be (32, 10, 16, 1) if the num_outputs is 10 and vec_len is 16
+```
+
+# ClassifierHead
+
+This class implements a classifier head with configurable global pooling and dropout options.
+
+**Initialization Parameters**
+
+- `in_features` (int): The number of input features.
+- `num_classes` (int): The number of classes for the final classifier layer (output).
+- `pool_type` (str, optional): Type of global pooling. Options are `'avg'`, `'max'`, or `''` (no pooling). Default is `'avg'`.
+- `drop_rate` (float, optional): Dropout rate before the classifier. Default is `0.`.
+- `use_conv` (bool, optional): Whether to use convolution for the classifier. Default is `False`.
+- `input_fmt` (str, optional): The input format. Options are `'NHWC'` or `'NCHW'`. Default is `'NHWC'`.
+
+**Methods**
+
+**`__init__(self, in_features, num_classes, pool_type='avg', drop_rate=0., use_conv=False, input_fmt='NHWC')`**
+
+Initializes the classifier head with the specified parameters.
+
+- `in_features` (int): Number of input features.
+- `num_classes` (int): Number of output classes.
+- `pool_type` (str): Global pooling type.
+- `drop_rate` (float): Dropout rate before the classifier.
+- `use_conv` (bool): Whether to use convolution for the classifier.
+- `input_fmt` (str): Input format.
+
+**`reset(self, num_classes, pool_type=None)`**
+
+Resets the classifier head with a new number of classes and optionally a new pooling type.
+
+- `num_classes` (int): New number of output classes.
+- `pool_type` (str, optional): New pooling type.
+
+**`__call__(self, x, pre_logits=False)`**
+
+Applies the classifier head to the provided input tensor.
+
+- `x` (Tensor): Input tensor.
+- `pre_logits` (bool, optional): Whether to return the features before the final logits layer. Default is `False`.
+
+Returns:
+- `Tensor`: The output tensor after applying the classifier head.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Define input tensor
+input_tensor = tf.random.normal(shape=(32, 7, 7, 2048))  # Example shape
+
+# Instantiate the classifier head
+classifier_head = nn.ClassifierHead(in_features=2048, num_classes=1000, pool_type='avg', drop_rate=0.5)
+
+# Apply the classifier head to the input tensor
+output = classifier_head(input_tensor)
+
+print(output.shape)  # Should be (32, 1000) if num_classes is 1000
+```
+
+# NormMlpClassifierHead
+
+This class implements a classifier head with normalization, configurable MLP, and global pooling options.
+
+**Initialization Parameters**
+
+- `in_features` (int): The number of input features.
+- `num_classes` (int): The number of classes for the final classifier layer (output).
+- `hidden_size` (int, optional): The hidden size of the MLP (pre-logits FC layer). Default is `None`.
+- `pool_type` (str, optional): Type of global pooling. Options are `'avg'`, `'max'`, or `''` (no pooling). Default is `'avg'`.
+- `drop_rate` (float, optional): Dropout rate before the classifier. Default is `0.`.
+- `norm_layer` (Callable, optional): Normalization layer type. Default is `layer_norm`.
+- `act_layer` (Callable, optional): Activation layer type. Default is `tf.nn.tanh`.
+
+**Methods**
+
+**`__init__(self, in_features, num_classes, hidden_size=None, pool_type='avg', drop_rate=0., norm_layer=layer_norm, act_layer=tf.nn.tanh)`**
+
+Initializes the normalized MLP classifier head with the specified parameters.
+
+- `in_features` (int): Number of input features.
+- `num_classes` (int): Number of output classes.
+- `hidden_size` (int, optional): Hidden size of the MLP.
+- `pool_type` (str): Global pooling type.
+- `drop_rate` (float): Dropout rate before the classifier.
+- `norm_layer` (Callable): Normalization layer type.
+- `act_layer` (Callable): Activation layer type.
+
+**`reset(self, num_classes, pool_type=None)`**
+
+Resets the classifier head with a new number of classes and optionally a new pooling type.
+
+- `num_classes` (int): New number of output classes.
+- `pool_type` (str, optional): New pooling type.
+
+**`__call__(self, x, pre_logits=False)`**
+
+Applies the normalized MLP classifier head to the provided input tensor.
+
+- `x` (Tensor): Input tensor.
+- `pre_logits` (bool, optional): Whether to return the features before the final logits layer. Default is `False`.
+
+Returns:
+- `Tensor`: The output tensor after applying the classifier head.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Define input tensor
+input_tensor = tf.random.normal(shape=(32, 7, 7, 2048))  # Example shape
+
+# Instantiate the normalized MLP classifier head
+norm_mlp_head = nn.NormMlpClassifierHead(in_features=2048, num_classes=1000, hidden_size=512, pool_type='avg', drop_rate=0.5)
+
+# Apply the normalized MLP classifier head to the input tensor
+output = norm_mlp_head(input_tensor)
+
+print(output.shape)  # Should be (32, 1000) if num_classes is 1000
+```
+
 # conv1d
 
 The `conv1d` class implements a 1D convolutional layer, which is commonly used in processing sequential data such as time series or audio.
@@ -798,6 +1083,114 @@ output = conv_layer(data)
 print(output.shape)  # Output shape will depend on strides and padding
 ```
 
+# cropping1d
+
+This class implements 1D cropping for tensors.
+
+**Initialization Parameters**
+
+- `cropping` (int or list): The amount to crop from the start and end of the dimension. Can be an int or a list of two ints.
+
+**Methods**
+
+**`__init__(self, cropping=1)`**
+
+Initializes the cropping layer with the specified parameters.
+
+**`__call__(self, data)`**
+
+Applies 1D cropping to the input tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Instantiate the cropping1d layer
+layer = nn.cropping1d(cropping=2)
+
+# Define a sample input tensor
+input_tensor = tf.random.normal(shape=(32, 100, 64))  # (batch_size, length, channels)
+
+# Compute the cropped output
+output = layer(input_tensor)
+
+print(output.shape)  # Should be (32, 96, 64)
+```
+
+# cropping2d
+
+This class implements 2D cropping for tensors.
+
+**Initialization Parameters**
+
+- `cropping` (int or list): The amount to crop from the dimensions. Can be an int, a list of two ints, or a list of four ints.
+
+**Methods**
+
+**`__init__(self, cropping=1)`**
+
+Initializes the cropping layer with the specified parameters.
+
+**`__call__(self, data)`**
+
+Applies 2D cropping to the input tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Instantiate the cropping2d layer
+layer = nn.cropping2d(cropping=[2, 3])
+
+# Define a sample input tensor
+input_tensor = tf.random.normal(shape=(32, 100, 100, 64))  # (batch_size, height, width, channels)
+
+# Compute the cropped output
+output = layer(input_tensor)
+
+print(output.shape)  # Should be (32, 96, 94, 64)
+```
+
+# cropping3d
+
+This class implements 3D cropping for tensors.
+
+**Initialization Parameters**
+
+- `cropping` (int or list): The amount to crop from the dimensions. Can be an int, a list of three ints, or a list of six ints.
+
+**Methods**
+
+**`__init__(self, cropping=1)`**
+
+Initializes the cropping layer with the specified parameters.
+
+**`__call__(self, data)`**
+
+Applies 3D cropping to the input tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Instantiate the cropping3d layer
+layer = nn.cropping3d(cropping=[2, 3, 4])
+
+# Define a sample input tensor
+input_tensor = tf.random.normal(shape=(32, 50, 50, 50, 64))  # (batch_size, depth, height, width, channels)
+
+# Compute the cropped output
+output = layer(input_tensor)
+
+print(output.shape)  # Should be (32, 46, 44, 42, 64)
+```
+
 # dense
 
 The `dense` class implements a fully connected layer, which is a core component of many neural networks. This layer is used to perform a linear transformation on the input data, optionally followed by an activation function.
@@ -971,6 +1364,531 @@ data = tf.random.normal((10, 64))  # Batch of 10 samples, each with 64 features
 output = dropout_layer(data, train_flag=True)
 
 print(output.shape)  # Output shape will be the same as the input shape
+```
+
+# einsum_dense
+
+This class implements a dense layer using `tf.einsum` for computations. It allows for flexible einsum operations on tensors of arbitrary dimensionality.
+
+**Initialization Parameters**
+
+- `equation` (str): An einsum equation string, e.g., `ab,bc->ac`.
+- `output_shape` (int or list): The expected shape of the output tensor.
+- `input_shape` (list, optional): Shape of the input tensor.
+- `activation` (str, optional): Activation function to use.
+- `bias_axes` (str, optional): Axes to apply bias on.
+- `weight_initializer` (str): Initializer for the weight matrix. Default is "Xavier".
+- `bias_initializer` (str): Initializer for the bias vector. Default is "zeros".
+- `trainable` (bool): Whether the layer's variables should be trainable. Default is `True`.
+- `dtype` (str): Data type for the computations. Default is `'float32'`.
+
+**Methods**
+
+**`__init__(self, equation, output_shape, input_shape=None, activation=None, bias_axes=None, weight_initializer="Xavier", bias_initializer="zeros", trainable=True, dtype='float32')`**
+
+Initializes the layer with the specified parameters.
+
+**`__call__(self, data)`**
+
+Applies the einsum operation to the provided input tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Instantiate the einsum_dense layer
+layer = nn.einsum_dense(equation='ab,bc->ac', output_shape=64, activation='relu')
+
+# Define a sample input tensor
+input_tensor = tf.random.normal(shape=(32, 128))  # (batch_size, input_dim)
+
+# Compute the layer output
+output = layer(input_tensor)
+
+print(output.shape)  # Should be (32, 64)
+```
+
+# embedding
+
+This class implements an embedding layer, which transforms input indices into dense vectors.
+
+**Initialization Parameters**
+
+- `output_size` (int): The size of the output embedding vectors.
+- `input_size` (int, optional): The size of the input vocabulary. Default is `None`.
+- `initializer` (str): The initializer for the embedding weights. Default is `'normal'`.
+- `sparse` (bool): If `True`, supports sparse input tensors. Default is `False`.
+- `use_one_hot_matmul` (bool): If `True`, uses one-hot matrix multiplication. Default is `False`.
+- `trainable` (bool): If `True`, the embedding weights are trainable. Default is `True`.
+- `dtype` (str): The data type for the embedding weights. Default is `'float32'`.
+
+**Methods**
+
+**`__init__(self, output_size, input_size=None, initializer='normal', sparse=False, use_one_hot_matmul=False, trainable=True, dtype='float32')`**
+
+Initializes the embedding layer with the specified parameters.
+
+**`__call__(self, data)`**
+
+Applies the embedding layer to the input indices.
+
+- `data` (Tensor): The input tensor containing indices to be embedded.
+
+Returns:
+- `Tensor`: The embedded output tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Instantiate the embedding class
+embedding_layer = nn.embedding(output_size=64, input_size=1000)
+
+# Define sample input data
+input_data = tf.constant([1, 2, 3, 4, 5])
+
+# Compute embeddings
+output = embedding_layer(input_data)
+
+print(output.shape)  # Should be (5, 64)
+```
+
+# FAVOR_attention
+
+This class implements the Fast Attention via Positive Orthogonal Random Features (FAVOR) mechanism.
+
+**Initialization Parameters**
+
+- `key_dim` (int): The dimensionality of the keys.
+- `orthonormal` (bool): If `True`, uses orthonormal random features. Default is `True`.
+- `causal` (bool): If `True`, applies causal attention. Default is `False`.
+- `m` (int): The number of random features. Default is `128`.
+- `redraw` (bool): If `True`, redraws the random features at each call. Default is `True`.
+- `h` (function, optional): A scaling function for the random features. Default is `None`.
+- `f` (list): A list of activation functions to apply to the random features. Default is `[tf.nn.relu]`.
+- `randomizer` (function): The function to generate random features. Default is `tf.random.normal`.
+- `eps` (float): A small constant for numerical stability. Default is `0.0`.
+- `kernel_eps` (float): A small constant added to the kernel features. Default is `0.001`.
+- `dtype` (str): The data type for computations. Default is `'float32'`.
+
+**Methods**
+
+**`__init__(self, key_dim, orthonormal=True, causal=False, m=128, redraw=True, h=None, f=[tf.nn.relu], randomizer=tf.random.normal, eps=0.0, kernel_eps=0.001, dtype='float32')`**
+
+Initializes the FAVOR attention mechanism with the specified parameters.
+
+**`__call__(self, keys, values, queries)`**
+
+Applies the FAVOR attention mechanism to the provided keys, values, and queries.
+
+- `keys` (Tensor): The key tensor.
+- `values` (Tensor): The value tensor.
+- `queries` (Tensor): The query tensor.
+
+Returns:
+- `Tensor`: The result of the FAVOR attention mechanism.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Instantiate the FAVOR attention class
+attention_layer = nn.FAVOR_attention(key_dim=64)
+
+# Define sample keys, values, and queries
+keys = tf.random.normal(shape=(2, 10, 64))
+values = tf.random.normal(shape=(2, 10, 64))
+queries = tf.random.normal(shape=(2, 5, 64))
+
+# Compute attention output
+output = attention_layer(keys, values, queries)
+
+print(output.shape)  # Should be (2, 5, 64)
+```
+
+# feed_forward_experts
+
+This class implements a feed-forward layer with multiple experts, allowing for independent feed-forward blocks.
+
+**Initialization Parameters**
+
+- `num_experts` (int): The number of experts.
+- `d_ff` (int): The dimension of the feed-forward layer of each expert.
+- `input_shape` (tuple, optional): The shape of the input tensor. Default is `None`.
+- `inner_dropout` (float): Dropout probability after intermediate activations. Default is `0.0`.
+- `output_dropout` (float): Dropout probability after the output layer. Default is `0.0`.
+- `activation` (function): The activation function. Default is `tf.nn.gelu`.
+- `kernel_initializer` (str): The initializer for the kernel weights. Default is `'Xavier'`.
+- `bias_initializer` (str): The initializer for the bias weights. Default is `'zeros'`.
+
+**Methods**
+
+**`__init__(self, num_experts, d_ff, input_shape=None, inner_dropout=0.0, output_dropout=0.0, activation=tf.nn.gelu, kernel_initializer='Xavier', bias_initializer='zeros')`**
+
+Initializes the feed-forward experts layer with the specified parameters.
+
+**`__call__(self, data, train_flag=True)`**
+
+Applies the feed-forward experts layer to the input data.
+
+- `data` (Tensor): The input tensor.
+- `train_flag` (bool): If `True`, applies dropout during training.
+
+Returns:
+- `Tensor`: The transformed input tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Instantiate the feed-forward experts class
+ff_experts_layer = nn.feed_forward_experts(num_experts=4, d_ff=128, input_shape=(None, 4, 32, 64))
+
+# Define sample input data
+input_data = tf.random.normal(shape=(8, 4, 32, 64))
+
+# Compute output
+output = ff_experts_layer(input_data, train_flag=True)
+
+print(output.shape)  # Should be (8, 4, 32, 64)
+```
+
+# filter_response_norm
+
+This class implements the Filter Response Normalization (FRN) layer, which normalizes per-channel activations.
+
+**Initialization Parameters**
+
+- `input_shape` (tuple, optional): The shape of the input tensor. Default is `None`.
+- `epsilon` (float): Small constant added to variance to avoid division by zero. Default is `1e-6`.
+- `axis` (list): List of axes that should be normalized. Default is `[1, 2]`.
+- `beta_initializer` (str): Initializer for the beta weights. Default is `'zeros'`.
+- `gamma_initializer` (str): Initializer for the gamma weights. Default is `'ones'`.
+- `learned_epsilon` (bool): If `True`, adds a learnable epsilon parameter. Default is `False`.
+- `dtype` (str): The data type for computations. Default is `'float32'`.
+
+**Methods**
+
+**`__init__(self, input_shape=None, epsilon=1e-6, axis=[1, 2], beta_initializer='zeros', gamma_initializer='ones', learned_epsilon=False, dtype='float32')`**
+
+Initializes the Filter Response Normalization layer with the specified parameters.
+
+**`__call__(self, data)`**
+
+Applies the FRN layer to the input data.
+
+- `data` (Tensor): The input tensor.
+
+Returns:
+- `Tensor`: The normalized output tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Instantiate the FRN class
+frn_layer = nn.filter_response_norm(input_shape=(None, 32, 32, 64))
+
+# Define sample input data
+input_data = tf.random.normal(shape=(8, 32, 32, 64))
+
+# Compute output
+output = frn_layer(input_data)
+
+print(output.shape)  # Should be (8, 32, 32, 64)
+```
+
+# flatten
+
+This class implements a flatten layer, which reshapes the input tensor to a 2D tensor.
+
+**Methods**
+
+**`__init__(self)`**
+
+Initializes the flatten layer.
+
+**`__call__(self, data)`**
+
+Applies the flatten layer to the input data.
+
+- `data` (Tensor): The input tensor.
+
+Returns:
+- `Tensor`: The reshaped output tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Instantiate the flatten class
+flatten_layer = nn.flatten()
+
+# Define sample input data
+input_data = tf.random.normal(shape=(8, 32, 32, 64))
+
+# Compute output
+output = flatten_layer(input_data)
+
+print(output.shape)  # Should be (8, 65536)
+```
+
+# gaussian_dropout
+
+This class applies multiplicative 1-centered Gaussian noise, useful for regularization during training.
+
+**Initialization Parameters**
+
+- `rate` (float): Drop probability. The noise will have standard deviation `sqrt(rate / (1 - rate))`.
+- `seed` (int, optional): Random seed for deterministic behavior. Default is `7`.
+
+**Methods**
+
+**`__init__(self, rate, seed=7)`**
+
+Initializes the Gaussian Dropout layer.
+
+- `rate` (float): Drop probability.
+- `seed` (int, optional): Random seed. Default is `7`.
+
+**`__call__(self, data, train_flag=True)`**
+
+Applies the Gaussian Dropout to the input tensor during training.
+
+- `data` (Tensor): Input tensor of any rank.
+- `train_flag` (bool): If `True`, applies dropout. If `False`, returns the input tensor as is.
+
+Returns:
+- `Tensor`: The output tensor with Gaussian Dropout applied during training.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+dropout_layer = nn.gaussian_dropout(rate=0.5, seed=7)
+data = tf.random.normal(shape=(3, 4))
+output = dropout_layer(data, train_flag=True)
+
+print(output.shape)  # Same shape as input
+```
+
+# gaussian_noise
+
+This class applies additive zero-centered Gaussian noise, useful for regularization and data augmentation during training.
+
+**Initialization Parameters**
+
+- `stddev` (float): Standard deviation of the noise distribution.
+- `seed` (int, optional): Random seed for deterministic behavior. Default is `7`.
+
+**Methods**
+
+**`__init__(self, stddev, seed=7)`**
+
+Initializes the Gaussian Noise layer.
+
+- `stddev` (float): Standard deviation of the noise.
+- `seed` (int, optional): Random seed. Default is `7`.
+
+**`__call__(self, data, train_flag=True)`**
+
+Applies Gaussian noise to the input tensor during training.
+
+- `data` (Tensor): Input tensor of any rank.
+- `train_flag` (bool): If `True`, adds noise. If `False`, returns the input tensor as is.
+
+Returns:
+- `Tensor`: The output tensor with Gaussian noise added during training.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+noise_layer = nn.gaussian_noise(stddev=0.1, seed=7)
+data = tf.random.normal(shape=(3, 4))
+output = noise_layer(data, train_flag=True)
+
+print(output.shape)  # Same shape as input
+```
+
+# GCN
+
+This class implements a multi-layer Graph Convolutional Network (GCN).
+
+**Initialization Parameters**
+
+- `x_dim` (int): Dimension of input features.
+- `h_dim` (int): Dimension of hidden layers.
+- `out_dim` (int): Dimension of output features.
+- `nb_layers` (int): Number of GCN layers. Default is `2`.
+- `dropout_rate` (float): Dropout rate for regularization. Default is `0.5`.
+- `bias` (bool): If `True`, adds a learnable bias to the output. Default is `True`.
+
+**Methods**
+
+**`__init__(self, x_dim, h_dim, out_dim, nb_layers=2, dropout_rate=0.5, bias=True)`**
+
+Initializes the multi-layer GCN.
+
+- `x_dim` (int): Input feature size.
+- `h_dim` (int): Hidden layer size.
+- `out_dim` (int): Output feature size.
+- `nb_layers` (int): Number of GCN layers. Default is `2`.
+- `dropout_rate` (float): Dropout rate. Default is `0.5`.
+- `bias` (bool): Whether to include a bias term. Default is `True`.
+
+**`__call__(self, x, adj)`**
+
+Applies the multi-layer GCN to the input tensor and adjacency matrix.
+
+- `x` (Tensor): Input feature tensor.
+- `adj` (Tensor): Adjacency matrix tensor.
+
+Returns:
+- `Tensor`: The output tensor after applying the GCN layers.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+gcn = nn.GCN(x_dim=10, h_dim=20, out_dim=5, nb_layers=2, dropout_rate=0.5)
+x = tf.random.normal(shape=(5, 10))
+adj = tf.eye(5)
+
+output = gcn(x, adj)
+print(output.shape)  # Should be (5, 5)
+```
+
+# global_avg_pool1d
+
+These classes implement global average pooling operations for 1D tensors.
+
+**Initialization Parameters**
+
+- `keepdims` (bool): If `True`, retains reduced dimensions with length 1. Default is `False`.
+
+**Methods**
+
+**`__init__(self, keepdims=False)`**
+
+Initializes the global average pooling layer for 1D tensors.
+
+- `keepdims` (bool): Whether to keep reduced dimensions. Default is `False`.
+
+**`__call__(self, data)`**
+
+Applies global average pooling to the input tensor.
+
+- `data` (Tensor): Input 1D tensor.
+
+Returns:
+- `Tensor`: The pooled tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+pool1d = nn.global_avg_pool1d(keepdims=False)
+data = tf.random.normal(shape=(3, 4, 5))
+output = pool1d(data)
+
+print(output.shape)  # Should be (3, 5)
+```
+
+# global_avg_pool2d
+
+These classes implement global average pooling operations for 2D tensors.
+
+**Initialization Parameters**
+
+- `keepdims` (bool): If `True`, retains reduced dimensions with length 1. Default is `False`.
+
+**Methods**
+
+**`__init__(self, keepdims=False)`**
+
+Initializes the global average pooling layer for 2D tensors.
+
+- `keepdims` (bool): Whether to keep reduced dimensions. Default is `False`.
+
+**`__call__(self, data)`**
+
+Applies global average pooling to the input tensor.
+
+- `data` (Tensor): Input 2D tensor.
+
+Returns:
+- `Tensor`: The pooled tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+pool2d = nn.global_avg_pool2d(keepdims=False)
+data = tf.random.normal(shape=(3, 4, 5, 6))
+output = pool2d(data)
+
+print(output.shape)  # Should be (3, 6)
+```
+
+# global_avg_pool3d
+
+These classes implement global average pooling operations for 3D tensors.
+
+**Initialization Parameters**
+
+- `keepdims` (bool): If `True`, retains reduced dimensions with length 1. Default is `False`.
+
+**Methods**
+
+**`__init__(self, keepdims=False)`**
+
+Initializes the global average pooling layer for 3D tensors.
+
+- `keepdims` (bool): Whether to keep reduced dimensions. Default is `False`.
+
+**`__call__(self, data)`**
+
+Applies global average pooling to the input tensor.
+
+- `data` (Tensor): Input 3D tensor.
+
+Returns:
+- `Tensor`: The pooled tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+pool3d = nn.global_avg_pool3d(keepdims=False)
+data = tf.random.normal(shape=(3, 4, 5, 6, 7))
+output = pool3d(data)
+
+print(output.shape)  # Should be (3, 7)
 ```
 
 # group_norm
