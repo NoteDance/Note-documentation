@@ -467,10 +467,10 @@ The `batch_norm` class implements batch normalization, which helps to stabilize 
 - **`epsilon`** (float): Small constant to avoid division by zero. Default is `0.001`.
 - **`center`** (bool): If `True`, add offset of `beta` to the normalized tensor. Default is `True`.
 - **`scale`** (bool): If `True`, multiply by `gamma`. Default is `True`.
-- **`beta_initializer`** (str): Initializer for the beta weight. Default is `'zeros'`.
-- **`gamma_initializer`** (str): Initializer for the gamma weight. Default is `'ones'`.
-- **`moving_mean_initializer`** (str): Initializer for the moving mean. Default is `'zeros'`.
-- **`moving_variance_initializer`** (str): Initializer for the moving variance. Default is `'ones'`.
+- **`beta_initializer`** (str, list, tuple): Initializer for the beta weight. Default is `'zeros'`.
+- **`gamma_initializer`** (str, list, tuple): Initializer for the gamma weight. Default is `'ones'`.
+- **`moving_mean_initializer`** (str, list, tuple): Initializer for the moving mean. Default is `'zeros'`.
+- **`moving_variance_initializer`** (str, list, tuple): Initializer for the moving variance. Default is `'ones'`.
 - **`synchronized`** (bool): If `True`, synchronize the moments across replicas. Default is `False`.
 - **`trainable`** (bool): If `True`, add variables to the trainable variables collection. Default is `True`.
 - **`dtype`** (str): Data type for the layer. Default is `'float32'`.
@@ -514,8 +514,8 @@ The `cached_attention` class implements an attention mechanism with caching, pri
 - **`input_size`** (int, optional): Size of the input. If not specified, it will be inferred from the input data.
 - **`attention_axes`** (list or tuple of ints, optional): Axes along which to apply attention. Defaults to the last axis.
 - **`dropout_rate`** (float, optional): Dropout rate to apply to the attention scores. Defaults to 0.0.
-- **`weight_initializer`** (str, optional): Initializer for the weights. Defaults to "Xavier".
-- **`bias_initializer`** (str, optional): Initializer for the biases. Defaults to "zeros".
+- **`weight_initializer`** (str, list, tuple): Initializer for the weights. Defaults to "Xavier".
+- **`bias_initializer`** (str, list, tuple): Initializer for the biases. Defaults to "zeros".
 - **`use_bias`** (bool, optional): Whether to use bias in the dense layers. Defaults to True.
 - **`dtype`** (str, optional): Data type of the layer. Defaults to 'float32'.
 
@@ -755,8 +755,8 @@ The `conv1d` class implements a 1D convolutional layer, which is commonly used i
 - **`input_size`** (int, optional): Size of the input channels.
 - **`strides`** (int or list of int): Stride size for the convolution. Default is `[1]`.
 - **`padding`** (str or list of int): Padding type or size. Default is `'VALID'`.
-- **`weight_initializer`** (str): Initializer for the weight tensor. Default is `'Xavier'`.
-- **`bias_initializer`** (str): Initializer for the bias vector. Default is `'zeros'`.
+- **`weight_initializer`** (str, list, tuple): Initializer for the weight tensor. Default is `'Xavier'`.
+- **`bias_initializer`** (str, list, tuple): Initializer for the bias vector. Default is `'zeros'`.
 - **`activation`** (str, optional): Activation function to use. Default is `None`.
 - **`data_format`** (str): Data format, either `'NWC'` or `'NCW'`. Default is `'NWC'`.
 - **`dilations`** (int or list of int, optional): Dilation rate for dilated convolution. Default is `None`.
@@ -804,8 +804,8 @@ The `conv1d_transpose` class implements a 1D transposed convolutional layer, oft
 - **`strides`** (int or list of int): Stride size for the transposed convolution. Default is `[1]`.
 - **`padding`** (str): Padding type. Default is `'VALID'`.
 - **`output_padding`** (int, optional): Additional size added to the output shape.
-- **`weight_initializer`** (str): Initializer for the weight tensor. Default is `'Xavier'`.
-- **`bias_initializer`** (str): Initializer for the bias vector. Default is `'zeros'`.
+- **`weight_initializer`** (str, list, tuple): Initializer for the weight tensor. Default is `'Xavier'`.
+- **`bias_initializer`** (str, list, tuple): Initializer for the bias vector. Default is `'zeros'`.
 - **`activation`** (str, optional): Activation function to use. Default is `None`.
 - **`data_format`** (str): Data format, either `'NWC'` or `'NCW'`. Default is `'NWC'`.
 - **`dilations`** (int or list of int, optional): Dilation rate for dilated convolution. Default is `None`.
@@ -851,8 +851,8 @@ The `conv2d` class implements a 2D convolutional layer, which is commonly used i
 - **`input_size`** (int, optional): Number of input channels. If not provided, it will be inferred from the input data.
 - **`strides`** (int or list of int): Stride size for the convolution. Default is `[1, 1]`.
 - **`padding`** (str or list of int): Padding type or size. Default is `'VALID'`.
-- **`weight_initializer`** (str): Initializer for the weight tensor. Default is `'Xavier'`.
-- **`bias_initializer`** (str): Initializer for the bias vector. Default is `'zeros'`.
+- **`weight_initializer`** (str, list, tuple): Initializer for the weight tensor. Default is `'Xavier'`.
+- **`bias_initializer`** (str, list, tuple): Initializer for the bias vector. Default is `'zeros'`.
 - **`activation`** (str, optional): Activation function to use. Default is `None`.
 - **`data_format`** (str): Data format, either `'NHWC'` or `'NCHW'`. Default is `'NHWC'`.
 - **`dilations`** (int or list of int, optional): Dilation rate for dilated convolution. Default is `None`.
@@ -900,8 +900,8 @@ The `conv2d_transpose` class implements a 2D transposed convolutional layer, whi
 - **`strides`** (int or list of int): Stride size for the transposed convolution. Default is `[1, 1]`.
 - **`padding`** (str): Padding type, either `'VALID'` or `'SAME'`. Default is `'VALID'`.
 - **`output_padding`** (int or list of int, optional): Additional size added to one side of each dimension in the output shape. Default is `None`.
-- **`weight_initializer`** (str): Initializer for the weight tensor. Default is `'Xavier'`.
-- **`bias_initializer`** (str): Initializer for the bias vector. Default is `'zeros'`.
+- **`weight_initializer`** (str, list, tuple): Initializer for the weight tensor. Default is `'Xavier'`.
+- **`bias_initializer`** (str, list, tuple): Initializer for the bias vector. Default is `'zeros'`.
 - **`activation`** (str, optional): Activation function to use. Default is `None`.
 - **`data_format`** (str): Data format, either `'NHWC'` or `'NCHW'`. Default is `'NHWC'`.
 - **`dilations`** (int or list of int, optional): Dilation rate for dilated transposed convolution. Default is `None`.
@@ -947,8 +947,8 @@ The `conv3d` class implements a 3D convolutional layer, which is commonly used f
 - **`input_size`** (int, optional): Number of input channels. If not provided, it will be inferred from the input data.
 - **`strides`** (int or list of int): Stride size for the convolution. Default is `[1, 1, 1]`.
 - **`padding`** (str): Padding type, either `'VALID'` or `'SAME'`. Default is `'VALID'`.
-- **`weight_initializer`** (str): Initializer for the weight tensor. Default is `'Xavier'`.
-- **`bias_initializer`** (str): Initializer for the bias vector. Default is `'zeros'`.
+- **`weight_initializer`** (str, list, tuple): Initializer for the weight tensor. Default is `'Xavier'`.
+- **`bias_initializer`** (str, list, tuple): Initializer for the bias vector. Default is `'zeros'`.
 - **`activation`** (str, optional): Activation function to use. Default is `None`.
 - **`data_format`** (str): Data format, either `'NDHWC'` or `'NCDHW'`. Default is `'NDHWC'`.
 - **`dilations`** (int or list of int, optional): Dilation rate for dilated convolution. Default is `None`.
@@ -995,8 +995,8 @@ The `conv3d_transpose` class implements a 3D transposed convolutional (also know
 - **`strides`** (int or list of int): Stride size for the transposed convolution. Default is `[1, 1, 1]`.
 - **`padding`** (str): Padding type, either `'VALID'` or `'SAME'`. Default is `'VALID'`.
 - **`output_padding`** (int or list of int, optional): Additional size added to each dimension of the output shape. Default is `None`.
-- **`weight_initializer`** (str): Initializer for the weight tensor. Default is `'Xavier'`.
-- **`bias_initializer`** (str): Initializer for the bias vector. Default is `'zeros'`.
+- **`weight_initializer`** (str, list, tuple): Initializer for the weight tensor. Default is `'Xavier'`.
+- **`bias_initializer`** (str, list, tuple): Initializer for the bias vector. Default is `'zeros'`.
 - **`activation`** (str, optional): Activation function to use. Default is `None`.
 - **`data_format`** (str): Data format, either `'NDHWC'` or `'NCDHW'`. Default is `'NDHWC'`.
 - **`dilations`** (int or list of int, optional): Dilation rate for dilated transposed convolution. Default is `None`.
@@ -1144,8 +1144,8 @@ The `dense` class implements a fully connected layer, which is a core component 
 
 - **`output_size`** (int): Number of output units (neurons) in the dense layer.
 - **`input_size`** (int, optional): Number of input units (neurons) in the dense layer. If not provided, it will be inferred from the input data.
-- **`weight_initializer`** (str): Initializer for the weight matrix. Default is `'Xavier'`.
-- **`bias_initializer`** (str): Initializer for the bias vector. Default is `'zeros'`.
+- **`weight_initializer`** (str, list, tuple): Initializer for the weight matrix. Default is `'Xavier'`.
+- **`bias_initializer`** (str, list, tuple): Initializer for the bias vector. Default is `'zeros'`.
 - **`activation`** (str, optional): Activation function to use. Default is `None`.
 - **`use_bias`** (bool): Whether to use a bias vector. Default is `True`.
 - **`trainable`** (bool): Whether the layer's variables should be trainable. Default is `True`.
@@ -1190,8 +1190,8 @@ The `depthwise_conv1d` class implements a depthwise 1D convolutional layer, whic
 - **`input_size`** (int, optional): Number of input channels. If not provided, it will be inferred from the input data.
 - **`strides`** (int or list of int): Stride of the convolution. Default is `1`.
 - **`padding`** (str): Padding algorithm to use. Default is `'VALID'`.
-- **`weight_initializer`** (str): Initializer for the weight tensor. Default is `'Xavier'`.
-- **`bias_initializer`** (str): Initializer for the bias vector. Default is `'zeros'`.
+- **`weight_initializer`** (str, list, tuple): Initializer for the weight tensor. Default is `'Xavier'`.
+- **`bias_initializer`** (str, list, tuple): Initializer for the bias vector. Default is `'zeros'`.
 - **`activation`** (str, optional): Activation function to use. Default is `None`.
 - **`data_format`** (str): Data format of the input and output data. Default is `'NHWC'`.
 - **`dilations`** (int or list of int, optional): Dilation rate for the convolution. Default is `None`.
@@ -1237,8 +1237,8 @@ The `depthwise_conv2d` class implements a depthwise 2D convolutional layer, whic
 - **`input_size`** (int, optional): Number of input channels. If not provided, it will be inferred from the input data.
 - **`strides`** (int or list of int): Stride of the convolution. Default is `1`.
 - **`padding`** (str or list of int): Padding algorithm to use. Can be a string (`'VALID'` or `'SAME'`) or a list of integers for custom padding. Default is `'VALID'`.
-- **`weight_initializer`** (str): Initializer for the weight tensor. Default is `'Xavier'`.
-- **`bias_initializer`** (str): Initializer for the bias vector. Default is `'zeros'`.
+- **`weight_initializer`** (str, list, tuple): Initializer for the weight tensor. Default is `'Xavier'`.
+- **`bias_initializer`** (str, list, tuple): Initializer for the bias vector. Default is `'zeros'`.
 - **`activation`** (str, optional): Activation function to use. Default is `None`.
 - **`data_format`** (str): Data format of the input and output data. Default is `'NHWC'`.
 - **`dilations`** (int or list of int, optional): Dilation rate for the convolution. Default is `None`.
@@ -1322,8 +1322,8 @@ This class implements a dense layer using `tf.einsum` for computations. It allow
 - **`input_shape`** (list, optional): Shape of the input tensor.
 - **`activation`** (str, optional): Activation function to use.
 - **`bias_axes`** (str, optional): Axes to apply bias on.
-- **`weight_initializer`** (str): Initializer for the weight matrix. Default is "Xavier".
-- **`bias_initializer`** (str): Initializer for the bias vector. Default is "zeros".
+- **`weight_initializer`** (str, list, tuple): Initializer for the weight matrix. Default is "Xavier".
+- **`bias_initializer`** (str, list, tuple): Initializer for the bias vector. Default is "zeros".
 - **`trainable`** (bool): Whether the layer's variables should be trainable. Default is `True`.
 - **`dtype`** (str): Data type for the computations. Default is `'float32'`.
 
@@ -1362,7 +1362,7 @@ This class implements an embedding layer, which transforms input indices into de
 
 - **`output_size`** (int): The size of the output embedding vectors.
 - **`input_size`** (int, optional): The size of the input vocabulary. Default is `None`.
-- **`initializer`** (str): The initializer for the embedding weights. Default is `'normal'`.
+- **`initializer`** (str, list, tuple): The initializer for the embedding weights. Default is `'normal'`.
 - **`sparse`** (bool): If `True`, supports sparse input tensors. Default is `False`.
 - **`use_one_hot_matmul`** (bool): If `True`, uses one-hot matrix multiplication. Default is `False`.
 - **`trainable`** (bool): If `True`, the embedding weights are trainable. Default is `True`.
@@ -1457,8 +1457,8 @@ This class implements a feed-forward layer with multiple experts, allowing for i
 - **`inner_dropout`** (float): Dropout probability after intermediate activations. Default is `0.0`.
 - **`output_dropout`** (float): Dropout probability after the output layer. Default is `0.0`.
 - **`activation`** (function): The activation function. Default is `tf.nn.gelu`.
-- **`kernel_initializer`** (str): The initializer for the kernel weights. Default is `'Xavier'`.
-- **`bias_initializer`** (str): The initializer for the bias weights. Default is `'zeros'`.
+- **`kernel_initializer`** (str, list, tuple): The initializer for the kernel weights. Default is `'Xavier'`.
+- **`bias_initializer`** (str, list, tuple): The initializer for the bias weights. Default is `'zeros'`.
 
 **Methods**
 
@@ -1497,8 +1497,8 @@ This class implements the Filter Response Normalization (FRN) layer, which norma
 - **`input_shape`** (tuple, optional): The shape of the input tensor. Default is `None`.
 - **`epsilon`** (float): Small constant added to variance to avoid division by zero. Default is `1e-6`.
 - **`axis`** (list): List of axes that should be normalized. Default is `[1, 2]`.
-- **`beta_initializer`** (str): Initializer for the beta weights. Default is `'zeros'`.
-- **`gamma_initializer`** (str): Initializer for the gamma weights. Default is `'ones'`.
+- **`beta_initializer`** (str, list, tuple): Initializer for the beta weights. Default is `'zeros'`.
+- **`gamma_initializer`** (str, list, tuple): Initializer for the gamma weights. Default is `'ones'`.
 - **`learned_epsilon`** (bool): If `True`, adds a learnable epsilon parameter. Default is `False`.
 - **`dtype`** (str): The data type for computations. Default is `'float32'`.
 
@@ -1763,8 +1763,8 @@ The `group_norm` class implements Group Normalization, a technique that divides 
 - **`epsilon`** (float, default=1e-3): Small constant to avoid division by zero.
 - **`center`** (bool, default=True): If `True`, add offset `beta`.
 - **`scale`** (bool, default=True): If `True`, multiply by `gamma`.
-- **`beta_initializer`** (str, default="zeros"): Initializer for the beta parameter.
-- **`gamma_initializer`** (str, default="ones"): Initializer for the gamma parameter.
+- **`beta_initializer`** (str, list, tuple): Initializer for the beta parameter. Default is `'zeros'`.
+- **`gamma_initializer`** (str, list, tuple): Initializer for the gamma parameter. Default is `'ones'`.
 - **`mask`** (tensor, optional): Mask tensor for weighted mean and variance calculation.
 - **`dtype`** (str, default='float32'): Data type for the layer parameters.
 
@@ -1803,8 +1803,8 @@ The `GRU` class implements a Gated Recurrent Unit (GRU) layer, a type of recurre
 
 - **`output_size`** (int): Size of the output dimension.
 - **`input_size`** (int, optional): Size of the input dimension. If not provided, it will be inferred from the input data.
-- **`weight_initializer`** (str, default='Xavier'): Initializer for the weight matrices.
-- **`bias_initializer`** (str, default='zeros'): Initializer for the bias vectors.
+- **`weight_initializer`** (str, list, tuple): Initializer for the weight matrices. Default is `'Xavier'`.
+- **`bias_initializer`** (str, list, tuple): Initializer for the bias vectors. Default is `'zeros'`.
 - **`return_sequence`** (bool, default=False): If `True`, returns the full sequence of outputs. If `False`, returns only the final output.
 - **`use_bias`** (bool, default=True): If `True`, includes bias terms in the calculations.
 - **`trainable`** (bool, default=True): If `True`, the layer's parameters will be trainable.
@@ -1846,8 +1846,8 @@ The `GRUCell` class implements a single Gated Recurrent Unit (GRU) cell, a build
 **Initialization Parameters**
 
 - **`weight_shape`** (tuple): Shape of the weight matrix, typically `[input_size + output_size, output_size]`.
-- **`weight_initializer`** (str, default='Xavier'): Initializer for the weight matrix.
-- **`bias_initializer`** (str, default='zeros'): Initializer for the bias vector.
+- **`weight_initializer`** (str, list, tuple): Initializer for the weight matrix. Default is `'Xavier'`.
+- **`bias_initializer`** (str, list, tuple): Initializer for the bias vector. Default is `'zeros'`.
 - **`use_bias`** (bool, default=True): If `True`, includes bias terms in the calculations.
 - **`trainable`** (bool, default=True): If `True`, the cell's parameters will be trainable.
 - **`dtype`** (str, default='float32'): Data type for the cell's parameters.
@@ -1929,8 +1929,8 @@ The `LSTM` class implements a long short-term memory (LSTM) layer, which is a ty
 
 - **`output_size`** (int): The size of the output vector for each time step.
 - **`input_size`** (int, optional): The size of the input vector. If not provided, it will be inferred from the input data.
-- **`weight_initializer`** (str, default='Xavier'): The method to initialize weights.
-- **`bias_initializer`** (str, default='zeros'): The method to initialize biases.
+- **`weight_initializer`** (str, list, tuple): The method to initialize weights. Default is `'Xavier'`.
+- **`bias_initializer`** (str, list, tuple): The method to initialize biases. Default is `'zeros'`.
 - **`return_sequence`** (bool, default=False): Whether to return the full sequence of outputs or just the last output.
 - **`use_bias`** (bool, default=True): Whether to use bias vectors.
 - **`trainable`** (bool, default=True): Whether the layer parameters are trainable.
@@ -1971,8 +1971,8 @@ The `LSTMCell` class implements a long short-term memory (LSTM) cell, a fundamen
 **Initialization Parameters**
 
 - **`weight_shape`** (tuple): Shape of the weights. Should be `[input_size, hidden_size]`.
-- **`weight_initializer`** (str, default='Xavier'): Method for weight initialization.
-- **`bias_initializer`** (str, default='zeros'): Method for bias initialization.
+- **`weight_initializer`** (str, list, tuple): Method for weight initialization. Default is `'Xavier'`.
+- **`bias_initializer`** (str, list, tuple): Method for bias initialization. Default is `'zeros'`.
 - **`use_bias`** (bool, default=True): Whether to use bias vectors.
 - **`trainable`** (bool, default=True): Whether the layer parameters are trainable.
 - **`dtype`** (str, default='float32'): Data type of the layer parameters.
@@ -2026,8 +2026,8 @@ The `layer_norm` class implements layer normalization, a technique used to norma
 - **`center`** (bool, default=True): Whether to include a beta parameter.
 - **`scale`** (bool, default=True): Whether to include a gamma parameter.
 - **`rms_scaling`** (bool, default=False): Whether to use RMS scaling.
-- **`beta_initializer`** (str, default='zeros'): Initializer for the beta parameter.
-- **`gamma_initializer`** (str, default='ones'): Initializer for the gamma parameter.
+- **`beta_initializer`** (str, list, tuple): Initializer for the beta parameter. Default is `'zeros'`.
+- **`gamma_initializer`** (str, list, tuple): Initializer for the gamma parameter. Default is `'ones'`.
 - **`dtype`** (str, default='float32'): Data type of the layer parameters.
 
 **Methods**
@@ -2068,8 +2068,8 @@ The `multihead_attention` class implements multi-head attention, a core componen
 - **`input_size`** (int, default=None): Size of the input features.
 - **`kdim`** (int, default=None): Dimension of the key vectors (defaults to `input_size` if not specified).
 - **`vdim`** (int, default=None): Dimension of the value vectors (defaults to `input_size` if not specified).
-- **`weight_initializer`** (str, default='Xavier'): Initializer for the weights.
-- **`bias_initializer`** (str, default='zeros'): Initializer for the biases.
+- **`weight_initializer`** (str, list, tuple): Initializer for the weights. Default is `'Xavier'`.
+- **`bias_initializer`** (str, list, tuple): Initializer for the biases. Default is `'zeros'`.
 - **`use_bias`** (bool, default=True): Whether to use biases in the dense layers.
 - **`dtype`** (str, default='float32'): Data type of the layer parameters.
 
@@ -2113,8 +2113,8 @@ The `RNN` class implements a simple Recurrent Neural Network (RNN) layer, which 
 
 - **`output_size`** (int): Size of the output features.
 - **`input_size`** (int, default=None): Size of the input features. If not specified, it will be inferred from the input data.
-- **`weight_initializer`** (str, default='Xavier'): Initializer for the weights.
-- **`bias_initializer`** (str, default='zeros'): Initializer for the biases.
+- **`weight_initializer`** (str, list, tuple): Initializer for the weights. Default is `'Xavier'`.
+- **`bias_initializer`** (str, list, tuple): Initializer for the biases. Default is `'zeros'`.
 - **`activation`** (str, default=None): Activation function to use (should be a key in `activation_dict`).
 - **`return_sequence`** (bool, default=False): Whether to return the full sequence of outputs or just the last output.
 - **`use_bias`** (bool, default=True): Whether to use biases in the RNN cell.
@@ -2156,8 +2156,8 @@ The `RNNCell` class implements a basic Recurrent Neural Network (RNN) cell, whic
 **Initialization Parameters**
 
 - **`weight_shape`** (tuple): Shape of the weight matrix for input data.
-- **`weight_initializer`** (str, default='Xavier'): Initializer for the weights.
-- **`bias_initializer`** (str, default='zeros'): Initializer for the biases.
+- **`weight_initializer`** (str, list, tuple): Initializer for the weights. Default is `'Xavier'`.
+- **`bias_initializer`** (str, list, tuple): Initializer for the biases. Default is `'zeros'`.
 - **`activation`** (str, default=None): Activation function to use (should be a key in `activation_dict`).
 - **`use_bias`** (bool, default=True): Whether to use biases in the RNN cell.
 - **`trainable`** (bool, default=True): Whether the layer parameters are trainable.
@@ -2207,8 +2207,8 @@ The `separable_conv1d` class implements a 1D separable convolutional layer, whic
 - **`padding`** (str, default='VALID'): One of `"VALID"` or `"SAME"`.
 - **`data_format`** (str, default='NHWC'): The data format, either `"NHWC"` or `"NCHW"`.
 - **`dilations`** (int or list, default=None): The dilation rate to use for dilated convolution.
-- **`weight_initializer`** (str, default='Xavier'): Initializer for the weights.
-- **`bias_initializer`** (str, default='zeros'): Initializer for the biases.
+- **`weight_initializer`** (str, list, tuple): Initializer for the weights. Default is `'Xavier'`.
+- **`bias_initializer`** (str, list, tuple): Initializer for the biases. Default is `'zeros'`.
 - **`activation`** (str, default=None): Activation function to apply.
 - **`use_bias`** (bool, default=True): Whether to use a bias vector.
 - **`trainable`** (bool, default=True): Whether the layer's variables should be trainable.
