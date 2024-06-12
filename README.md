@@ -220,6 +220,246 @@ output = pooling_layer(data)
 print(output.shape)  # Output shape will be (32, 4, 4, 4, 8) for 'channels_last' data format
 ```
 
+# FastAdaptiveAvgPool
+
+The `FastAdaptiveAvgPool` class implements fast adaptive average pooling for 2D inputs. It computes the average of the input tensor along the spatial dimensions.
+
+**Initialization Parameters**
+
+- **`flatten`** (bool, optional): If `True`, flattens the output. Default is `False`.
+- **`input_fmt`** (str, optional): Specifies the format of the input tensor (`'NHWC'` or `'NCHW'`). Default is `'NHWC'`.
+
+**Methods**
+
+- **`__call__(self, x)`**: Applies adaptive average pooling to the input `x`.
+
+  - **Parameters**:
+    - **`x`**: Input tensor.
+
+  - **Returns**: Pooled output tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of FastAdaptiveAvgPool
+avg_pool = nn.FastAdaptiveAvgPool(flatten=True)
+
+# Generate some sample data
+data = tf.random.normal((2, 8, 8, 3))
+
+# Apply average pooling
+output = avg_pool(data)
+```
+
+# FastAdaptiveMaxPool
+
+The `FastAdaptiveMaxPool` class implements fast adaptive max pooling for 2D inputs. It computes the maximum value of the input tensor along the spatial dimensions.
+
+**Initialization Parameters**
+
+- **`flatten`** (bool, optional): If `True`, flattens the output. Default is `False`.
+- **`input_fmt`** (str, optional): Specifies the format of the input tensor (`'NHWC'` or `'NCHW'`). Default is `'NHWC'`.
+
+**Methods**
+
+- **`__call__(self, x)`**: Applies adaptive max pooling to the input `x`.
+
+  - **Parameters**:
+    - **`x`**: Input tensor.
+
+  - **Returns**: Pooled output tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of FastAdaptiveMaxPool
+max_pool = nn.FastAdaptiveMaxPool(flatten=True)
+
+# Generate some sample data
+data = tf.random.normal((2, 8, 8, 3))
+
+# Apply max pooling
+output = max_pool(data)
+```
+
+# FastAdaptiveAvgMaxPool
+
+The `FastAdaptiveAvgMaxPool` class combines both average and max pooling for 2D inputs. It computes the average and maximum of the input tensor along the spatial dimensions and returns their mean.
+
+**Initialization Parameters**
+
+- **`flatten`** (bool, optional): If `True`, flattens the output. Default is `False`.
+- **`input_fmt`** (str, optional): Specifies the format of the input tensor (`'NHWC'` or `'NCHW'`). Default is `'NHWC'`.
+
+**Methods**
+
+- **`__call__(self, x)`**: Applies combined adaptive average and max pooling to the input `x`.
+
+  - **Parameters**:
+    - **`x`**: Input tensor.
+
+  - **Returns**: Pooled output tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of FastAdaptiveAvgMaxPool
+avg_max_pool = nn.FastAdaptiveAvgMaxPool(flatten=True)
+
+# Generate some sample data
+data = tf.random.normal((2, 8, 8, 3))
+
+# Apply average and max pooling
+output = avg_max_pool(data)
+```
+
+# FastAdaptiveCatAvgMaxPool
+
+The `FastAdaptiveCatAvgMaxPool` class concatenates the results of both average and max pooling for 2D inputs. It computes the average and maximum of the input tensor along the spatial dimensions and concatenates the results.
+
+**Initialization Parameters**
+
+- **`flatten`** (bool, optional): If `True`, flattens the output. Default is `False`.
+- **`input_fmt`** (str, optional): Specifies the format of the input tensor (`'NHWC'` or `'NCHW'`). Default is `'NHWC'`.
+
+**Methods**
+
+- **`__call__(self, x)`**: Applies concatenated adaptive average and max pooling to the input `x`.
+
+  - **Parameters**:
+    - **`x`**: Input tensor.
+
+  - **Returns**: Concatenated pooled output tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of FastAdaptiveCatAvgMaxPool
+cat_avg_max_pool = nn.FastAdaptiveCatAvgMaxPool(flatten=True)
+
+# Generate some sample data
+data = tf.random.normal((2, 8, 8, 3))
+
+# Apply concatenated average and max pooling
+output = cat_avg_max_pool(data)
+```
+
+# AdaptiveAvgMaxPool2d
+
+The `AdaptiveAvgMaxPool2d` class implements adaptive pooling that combines average and max pooling for 2D inputs.
+
+**Initialization Parameters**
+
+- **`output_size`** (tuple of int, optional): Specifies the output size. Default is `1`.
+
+**Methods**
+
+- **`__call__(self, x)`**: Applies adaptive average and max pooling to the input `x`.
+
+  - **Parameters**:
+    - **`x`**: Input tensor.
+
+  - **Returns**: Pooled output tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of AdaptiveAvgMaxPool2d
+adaptive_avg_max_pool = nn.AdaptiveAvgMaxPool2d(output_size=(2, 2))
+
+# Generate some sample data
+data = tf.random.normal((2, 8, 8, 3))
+
+# Apply adaptive average and max pooling
+output = adaptive_avg_max_pool(data)
+```
+
+# AdaptiveCatAvgMaxPool2d
+
+The `AdaptiveCatAvgMaxPool2d` class implements adaptive pooling that concatenates the results of average and max pooling for 2D inputs.
+
+**Initialization Parameters**
+
+- **`output_size`** (tuple of int, optional): Specifies the output size. Default is `1`.
+
+**Methods**
+
+- **`__call__(self, x)`**: Applies adaptive concatenated average and max pooling to the input `x`.
+
+  - **Parameters**:
+    - **`x`**: Input tensor.
+
+  - **Returns**: Concatenated pooled output tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of AdaptiveCatAvgMaxPool2d
+adaptive_cat_avg_max_pool = nn.AdaptiveCatAvgMaxPool2d(output_size=(2, 2))
+
+# Generate some sample data
+data = tf.random.normal((2, 8, 8, 3))
+
+# Apply adaptive concatenated average and max pooling
+output = adaptive_cat_avg_max_pool(data)
+```
+
+# SelectAdaptivePool2d
+
+The `SelectAdaptivePool2d` class provides a selectable global pooling layer with dynamic input kernel size.
+
+**Initialization Parameters**
+
+- **`output_size`** (tuple of int, optional): Specifies the output size. Default is `1`.
+- **`pool_type`** (str, optional): Specifies the type of pooling (`'fast'`, `'avgmax'`, `'catavgmax'`, `'max'`, or `'avg'`). Default is `'fast'`.
+- **`flatten`** (bool, optional): If `True`, flattens the output. Default is `False`.
+- **`input_fmt`** (str, optional): Specifies the format of the input tensor (`'NHWC'` or `'NCHW'`). Default is `'NHWC'`.
+
+**Methods**
+
+- **`is_identity(self)`**: Checks if the pool type is an identity (no pooling).
+- **`__call__(self, x)`**: Applies the selected pooling method to the input `x`.
+- **`feat_mult(self)`**: Returns the feature multiplier for the selected pooling method.
+
+  - **Parameters**:
+    - **`x`**: Input tensor.
+
+  - **Returns**: Pooled output tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of SelectAdaptivePool2d
+select_pool = nn.SelectAdaptivePool2d(pool_type='avgmax', flatten=True)
+
+# Generate some sample data
+data = tf.random.normal((2, 8, 8, 3))
+
+# Apply selected pooling
+output = select_pool(data)
+```
+
 # additive_attention
 
 The `additive_attention` class implements an additive attention mechanism, which calculates attention scores as a nonlinear sum of query and key tensors.
@@ -500,6 +740,101 @@ data = tf.random.normal((2, 5, 10))
 
 # Apply batch normalization
 output = bn(data)
+```
+
+# BigBird_attention
+
+The `BigBird_attention` class implements BigBird, a sparse attention mechanism, which reduces the quadratic dependency of attention computation to linear. This implementation is based on the paper "Big Bird: Transformers for Longer Sequences" (https://arxiv.org/abs/2007.14062).
+
+**Initialization Parameters**
+
+- **`n_head`** (int): Number of attention heads.
+- **`key_dim`** (int): Size of each attention head for query and key.
+- **`input_size`** (int, optional): Size of the input.
+- **`num_rand_blocks`** (int): Number of random blocks. Default is `3`.
+- **`from_block_size`** (int): Block size of the query. Default is `64`.
+- **`to_block_size`** (int): Block size of the key. Default is `64`.
+- **`max_rand_mask_length`** (int): Maximum length for the random mask. Default is `MAX_SEQ_LEN`.
+- **`weight_initializer`** (str): Initializer for the weights. Default is `'Xavier'`.
+- **`bias_initializer`** (str): Initializer for the bias. Default is `'zeros'`.
+- **`use_bias`** (bool): If `True`, adds a bias term to the attention computation. Default is `True`.
+- **`seed`** (int, optional): Seed for random number generation.
+- **`dtype`** (str): Data type for the layer. Default is `'float32'`.
+
+**Methods**
+
+- **`__call__(self, query, value, key=None, attention_mask=None)`**: Applies BigBird sparse attention to the input `query`, `key`, and `value`.
+
+  - **Parameters**:
+    - **`query`**: Query tensor.
+    - **`value`**: Value tensor.
+    - **`key`** (optional): Key tensor. If not provided, `value` is used as the key.
+    - **`attention_mask`** (optional): Mask tensor for attention computation.
+
+  - **Returns**: Attention output tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of BigBird_attention
+bigbird_attn = nn.BigBird_attention(
+    n_head=8,
+    key_dim=64,
+    input_size=128,
+    num_rand_blocks=3,
+    from_block_size=64,
+    to_block_size=64,
+    max_rand_mask_length=512,
+    weight_initializer='Xavier',
+    bias_initializer='zeros',
+    use_bias=True,
+    dtype='float32'
+)
+
+# Generate some sample data
+query = tf.random.normal((2, 128, 128))
+value = tf.random.normal((2, 128, 128))
+
+# Apply BigBird attention
+output = bigbird_attn(query, value)
+```
+
+# BigBird_masks
+
+The `BigBird_masks` class creates attention masks for the BigBird attention mechanism, which are used to efficiently handle long sequences by reducing the complexity of the attention computation.
+
+**Initialization Parameters**
+
+- **`block_size`** (int): Size of the blocks used in the BigBird attention mechanism.
+
+**Methods**
+
+- **`__call__(self, data, mask)`**: Generates the attention masks required for BigBird attention.
+
+  - **Parameters**:
+    - **`data`**: Input tensor.
+    - **`mask`**: Mask tensor indicating which elements should be attended to.
+
+  - **Returns**: A list of masks `[band_mask, encoder_from_mask, encoder_to_mask, blocked_encoder_mask]` used in the BigBird attention mechanism.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the BigBird_masks class
+bigbird_masks = nn.BigBird_masks(block_size=64)
+
+# Generate some sample data and mask
+data = tf.random.normal((2, 128, 128))
+mask = tf.cast(tf.random.uniform((2, 128), maxval=2, dtype=tf.int32), tf.float32)
+
+# Generate the BigBird attention masks
+masks = bigbird_masks(data, mask)
 ```
 
 # cached_attention
