@@ -755,8 +755,8 @@ The `BigBird_attention` class implements BigBird, a sparse attention mechanism, 
 - **`from_block_size`** (int): Block size of the query. Default is `64`.
 - **`to_block_size`** (int): Block size of the key. Default is `64`.
 - **`max_rand_mask_length`** (int): Maximum length for the random mask. Default is `MAX_SEQ_LEN`.
-- **`weight_initializer`** (str): Initializer for the weights. Default is `'Xavier'`.
-- **`bias_initializer`** (str): Initializer for the bias. Default is `'zeros'`.
+- **`weight_initializer`** (str, list, tuple): Initializer for the weights. Default is `'Xavier'`.
+- **`bias_initializer`** (str, list, tuple): Initializer for the bias. Default is `'zeros'`.
 - **`use_bias`** (bool): If `True`, adds a bias term to the attention computation. Default is `True`.
 - **`seed`** (int, optional): Seed for random number generation.
 - **`dtype`** (str): Data type for the layer. Default is `'float32'`.
@@ -2357,6 +2357,68 @@ output = identity_layer(data)
 
 print(output.shape)  # Output shape will be (32, 128), same as input shape
 print(tf.reduce_all(tf.equal(data, output)))  # Should print True, indicating the output is the same as input
+```
+
+# kernel_attention
+
+The `kernel_attention` class implements an efficient attention mechanism by replacing the traditional softmax function with various kernel functions, allowing for scalable attention computation on both long and short sequences.
+
+**Initialization Parameters**
+
+- **`n_head`** (int): Number of attention heads.
+- **`key_dim`** (int): Dimension of the key vectors.
+- **`value_dim`** (int, optional): Dimension of the value vectors. Defaults to `key_dim` if not specified.
+- **`input_size`** (int, optional): Size of the input.
+- **`attention_axes`** (int or list of int, optional): Axes along which to perform attention.
+- **`dropout_rate`** (float): Dropout rate for attention weights. Default is `0.0`.
+- **`feature_transform`** (str): Non-linear transform of keys and queries. Options include `"elu"`, `"relu"`, `"square"`, `"exp"`, `"expplus"`, `"expmod"`, `"identity"`.
+- **`num_random_features`** (int): Number of random features for projection. If <= 0, no projection is used. Default is `256`.
+- **`seed`** (int): Seed for random feature generation. Default is `0`.
+- **`redraw`** (bool): Whether to redraw projection every forward pass during training. Default is `False`.
+- **`is_short_seq`** (bool): Indicates if the input data consists of short sequences. Default is `False`.
+- **`begin_kernel`** (int): Apply kernel attention after this sequence ID; apply softmax attention before this. Default is `0`.
+- **`scale`** (float, optional): Value to scale the dot product. If `None`, defaults to `1/sqrt(key_dim)`.
+- **`scale_by_length`** (bool): Whether to scale the dot product based on key length. Default is `False`.
+- **`use_causal_windowed`** (bool): Perform windowed causal attention if `True`. Default is `False`.
+- **`causal_chunk_length`** (int): Length of each chunk in tokens for causal attention. Default is `1`.
+- **`causal_window_length`** (int): Length of attention window in chunks for causal attention. Default is `3`.
+- **`causal_window_decay`** (float, optional): Decay factor for past attention window values. Default is `None`.
+- **`causal_padding`** (str, optional): Pad the query, value, and key input tensors. Options are `"left"`, `"right"`, or `None`. Default is `None`.
+- **`weight_initializer`** (str, list, tuple): Initializer for weights. Default is `'Xavier'`.
+- **`bias_initializer`** (str, list, tuple): Initializer for biases. Default is `'zeros'`.
+- **`use_bias`** (bool): Whether to use bias in dense layers. Default is `True`.
+- **`dtype`** (str): Data type for the layer. Default is `'float32'`.
+
+**Methods**
+
+- **`__call__(self, query, value, key=None, attention_mask=None, cache=None, train_flag=True)`**: Computes attention using kernel mechanism.
+
+  - **Parameters**:
+    - **`query`**: Query tensor of shape `[B, T, dim]`.
+    - **`value`**: Value tensor of shape `[B, S, dim]`.
+    - **`key`** (optional): Key tensor of shape `[B, S, dim]`. If not given, `value` is used for both key and value.
+    - **`attention_mask`** (optional): Boolean mask tensor of shape `[B, S]` to prevent attending to masked positions.
+    - **`cache`** (optional): Cache for accumulating history in memory during inference.
+    - **`train_flag`** (bool): Indicates whether the layer should behave in training mode.
+
+  - **Returns**: Multi-headed attention output tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the kernel attention layer
+ka = nn.kernel_attention(n_head=8, key_dim=64, input_size=128, feature_transform='exp')
+
+# Generate some sample data and mask
+query = tf.random.normal((2, 50, 128))
+value = tf.random.normal((2, 50, 128))
+mask = tf.cast(tf.random.uniform((2, 50), maxval=2, dtype=tf.int32), tf.float32)
+
+# Apply kernel attention
+output = ka(query, value, attention_mask=mask)
 ```
 
 # LSTM
