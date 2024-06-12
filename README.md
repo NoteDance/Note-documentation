@@ -4808,3 +4808,330 @@ output = padding_layer(data)
 
 print(output.shape)  # Output shape will be (32, 14, 16, 18, 3)
 ```
+
+# image preprocessing
+
+## center_crop
+
+The `center_crop` layer crops the center of the input image to the specified height and width. If the input image is smaller than the target size, it will be resized instead.
+
+**Initialization Parameters**
+
+- **`height`** (int): The target height of the cropped image.
+- **`width`** (int): The target width of the cropped image.
+- **`dtype`** (str, optional): The data type for computations. Default is `'float32'`.
+
+**Methods**
+
+- **`__call__(self, data)`**: Crops or resizes the input `data` to the specified dimensions.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+crop_layer = nn.center_crop(height=128, width=128)
+input_image = tf.random.normal((2, 64, 64, 3))
+output = crop_layer(input_image)
+```
+
+## random_brightness
+
+The `random_brightness` layer adjusts the brightness of the input image by a random factor within a specified range.
+
+**Initialization Parameters**
+
+- **`factor`** (float or tuple): The range of brightness adjustment.
+- **`value_range`** (tuple, optional): The value range of the input data. Default is `(0, 255)`.
+- **`seed`** (int, optional): Seed for random number generation. Default is `7`.
+
+**Methods**
+
+- **`__call__(self, data, train_flag=True)`**: Adjusts the brightness of the input `data`.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+brightness_layer = nn.random_brightness(factor=0.2)
+input_image = tf.random.normal((2, 64, 64, 3))
+output = brightness_layer(input_image)
+```
+
+## random_crop
+
+The `random_crop` layer randomly crops the input image to the specified height and width during training.
+
+**Initialization Parameters**
+
+- **`height`** (int): The target height of the cropped image.
+- **`width`** (int): The target width of the cropped image.
+- **`seed`** (int, optional): Seed for random number generation. Default is `7`.
+
+**Methods**
+
+- **`__call__(self, data, train_flag=True)`**: Randomly crops the input `data`.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+crop_layer = nn.random_crop(height=128, width=128)
+input_image = tf.random.normal((2, 64, 64, 3))
+output = crop_layer(input_image)
+```
+
+## random_height
+
+The `random_height` layer randomly varies the height of the input image during training by a specified factor.
+
+**Initialization Parameters**
+
+- **`factor`** (float or tuple): The range of height adjustment.
+- **`interpolation`** (str, optional): Interpolation method for resizing. Default is `"bilinear"`.
+- **`seed`** (int, optional): Seed for random number generation. Default is `7`.
+
+**Methods**
+
+- **`__call__(self, data, train_flag=True)`**: Randomly adjusts the height of the input `data`.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+height_layer = nn.random_height(factor=0.2)
+input_image = tf.random.normal((2, 64, 64, 3))
+output = height_layer(input_image)
+```
+
+## random_rotation
+
+The `random_rotation` layer randomly rotates the input image during training by a specified angle.
+
+**Initialization Parameters**
+
+- **`factor`** (float or tuple): The range of rotation angles as a fraction of 2π.
+- **`fill_mode`** (str, optional): How to fill points outside the boundaries. Default is `"reflect"`.
+- **`interpolation`** (str, optional): Interpolation method. Default is `"bilinear"`.
+- **`seed`** (int, optional): Seed for random number generation. Default is `7`.
+- **`fill_value`** (float, optional): Fill value for points outside the boundaries when `fill_mode` is `"constant"`. Default is `0.0`.
+
+**Methods**
+
+- **`__call__(self, data, train_flag=True)`**: Randomly rotates the input `data`.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+rotation_layer = nn.random_rotation(factor=0.2)
+input_image = tf.random.normal((2, 64, 64, 3))
+output = rotation_layer(input_image)
+```
+
+## random_translation
+
+The `random_translation` layer randomly translates the input image during training by a specified factor.
+
+**Initialization Parameters**
+
+- **`height_factor`** (float or tuple): The range of vertical translation.
+- **`width_factor`** (float or tuple): The range of horizontal translation.
+- **`fill_mode`** (str, optional): How to fill points outside the boundaries. Default is `"reflect"`.
+- **`interpolation`** (str, optional): Interpolation method. Default is `"bilinear"`.
+- **`seed`** (int, optional): Seed for random number generation. Default is `7`.
+- **`fill_value`** (float, optional): Fill value for points outside the boundaries when `fill_mode` is `"constant"`. Default is `0.0`.
+
+**Methods**
+
+- **`__call__(self, data, train_flag=True)`**: Randomly translates the input `data`.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+translation_layer = nn.random_translation(height_factor=0.2, width_factor=0.2)
+output = translation_layer(input_image)
+```
+
+Here's the documentation for the preprocessing layers following the provided format:
+
+## random_width
+
+The `random_width` class implements a preprocessing layer that randomly varies the width of an image during training.
+
+**Initialization Parameters**
+
+- **`factor`** (float or tuple): A positive float (fraction of original width) or a tuple of two floats representing the lower and upper bounds for resizing horizontally. For example, `factor=(0.2, 0.3)` results in a width change by a random amount in the range `[20%, 30%]`.
+- **`interpolation`** (str): The interpolation method. Options are `"bilinear"`, `"nearest"`, `"bicubic"`, `"area"`, `"lanczos3"`, `"lanczos5"`, `"gaussian"`, `"mitchellcubic"`. Default is `"bilinear"`.
+- **`seed`** (int): Seed for random number generation.
+
+**Methods**
+
+- **`__call__(self, data, train_flag=True)`**: Applies random width adjustment to the input `data`.
+
+  - **Parameters**:
+    - **`data`**: Input tensor.
+    - **`train_flag`** (bool, optional): Specifies whether the layer is in training mode. Default is `True`.
+
+  - **Returns**: Width-adjusted output tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the random width layer
+rw = nn.random_width(factor=(0.2, 0.3))
+
+# Generate some sample data
+data = tf.random.normal((2, 64, 64, 3))
+
+# Apply random width adjustment
+output = rw(data)
+```
+
+## random_zoom
+
+The `random_zoom` class implements a preprocessing layer that randomly zooms images during training.
+
+**Initialization Parameters**
+
+- **`height_factor`** (float or tuple): A float represented as a fraction of the value, or a tuple of two floats representing the lower and upper bounds for zooming vertically. A positive value means zooming out, while a negative value means zooming in.
+- **`width_factor`** (float or tuple, optional): A float or a tuple of two floats representing the lower and upper bounds for zooming horizontally. Defaults to `None`.
+- **`fill_mode`** (str): Mode for filling points outside the boundaries of the input. Options are `"constant"`, `"reflect"`, `"wrap"`, `"nearest"`. Default is `"reflect"`.
+- **`interpolation`** (str): Interpolation mode. Options are `"nearest"`, `"bilinear"`. Default is `"bilinear"`.
+- **`seed`** (int): Seed for random number generation.
+- **`fill_value`** (float): Value to be filled outside the boundaries when `fill_mode="constant"`. Default is `0.0`.
+
+**Methods**
+
+- **`__call__(self, data, train_flag=True)`**: Applies random zooming to the input `data`.
+
+  - **Parameters**:
+    - **`data`**: Input tensor.
+    - **`train_flag`** (bool, optional): Specifies whether the layer is in training mode. Default is `True`.
+
+  - **Returns**: Zoom-adjusted output tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the random zoom layer
+rz = nn.random_zoom(height_factor=(0.2, 0.3), width_factor=(0.2, 0.3))
+
+# Generate some sample data
+data = tf.random.normal((2, 64, 64, 3))
+
+# Apply random zoom adjustment
+output = rz(data)
+```
+
+## rescaling
+
+The `rescaling` class implements a preprocessing layer that rescales input values to a new range.
+
+**Initialization Parameters**
+
+- **`scale`** (float): The scale to apply to the inputs.
+- **`offset`** (float, optional): The offset to apply to the inputs. Default is `0.0`.
+
+**Methods**
+
+- **`__call__(self, data)`**: Applies rescaling to the input `data`.
+
+  - **Parameters**:
+    - **`data`**: Input tensor.
+
+  - **Returns**: Rescaled output tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the rescaling layer
+rs = nn.rescaling(scale=1./255)
+
+# Generate some sample data
+data = tf.random.uniform((2, 64, 64, 3), maxval=255, dtype=tf.float32)
+
+# Apply rescaling
+output = rs(data)
+```
+
+## resizing
+
+The `resizing` class implements a preprocessing layer that resizes images.
+
+**Initialization Parameters**
+
+- **`height`** (int): The height of the output shape.
+- **`width`** (int): The width of the output shape.
+- **`interpolation`** (str): The interpolation method. Options are `"bilinear"`, `"nearest"`, `"bicubic"`, `"area"`, `"lanczos3"`, `"lanczos5"`, `"gaussian"`, `"mitchellcubic"`. Default is `"bilinear"`.
+- **`crop_to_aspect_ratio`** (bool, optional): If `True`, resizes the images without aspect ratio distortion. Default is `False`.
+
+**Methods**
+
+- **`__call__(self, data)`**: Resizes the input `data`.
+
+  - **Parameters**:
+    - **`data`**: Input tensor.
+
+  - **Returns**: Resized output tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the resizing layer
+resize = nn.resizing(height=128, width=128)
+
+# Generate some sample data
+data = tf.random.normal((2, 64, 64, 3))
+
+# Apply resizing
+output = resize(data)
+```
+
+## transform
+
+Applies projective transformations to a batch of images.
+
+- **Parameters:**
+  - **`images`**: Tensor of shape `(num_images, num_rows, num_columns, num_channels)`.
+  - **`transforms`**: Transformation matrices, either a vector of length 8 or tensor of size `N x 8`.
+  - **`fill_mode`**: Mode to fill points outside boundaries (`"constant"`, `"reflect"`, `"wrap"`, `"nearest"`). Default is `"reflect"`.
+  - **`fill_value`**: Fill value for `"constant"` mode. Default is `0.0`.
+  - **`interpolation`**: Interpolation mode (`"nearest"`, `"bilinear"`). Default is `"bilinear"`.
+  - **`output_shape`**: Output shape `[height, width]`. If `None`, output is same size as input.
+
+- **Returns:** Transformed image tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+images = tf.random.normal([5, 256, 256, 3])
+transforms = tf.constant([1, 0, 0, 0, 1, 0, 0, 0], shape=(1, 8), dtype=tf.float32)
+transformed_images = nn.transform(images, transforms)
+```
