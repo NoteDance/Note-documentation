@@ -2086,27 +2086,22 @@ output = pool3d(data)
 print(output.shape)  # Should be (3, 7)
 ```
 
-# global_max_pool
+# global_max_pool1d
 
-The `global_max_pool` classes implement global max pooling operations for 1D, 2D, and 3D data. These layers reduce the input data by taking the maximum value over specified dimensions, helping to reduce the data size while preserving the most important features.
+The `global_max_pool1d` class performs global max pooling on 1D input data, reducing each feature map to its maximum value.
 
 **Initialization Parameters**
 
-- **`keepdims`** (bool): If `True`, retains reduced dimensions with length 1. Default is `False`.
+- **`keepdims`** (bool, optional): If `True`, retains reduced dimensions with length 1. Default is `False`.
 
 **Methods**
 
 - **`__call__(self, data)`**: Applies global max pooling to the input `data`.
 
   - **Parameters**:
-    - **`data`**: Input tensor of shape `(batch_size, seq_length, feature_dim)` for 1D, `(batch_size, height, width, feature_dim)` for 2D, and `(batch_size, depth, height, width, feature_dim)` for 3D.
-  - **Returns**: Tensor after applying global max pooling.
-
-**Classes**
-
-- **`global_max_pool1d`**: Applies global max pooling over 1D data.
-- **`global_max_pool2d`**: Applies global max pooling over 2D data.
-- **`global_max_pool3d`**: Applies global max pooling over 3D data.
+    - **`data`**: Input tensor of shape `[batch_size, sequence_length, features]`.
+  
+  - **Returns**: Tensor of reduced shape depending on `keepdims`.
 
 **Example Usage**
 
@@ -2114,20 +2109,80 @@ The `global_max_pool` classes implement global max pooling operations for 1D, 2D
 import tensorflow as tf
 from Note import nn
 
-# 1D Global Max Pooling
-pool1d = nn.global_max_pool1d(keepdims=True)
-data_1d = tf.random.normal((2, 10, 5))
-output_1d = pool1d(data_1d)
+# Create an instance of the global max pooling 1D layer
+gmp1d = nn.global_max_pool1d(keepdims=True)
 
-# 2D Global Max Pooling
-pool2d = nn.global_max_pool2d(keepdims=True)
-data_2d = tf.random.normal((2, 8, 8, 5))
-output_2d = pool2d(data_2d)
+# Generate some sample data
+data = tf.random.normal((2, 10, 8))
 
-# 3D Global Max Pooling
-pool3d = nn.global_max_pool3d(keepdims=True)
-data_3d = tf.random.normal((2, 4, 4, 4, 5))
-output_3d = pool3d(data_3d)
+# Apply global max pooling 1D
+output = gmp1d(data)
+```
+
+# global_max_pool2d
+
+The `global_max_pool2d` class performs global max pooling on 2D input data, reducing each feature map to its maximum value.
+
+**Initialization Parameters**
+
+- **`keepdims`** (bool, optional): If `True`, retains reduced dimensions with length 1. Default is `False`.
+
+**Methods**
+
+- **`__call__(self, data)`**: Applies global max pooling to the input `data`.
+
+  - **Parameters**:
+    - **`data`**: Input tensor of shape `[batch_size, height, width, channels]`.
+  
+  - **Returns**: Tensor of reduced shape depending on `keepdims`.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the global max pooling 2D layer
+gmp2d = nn.global_max_pool2d(keepdims=True)
+
+# Generate some sample data
+data = tf.random.normal((2, 5, 5, 3))
+
+# Apply global max pooling 2D
+output = gmp2d(data)
+```
+
+# global_max_pool3d
+
+The `global_max_pool3d` class performs global max pooling on 3D input data, reducing each feature map to its maximum value.
+
+**Initialization Parameters**
+
+- **`keepdims`** (bool, optional): If `True`, retains reduced dimensions with length 1. Default is `False`.
+
+**Methods**
+
+- **`__call__(self, data)`**: Applies global max pooling to the input `data`.
+
+  - **Parameters**:
+    - **`data`**: Input tensor of shape `[batch_size, depth, height, width, channels]`.
+  
+  - **Returns**: Tensor of reduced shape depending on `keepdims`.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the global max pooling 3D layer
+gmp3d = nn.global_max_pool3d(keepdims=True)
+
+# Generate some sample data
+data = tf.random.normal((2, 4, 4, 4, 3))
+
+# Apply global max pooling 3D
+output = gmp3d(data)
 ```
 
 # grouped_query_attention
