@@ -3000,7 +3000,7 @@ The `max_pool1d` class implements 1D max pooling.
 
 - **`ksize`** (int): Size of the max pooling window.
 - **`strides`** (int): Stride of the max pooling window.
-- **`padding`** (str): Padding algorithm to use, either `'VALID'` or `'SAME'`.
+- **`padding`** (str, int, list, tuple): implicit zero paddings on both sides of the input. Default is `0`.
 
 **Methods**
 
@@ -3035,7 +3035,7 @@ The `max_pool2d` class implements 2D max pooling.
 
 - **`ksize`** (int): Size of the max pooling window.
 - **`strides`** (int): Stride of the max pooling window.
-- **`padding`** (str): Padding algorithm to use, either `'VALID'` or `'SAME'`.
+- **`padding`** (str, int, list, tuple): implicit zero paddings on both sides of the input. Default is `0`.
 
 **Methods**
 
@@ -3070,7 +3070,7 @@ The `max_pool3d` class implements 3D max pooling.
 
 - **`ksize`** (int): Size of the max pooling window.
 - **`strides`** (int): Stride of the max pooling window.
-- **`padding`** (str): Padding algorithm to use, either `'VALID'` or `'SAME'`.
+- **`padding`** (str, int, list, tuple): implicit zero paddings on both sides of the input. Default is `0`.
 
 **Methods**
 
@@ -3096,6 +3096,60 @@ data = tf.random.normal((2, 10, 10, 10, 3))
 # Apply max pooling
 output = mp3d(data)
 ```
+
+# MLDecoder
+
+The `MLDecoder` class implements a multi-label decoder using transformer-based architecture. It is designed to handle various input sizes and resample embeddings appropriately.
+
+**Initialization Parameters**
+
+- **`num_classes`** (int): Number of output classes.
+- **`num_of_groups`** (int): Number of groups for the decoder. Default is `-1`, which defaults to a value of `100`.
+- **`decoder_embedding`** (int): Dimension of the decoder embedding. Default is `768`.
+- **`initial_num_features`** (int): Initial number of features. Default is `2048`.
+
+**Methods**
+
+- **`__call__(self, x)`**: Applies the decoder to the input `x`.
+
+  - **Parameters**:
+    - **`x`** (Tensor): Input tensor of shape `[bs, 7, 7, 2048]` or `[bs, 197, 468]`.
+  
+  - **Returns**: Logits tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Define a sample input tensor
+x = tf.random.normal((2, 7, 7, 2048))
+
+# Create an instance of the MLDecoder
+decoder = nn.MLDecoder(num_classes=1000)
+
+# Apply the decoder
+logits = decoder(x)
+```
+
+**Detailed Explanation**
+
+1. **Initialization**:
+   - **`embed_len_decoder`** is set to `100` if `num_of_groups` is less than `0`. Otherwise, it is set to `num_of_groups`.
+   - `embed_len_decoder` is adjusted to be no greater than `num_classes`.
+   - **`embed_standart`** initializes a dense layer with `decoder_embedding` output units and `initial_num_features` input features.
+   - **`layer_decode`** initializes a single-layer transformer decoder with dropout and feedforward dimensions specified.
+   - **`query_embed`** initializes non-learnable queries for the decoder.
+   - **`duplicate_pooling`** and **`duplicate_pooling_bias`** initialize pooling weights and bias for the output layer.
+
+2. **Forward Pass (`__call__` method)**:
+   - Reshapes the input if it is 4-dimensional.
+   - Applies the dense layer to transform spatial embeddings.
+   - Uses ReLU activation.
+   - Expands and repeats the query embeddings for each batch.
+   - Applies the transformer decoder.
+   - Uses pooling weights and bias to compute the final logits for each class.
 
 # maxout
 
