@@ -695,6 +695,135 @@ output = att(query, value)
 print(output.shape)  # Should be (2, 5, 10)
 ```
 
+# AttentionPoolLatent
+
+The `AttentionPoolLatent` class implements attention pooling with latent queries.
+
+**Initialization Parameters**
+
+- **`in_features`** (int): Number of input features.
+- **`out_features`** (int, optional): Number of output features. Default is `in_features`.
+- **`embed_dim`** (int, optional): Dimension of the embedding. Default is `in_features`.
+- **`num_heads`** (int): Number of attention heads. Default is `8`.
+- **`feat_size`** (int, optional): Size of the feature map.
+- **`mlp_ratio`** (float): Ratio for the MLP hidden layer. Default is `4.0`.
+- **`qkv_bias`** (bool): Whether to use bias in QKV projections. Default is `True`.
+- **`qk_norm`** (bool): Whether to normalize Q and K. Default is `False`.
+- **`latent_len`** (int): Length of the latent sequence. Default is `1`.
+- **`latent_dim`** (int, optional): Dimension of the latent vector. Default is `embed_dim`.
+- **`pos_embed`** (str): Type of positional embedding. Default is `''`.
+- **`pool_type`** (str): Type of pooling ('token' or 'avg'). Default is `'token'`.
+- **`norm_layer`** (callable, optional): Normalization layer.
+- **`drop`** (float): Dropout rate. Default is `0.0`.
+- **`use_fused_attn`** (bool): Whether to use fused attention. Default is `True`.
+
+**Methods**
+
+- **`__call__(self, x)`**: Applies attention pooling to the input `x`.
+
+  - **Parameters**:
+    - **`x`**: Input tensor of shape `[B, N, C]`.
+
+  - **Returns**: Output tensor after applying attention pooling.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the AttentionPoolLatent layer
+attn_pool = nn.AttentionPoolLatent(in_features=128)
+
+# Generate some sample data
+data = tf.random.normal((2, 100, 128))
+
+# Apply attention pooling
+output = attn_pool(data)
+```
+
+# MultiQueryAttentionV2
+
+The `MultiQueryAttentionV2` class implements a fast multi-query attention mechanism optimized for Transformer decoding.
+
+**Initialization Parameters**
+
+- **`dim`** (int): Dimension of the input.
+- **`dim_out`** (int, optional): Dimension of the output. Default is `dim`.
+- **`num_heads`** (int): Number of attention heads. Default is `8`.
+- **`key_dim`** (int): Dimension of the keys. Default is `64`.
+- **`value_dim`** (int): Dimension of the values. Default is `64`.
+- **`attn_drop`** (float): Dropout rate for attention. Default is `0.0`.
+- **`proj_drop`** (float): Dropout rate for projection. Default is `0.0`.
+
+**Methods**
+
+- **`__call__(self, x, m=None)`**: Applies multi-query attention to the input `x`.
+
+  - **Parameters**:
+    - **`x`**: Input tensor.
+    - **`m`**: Memory tensor (optional). Default is `x`.
+
+  - **Returns**: Output tensor after applying multi-query attention.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the MultiQueryAttentionV2 layer
+attn = nn.MultiQueryAttentionV2(dim=128)
+
+# Generate some sample data
+data = tf.random.normal((2, 10, 128))
+
+# Apply multi-query attention
+output = attn(data)
+```
+
+# Attention2d
+
+The `Attention2d` class implements multi-head attention for 2D NHWC tensors.
+
+**Initialization Parameters**
+
+- **`dim`** (int): Dimension of the input.
+- **`dim_out`** (int, optional): Dimension of the output. Default is `dim`.
+- **`num_heads`** (int): Number of attention heads. Default is `32`.
+- **`bias`** (bool): Whether to use bias in the convolutions. Default is `True`.
+- **`expand_first`** (bool): Whether to expand dimension before attention. Default is `False`.
+- **`head_first`** (bool): Whether to process heads first. Default is `False`.
+- **`attn_drop`** (float): Dropout rate for attention. Default is `0.0`.
+- **`proj_drop`** (float): Dropout rate for projection. Default is `0.0`.
+- **`use_fused_attn`** (bool): Whether to use fused attention. Default is `True`.
+
+**Methods**
+
+- **`__call__(self, x, attn_mask=None)`**: Applies multi-head attention to the input `x`.
+
+  - **Parameters**:
+    - **`x`**: Input tensor of shape `[B, H, W, C]`.
+    - **`attn_mask`**: Attention mask (optional).
+
+  - **Returns**: Output tensor after applying multi-head attention.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the Attention2d layer
+attn2d = nn.Attention2d(dim=64)
+
+# Generate some sample data
+data = tf.random.normal((2, 16, 16, 64))
+
+# Apply 2D attention
+output = attn2d(data)
+```
+
 # batch_norm
 
 The `batch_norm` class implements batch normalization, which helps to stabilize and accelerate training by normalizing the input layer by adjusting and scaling the activations.
@@ -835,6 +964,47 @@ mask = tf.cast(tf.random.uniform((2, 128), maxval=2, dtype=tf.int32), tf.float32
 
 # Generate the BigBird attention masks
 masks = bigbird_masks(data, mask)
+```
+
+# BottleneckAttn
+
+The `BottleneckAttn` class implements bottleneck attention for visual recognition.
+
+**Initialization Parameters**
+
+- **`dim`** (int): Input dimension.
+- **`dim_out`** (int, optional): Output dimension. Default is `dim`.
+- **`feat_size`** (tuple): Size of the feature map (height, width).
+- **`stride`** (int): Output stride. Default is `1`.
+- **`num_heads`** (int): Number of attention heads. Default is `4`.
+- **`dim_head`** (int, optional): Dimension of the query and key heads.
+- **`qk_ratio`** (float): Ratio of query and key dimensions to output dimension. Default is `1.0`.
+- **`qkv_bias`** (bool): Whether to use bias in QKV projections.
+- **`scale_pos_embed`** (bool): Whether to scale the position embedding as well as Q @ K.
+
+**Methods**
+
+- **`__call__(self, x)`**: Applies bottleneck attention to the input `x`.
+
+  - **Parameters**:
+    - **`x`**: Input tensor of shape `[B, H, W, C]`.
+
+  - **Returns**: Output tensor after applying bottleneck attention.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the BottleneckAttn layer
+bottleneck_attn = nn.BottleneckAttn(dim=64, feat_size=(16, 16))
+
+# Generate some sample data
+data = tf.random.normal((2, 16, 16, 64))
+
+# Apply bottleneck attention
+output = bottleneck_attn(data)
 ```
 
 # cached_attention
