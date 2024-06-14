@@ -69,6 +69,7 @@ Performs interpolation on a tensor.
   - `recompute_scale_factor`: Whether to recompute scale factor. Default is `False`.
   - `mode`: Interpolation mode (`"nearest"`, `"bilinear"`, `"bicubic"`). Default is `"nearest"`.
   - `align_corners`: If `True`, aligns corners of input and output. Default is `False`.
+  - `antialias`: Whether to use an anti-aliasing filter when downsampling an image.
 
 - **Returns:** Interpolated tensor.
 
