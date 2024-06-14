@@ -132,7 +132,7 @@ The `resample_abs_pos_embed` function resamples absolute position embeddings to 
   new_size = [16, 16]
   
   # Resample position embeddings
-  resampled_posemb = resample_abs_pos_embed(posemb, new_size)
+  resampled_posemb = nn.resample_abs_pos_embed(posemb, new_size)
   ```
 
 # resample_abs_pos_embed_nhwc
@@ -160,7 +160,7 @@ The `resample_abs_pos_embed_nhwc` function resamples absolute position embedding
   new_size = [16, 16]
   
   # Resample position embeddings
-  resampled_posemb_nhwc = resample_abs_pos_embed_nhwc(posemb_nhwc, new_size)
+  resampled_posemb_nhwc = nn.resample_abs_pos_embed_nhwc(posemb_nhwc, new_size)
   ```
 
 # positional_encoding
