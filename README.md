@@ -104,6 +104,65 @@ Calculates pairwise distance between two tensors.
   distance = nn.pairwise_distance(x, y)
   ```
 
+# resample_abs_pos_embed
+
+The `resample_abs_pos_embed` function resamples absolute position embeddings to a new size, which is useful when the input resolution to a model changes.
+
+- **Parameters**
+  - `posemb` (Tensor): The input position embedding tensor of shape (B, N, C).
+  - `new_size` (List[int]): The desired new size (height, width) for the position embeddings.
+  - `old_size` (Optional[List[int]]): The original size (height, width) of the position embeddings. If not provided, it assumes the position embeddings are square.
+  - `num_prefix_tokens` (int): Number of prefix tokens (e.g., class token). Default is `1`.
+  - `interpolation` (str): Interpolation method to use. Default is `'bicubic'`.
+  - `antialias` (bool): Whether to apply antialiasing when resizing. Default is `True`.
+  - `verbose` (bool): If `True`, logs information about the resizing process. Default is `False`.
+
+- **Returns:** The resampled position embedding tensor.
+
+- **Example:**
+  ```python
+  import tensorflow as tf
+  from Note import nn
+  import math
+  
+  # Create a sample position embedding tensor
+  posemb = tf.random.normal((1, 197, 768))
+  
+  # Define new size
+  new_size = [16, 16]
+  
+  # Resample position embeddings
+  resampled_posemb = resample_abs_pos_embed(posemb, new_size)
+  ```
+
+# resample_abs_pos_embed_nhwc
+
+The `resample_abs_pos_embed_nhwc` function resamples absolute position embeddings for tensors in NHWC format (height, width, channels).
+
+- **Parameters:**
+  - `posemb` (Tensor): The input position embedding tensor in NHWC format.
+  - `new_size` (List[int]): The desired new size (height, width) for the position embeddings.
+  - `interpolation` (str): Interpolation method to use. Default is `'bicubic'`.
+  - `antialias` (bool): Whether to apply antialiasing when resizing. Default is `True`.
+  - `verbose` (bool): If `True`, logs information about the resizing process. Default is `False`.
+
+- **Returns:** The resampled position embedding tensor in NHWC format.
+
+- **Example:**
+  ```python
+  import tensorflow as tf
+  from Note import nn
+  
+  # Create a sample position embedding tensor in NHWC format
+  posemb_nhwc = tf.random.normal((1, 14, 14, 768))
+  
+  # Define new size
+  new_size = [16, 16]
+  
+  # Resample position embeddings
+  resampled_posemb_nhwc = resample_abs_pos_embed_nhwc(posemb_nhwc, new_size)
+  ```
+
 # positional_encoding
 
 Generates positional encoding for a sequence.
