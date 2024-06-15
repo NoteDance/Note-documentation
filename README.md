@@ -2635,6 +2635,80 @@ print(output.shape)  # Output shape will be (32, 64)
 print(new_state.shape)  # New state shape will be (32, 64)
 ```
 
+# Halo Self Attention
+
+The `HaloAttn` class implements Halo Attention, a mechanism that scales local self-attention for parameter-efficient visual backbones. This layer is based on the paper "Scaling Local Self-Attention for Parameter Efficient Visual Backbones" by Ashish Vaswani et al. (2021).
+
+**Initialization Parameters**
+
+- **`dim`** (int): Input dimension to the module.
+- **`dim_out`** (int, optional): Output dimension of the module, defaults to input dimension if not set.
+- **`feat_size`** (Tuple[int, int], optional): Size of the input feature map (not used, for argument compatibility).
+- **`stride`** (int): Output stride of the module. Query is downscaled if greater than 1. Default is `1`.
+- **`num_heads`** (int): Number of parallel attention heads. Default is `8`.
+- **`dim_head`** (int, optional): Dimension of query and key heads. Calculated from `dim_out * qk_ratio // num_heads` if not set.
+- **`block_size`** (int): Size of the blocks. Default is `8`.
+- **`halo_size`** (int): Size of the halo overlap. Default is `3`.
+- **`qk_ratio`** (float): Ratio of query and key dimensions to output dimension when `dim_head` is not set. Default is `1.0`.
+- **`qkv_bias`** (bool): Add bias to query, key, and value projections. Default is `False`.
+- **`avg_down`** (bool): Use average pool downsample instead of strided query blocks. Default is `False`.
+- **`scale_pos_embed`** (bool): Scale the position embedding as well as Q @ K. Default is `False`.
+- **`is_xla`** (bool): If `True`, use XLA-friendly implementation. Default is `True`.
+
+**Methods**
+
+- **`__call__(self, x)`**: Applies Halo Attention to the input `x`.
+
+  - **Parameters**:
+    - **`x`**: Input tensor of shape `(B, H, W, C)`.
+
+  - **Returns**: Output tensor with Halo Attention applied.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the Halo Attention layer
+halo_attn = nn.HaloAttn(dim=64, num_heads=8, block_size=8, halo_size=3)
+
+# Generate some sample data
+data = tf.random.normal((2, 32, 32, 64))
+
+# Apply Halo Attention
+output = halo_attn(data)
+```
+
+**Supporting Classes**
+
+- **`PosEmbedRel`**: Implements relative position embedding.
+
+  **Initialization Parameters**
+
+  - **`feat_size`** (int): Size of the feature map.
+  - **`dim_head`** (int): Dimension of the heads.
+  - **`scale`** (float): Scale factor for initialization.
+
+  **Methods**
+
+  - **`__call__(self, q)`**: Computes relative logits for the input query `q`.
+
+    - **Parameters**:
+      - **`q`**: Input query tensor.
+
+    - **Returns**: Relative logits tensor.
+
+- **`rel_logits_1d`**: Computes relative logits along one dimension.
+
+  **Parameters**
+
+  - **`q`**: Query tensor of shape `(batch, heads, height, width, dim)`.
+  - **`rel_k`**: Relative key tensor of shape `(2 * width - 1, dim)`.
+  - **`permute_mask`** (List[int]): Permute output dimension according to this mask.
+
+  **Returns**: Relative logits tensor.
+
 # identity
 
 The `identity` class implements an identity layer, which is a simple layer that outputs the input data unchanged. This layer can be useful in various neural network architectures for maintaining the shape of data or as a placeholder.
