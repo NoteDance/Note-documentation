@@ -2635,7 +2635,7 @@ print(output.shape)  # Output shape will be (32, 64)
 print(new_state.shape)  # New state shape will be (32, 64)
 ```
 
-# Halo Self Attention
+# HaloAttn
 
 The `HaloAttn` class implements Halo Attention, a mechanism that scales local self-attention for parameter-efficient visual backbones. This layer is based on the paper "Scaling Local Self-Attention for Parameter Efficient Visual Backbones" by Ashish Vaswani et al. (2021).
 
