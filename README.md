@@ -1816,6 +1816,94 @@ output = dropout_layer(data, train_flag=True)
 print(output.shape)  # Output shape will be the same as the input shape
 ```
 
+# EcaModule
+
+The `EcaModule` class implements an Efficient Channel Attention (ECA) module, which enhances channel attention without using dimensionality reduction, improving the efficiency and performance of the model.
+
+**Initialization Parameters**
+
+- **`channels`** (int, optional): Number of input feature map channels. If provided, kernel size will be adaptively determined. Default is `None`.
+- **`kernel_size`** (int): Kernel size for the convolution. Default is `3`.
+- **`gamma`** (int): Parameter used in adaptive kernel size calculation. Default is `2`.
+- **`beta`** (int): Parameter used in adaptive kernel size calculation. Default is `1`.
+- **`act_layer`** (optional): Activation layer to use after convolution. Default is `None`.
+- **`gate_layer`** (callable): Gating function to use. Default is `tf.nn.sigmoid`.
+- **`rd_ratio`** (float): Reduction ratio for MLP mode. Default is `1/8`.
+- **`rd_channels`** (int, optional): Number of reduced channels for MLP mode. Default is `None`.
+- **`rd_divisor`** (int): Divisor for channel reduction. Default is `8`.
+- **`use_mlp`** (bool): Flag to use MLP mode. Default is `False`.
+
+**Methods**
+
+- **`__call__(self, x)`**: Applies the ECA module to the input `x`.
+
+  - **Parameters**:
+    - **`x`** (Tensor): Input tensor.
+  
+  - **Returns**: Output tensor with enhanced channel attention.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the EcaModule
+eca = nn.EcaModule(channels=128)
+
+# Generate some sample data
+data = tf.random.normal((2, 128, 32, 32))
+
+# Apply the ECA module
+output = eca(data)
+```
+
+# CecaModule
+
+The `CecaModule` class implements a Circular Efficient Channel Attention (CECA) module, which applies circular padding in the convolution process, improving connectivity and potentially enhancing performance metrics.
+
+**Initialization Parameters**
+
+- **`channels`** (int, optional): Number of input feature map channels. If provided, kernel size will be adaptively determined. Default is `None`.
+- **`kernel_size`** (int): Kernel size for the convolution. Default is `3`.
+- **`gamma`** (int): Parameter used in adaptive kernel size calculation. Default is `2`.
+- **`beta`** (int): Parameter used in adaptive kernel size calculation. Default is `1`.
+- **`act_layer`** (optional): Activation layer to use after convolution. Default is `None`.
+- **`gate_layer`** (callable): Gating function to use. Default is `tf.nn.sigmoid`.
+
+**Methods**
+
+- **`__call__(self, x)`**: Applies the CECA module to the input `x`.
+
+  - **Parameters**:
+    - **`x`** (Tensor): Input tensor.
+  
+  - **Returns**: Output tensor with enhanced channel attention.
+
+- **`circular_pad(self, x, pad)`**: Applies circular padding to the input `x`.
+
+  - **Parameters**:
+    - **`x`** (Tensor): Input tensor.
+    - **`pad`** (int): Padding size.
+  
+  - **Returns**: Padded tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the CecaModule
+ceca = nn.CecaModule(channels=128)
+
+# Generate some sample data
+data = tf.random.normal((2, 128, 32, 32))
+
+# Apply the CECA module
+output = ceca(data)
+```
+
 # einsum_dense
 
 This class implements a dense layer using `tf.einsum` for computations. It allows for flexible einsum operations on tensors of arbitrary dimensionality.
