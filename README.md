@@ -4473,6 +4473,60 @@ data = tf.random.normal((2, 5))
 selected, not_selected = selector(data)
 ```
 
+# SelectiveKernel
+
+The `SelectiveKernel` class implements the Selective Kernel Convolution Module as described in the paper "Selective Kernel Networks" (https://arxiv.org/abs/1903.06586), with some modifications for improved performance and parameter efficiency.
+
+**Initialization Parameters**
+
+- **`in_channels`** (int): Number of input channels.
+- **`out_channels`** (int, optional): Number of output channels. Defaults to `in_channels`.
+- **`kernel_size`** (list of int, optional): List of kernel sizes for each convolution path. Defaults to `[3, 5]`.
+- **`stride`** (int): Stride for the convolution. Default is `1`.
+- **`dilation`** (int): Dilation rate for the convolution. Default is `1`.
+- **`groups`** (int): Number of groups for grouped convolution. Default is `1`.
+- **`rd_ratio`** (float): Reduction ratio for the attention layer. Default is `1./16`.
+- **`rd_channels`** (int, optional): Number of reduced channels for the attention layer. Calculated from `rd_ratio` if not set.
+- **`rd_divisor`** (int): Divisor for rounding reduced channels. Default is `8`.
+- **`keep_3x3`** (bool): If `True`, use 3x3 convolutions regardless of specified `kernel_size`. Default is `True`.
+- **`split_input`** (bool): If `True`, split input channels across each convolution path. Default is `True`.
+- **`act_layer`** (callable): Activation layer to use. Default is `tf.nn.relu`.
+- **`norm_layer`** (callable): Normalization layer to use. Default is `batch_norm`.
+- **`aa_layer`** (callable): Anti-aliasing layer to use. Default is `avg_pool2d`.
+- **`drop_layer`** (callable): Dropout layer to use. Default is `spatial_dropout2d`.
+- **`drop_rate`** (float): Dropout rate for the dropout layer. Default is `0.`.
+
+**Methods**
+
+- **`__call__(self, x)`**: Applies the Selective Kernel Convolution to the input `x`.
+
+  - **Parameters**:
+    - **`x`**: Input tensor.
+
+  - **Returns**: Output tensor with the Selective Kernel Convolution applied.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the Selective Kernel layer
+selective_kernel = nn.SelectiveKernel(in_channels=64, out_channels=128, kernel_size=[3, 5], stride=2)
+
+# Generate some sample data
+data = tf.random.normal((2, 32, 32, 64))
+
+# Apply Selective Kernel Convolution
+output = selective_kernel(data)
+```
+
+**Notes**
+
+The `SelectiveKernel` class includes an internal attention mechanism that adjusts the weights of different convolution paths based on the input features, improving the network's ability to focus on relevant information. The input split divides the input channels across each convolution path, which helps keep the parameter count manageable while boosting performance.
+
+The code for the `SelectiveKernel` class is designed to be flexible and customizable, allowing you to easily adjust the convolution parameters, activation functions, normalization layers, and more to suit your specific needs.
+
 # self_attention_mask
 
 The `self_attention_mask` class creates a 3D attention mask from a 2D tensor mask.
