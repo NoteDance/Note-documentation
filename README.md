@@ -966,6 +966,50 @@ mask = tf.cast(tf.random.uniform((2, 128), maxval=2, dtype=tf.int32), tf.float32
 masks = bigbird_masks(data, mask)
 ```
 
+# BlurPool2d
+
+The `BlurPool2d` class creates a module that applies blurring and downsampling to a given feature map, as described in the paper "Making Convolutional Networks Shift-Invariant Again" (https://arxiv.org/abs/1904.11486).
+
+**Initialization Parameters**
+
+- **`channels`** (int, optional): Number of input channels. If not provided, it will be inferred from the input tensor.
+- **`filt_size`** (int): Size of the binomial filter for blurring. Supported values are `3` (default) and `5`.
+- **`stride`** (int): Stride for the downsampling filter. Default is `2`.
+- **`pad_mode`** (str): Padding mode to use. Default is `'REFLECT'`.
+
+**Methods**
+
+- **`__call__(self, x)`**: Applies blurring and downsampling to the input `x`.
+
+  - **Parameters**:
+    - **`x`**: Input tensor.
+
+  - **Returns**: Transformed tensor after applying blurring and downsampling.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the BlurPool2d layer
+blur_pool = nn.BlurPool2d(channels=64, filt_size=3, stride=2)
+
+# Generate some sample data
+data = tf.random.normal((2, 32, 32, 64))
+
+# Apply blurring and downsampling
+output = blur_pool(data)
+```
+
+**Notes**
+
+The `BlurPool2d` class uses a binomial filter for blurring, followed by downsampling the input feature map. This operation helps to maintain the shift-invariance of convolutional neural networks by reducing aliasing effects that occur during downsampling.
+
+The padding applied to the input tensor ensures that the dimensions are consistent during the convolution operation. The filter coefficients are computed using a binomial distribution, which provides a smoothing effect on the input feature map before downsampling.
+
+The code for the `BlurPool2d` class is designed to be flexible and efficient, allowing for easy integration into various neural network architectures that require blurring and downsampling operations.
+
 # BottleneckAttn
 
 The `BottleneckAttn` class implements bottleneck attention for visual recognition.
