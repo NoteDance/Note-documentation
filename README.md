@@ -742,6 +742,100 @@ data = tf.random.normal((2, 100, 128))
 output = attn_pool(data)
 ```
 
+# RotAttentionPool2d
+
+The `RotAttentionPool2d` class implements a multi-head attention-based 2D feature pooling with rotary (relative) positional embedding. It serves as a replacement for spatial average pooling in neural network architectures, adapted from the AttentionPool2d in CLIP by OpenAI.
+
+**Initialization Parameters**
+
+- **`in_features`** (int): Number of input features.
+- **`out_features`** (int, optional): Number of output features. Defaults to `in_features`.
+- **`ref_feat_size`** (int or tuple): Reference feature size. Default is `7`.
+- **`embed_dim`** (int, optional): Dimension of the embedding. Defaults to `in_features`.
+- **`head_dim`** (int, optional): Dimension of each attention head. Default is `64`.
+- **`num_heads`** (int, optional): Number of attention heads. Automatically calculated if not provided.
+- **`qkv_bias`** (bool): Whether to use bias in QKV projections. Default is `True`.
+- **`qkv_separate`** (bool): Whether to use separate Q, K, V projections. Default is `False`.
+- **`pool_type`** (str): Type of pooling. Must be 'token' or ''. Default is 'token'.
+- **`class_token`** (bool): Whether to use a class token. Default is `False`.
+- **`drop_rate`** (float): Dropout rate. Default is `0.0`.
+- **`use_fused_attn`** (bool): Whether to use fused attention. Default is `True`.
+
+**Methods**
+
+- **`init_weights(self, zero_init_last=False)`**: Initializes the weights of the layer.
+- **`reset(self, num_classes=None, pool_type=None)`**: Resets the projection layer and pool type.
+  - **Parameters**:
+    - **`num_classes`** (int, optional): Number of output classes. Defaults to `None`.
+    - **`pool_type`** (str, optional): Type of pooling. Must be 'token' or ''. Defaults to `None`.
+- **`__call__(self, x, pre_logits=False)`**: Applies the attention pooling to the input tensor.
+  - **Parameters**:
+    - **`x`**: Input tensor.
+    - **`pre_logits`** (bool): Whether to return pre-logits output. Default is `False`.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the RotAttentionPool2d layer
+attn_pool = nn.RotAttentionPool2d(in_features=64, embed_dim=128, num_heads=8)
+
+# Generate some sample data
+data = tf.random.normal((2, 16, 16, 64))
+
+# Apply attention pooling
+output = attn_pool(data)
+```
+
+# AttentionPool2d
+
+The `AttentionPool2d` class implements a multi-head attention-based 2D feature pooling with learned (absolute) positional embedding. It is a replacement for spatial average pooling in neural network architectures, based on the implementation in CLIP by OpenAI.
+
+**Initialization Parameters**
+
+- **`in_features`** (int): Number of input features.
+- **`feat_size`** (int or tuple): Feature size. Default is `7`.
+- **`out_features`** (int, optional): Number of output features. Defaults to `in_features`.
+- **`embed_dim`** (int, optional): Dimension of the embedding. Defaults to `in_features`.
+- **`head_dim`** (int, optional): Dimension of each attention head. Default is `64`.
+- **`num_heads`** (int, optional): Number of attention heads. Automatically calculated if not provided.
+- **`qkv_bias`** (bool): Whether to use bias in QKV projections. Default is `True`.
+- **`qkv_separate`** (bool): Whether to use separate Q, K, V projections. Default is `False`.
+- **`pool_type`** (str): Type of pooling. Must be 'token' or ''. Default is 'token'.
+- **`class_token`** (bool): Whether to use a class token. Default is `False`.
+- **`drop_rate`** (float): Dropout rate. Default is `0.0`.
+- **`use_fused_attn`** (bool): Whether to use fused attention. Default is `True`.
+
+**Methods**
+
+- **`init_weights(self, zero_init_last=False)`**: Initializes the weights of the layer.
+- **`reset(self, num_classes=None, pool_type=None)`**: Resets the projection layer and pool type.
+  - **Parameters**:
+    - **`num_classes`** (int, optional): Number of output classes. Defaults to `None`.
+    - **`pool_type`** (str, optional): Type of pooling. Must be 'token' or ''. Defaults to `None`.
+- **`__call__(self, x, pre_logits=False)`**: Applies the attention pooling to the input tensor.
+  - **Parameters**:
+    - **`x`**: Input tensor.
+    - **`pre_logits`** (bool): Whether to return pre-logits output. Default is `False`.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the AttentionPool2d layer
+attn_pool = nn.AttentionPool2d(in_features=64, feat_size=16, embed_dim=128, num_heads=8)
+
+# Generate some sample data
+data = tf.random.normal((2, 16, 16, 64))
+
+# Apply attention pooling
+output = attn_pool(data)
+```
+
 # MultiQueryAttentionV2
 
 The `MultiQueryAttentionV2` class implements a fast multi-query attention mechanism optimized for Transformer decoding.
@@ -4073,6 +4167,54 @@ data = tf.random.normal((2, 5, 10))
 # Apply permutation
 output = permuter(data)
 ```
+
+# RotaryEmbedding
+
+The `RotaryEmbedding` class implements rotary position embeddings, which encode spatial position information into the input tensor using sine and cosine functions. This is useful for tasks that benefit from spatial awareness in neural networks.
+
+**Initialization Parameters**
+
+- **`dim`** (int): Dimensionality of the embeddings.
+- **`max_res`** (int, optional): Maximum resolution of the spatial dimensions. Default is `224`.
+- **`temperature`** (float, optional): Temperature parameter for scaling the frequency bands. Default is `10000`.
+- **`in_pixels`** (bool, optional): If `True`, frequency bands are computed in pixel space. Default is `True`.
+- **`linear_bands`** (bool, optional): If `True`, use linear frequency bands. Default is `False`.
+- **`feat_shape`** (list of int, optional): Shape of the feature map for precomputing the positional embeddings. Default is `None`.
+- **`ref_feat_shape`** (list of int, optional): Reference shape of the feature map for relative positional embeddings. Default is `None`.
+
+**Methods**
+
+- **`get_embed(self, shape: Optional[List[int]] = None)`**: Returns the sine and cosine embeddings for the given shape.
+
+  - **Parameters**:
+    - **`shape`** (list of int, optional): Shape of the feature map for which to compute the embeddings. Required if `feat_shape` was not provided during initialization.
+    
+  - **Returns**: Tuple of sine and cosine embedding tensors.
+
+- **`__call__(self, x)`**: Applies the rotary embeddings to the input tensor.
+
+  - **Parameters**:
+    - **`x`**: Input tensor with shape `[batch_size, channels, height, width]`.
+
+  - **Returns**: Tensor with rotary embeddings applied.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the rotary embedding layer
+rot_emb = nn.RotaryEmbedding(dim=64, max_res=224)
+
+# Generate some sample data
+data = tf.random.normal((2, 64, 14, 14))
+
+# Apply rotary embeddings
+output = rot_emb(data)
+```
+
+The `RotaryEmbedding` class is based on implementations and resources referenced from various sources, including the ViT-pytorch library and EleutherAI's blog on rotary embeddings. This initial implementation is intended for spatial use and may evolve with further testing and optimization.
 
 # position_embedding
 
