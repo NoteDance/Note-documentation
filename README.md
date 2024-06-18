@@ -1,3 +1,55 @@
+# conv2d_func
+
+The `conv2d_func` function performs a 2D convolution operation with support for various configurations including groups, padding, and dilations.
+
+- **Parameters**
+  - `input`: Input tensor.
+  - `weight`: Convolution filter tensor.
+  - `bias` (optional): Bias tensor. Default is `None`.
+  - `strides`: Convolution strides. Default is `1`.
+  - `padding`: Padding value or type ('SAME' or 'VALID'). Default is `0`.
+  - `dilations`: Dilation rate. Default is `1`.
+  - `groups`: Number of groups for grouped convolution. Default is `1`.
+
+- **Returns:** Output tensor after applying the convolution operation.
+
+- **Example:**
+  ```python
+  import tensorflow as tf
+  from Note import nn
+  
+  # Define input and filter tensors
+  input = tf.random.normal((1, 64, 64, 3))
+  weight = tf.random.normal((3, 3, 3, 16))
+  
+  # Apply conv2d_func
+  output = nn.conv2d_func(input, weight)
+  ```
+
+# create_aa
+
+The `create_aa` function creates an anti-aliasing layer for convolutional neural networks, which helps to reduce aliasing artifacts during downsampling operations.
+
+- **Parameters**
+  - `aa_layer`: Type of anti-aliasing layer (e.g., 'avg', 'blur').
+  - `channels` (optional): Number of channels in the input tensor.
+  - `stride`: Stride value for the anti-aliasing operation. Default is `2`.
+  - `enable`: Boolean flag to enable or disable the anti-aliasing layer. Default is `True`.
+  - `noop`: Function to use if anti-aliasing is disabled. Default is `identity`.
+
+- **Returns:** Anti-aliasing layer or the `noop` function if anti-aliasing is disabled.
+
+- **Example:**
+  ```python
+  from Note import nn
+  
+  # Create an anti-aliasing layer
+  aa_layer = nn.create_aa('avg', channels=16, stride=2)
+  
+  # Apply anti-aliasing layer
+  output = aa_layer(input)
+  ```
+
 # cosine_similarity
 
 Computes the cosine similarity between two tensors.
