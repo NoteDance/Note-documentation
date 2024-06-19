@@ -293,7 +293,7 @@ model = cait_XXS24_224()
 
 img = tf.random.normal((1, 224, 224, 3))
 
-preds = model(img) # (1, 1000)
+output = model(img) # (1, 1000)
 ```
 
 ## PiT
@@ -307,7 +307,7 @@ model = pit_b()
 
 img = tf.random.normal((1, 224, 224, 3))
 
-preds = model(img) # (1, 1000)
+output = model(img) # (1, 1000)
 ```
 
 ## Cross ViT
@@ -319,7 +319,7 @@ model = crossvit_tiny_224()
 
 img = tf.random.normal((1, 240, 240, 3))
 
-pred = model(img) # (1, 1000)
+output = model(img) # (1, 1000)
 ```
 
 ## Deep ViT
@@ -341,7 +341,7 @@ v = DeepViT(
 
 img = tf.random.normal((1, 256, 256, 3))
 
-preds = v(img) # (1, 1000)
+output = v(img) # (1, 1000)
 ```
 
 ## ViViT
@@ -364,7 +364,7 @@ v = ViViT(
 
 video = tf.random.normal((4, 16, 128, 128, 3)) # (batch, frames, height, width, channels)
 
-preds = v(video) # (4, 1000)
+output = v(video) # (4, 1000)
 ```
 
 ## XCiT
@@ -376,7 +376,7 @@ model = xcit_nano_12_p16()
 
 img = tf.random.normal([1, 224, 224, 3])
 
-preds = model(img) # (1, 1000)
+output = model(img) # (1, 1000)
 ```
 
 ## CvT
@@ -415,7 +415,7 @@ v = CvT(
 
 img = tf.random.normal((1, 224, 224, 3))
 
-pred = v(img) # (1, 1000)
+output = v(img) # (1, 1000)
 ```
 
 ## CCT
@@ -441,7 +441,7 @@ cct = CCT(
 )
 
 img = tf.random.normal((1, 224, 448, 3))
-pred = cct(img) # (1, 1000)
+output = cct(img) # (1, 1000)
 ```
 Alternatively you can use one of several pre-defined models [2,4,6,7,8,14,16] which pre-define the number of layers, number of attention heads, the mlp ratio, and the embedding dimension.
 ```python
@@ -540,5 +540,17 @@ model = pvt_v2_b0()
 
 img = tf.random.normal([1, 224, 224, 3])
 
-preds = model(img) # (1, 1000)
+output = model(img) # (1, 1000)
+```
+
+## GCViT
+```python
+import tensorflow as tf
+from Note.neuralnetwork.tf.GCViT import gc_vit_xxtiny
+
+model = gc_vit_xxtiny()
+
+img = tf.random.normal([1, 224, 224, 3])
+
+output = model(img) # (1, 1000)
 ```
