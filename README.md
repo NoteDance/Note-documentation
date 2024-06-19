@@ -506,7 +506,7 @@ The `avg_pool1d` class performs 1D average pooling on the input tensor.
 
 **Initialization Parameters**
 
-- **`ksize`** (int): Size of the window for each dimension of the input tensor.
+- **`kernel_size`** (int): Size of the window for each dimension of the input tensor.
 - **`strides`** (int): Stride of the sliding window for each dimension of the input tensor.
 - **`padding`** (str, int, list, tuple): implicit zero paddings on both sides of the input. Default is `0`.
 
@@ -527,7 +527,7 @@ import tensorflow as tf
 from Note import nn
 
 # Create an instance of avg_pool1d
-pooling_layer = nn.avg_pool1d(ksize=2, strides=2, padding='SAME')
+pooling_layer = nn.avg_pool1d(kernel_size=2, strides=2, padding='SAME')
 
 # Generate some sample data
 data = tf.random.normal((32, 100, 64))  # Batch of 32 samples, 100 steps, 64 channels
@@ -544,7 +544,7 @@ The `avg_pool2d` class performs 2D average pooling on the input tensor.
 
 **Initialization Parameters**
 
-- **`ksize`** (int or tuple of 2 ints): Size of the window for each dimension of the input tensor.
+- **`kernel_size`** (int or tuple of 2 ints): Size of the window for each dimension of the input tensor.
 - **`strides`** (int or tuple of 2 ints): Stride of the sliding window for each dimension of the input tensor.
 - **`padding`** (str, int, list, tuple): implicit zero paddings on both sides of the input. Default is `0`.
 
@@ -565,7 +565,7 @@ import tensorflow as tf
 from Note import nn
 
 # Create an instance of avg_pool2d
-pooling_layer = nn.avg_pool2d(ksize=(2, 2), strides=(2, 2), padding='SAME')
+pooling_layer = nn.avg_pool2d(kernel_size=(2, 2), strides=(2, 2), padding='SAME')
 
 # Generate some sample data
 data = tf.random.normal((32, 64, 64, 3))  # Batch of 32 samples, 64x64 spatial dimensions, 3 channels
@@ -582,7 +582,7 @@ The `avg_pool3d` class performs 3D average pooling on the input tensor.
 
 **Initialization Parameters**
 
-- **`ksize`** (int or tuple of 3 ints): Size of the window for each dimension of the input tensor.
+- **`kernel_size`** (int or tuple of 3 ints): Size of the window for each dimension of the input tensor.
 - **`strides`** (int or tuple of 3 ints): Stride of the sliding window for each dimension of the input tensor.
 - **`padding`** (str, int, list, tuple): implicit zero paddings on both sides of the input. Default is `0`.
 
@@ -603,7 +603,7 @@ import tensorflow as tf
 from Note import nn
 
 # Create an instance of avg_pool3d
-pooling_layer = nn.avg_pool3d(ksize=(2, 2, 2), strides=(2, 2, 2), padding='SAME')
+pooling_layer = nn.avg_pool3d(kernel_size=(2, 2, 2), strides=(2, 2, 2), padding='SAME')
 
 # Generate some sample data
 data = tf.random.normal((16, 32, 32, 32, 3))  # Batch of 16 samples, 32x32x32 spatial dimensions, 3 channels
@@ -3298,7 +3298,7 @@ The `max_pool1d` class implements 1D max pooling.
 
 **Initialization Parameters**
 
-- **`ksize`** (int): Size of the max pooling window.
+- **`kernel_size`** (int): Size of the max pooling window.
 - **`strides`** (int): Stride of the max pooling window.
 - **`padding`** (str, int, list, tuple): implicit zero paddings on both sides of the input. Default is `0`.
 
@@ -3318,7 +3318,7 @@ import tensorflow as tf
 from Note import nn
 
 # Create an instance of the max_pool1d layer
-mp1d = nn.max_pool1d(ksize=2, strides=2, padding='VALID')
+mp1d = nn.max_pool1d(kernel_size=2, strides=2, padding='VALID')
 
 # Generate some sample data
 data = tf.random.normal((2, 10, 1))
@@ -3333,8 +3333,8 @@ The `max_pool2d` class implements 2D max pooling.
 
 **Initialization Parameters**
 
-- **`ksize`** (int): Size of the max pooling window.
-- **`strides`** (int): Stride of the max pooling window.
+- **`kernel_size`** (int or tuple of 2 ints): Size of the max pooling window.
+- **`strides`** (int or tuple of 2 ints): Stride of the max pooling window.
 - **`padding`** (str, int, list, tuple): implicit zero paddings on both sides of the input. Default is `0`.
 
 **Methods**
@@ -3353,7 +3353,7 @@ import tensorflow as tf
 from Note import nn
 
 # Create an instance of the max_pool2d layer
-mp2d = nn.max_pool2d(ksize=2, strides=2, padding='VALID')
+mp2d = nn.max_pool2d(kernel_size=2, strides=2, padding='VALID')
 
 # Generate some sample data
 data = tf.random.normal((2, 10, 10, 3))
@@ -3368,8 +3368,8 @@ The `max_pool3d` class implements 3D max pooling.
 
 **Initialization Parameters**
 
-- **`ksize`** (int): Size of the max pooling window.
-- **`strides`** (int): Stride of the max pooling window.
+- **`kernel_size`** (int or tuple of 3 ints): Size of the max pooling window.
+- **`strides`** (int or tuple of 3 ints): Stride of the max pooling window.
 - **`padding`** (str, int, list, tuple): implicit zero paddings on both sides of the input. Default is `0`.
 
 **Methods**
@@ -3388,7 +3388,7 @@ import tensorflow as tf
 from Note import nn
 
 # Create an instance of the max_pool3d layer
-mp3d = nn.max_pool3d(ksize=2, strides=2, padding='VALID')
+mp3d = nn.max_pool3d(kernel_size=2, strides=2, padding='VALID')
 
 # Generate some sample data
 data = tf.random.normal((2, 10, 10, 10, 3))
