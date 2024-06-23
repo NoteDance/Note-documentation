@@ -554,3 +554,15 @@ img = tf.random.normal([1, 224, 224, 3])
 
 output = model(img) # (1, 1000)
 ```
+
+## DaViT
+```python
+import tensorflow as tf
+from Note.neuralnetwork.tf.DaViT import davit_tiny
+
+model = davit_tiny()
+
+img = tf.random.normal([1, 224, 224, 3])
+
+output = model(img) # (1, 1000)
+```
