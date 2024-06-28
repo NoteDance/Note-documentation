@@ -39,6 +39,18 @@ for epoch in range(EPOCHS):
     f'Loss: {train_loss.result()}, '
   )
 ```
+or
+```python
+from Note.neuralnetwork.tf.ConViT import convit_tiny
+model=convit_tiny(embed_dim=48)
+
+train_ds = tf.data.Dataset.from_tensor_slices((x_train, y_train)).batch(32)
+loss_object = tf.keras.losses.SparseCategoricalCrossentropy()
+optimizer = tf.keras.optimizers.Adam()
+train_loss = tf.keras.metrics.Mean(name='train_loss')
+
+model.fit(train_ds, loss_object, train_loss, optimizer, 5)
+```
 
 
 # Distributed training:
