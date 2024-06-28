@@ -50,6 +50,9 @@ optimizer = tf.keras.optimizers.Adam()
 train_loss = tf.keras.metrics.Mean(name='train_loss')
 
 model.fit(train_ds, loss_object, train_loss, optimizer, 5)
+
+# visualize
+model.visualize_train()
 ```
 
 
