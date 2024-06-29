@@ -58,6 +58,12 @@ model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_
 
 # visualize
 model.visualize_train()
+model.visualize_test()
+model.visualize_comparison()
+
+# save
+model.save_param('param.dat')
+model.save('model.dat')
 ```
 
 
