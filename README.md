@@ -47,9 +47,14 @@ model=convit_tiny(embed_dim=48)
 train_ds = tf.data.Dataset.from_tensor_slices((x_train, y_train)).batch(32)
 loss_object = tf.keras.losses.SparseCategoricalCrossentropy()
 optimizer = tf.keras.optimizers.Adam()
-train_loss = tf.keras.metrics.Mean(name='train_loss')
 
-model.fit(train_ds, loss_object, train_loss, optimizer, 5)
+train_loss = tf.keras.metrics.Mean(name='train_loss')
+train_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='train_accuracy')
+
+test_loss = tf.keras.metrics.Mean(name='test_loss')
+test_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='test_accuracy')
+
+model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy)
 
 # visualize
 model.visualize_train()
@@ -158,7 +163,10 @@ output_file=open('param.dat','wb')
 pickle.dump(model.param,output_file)
 output_file.close()
 ```
-
+or
+```python
+model.save_param('param.dat')
+```
 
 # Restore model parameters:
 ```python
@@ -166,6 +174,10 @@ import pickle
 input_file=open('param.dat','rb')
 param=pickle.load(input_file)
 input_file.close()
+```
+or
+```python
+model.restore_param('param.dat')
 ```
 
 
@@ -190,6 +202,10 @@ output_file=open('model.dat','wb')
 pickle.dump(model,output_file)
 output_file.close()
 ```
+or
+```python
+model.save('model.dat')
+```
 
 
 # Restore model:
@@ -198,6 +214,11 @@ import pickle
 input_file=open('model.dat','rb')
 model=pickle.load(input_file)
 input_file.close()
+```
+or
+```python
+from Note import nn
+model,optimizer=nn.restore('model.dat')
 ```
 
 
