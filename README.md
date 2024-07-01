@@ -45,6 +45,7 @@ from Note.neuralnetwork.tf.ConViT import convit_tiny
 model=convit_tiny(embed_dim=48)
 
 train_ds = tf.data.Dataset.from_tensor_slices((x_train, y_train)).batch(32)
+test_ds = tf.data.Dataset.from_tensor_slices((x_test, y_test)).batch(32)
 loss_object = tf.keras.losses.SparseCategoricalCrossentropy()
 optimizer = tf.keras.optimizers.Adam()
 
