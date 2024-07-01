@@ -163,6 +163,26 @@ output=model(data)
 ```
 
 
+# Test model:
+```python
+test_ds = tf.data.Dataset.from_tensor_slices((x_test, y_test)).batch(32)
+loss_object = tf.keras.losses.SparseCategoricalCrossentropy()
+test_loss = tf.keras.metrics.Mean(name='test_loss')
+test_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='test_accuracy')
+test_loss, test_acc = model.test(test_ds, loss_object, test_loss, test_accuracy)
+```
+or parallel test
+```python
+import multiprocessing as mp
+x_test, y_test = model.segment_data(x_test, y_test, 3)
+test_ds = [tf.data.Dataset.from_tensor_slices((x_test, y_test)).batch(32) x_test,y_test for zip(x_test,y_test)]
+loss_object = tf.keras.losses.SparseCategoricalCrossentropy()
+test_loss = [tf.keras.metrics.Mean(name='test_loss') for _ in range(3)]
+test_accuracy = [tf.keras.metrics.SparseCategoricalAccuracy(name='test_accuracy') for _ in range(3)]
+test_loss, test_acc = model.test(test_ds, loss_object, test_loss, test_accuracy, 3, mp)
+```
+
+
 # Save model parameters:
 ```python
 import pickle
