@@ -3,7 +3,7 @@ from Note.nn.layer.conv2d import conv2d
 from Note.nn.layer.dense import dense
 from Note.nn.layer.flatten import flatten
 from Note.nn.parallel.optimizer import Adam
-from Note.nn.Module import Module
+from Note.nn.Model import Model
 
 # Define a convolutional neural network class
 class cnn:
@@ -23,7 +23,7 @@ class cnn:
         self.dense2=dense(10,64)
         self.optimizer=Adam()
         # Store the parameters of the layers in a list
-        self.param=Module.param
+        self.param=Model.param
         return
     
     

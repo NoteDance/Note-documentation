@@ -2,7 +2,7 @@ import tensorflow as tf
 from Note.nn.layer.dense import dense
 from Note.nn.parallel.optimizer import SGD
 from Note.nn.layer.flatten import flatten
-from Note.nn.Module import Module
+from Note.nn.Model import Model
 
 # Define a neural network class
 class nn:
@@ -18,7 +18,7 @@ class nn:
         self.flatten=flatten()
         self.optimizer=SGD()
         # Store the parameters of the layers in a list
-        self.param=Module.param
+        self.param=Model.param
         return
     
     
