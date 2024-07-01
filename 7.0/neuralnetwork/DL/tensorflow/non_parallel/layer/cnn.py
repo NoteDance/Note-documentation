@@ -2,7 +2,7 @@ import tensorflow as tf
 from Note.nn.layer.conv2d import conv2d
 from Note.nn.layer.dense import dense
 from Note.nn.layer.flatten import flatten
-from Note.nn.Module import Module
+from Note.nn.Model import Model
 
 """
 This is an example of using the Note layer module.
@@ -26,7 +26,7 @@ class cnn:
         self.dense1=dense(64,activation='relu')
         self.dense2=dense(10)
         # Store the parameters of the layers in a list
-        self.param=Module.param
+        self.param=Model.param
         return
     
     

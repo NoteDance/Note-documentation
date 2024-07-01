@@ -1,7 +1,7 @@
 import tensorflow as tf
 from Note.nn.layer.dense import dense
 from Note.nn.layer.flatten import flatten
-from Note.nn.Module import Module
+from Note.nn.Model import Model
 
 """
 This is an example of using the Note layer module.
@@ -21,7 +21,7 @@ class nn:
         self.layer2=dense(10)
         self.flatten=flatten()
         # Store the parameters of the layers in a list
-        self.param=Module.param
+        self.param=Model.param
         return
     
     
