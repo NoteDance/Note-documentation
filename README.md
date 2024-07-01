@@ -174,6 +174,7 @@ or
 model.save_param('param.dat')
 ```
 
+
 # Restore model parameters:
 ```python
 import pickle
@@ -184,6 +185,11 @@ input_file.close()
 or
 ```python
 model.restore_param('param.dat')
+```
+or
+```python
+from Note import nn
+param=nn.restore_param('param.dat')
 ```
 
 
