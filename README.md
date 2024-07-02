@@ -1,5 +1,5 @@
 # Introduction:
-Deep learning models built with Note are compatible with TensorFlow and can be trained with TensorFlow. The documentation shows how to train, test, save, and restore models.
+Deep learning models built with Note are compatible with TensorFlow and can be trained with TensorFlow. The documentation shows how to train, test, save, and restore models built with Note.
 
 
 # Installation:
