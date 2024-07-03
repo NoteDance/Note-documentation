@@ -940,11 +940,11 @@ The `batch_norm` class implements batch normalization, which helps to stabilize 
 
 **Methods**
 
-- **`__call__(self, data, train_flag=None, mask=None)`**: Applies batch normalization to the input `data`.
+- **`__call__(self, data, training=None, mask=None)`**: Applies batch normalization to the input `data`.
 
   - **Parameters**:
     - **`data`**: Input tensor.
-    - **`train_flag`** (bool, optional): Specifies whether the layer is in training mode.
+    - **`training`** (bool, optional): Specifies whether the layer is in training mode.
     - **`mask`** (tensor, optional): Mask tensor for weighted moments calculation.
 
   - **Returns**: Normalized output tensor.
@@ -1928,11 +1928,11 @@ The `dropout` class applies dropout to the input data, randomly dropping element
 
 **Methods**
 
-- **`__call__(self, data, train_flag=None)`**: Applies dropout to the input `data`.
+- **`__call__(self, data, training=None)`**: Applies dropout to the input `data`.
 
   - **Parameters**:
     - **`data`** (tensor): Input tensor.
-    - **`train_flag`** (bool, optional): If `True`, dropout is applied; if `False`, the input is returned unchanged. If `None`, the layer uses its internal `train_flag` attribute. Default is `None`.
+    - **`training`** (bool, optional): If `True`, dropout is applied; if `False`, the input is returned unchanged. If `None`, the layer uses its internal `train_flag` attribute. Default is `None`.
 
   - **Returns**: The tensor after applying dropout during training or the original tensor during inference.
 
@@ -2302,11 +2302,11 @@ This class applies multiplicative 1-centered Gaussian noise, useful for regulari
 
 **Methods**
 
-**`__call__(self, data, train_flag=True)`**: Applies the Gaussian Dropout to the input tensor during training.
+**`__call__(self, data, training=True)`**: Applies the Gaussian Dropout to the input tensor during training.
 
   - **Parameters**:
     - **`data`** (Tensor): Input tensor of any rank.
-    - **`train_flag`** (bool): If `True`, applies dropout. If `False`, returns the input tensor as is.
+    - **`training`** (bool): If `True`, applies dropout. If `False`, returns the input tensor as is.
 
   - Returns: The output tensor with Gaussian Dropout applied during training.
 
@@ -4849,11 +4849,11 @@ The `spatial_dropout1d` class implements spatial dropout for 1D inputs, setting 
 
 **Methods**
 
-- **`__call__(self, data, train_flag=True)`**: Applies spatial dropout to the input `data`.
+- **`__call__(self, data, training=True)`**: Applies spatial dropout to the input `data`.
 
   - **Parameters**:
     - **`data`**: Input tensor.
-    - **`train_flag`** (bool): Whether to apply dropout. Default is `True`.
+    - **`training`** (bool): Whether to apply dropout. Default is `True`.
 
   - **Returns**: Output tensor after applying dropout.
 
@@ -4884,11 +4884,11 @@ The `spatial_dropout2d` class implements spatial dropout for 2D inputs, setting 
 
 **Methods**
 
-- **`__call__(self, data, train_flag=True)`**: Applies spatial dropout to the input `data`.
+- **`__call__(self, data, training=True)`**: Applies spatial dropout to the input `data`.
 
   - **Parameters**:
     - **`data`**: Input tensor.
-    - **`train_flag`** (bool): Whether to apply dropout. Default is `True`.
+    - **`training`** (bool): Whether to apply dropout. Default is `True`.
 
   - **Returns**: Output tensor after applying dropout.
 
@@ -4919,11 +4919,11 @@ The `spatial_dropout3d` class implements spatial dropout for 3D inputs, setting 
 
 **Methods**
 
-- **`__call__(self, data, train_flag=True)`**: Applies spatial dropout to the input `data`.
+- **`__call__(self, data, training=True)`**: Applies spatial dropout to the input `data`.
 
   - **Parameters**:
     - **`data`**: Input tensor.
-    - **`train_flag`** (bool): Whether to apply dropout. Default is `True`.
+    - **`training`** (bool): Whether to apply dropout. Default is `True`.
 
   - **Returns**: Output tensor after applying dropout.
 
@@ -4954,11 +4954,11 @@ The `spectral_norm` class performs spectral normalization on the weights of a ta
 
 **Methods**
 
-- **`__call__(self, data, train_flag=True)`**: Applies spectral normalization to the target layer's weights.
+- **`__call__(self, data, training=True)`**: Applies spectral normalization to the target layer's weights.
 
   - **Parameters**:
     - **`data`**: Input tensor.
-    - **`train_flag`** (bool): Whether to apply spectral normalization. Default is `True`.
+    - **`training`** (bool): Whether to apply spectral normalization. Default is `True`.
 
   - **Returns**: Output tensor from the target layer.
 
@@ -5069,11 +5069,11 @@ The `stochastic_depth` class implements a layer that randomly drops entire paths
 
 **Methods**
 
-- **`__call__(self, x, train_flag=None)`**: Applies stochastic depth to the input tensor during training.
+- **`__call__(self, x, training=None)`**: Applies stochastic depth to the input tensor during training.
 
   - **Parameters**:
     - **`x`** (tensor): Input tensor.
-    - **`train_flag`** (bool, default=None): Whether to apply stochastic depth (drop paths). If `None`, uses the internal training flag.
+    - **`training`** (bool, default=None): Whether to apply stochastic depth (drop paths). If `None`, uses the internal training flag.
 
   - **Returns**:
     - **`output`** (tensor): Output tensor with some paths randomly dropped during training.
