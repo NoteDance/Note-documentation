@@ -8,6 +8,7 @@ Download Note from https://github.com/NoteDance/Note and then unzip it to the si
 
 # Train:
 ```python
+import tensorflow as tf
 from Note.neuralnetwork.tf.ConViT import convit_tiny
 model=convit_tiny(embed_dim=48)
 
@@ -41,6 +42,7 @@ for epoch in range(EPOCHS):
 ```
 or
 ```python
+import tensorflow as tf
 from Note.neuralnetwork.tf.ConViT import convit_tiny
 model=convit_tiny(embed_dim=48)
 
@@ -70,6 +72,7 @@ model.save('model.dat')
 
 # Distributed training:
 ```python
+import tensorflow as tf
 from Note.neuralnetwork.tf.ConViT import convit_tiny
 
 strategy = tf.distribute.MirroredStrategy()
@@ -117,6 +120,42 @@ for epoch in range(EPOCHS):
 
   template = ("Epoch {}, Loss: {}")
   print(template.format(epoch + 1, train_loss)
+```
+or
+```python
+import tensorflow as tf
+from Note.neuralnetwork.tf.ConViT import convit_tiny
+
+strategy = tf.distribute.MirroredStrategy()
+
+BATCH_SIZE_PER_REPLICA = 64
+GLOBAL_BATCH_SIZE = BATCH_SIZE_PER_REPLICA * strategy.num_replicas_in_sync
+EPOCHS = 10
+
+train_dataset = tf.data.Dataset.from_tensor_slices((train_images, train_labels)).shuffle(BUFFER_SIZE).batch(GLOBAL_BATCH_SIZE) 
+test_dataset = tf.data.Dataset.from_tensor_slices((test_images, test_labels)).batch(GLOBAL_BATCH_SIZE) 
+
+train_dist_dataset = strategy.experimental_distribute_dataset(train_dataset)
+test_dist_dataset = strategy.experimental_distribute_dataset(test_dataset)
+
+with strategy.scope():
+  loss_object = tf.keras.losses.SparseCategoricalCrossentropy(
+      reduction=tf.keras.losses.Reduction.NONE)
+
+with strategy.scope():
+  test_loss = tf.keras.metrics.Mean(name='test_loss')
+
+  train_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(
+      name='train_accuracy')
+  test_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(
+      name='test_accuracy')
+
+with strategy.scope():
+  model=convit_tiny(embed_dim=48)
+  optimizer = tf.keras.optimizers.Adam()
+
+model.distributed_fit(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
+EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
 ```
 
 
