@@ -156,6 +156,15 @@ with strategy.scope():
 
 model.distributed_fit(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
 EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
+
+# visualize
+model.visualize_train()
+model.visualize_test()
+model.visualize_comparison()
+
+# save
+model.save_param('param.dat')
+model.save('model.dat')
 ```
 
 
