@@ -507,7 +507,7 @@ The `avg_pool1d` class performs 1D average pooling on the input tensor.
 **Initialization Parameters**
 
 - **`kernel_size`** (int): Size of the window for each dimension of the input tensor.
-- **`strides`** (int): Stride of the sliding window for each dimension of the input tensor.
+- **`strides`** (int): Stride of the sliding window for each dimension of the input tensor. Default is `None`. If `None`, it will default to `kernel_size`.
 - **`padding`** (str, int, list, tuple): implicit zero paddings on both sides of the input. Default is `0`.
 
 **Methods**
@@ -545,7 +545,7 @@ The `avg_pool2d` class performs 2D average pooling on the input tensor.
 **Initialization Parameters**
 
 - **`kernel_size`** (int or tuple of 2 ints): Size of the window for each dimension of the input tensor.
-- **`strides`** (int or tuple of 2 ints): Stride of the sliding window for each dimension of the input tensor.
+- **`strides`** (int or tuple of 2 ints): Stride of the sliding window for each dimension of the input tensor. Default is `None`. If `None`, it will default to `kernel_size`.
 - **`padding`** (str, int, list, tuple): implicit zero paddings on both sides of the input. Default is `0`.
 
 **Methods**
@@ -583,7 +583,7 @@ The `avg_pool3d` class performs 3D average pooling on the input tensor.
 **Initialization Parameters**
 
 - **`kernel_size`** (int or tuple of 3 ints): Size of the window for each dimension of the input tensor.
-- **`strides`** (int or tuple of 3 ints): Stride of the sliding window for each dimension of the input tensor.
+- **`strides`** (int or tuple of 3 ints): Stride of the sliding window for each dimension of the input tensor. Default is `None`. If `None`, it will default to `kernel_size`.
 - **`padding`** (str, int, list, tuple): implicit zero paddings on both sides of the input. Default is `0`.
 
 **Methods**
@@ -3299,7 +3299,7 @@ The `max_pool1d` class implements 1D max pooling.
 **Initialization Parameters**
 
 - **`kernel_size`** (int): Size of the max pooling window.
-- **`strides`** (int): Stride of the max pooling window.
+- **`strides`** (int): Stride of the max pooling window. Default is `None`. If `None`, it will default to `kernel_size`.
 - **`padding`** (str, int, list, tuple): implicit zero paddings on both sides of the input. Default is `0`.
 
 **Methods**
@@ -3334,7 +3334,7 @@ The `max_pool2d` class implements 2D max pooling.
 **Initialization Parameters**
 
 - **`kernel_size`** (int or tuple of 2 ints): Size of the max pooling window.
-- **`strides`** (int or tuple of 2 ints): Stride of the max pooling window.
+- **`strides`** (int or tuple of 2 ints): Stride of the max pooling window. Default is `None`. If `None`, it will default to `kernel_size`.
 - **`padding`** (str, int, list, tuple): implicit zero paddings on both sides of the input. Default is `0`.
 
 **Methods**
@@ -3369,7 +3369,7 @@ The `max_pool3d` class implements 3D max pooling.
 **Initialization Parameters**
 
 - **`kernel_size`** (int or tuple of 3 ints): Size of the max pooling window.
-- **`strides`** (int or tuple of 3 ints): Stride of the max pooling window.
+- **`strides`** (int or tuple of 3 ints): Stride of the max pooling window. Default is `None`. If `None`, it will default to `kernel_size`.
 - **`padding`** (str, int, list, tuple): implicit zero paddings on both sides of the input. Default is `0`.
 
 **Methods**
