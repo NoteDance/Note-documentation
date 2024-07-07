@@ -295,12 +295,12 @@ The assign_param function allows you to assign trained parameters, such as downl
 ```python
 import pickle
 from Note.neuralnetwork.tf.ConViT import convit_tiny
-from Note.neuralnetwork.tf.assign_param import assign_param
+from Note import nn
 model=convit_tiny(embed_dim=48)
 input_file=open('param.dat','rb')
 param=pickle.load(input_file)
 input_file.close()
-assign_param(model.param,param)
+nn.assign_param(model.param,param)
 ```
 
 
