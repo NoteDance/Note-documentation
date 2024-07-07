@@ -293,9 +293,9 @@ param=nn.restore_param('param.dat')
 # Assign the trained parameters to the model:
 The assign_param function allows you to assign trained parameters, such as downloaded pre-trained parameters, to the parameters of a neural network. These parameters should be stored in a list.
 ```python
-import pickle
-from Note.neuralnetwork.tf.ConViT import convit_tiny
 from Note import nn
+from Note.neuralnetwork.tf.ConViT import convit_tiny
+import pickle
 model=convit_tiny(embed_dim=48)
 input_file=open('param.dat','rb')
 param=pickle.load(input_file)
