@@ -9,8 +9,14 @@ Download Note from https://github.com/NoteDance/Note and then unzip it to the si
 # Train:
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.tf.ConViT import convit_tiny
-model=convit_tiny(embed_dim=48)
+from Note.neuralnetwork.example.model1 import Model
+
+mnist = tf.keras.datasets.mnist
+
+(x_train, y_train), (x_test, y_test) = mnist.load_data()
+x_train, x_test = x_train / 255.0, x_test / 255.0
+
+model=Model()
 
 train_ds = tf.data.Dataset.from_tensor_slices((x_train, y_train)).batch(32)
 loss_object = tf.keras.losses.SparseCategoricalCrossentropy()
@@ -43,8 +49,14 @@ for epoch in range(EPOCHS):
 or
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.tf.ConViT import convit_tiny
-model=convit_tiny(embed_dim=48)
+from Note.neuralnetwork.example.model1 import Model
+
+mnist = tf.keras.datasets.mnist
+
+(x_train, y_train), (x_test, y_test) = mnist.load_data()
+x_train, x_test = x_train / 255.0, x_test / 255.0
+
+model=Model()
 
 train_ds = tf.data.Dataset.from_tensor_slices((x_train, y_train)).batch(32)
 test_ds = tf.data.Dataset.from_tensor_slices((x_test, y_test)).batch(32)
@@ -73,7 +85,17 @@ model.save('model.dat')
 # Distributed training:
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.tf.ConViT import convit_tiny
+from Note.neuralnetwork.example.model2 import Model
+
+fashion_mnist = tf.keras.datasets.fashion_mnist
+
+(train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()
+
+train_images = train_images[..., None]
+test_images = test_images[..., None]
+
+train_images = train_images / np.float32(255)
+test_images = test_images / np.float32(255)
 
 strategy = tf.distribute.MirroredStrategy()
 
@@ -92,7 +114,7 @@ with strategy.scope():
     return tf.nn.compute_average_loss(per_example_loss, global_batch_size=GLOBAL_BATCH_SIZE)
 
 with strategy.scope():
-  model=convit_tiny(embed_dim=48)
+  model=Model()
   optimizer = tf.keras.optimizers.Adam()
 
 def train_step(inputs):
@@ -124,7 +146,17 @@ for epoch in range(EPOCHS):
 or
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.tf.ConViT import convit_tiny
+from Note.neuralnetwork.example.model2 import Model
+
+fashion_mnist = tf.keras.datasets.fashion_mnist
+
+(train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()
+
+train_images = train_images[..., None]
+test_images = test_images[..., None]
+
+train_images = train_images / np.float32(255)
+test_images = test_images / np.float32(255)
 
 strategy = tf.distribute.MirroredStrategy()
 
@@ -151,7 +183,7 @@ with strategy.scope():
       name='test_accuracy')
 
 with strategy.scope():
-  model=convit_tiny(embed_dim=48)
+  model=Model()
   optimizer = tf.keras.optimizers.Adam()
 
 model.distributed_fit(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
