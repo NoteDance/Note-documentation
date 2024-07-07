@@ -18,20 +18,7 @@ class Sequential:
                 layer.save_data_count=self.save_data_count  # Set save_data_count in the layer if use_data is True
             if use_data==True:
                 self.save_data_count=0  # Reset save_data_count if use_data is True
-            # If the layer has a build method
-            if hasattr(layer,'build'):
-                # If the layer has an input_size attribute
-                if hasattr(layer,'input_size'):
-                    if layer.input_size is None and self.output_size is not None:
-                        layer.input_size=self.output_size  # Set layer's input_size to the current output_size
-                        layer.build()  # Build the layer
-                        self.layer.append(layer)  # Add layer to the list
-                    else:
-                        self.layer.append(layer)  # Add layer to the list without changes
-                else:
-                    self.layer.append(layer)  # Add layer to the list without changes
-            else:
-                self.layer.append(layer)  # Add layer to the list without changes
+            self.layer.append(layer)  # Add layer to the list without changes
             if hasattr(layer,'param'):
                 self.param.extend(layer.param)  # Add layer's parameters to the param list
             if hasattr(layer,'output_size'):
@@ -41,18 +28,7 @@ class Sequential:
         else:
             # If the input is a list of layers
             for layer in layer:
-                if hasattr(layer,'build'):
-                    if hasattr(layer,'input_size'):
-                        if layer.input_size is None and self.output_size is not None:
-                            layer.input_size=self.output_size  # Set layer's input_size to the current output_size
-                            layer.build()  # Build the layer
-                            self.layer.append(layer)  # Add layer to the list
-                        else:
-                            self.layer.append(layer)  # Add layer to the list without changes
-                    else:
-                        self.layer.append(layer)  # Add layer to the list without changes
-                else:
-                    self.layer.append(layer)  # Add layer to the list without changes
+                self.layer.append(layer)  # Add layer to the list without changes
                 if hasattr(layer,'param'):
                     self.param.extend(layer.param)  # Add layer's parameters to the param list
                 if hasattr(layer,'output_size'):
