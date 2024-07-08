@@ -71,8 +71,8 @@ model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_
 # model.end_acc=0.9
 # model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy)
 
-# If save the model at intervals of 1 epoch and the maximum number of saved files is 2.
-# model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy, save_freq=1, max_save_files=2)
+# If save the model at intervals of 1 epoch, with a maximum of 2 saved file, and the file name is model.dat.
+# model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy, path='model.dat', save_freq=1, max_save_files=2)
 
 # visualize
 # model.visualize_train()
@@ -197,9 +197,9 @@ EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
 # model.distributed_fit(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
 # EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
 
-# If save the model at intervals of 2 epoch and the maximum number of saved files is 3.
+# If save the model at intervals of 2 epoch, with a maximum of 3 saved file, and the file name is model.dat.
 # model.distributed_fit(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
-# EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy, save_freq=2, max_save_files=3)
+# EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy, path='model.dat', save_freq=2, max_save_files=3)
 
 # visualize
 # model.visualize_train()
