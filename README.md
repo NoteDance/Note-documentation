@@ -67,14 +67,21 @@ test_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='test_accuracy')
 
 model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy)
 
+# If use early stopping.
+# model.end_acc=0.9
+# model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy)
+
+# If save the model at intervals of 1 epoch and the maximum number of saved files is 2.
+# model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy, save_freq=1, max_save_files=2)
+
 # visualize
-model.visualize_train()
-model.visualize_test()
-model.visualize_comparison()
+# model.visualize_train()
+# model.visualize_test()
+# model.visualize_comparison()
 
 # save
-model.save_param('param.dat')
-model.save('model.dat')
+# model.save_param('param.dat')
+# model.save('model.dat')
 ```
 
 
@@ -185,14 +192,23 @@ with strategy.scope():
 model.distributed_fit(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
 EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
 
+# If use early stopping.
+# model.end_acc=0.9
+# model.distributed_fit(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
+# EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
+
+# If save the model at intervals of 2 epoch and the maximum number of saved files is 3.
+# model.distributed_fit(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
+# EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy, save_freq=2, max_save_files=3)
+
 # visualize
-model.visualize_train()
-model.visualize_test()
-model.visualize_comparison()
+# model.visualize_train()
+# model.visualize_test()
+# model.visualize_comparison()
 
 # save
-model.save_param('param.dat')
-model.save('model.dat')
+# model.save_param('param.dat')
+# model.save('model.dat')
 ```
 
 
