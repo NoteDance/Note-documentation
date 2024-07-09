@@ -658,7 +658,7 @@ for p in range(5):           #loop over the processes
 ```python
 import Note.DL.kernel as k   #import kernel module
 import tensorflow as tf      #import tensorflow library
-from Note.nn.neuralnetwork.non_parallel.ConvNeXtV2 import ConvNeXtV2 #import neural network class
+from Note.nn.neuralnetwork.note.non_parallel.ConvNeXtV2 import ConvNeXtV2 #import neural network class
 from tensorflow.keras import datasets
 (train_images,train_labels),(test_images,test_labels)=datasets.cifar10.load_data()
 train_images,test_images=train_images/255.0,test_images/255.0
@@ -678,7 +678,7 @@ output=convnext_atto.fp(data)
 **Train:**
 ```python
 import Note.DL.kernel as k   #import kernel module
-from Note.nn.neuralnetwork.ConvNeXtV2 import ConvNeXtV2 #import neural network class
+from Note.nn.neuralnetwork.note.ConvNeXtV2 import ConvNeXtV2 #import neural network class
 convnext_atto=ConvNeXtV2(model_type='atto',classes=1000)  #create neural network object
 kernel=k.kernel(convnext_atto)                  #create kernel object with the network
 kernel.platform=tf           #set the platform to tensorflow
