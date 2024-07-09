@@ -13,7 +13,7 @@ kernel=k.kernel(nn)          #create kernel object with the network
 kernel.platform=tf           #set the platform to tensorflow
 kernel.data(x_train,y_train) #input train data to the kernel
 kernel.train(32,5)           #train the network with batch size 32 and epoch 5
-kernel.save()                #save the neural network to a file
+kernel.save('model.dat')                #save the neural network to a file
 ```
 ```python
 import Note.DL.kernel as k   #import kernel module
@@ -24,7 +24,7 @@ x_train,x_test =x_train/255.0,x_test/255.0 #normalize data
 kernel=k.kernel()             #create kernel object without a network
 kernel.platform=tf            #set the platform to tensorflow
 kernel.data(x_train,y_train)  #input train data to the kernel
-kernel.restore('save.dat')    #restore the network from a file
+kernel.restore('model.dat')    #restore the network from a file
 kernel.train(32,1)            #train the network again with batch size 32 and epoch 1
 ```
 
@@ -56,7 +56,7 @@ nn=n.nn()                    #create neural network object
 kernel=k.kernel(nn)          #create kernel object with the network
 kernel.platform=tf           #set the platform to tensorflow
 kernel.data(x_train,y_train) #input train data to the kernel
-kernel.train(32,5,save=True,one=False,s=3)           #train the network with batch size 32 and epoch 5
+kernel.train(32,5,path='model.dat',save_freq=1,max_save_files=3)           #train the network with batch size 32 and epoch 5
 ```
 
 ### Stop training and saving when condition is met:
@@ -134,7 +134,7 @@ kernel=k.kernel(dqn)              #create kernel object with the network
 kernel.platform=tf                #set the platform to tensorflow
 kernel.action_count=2             #set the number of actions to 2
 kernel.set_up(epsilon=0.01,pool_size=10000,batch=64,update_step=10) #set up the hyperparameters for training
-kernel.train(100,save=True,one=False,s=3)                 #train the network for 100 episodes
+kernel.train(100,path='model.dat',save_freq=20,max_save_files=3)                 #train the network for 100 episodes
 ```
 
 ### Stop training and saving when condition is met:
@@ -318,6 +318,7 @@ kernel.process=3                     #set the number of processes to train
 kernel.epoch=5                       #set the number of epochs to train
 kernel.batch=32                      #set the batch size
 kernel.PO=3                          #use PO3 algorithm for parallel optimization
+kernel.path='model.dat'
 kernel.data(x_train,y_train)         #input train data to the kernel
 manager=Manager()                    #create manager object to share data among processes
 kernel.init(manager)                 #initialize shared data with the manager
@@ -342,7 +343,7 @@ kernel.PO=3                          #use PO3 algorithm for parallel optimizatio
 kernel.data(x_train,y_train)         #input train data to the kernel
 manager=Manager()                    #create manager object to share data among processes
 kernel.init(manager)                 #initialize shared data with the manager
-kernel.restore('save.dat',manager)           #restore the neural network from a file
+kernel.restore('model.dat',manager)           #restore the neural network from a file
 for p in range(3):                   #loop over the processes
 	Process(target=kernel.train,args=(p,)).start() #start each process with the train function and pass the process id as argument
 ```
@@ -413,7 +414,9 @@ kernel.process=3                     #set the number of processes to train
 kernel.epoch=5                       #set the number of epochs to train
 kernel.batch=32                      #set the batch size
 kernel.PO=3                          #use PO3 algorithm for parallel optimization
-kernel.s=3                           #set the maximum number of saved files
+kernel.path='model.dat'
+kernel.save_freq=1
+kernel.max_save_files=3                           #set the maximum number of saved files
 kernel.data(x_train,y_train)         #input train data to the kernel
 manager=Manager()                    #create manager object to share data among processes
 kernel.init(manager)                 #initialize shared data with the manager
@@ -598,7 +601,9 @@ kernel.init(manager)         #initialize shared data with the manager
 kernel.action_count=2        #set the number of actions to 2
 kernel.set_up(epsilon=0.01,pool_size=10000,batch=64,update_step=10) #set up the hyperparameters for training
 kernel.PO=3                  #use PO3 algorithm for parallel optimization
-kernel.s=3                   #set the maximum number of saved files
+kernel.path='model.dat'
+kernel.save_freq=20
+kernel.max_save_files=3                   #set the maximum number of saved files
 pool_lock=[Lock(),Lock(),Lock(),Lock(),Lock()] #create a list of locks for each process's replay pool
 lock=[Lock(),Lock()]         #create two locks for synchronization
 for p in range(5):           #loop over the processes
