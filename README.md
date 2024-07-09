@@ -1,3 +1,25 @@
+# assign_param
+
+The `assign_param` function copies values from one set of parameters to another. This is useful in scenarios where you need to update or synchronize model parameters.
+
+- **Parameters**
+  - `param1`: The target parameters to which values will be assigned.
+  - `param2`: The source parameters from which values will be copied.
+
+- **Returns**: None.
+
+- **Example:**
+  ```python
+  # Example parameters (e.g., model weights)
+  model.param = [...]  # Target parameters
+  param = [...]  # Source parameters
+  
+  from Note import nn
+  nn.assign_param(model.param, param)
+  ```
+
+This function leverages TensorFlow's `state_ops.assign` for assignment operations and `nest.flatten` to handle nested structures of parameters.
+
 # conv2d_func
 
 The `conv2d_func` function performs a 2D convolution operation with support for various configurations including groups, padding, and dilations.
