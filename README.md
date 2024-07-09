@@ -13,7 +13,7 @@ To import the neural network example conveniently, you can download it from http
 
 - Neural network class should define a forward propagation function fp(data), and if using parallel kernel, it should define fp(data,p) where p is the process number. fp passes in the data and returns output, a loss function loss(output,labels), and if using parallel kernel, it should define loss(output,labels,p) where p is the process number. loss passes in the output and labels and returns loss value. If using parallel kernel, it should also define an optimization function opt(gradient,p) and GradientTape(data,labels,p) where p is the process number. opt passes in the gradient and returns parameter, GradientTape passes in the data and labels and returns tape, output and loss. It should also have a self.param object, which is a list for storing the trainable parameters. The kernel needs this list to calculate the gradients and update the parameters.
 
-- The Note.neuralnetwork package contains more complex neural network implementations. For some unknown reason, neural networks built with Keras may not be able to train in parallel on Note. The neural networks in the Note.neuralnetwork package use the layer module provided by Note, so they can train in parallel on Note. I hope you can learn how to build more complex networks on Note from these neural network codes.
+- The Note.neuralnetwork.note package contains more complex neural network implementations. For some unknown reason, neural networks built with Keras may not be able to train in parallel on Note. The neural networks in the Note.neuralnetwork.note package use the layer module provided by Note, so they can train in parallel on Note. I hope you can learn how to build more complex networks on Note from these neural network codes.
 
 Examples of training neural networks with kernel are shown below.
 
@@ -154,7 +154,7 @@ for p in range(5):           #loop over the processes
 # Neural network:
 The neuralnetwork package in Note has models that can be trained in parallel on Note, such as ConvNeXt, EfficientNetV2, EfficientNet, etc. You only need to provide the training data and operate simply, then you can train these neural networks in parallel on Note.
 
-https://github.com/NoteDance/Note/tree/Note-7.0/Note/neuralnetwork
+https://github.com/NoteDance/Note/tree/Note-7.0/Note/neuralnetwork/note
 
 **Documentation:** https://github.com/NoteDance/Note-documentation/tree/neural-network-7.0
 
@@ -165,7 +165,7 @@ The following is an example of training on the CIFAR10 dataset.
 **Train:**
 ```python
 import Note.DL.parallel.kernel as k   #import kernel module
-from Note.neuralnetwork.ConvNeXtV2 import ConvNeXtV2 #import neural network class
+from Note.neuralnetwork.note.ConvNeXtV2 import ConvNeXtV2 #import neural network class
 from tensorflow.keras import datasets
 from multiprocessing import Process,Manager #import multiprocessing tools
 (train_images,train_labels),(test_images,test_labels)=datasets.cifar10.load_data()
@@ -193,7 +193,7 @@ output=convnext_atto.fp(data)
 **Train:**
 ```python
 import Note.DL.parallel.kernel as k   #import kernel module
-from Note.neuralnetwork.ConvNeXtV2 import ConvNeXtV2 #import neural network class
+from Note.neuralnetwork.note.ConvNeXtV2 import ConvNeXtV2 #import neural network class
 convnext_atto=ConvNeXtV2(model_type='atto',classes=1000)  #create neural network object
 kernel=k.kernel(convnext_atto)                  #create kernel object with the network
 kernel.process=3                     #set the number of processes to train
