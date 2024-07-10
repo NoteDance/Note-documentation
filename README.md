@@ -71,10 +71,6 @@ model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_
 # model.end_acc=0.9
 # model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy)
 
-# If use parallel test(experiment)
-# import multiprocessing as mp
-# model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy, 7, mp)
-
 # If save the model at intervals of 1 epoch, with a maximum of 2 saved file, and the file name is model.dat.
 # model.path='model.dat'
 # model.save_freq=1
@@ -99,6 +95,15 @@ model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_
 # model.save_best_only=True
 # model.monitor='val_loss'
 # model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy)
+
+# If use parallel test(experiment)
+# import multiprocessing as mp
+# x_test, y_test = model.segment_data(x_test, y_test, 7)
+# test_ds = [tf.data.Dataset.from_tensor_slices((x_test, y_test)).batch(32) x_test,y_test for zip(x_test,y_test)]
+# loss_object = tf.keras.losses.SparseCategoricalCrossentropy()
+# test_loss = [tf.keras.metrics.Mean(name='test_loss') for _ in range(7)]
+# test_accuracy = [tf.keras.metrics.SparseCategoricalAccuracy(name='test_accuracy') for _ in range(7)]
+# model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy, 7, mp)
 
 # visualize
 # model.visualize_train()
