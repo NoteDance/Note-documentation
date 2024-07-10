@@ -72,7 +72,22 @@ model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_
 # model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy)
 
 # If save the model at intervals of 1 epoch, with a maximum of 2 saved file, and the file name is model.dat.
-# model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy, path='model.dat', save_freq=1, max_save_files=2)
+# model.path='model.dat'
+# model.save_freq=1
+# model. max_save_files=2
+# model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy)
+
+# If save parameters only
+# model.path='param.dat'
+# model.save_freq=1
+# model. max_save_files=2
+# model.save_param_only=True
+# model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy)
+
+# If save best only
+# model.save_best_only=True
+# model.monitor='val_loss'
+# model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy)
 
 # visualize
 # model.visualize_train()
@@ -198,8 +213,25 @@ EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
 # EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
 
 # If save the model at intervals of 2 epoch, with a maximum of 3 saved file, and the file name is model.dat.
+# model.path='model.dat'
+# model.save_freq=2
+# model.max_save_files=3
 # model.distributed_fit(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
-# EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy, path='model.dat', save_freq=2, max_save_files=3)
+# EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
+
+# If save parameters only
+# model.path='param.dat'
+# model.save_freq=2
+# model.max_save_files=3
+# model.save_param_only=True
+# model.distributed_fit(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
+# EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
+
+# If save best only
+# model.save_best_only=True
+# model.monitor='val_loss'
+# model.distributed_fit(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
+# EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
 
 # visualize
 # model.visualize_train()
