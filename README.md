@@ -71,6 +71,10 @@ model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_
 # model.end_acc=0.9
 # model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy)
 
+# If use parallel test(experiment)
+# import multiprocessing as mp
+# model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy, 7, mp)
+
 # If save the model at intervals of 1 epoch, with a maximum of 2 saved file, and the file name is model.dat.
 # model.path='model.dat'
 # model.save_freq=1
@@ -91,6 +95,7 @@ model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_
 # model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy)
 
 # If save best only
+# model.path='model.dat'
 # model.save_best_only=True
 # model.monitor='val_loss'
 # model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy)
@@ -241,6 +246,7 @@ EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
 # EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
 
 # If save best only
+# model.path='model.dat'
 # model.save_best_only=True
 # model.monitor='val_loss'
 # model.distributed_fit(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
