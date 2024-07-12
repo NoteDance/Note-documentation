@@ -98,6 +98,7 @@ model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_
 
 # If set steps_per_execution
 # model.path='model.dat'
+# model.end_acc=0.9
 # model.steps_per_execution=1875
 # model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy)
 
@@ -264,6 +265,7 @@ EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
 
 # If set steps_per_execution
 # model.path='model.dat'
+# model.end_acc=0.9
 # model.steps_per_execution=1094
 # model.distributed_fit(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
 # EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
