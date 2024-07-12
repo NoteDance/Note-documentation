@@ -265,7 +265,8 @@ EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
 # If set steps_per_execution
 # model.path='model.dat'
 # model.steps_per_execution=1094
-# model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy)
+# model.distributed_fit(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
+# EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
 
 # visualize
 # model.visualize_train()
