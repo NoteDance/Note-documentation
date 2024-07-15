@@ -352,6 +352,37 @@ nn.trunc_normal_tf_(tensor)
 print(tensor)
 ```
 
+# dirac_
+
+The `dirac_` function initializes a tensor with the Dirac delta function, preserving the identity of the inputs in convolutional layers. This is useful for initializing layers where you want to retain as many input channels as possible.
+
+**Parameters**
+
+- **`tensor`**: A {3, 4, 5}-dimensional `tf.Variable` that will be filled with the Dirac delta function.
+- **`groups`** (int, optional): The number of groups in the convolutional layer. Default is `1`.
+
+**Method**
+
+- **`dirac_(tensor, groups=1)`**: Fills the input `tensor` with the Dirac delta function.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Example usage of dirac_
+tensor = tf.Variable(tf.zeros([5, 5, 16, 3]))
+nn.dirac_(tensor)
+print(tensor)
+
+tensor = tf.Variable(tf.zeros([5, 5, 24, 3]))
+nn.dirac_(tensor, groups=3)
+print(tensor)
+```
+
+This function is particularly useful for convolutional layers in neural networks, where maintaining the identity of the inputs is important for preserving certain properties of the data as it passes through the network. The `groups` parameter allows for dividing the channels into multiple groups, each preserving the identity independently.
+
 # variance_scaling_
 
 The `variance_scaling_` function initializes a tensor with values from a scaled distribution based on the variance of the input tensor. It supports different modes and distributions.
