@@ -277,3 +277,345 @@ Performs scaled dot-product attention.
   value = tf.random.normal([5, 10, 64])
   attn_output = nn.scaled_dot_product_attention(query, key, value)
   ```
+
+# trunc_normal_
+
+The `trunc_normal_` function fills a tensor with values drawn from a truncated normal distribution. This distribution is bounded by specified minimum and maximum values, ensuring that all values in the tensor fall within these bounds.
+
+**Parameters**
+
+- **`tensor`**: An n-dimensional `tf.Variable` that will be filled with values from the truncated normal distribution.
+- **`mean`** (float, optional): The mean of the normal distribution. Default is `0.`.
+- **`std`** (float, optional): The standard deviation of the normal distribution. Default is `1.`.
+- **`a`** (float, optional): The minimum cutoff value. Default is `-2.`.
+- **`b`** (float, optional): The maximum cutoff value. Default is `2.`.
+
+**Method**
+
+- **`trunc_normal_(tensor, mean=0., std=1., a=-2., b=2.)`**: Fills the input `tensor` with values drawn from a truncated normal distribution.
+
+  - **Parameters**:
+    - **`tensor`**: An n-dimensional `tf.Variable`.
+    - **`mean`** (float, optional): The mean of the normal distribution.
+    - **`std`** (float, optional): The standard deviation of the normal distribution.
+    - **`a`** (float, optional): The minimum cutoff value.
+    - **`b`** (float, optional): The maximum cutoff value.
+
+  - **Returns**: The input `tensor` filled with values from the truncated normal distribution.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Example usage of trunc_normal_
+tensor = tf.Variable(tf.zeros((3, 5)), dtype=tf.float32)
+nn.trunc_normal_(tensor)
+print(tensor)
+```
+
+# trunc_normal_tf_
+
+The `trunc_normal_tf_` function fills a tensor with values drawn from a truncated normal distribution, similar to `trunc_normal_`, but it behaves closer to TensorFlow or JAX implementations. This function first samples the normal distribution with mean=0 and std=1, then scales and shifts the result by the specified mean and standard deviation.
+
+**Parameters**
+
+- **`tensor`**: An n-dimensional `tf.Variable` that will be filled with values from the truncated normal distribution.
+- **`mean`** (float, optional): The mean of the normal distribution. Default is `0.`.
+- **`std`** (float, optional): The standard deviation of the normal distribution. Default is `1.`.
+- **`a`** (float, optional): The minimum cutoff value. Default is `-2.`.
+- **`b`** (float, optional): The maximum cutoff value. Default is `2.`.
+
+**Method**
+
+- **`trunc_normal_tf_(tensor, mean=0., std=1., a=-2., b=2.)`**: Fills the input `tensor` with values drawn from a truncated normal distribution.
+
+  - **Parameters**:
+    - **`tensor`**: An n-dimensional `tf.Variable`.
+    - **`mean`** (float, optional): The mean of the normal distribution.
+    - **`std`** (float, optional): The standard deviation of the normal distribution.
+    - **`a`** (float, optional): The minimum cutoff value.
+    - **`b`** (float, optional): The maximum cutoff value.
+
+  - **Returns**: The input `tensor` filled with values from the truncated normal distribution.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Example usage of trunc_normal_tf_
+tensor = tf.Variable(tf.zeros((3, 5)), dtype=tf.float32)
+nn.trunc_normal_tf_(tensor)
+print(tensor)
+```
+
+# variance_scaling_
+
+The `variance_scaling_` function initializes a tensor with values from a scaled distribution based on the variance of the input tensor. It supports different modes and distributions.
+
+**Parameters**
+
+- **`tensor`**: An n-dimensional `tf.Variable` that will be filled with values from the specified distribution.
+- **`scale`** (float, optional): Scaling factor. Default is `1.0`.
+- **`mode`** (str, optional): Mode for calculating the scaling factor. Can be `'fan_in'`, `'fan_out'`, or `'fan_avg'`. Default is `'fan_in'`.
+- **`distribution`** (str, optional): Distribution to sample from. Can be `'normal'`, `'truncated_normal'`, or `'uniform'`. Default is `'normal'`.
+
+**Method**
+
+- **`variance_scaling_(tensor, scale=1.0, mode='fan_in', distribution='normal')`**: Fills the input `tensor` with values from the specified scaled distribution.
+
+  - **Parameters**:
+    - **`tensor`**: An n-dimensional `tf.Variable`.
+    - **`scale`** (float, optional): Scaling factor.
+    - **`mode`** (str, optional): Mode for calculating the scaling factor.
+    - **`distribution`** (str, optional): Distribution to sample from.
+
+  - **Returns**: The input `tensor` filled with values from the scaled distribution.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Example usage of variance_scaling_
+tensor = tf.Variable(tf.zeros((3, 5)), dtype=tf.float32)
+nn.variance_scaling_(tensor, scale=1.0, mode='fan_in', distribution='normal')
+print(tensor)
+```
+
+# lecun_normal_
+
+The `lecun_normal_` function initializes a tensor with values from a truncated normal distribution, scaled according to the LeCun initialization method.
+
+**Parameters**
+
+- **`tensor`**: An n-dimensional `tf.Variable` that will be filled with values from the LeCun-normal distribution.
+
+**Method**
+
+- **`lecun_normal_(tensor)`**: Fills the input `tensor` with values from the LeCun-normal distribution.
+
+  - **Parameters**:
+    - **`tensor`**: An n-dimensional `tf.Variable`.
+
+  - **Returns**: The input `tensor` filled with values from the LeCun-normal distribution.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Example usage of lecun_normal_
+tensor = tf.Variable(tf.zeros((3, 5)), dtype=tf.float32)
+nn.lecun_normal_(tensor)
+print(tensor)
+```
+
+# calculate_gain
+
+The `calculate_gain` function returns the recommended gain value for a given nonlinearity function, which is used in weight initialization.
+
+**Parameters**
+
+- **`nonlinearity`** (str): The name of the non-linear function (e.g., `'relu'`, `'leaky_relu'`).
+- **`param`** (optional): An optional parameter for the non-linear function (e.g., negative slope for leaky ReLU).
+
+**Method**
+
+- **`calculate_gain(nonlinearity, param=None)`**: Returns the recommended gain value for the given nonlinearity function.
+
+  - **Parameters**:
+    - **`nonlinearity`** (str): The name of the non-linear function.
+    - **`param`** (optional): An optional parameter for the non-linear function.
+
+  - **Returns**: The recommended gain value for the given nonlinearity function.
+
+**Example Usage**
+
+```python
+from Note import nn
+
+# Example usage of calculate_gain
+gain = nn.calculate_gain('leaky_relu', 0.2)
+print(gain)
+```
+
+# xavier_uniform_
+
+The `xavier_uniform_` function initializes a tensor with values from a Xavier uniform distribution, which is used for initializing weights in neural networks.
+
+**Parameters**
+
+- **`tensor`**: An n-dimensional `tf.Variable` that will be filled with values from the Xavier uniform distribution.
+- **`gain`** (float, optional): An optional scaling factor. Default is `1.0`.
+- **`generator`** (optional): A generator for random number generation. Default is `None`.
+
+**Method**
+
+- **`xavier_uniform_(tensor, gain=1.0, generator=None)`**: Fills the input `tensor` with values from a Xavier uniform distribution.
+
+  - **Parameters**:
+    - **`tensor`**: An n-dimensional `tf.Variable`.
+    - **`gain`** (float, optional): An optional scaling factor.
+    - **`generator`** (optional): A generator for random number generation.
+
+  - **Returns**: The input `tensor` filled with values from the Xavier uniform distribution.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Example usage of xavier_uniform_
+tensor = tf.Variable(tf.zeros([3, 5]))
+nn.xavier_uniform_(tensor, gain=nn.calculate_gain('relu'))
+print(tensor)
+```
+
+# xavier_normal_
+
+The `xavier_normal_` function initializes a tensor with values from a Xavier normal distribution, which is used for initializing weights in neural networks.
+
+**Parameters**
+
+- **`tensor`**: An n-dimensional `tf.Variable` that will be filled with values from the Xavier normal distribution.
+- **`gain`** (float, optional): An optional scaling factor. Default is `1.0`.
+- **`generator`** (optional): A generator for random number generation. Default is `None`.
+
+**Method**
+
+- **`xavier_normal_(tensor, gain=1.0, generator=None)`**: Fills the input `tensor` with values from a Xavier normal distribution.
+
+  - **Parameters**:
+    - **`tensor`**: An n-dimensional `tf.Variable`.
+    - **`gain`** (float, optional): An optional scaling factor.
+    - **`generator`** (optional): A generator for random number generation.
+
+  - **Returns**: The input `tensor` filled with values from the Xavier normal distribution.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Example usage of xavier_normal_
+tensor = tf.Variable(tf.zeros([3, 5]))
+nn.xavier_normal_(tensor)
+print(tensor)
+```
+
+# kaiming_uniform_
+
+The `kaiming_uniform_` function initializes a tensor with values from a Kaiming uniform distribution, also known as He initialization. This method is typically used for layers with ReLU or leaky ReLU activations.
+
+**Parameters**
+
+- **`tensor`**: An n-dimensional `tf.Variable` that will be filled with values from the Kaiming uniform distribution.
+- **`a`** (float, optional): The negative slope of the rectifier used after this layer (used only with `'leaky_relu'`). Default is `0`.
+- **`mode`** (str, optional): Either `'fan_in'` (default) or `'fan_out'`. `'fan_in'` preserves the variance in the forward pass, while `'fan_out'` preserves it in the backward pass.
+- **`nonlinearity`** (str, optional): The non-linear function (`'relu'` or `'leaky_relu'`). Default is `'leaky_relu'`.
+- **`generator`** (optional): A generator for random number generation. Default is `None`.
+
+**Method**
+
+- **`kaiming_uniform_(tensor, a=0, mode='fan_in', nonlinearity='leaky_relu', generator=None)`**: Fills the input `tensor` with values from a Kaiming uniform distribution.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Example usage of kaiming_uniform_
+tensor = tf.Variable(tf.zeros([3, 5]))
+nn.kaiming_uniform_(tensor, mode='fan_in', nonlinearity='relu')
+print(tensor)
+```
+
+# kaiming_normal_
+
+The `kaiming_normal_` function initializes a tensor with values from a Kaiming normal distribution, also known as He initialization. This method is typically used for layers with ReLU or leaky ReLU activations.
+
+**Parameters**
+
+- **`tensor`**: An n-dimensional `tf.Variable` that will be filled with values from the Kaiming normal distribution.
+- **`a`** (float, optional): The negative slope of the rectifier used after this layer (used only with `'leaky_relu'`). Default is `0`.
+- **`mode`** (str, optional): Either `'fan_in'` (default) or `'fan_out'`. `'fan_in'` preserves the variance in the forward pass, while `'fan_out'` preserves it in the backward pass.
+- **`nonlinearity`** (str, optional): The non-linear function (`'relu'` or `'leaky_relu'`). Default is `'leaky_relu'`.
+- **`generator`** (optional): A generator for random number generation. Default is `None`.
+
+**Method**
+
+- **`kaiming_normal_(tensor, a=0, mode='fan_in', nonlinearity='leaky_relu', generator=None)`**: Fills the input `tensor` with values from a Kaiming normal distribution.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Example usage of kaiming_normal_
+tensor = tf.Variable(tf.zeros([3, 5]))
+nn.kaiming_normal_(tensor, mode='fan_out', nonlinearity='relu')
+print(tensor)
+```
+
+# orthogonal_
+
+The `orthogonal_` function initializes a tensor with a (semi) orthogonal matrix, preserving the orthogonality properties during initialization.
+
+**Parameters**
+
+- **`tensor`**: An n-dimensional `tf.Variable` with at least 2 dimensions.
+- **`gain`** (float, optional): An optional scaling factor. Default is `1`.
+- **`generator`** (optional): A generator for random number generation. Default is `None`.
+
+**Method**
+
+- **`orthogonal_(tensor, gain=1, generator=None)`**: Fills the input `tensor` with a (semi) orthogonal matrix.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Example usage of orthogonal_
+tensor = tf.Variable(tf.zeros([3, 5]))
+nn.orthogonal_(tensor)
+print(tensor)
+```
+
+# sparse_
+
+The `sparse_` function initializes a 2D tensor as a sparse matrix, with non-zero elements drawn from a normal distribution.
+
+**Parameters**
+
+- **`tensor`**: A 2-dimensional `tf.Variable`.
+- **`sparsity`** (float): The fraction of elements in each column to be set to zero.
+- **`std`** (float, optional): The standard deviation of the normal distribution used to generate the non-zero values. Default is `0.01`.
+- **`generator`** (optional): A generator for random number generation. Default is `None`.
+
+**Method**
+
+- **`sparse_(tensor, sparsity, std=0.01, generator=None)`**: Fills the input `tensor` as a sparse matrix.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Example usage of sparse_
+tensor = tf.Variable(tf.zeros([3, 5]))
+nn.sparse_(tensor, sparsity=0.1)
+print(tensor)
+```
