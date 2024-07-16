@@ -1,4 +1,5 @@
 import tensorflow as tf # import TensorFlow library
+from Note import nn
 import gym # import OpenAI Gym library
 import Note.nn.parallel.optimizer as o # import Note's optimizer module
 
@@ -43,7 +44,7 @@ class DQN: # define a class for the DQN agent
         
     
     def update_param(self): # update function, kernel uses it to update parameter
-        self.target_q_net.param=self.param.copy() # copy the parameters from the Q-network to the target network
+        nn.assign(self.target_q_net.param,self.param.copy()) # copy the parameters from the Q-network to the target network
         return
     
     
