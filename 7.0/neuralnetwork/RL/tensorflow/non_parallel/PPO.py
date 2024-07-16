@@ -33,7 +33,7 @@ class PPO:
     def __init__(self,state_dim,hidden_dim,action_dim,clip_eps,alpha):
         self.actor=actor(state_dim,hidden_dim,action_dim)
         self.nn=actor(state_dim,hidden_dim,action_dim)
-        self.nn.param=self.actor.param.copy()
+        nn.assign_param(self.nn.param,self.actor.param.copy())
         self.critic=critic(state_dim,hidden_dim)
         self.clip_eps=clip_eps
         self.alpha=alpha
