@@ -5,15 +5,13 @@ import gym # import OpenAI Gym library
 
 class Qnet: # define a class for the Q-network
     def __init__(self,state_dim,hidden_dim,action_dim): # initialize the network with state dimension, hidden dimension and action dimension
-        self.weight1=tf.Variable(tf.random.normal([state_dim,hidden_dim])) # create a weight matrix for the first layer
-        self.bias1=tf.Variable(tf.random.normal([hidden_dim])) # create a bias vector for the first layer
-        self.weight2=tf.Variable(tf.random.normal([hidden_dim,action_dim])) # create a weight matrix for the second layer
-        self.bias2=tf.Variable(tf.random.normal([action_dim])) # create a bias vector for the second layer
-        self.param=[self.weight1,self.bias1,self.weight2,self.bias2] # store the network parameters in a list
+        self.dense1 = nn.dense(hidden_dim, state_dim, activation='relu')
+        self.dense2 = nn.dense(action_dim, hidden_dim)
+        self.param=[self.dense1.param,self.dense2.param] # store the network parameters in a list
     
     def fp(self,x):  # forward propagation function, kernel uses it for forward propagation
-        x=tf.nn.relu(tf.matmul(x,self.weight1)+self.bias1) # apply the first layer with ReLU activation
-        return tf.matmul(x,self.weight2)+self.bias2 # apply the second layer and return the output
+        x = self.dense2(self.dense1(x))
+        return x
     
     
 class DQN: # define a class for the DQN agent
