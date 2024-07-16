@@ -1,4 +1,5 @@
 import tensorflow as tf
+from Note import nn
 import gym
 import Note.create.RL.rl.prioritized_replay as pr
 
@@ -55,5 +56,5 @@ class DQN:
         
     
     def update_param(self):
-        self.target_q_net.param=self.param.copy()
+        nn.assign_param(self.target_q_net.param, self.param.copy())
         return
