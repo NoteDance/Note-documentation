@@ -19,7 +19,7 @@ class actor: # define a class for the actor network
 
 class critic: # define a class for the critic network
     def __init__(self,state_dim,hidden_dim,action_dim): # initialize the network with state dimension, hidden dimension and action dimension
-        self.dense1 = nn.dense(hidden_dim, state_dim+1, activation='relu')
+        self.dense1 = nn.dense(hidden_dim, state_dim+action_dim, activation='relu')
         self.dense2 = nn.dense(action_dim, hidden_dim)
         self.param=[self.dense1.param,self.dense2.param] # store the network parameters in a list
     
