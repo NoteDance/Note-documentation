@@ -1,4 +1,5 @@
 import tensorflow as tf
+from Note import nn
 import gym
 from Note.nn.parallel.optimizer import SGD
 
@@ -33,7 +34,7 @@ class PPO:
     def __init__(self,state_dim,hidden_dim,action_dim,clip_eps,alpha):
         self.actor=actor(state_dim,hidden_dim,action_dim)
         self.nn=actor(state_dim,hidden_dim,action_dim)
-        self.nn.param=self.actor.param.copy()
+        nn.assign(self.nn.param,self.actor.param.copy())
         self.critic=critic(state_dim,hidden_dim)
         self.clip_eps=clip_eps
         self.param=[self.actor.param,self.critic.param]
@@ -80,5 +81,5 @@ class PPO:
     
     
     def update_param(self):
-        self.nn.param=self.actor.param.copy()
+        nn.assign(self.nn.param,self.actor.param.copy())
         return
