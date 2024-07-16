@@ -2946,6 +2946,111 @@ mask = tf.cast(tf.random.uniform((2, 50), maxval=2, dtype=tf.int32), tf.float32)
 output = ka(query, value, attention_mask=mask)
 ```
 
+# lp_pool1d
+
+The `lp_pool1d` class applies 1D power-average pooling over an input signal composed of several input planes. This operation is useful for downsampling input data while maintaining certain statistical properties based on the chosen power.
+
+**Initialization Parameters**
+
+- **norm_type** (Union[int, float]): The power to which each element is raised before computing the average.
+- **kernel_size**: Size of the pooling kernel.
+- **strides** (optional): Stride size. If None, the stride will be equal to the kernel size.
+
+**Methods**
+
+- **__call__(self, input)**: Applies the power-average pooling to the input tensor.
+
+  - **Parameters**:
+    - **input**: Input tensor to be pooled.
+
+  - **Returns**: The pooled output tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the lp_pool1d layer
+pool = nn.lp_pool1d(norm_type=2, kernel_size=3)
+
+# Generate some sample data
+data = tf.random.normal((1, 10, 1))
+
+# Apply lp_pool1d
+output = pool(data)
+```
+
+# lp_pool2d
+
+The `lp_pool2d` class applies 2D power-average pooling over an input signal composed of several input planes. This operation is useful for downsampling input data while maintaining certain statistical properties based on the chosen power.
+
+**Initialization Parameters**
+
+- **norm_type** (Union[int, float]): The power to which each element is raised before computing the average.
+- **kernel_size**: Size of the pooling kernel.
+- **strides** (optional): Stride size. If None, the stride will be equal to the kernel size.
+
+**Methods**
+
+- **__call__(self, input)**: Applies the power-average pooling to the input tensor.
+
+  - **Parameters**:
+    - **input**: Input tensor to be pooled.
+
+  - **Returns**: The pooled output tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the lp_pool2d layer
+pool = nn.lp_pool2d(norm_type=2, kernel_size=(2, 2))
+
+# Generate some sample data
+data = tf.random.normal((1, 10, 10, 1))
+
+# Apply lp_pool2d
+output = pool(data)
+```
+
+# lp_pool3d
+
+The `lp_pool3d` class applies 3D power-average pooling over an input signal composed of several input planes. This operation is useful for downsampling input data while maintaining certain statistical properties based on the chosen power.
+
+**Initialization Parameters**
+
+- **norm_type** (Union[int, float]): The power to which each element is raised before computing the average.
+- **kernel_size**: Size of the pooling kernel.
+- **strides** (optional): Stride size. If None, the stride will be equal to the kernel size.
+
+**Methods**
+
+- **__call__(self, input)**: Applies the power-average pooling to the input tensor.
+
+  - **Parameters**:
+    - **input**: Input tensor to be pooled.
+
+  - **Returns**: The pooled output tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the lp_pool3d layer
+pool = nn.lp_pool3d(norm_type=2, kernel_size=(2, 2, 2))
+
+# Generate some sample data
+data = tf.random.normal((1, 10, 10, 10, 1))
+
+# Apply lp_pool3d
+output = pool(data)
+```
+
 # LSTM
 
 The `LSTM` class implements a long short-term memory (LSTM) layer, which is a type of recurrent neural network (RNN) used for processing sequential data. LSTMs are designed to capture long-term dependencies and are commonly used in tasks such as time series forecasting, natural language processing, and more.
