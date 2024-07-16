@@ -20,7 +20,7 @@ class actor: # define a class for the actor network
 
 class critic: # define a class for the critic network
     def __init__(self,state_dim,hidden_dim,action_dim): # initialize the network with state dimension, hidden dimension and action dimension
-        self.dense1 = nn.dense(hidden_dim, state_dim, activation='relu')
+        self.dense1 = nn.dense(hidden_dim, state_dim+1, activation='relu')
         self.dense2 = nn.dense(action_dim, hidden_dim)
         self.param=[self.dense1.param,self.dense2.param] # store the network parameters in a list
     
@@ -33,7 +33,7 @@ class critic: # define a class for the critic network
 
 class DDPG: # define a class for the DDPG agent
     def __init__(self,hidden_dim,sigma,gamma,tau,actor_lr,critic_lr): # initialize the agent with hidden dimension, noise scale, discount factor, soft update factor, actor learning rate and critic learning rate
-        self.genv=[gym.make('Pendulum-v0') for _ in range(5)] # create a list of 5 environments
+        self.genv=[gym.make('Pendulum-v1') for _ in range(5)] # create a list of 5 environments
         state_dim=self.genv.observation_space.shape[0] # get the state dimension from the environment observation space
         action_dim=self.genv.action_space.shape[0] # get the action dimension from the environment action space
         action_bound=self.genv.action_space.high[0] # get the action bound from the environment action space high value (assume symmetric)
