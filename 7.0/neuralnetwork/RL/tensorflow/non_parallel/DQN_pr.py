@@ -1,7 +1,7 @@
 import tensorflow as tf
 from Note import nn
 import gym
-import Note.create.RL.rl.prioritized_replay as pr
+import Note.RL.rl.prioritized_replay as pr
 
 
 class Qnet:
