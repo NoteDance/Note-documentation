@@ -5,28 +5,24 @@ import gym
 
 class actor:
     def __init__(self,state_dim,hidden_dim,action_dim):
-        self.weight1=tf.Variable(tf.random.normal([state_dim,hidden_dim]))
-        self.bias1=tf.Variable(tf.random.normal([hidden_dim]))
-        self.weight2=tf.Variable(tf.random.normal([hidden_dim,action_dim]))
-        self.bias2=tf.Variable(tf.random.normal([action_dim]))
-        self.param=[self.weight1,self.bias1,self.weight2,self.bias2]
+        self.dense1 = nn.dense(hidden_dim, state_dim, activation='relu')
+        self.dense2 = nn.dense(action_dim, hidden_dim)
+        self.param=[self.dense1.param,self.dense2.param] # store the network parameters in a list
     
     def fp(self,x):
-        x=tf.nn.relu(tf.matmul(x,self.weight1)+self.bias1)
-        return tf.nn.softmax(tf.matmul(x,self.weight2)+self.bias2)
+        x=self.dense1(x)
+        return tf.nn.softmax(self.dense2(x))
 
 
 class critic:
     def __init__(self,state_dim,hidden_dim):
-        self.weight1=tf.Variable(tf.random.normal([state_dim,hidden_dim]))
-        self.bias1=tf.Variable(tf.random.normal([hidden_dim]))
-        self.weight2=tf.Variable(tf.random.normal([hidden_dim,1]))
-        self.bias2=tf.Variable(tf.random.normal([1]))
-        self.param=[self.weight1,self.bias1,self.weight2,self.bias2]
+        self.dense1 = nn.dense(hidden_dim, state_dim, activation='relu')
+        self.dense2 = nn.dense(1, hidden_dim)
+        self.param=[self.dense1.param,self.dense2.param] # store the network parameters in a list
     
     def fp(self,x):
-        x=tf.nn.relu(tf.matmul(x,self.weight1)+self.bias1)
-        return tf.matmul(x,self.weight2)+self.bias2
+        x=self.dense1(x)
+        return self.dense2(x)
     
     
 class PPO:
