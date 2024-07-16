@@ -1,4 +1,5 @@
 import tensorflow as tf
+from Note import nn
 import gym
 
 
@@ -81,5 +82,5 @@ class PPO:
     
     
     def update_param(self):
-        self.nn.param=self.actor.param.copy()
+        nn.assign_param(self.nn.param, self.actor.param.copy())
         return
