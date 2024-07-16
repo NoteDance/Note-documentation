@@ -7,32 +7,28 @@ import Note.nn.parallel.optimizer as o # import Note's optimizer module
 
 class actor: # define a class for the actor network
     def __init__(self,state_dim,hidden_dim,action_dim,action_bound): # initialize the network with state dimension, hidden dimension, action dimension and action bound
-        self.weight1=tf.Variable(tf.random.normal([state_dim,hidden_dim])) # create a weight matrix for the first layer
-        self.bias1=tf.Variable(tf.random.normal([hidden_dim])) # create a bias vector for the first layer
-        self.weight2=tf.Variable(tf.random.normal([hidden_dim,action_dim])) # create a weight matrix for the second layer
-        self.bias2=tf.Variable(tf.random.normal([action_dim])) # create a bias vector for the second layer
-        self.action_bound=action_bound # store the action bound
-        self.param=[self.weight1,self.bias1,self.weight2,self.bias2]  # store the network parameters in a list
+        self.dense1 = nn.dense(hidden_dim, state_dim, activation='relu')
+        self.dense2 = nn.dense(action_dim, hidden_dim, activation='tanh')
+        self.action_bound=action_bound
+        self.param=[self.dense1.param,self.dense2.param] # store the network parameters in a list
     
     
     def fp(self,x):  # forward propagation function, kernel uses it for forward propagation
-        x=tf.nn.relu(tf.matmul(x,self.weight1)+self.bias1) # apply the first layer with ReLU activation
-        return tf.nn.tanh(tf.matmul(x,self.weight2)+self.bias2)*self.action_bound # apply the second layer with tanh activation and scale it by the action bound
+        x = self.dense1(x)
+        return self.dense2(x)*self.action_bound
 
 
 class critic: # define a class for the critic network
     def __init__(self,state_dim,hidden_dim,action_dim): # initialize the network with state dimension, hidden dimension and action dimension
-        self.weight1=tf.Variable(tf.random.normal([state_dim+action_dim,hidden_dim])) # create a weight matrix for the first layer
-        self.bias1=tf.Variable(tf.random.normal([hidden_dim])) # create a bias vector for the first layer
-        self.weight2=tf.Variable(tf.random.normal([hidden_dim,action_dim])) # create a weight matrix for the second layer
-        self.bias2=tf.Variable(tf.random.normal([action_dim])) # create a bias vector for the second layer
-        self.param=[self.weight1,self.bias1,self.weight2,self.bias2]  # store the network parameters in a list
+        self.dense1 = nn.dense(hidden_dim, state_dim, activation='relu')
+        self.dense2 = nn.dense(action_dim, hidden_dim)
+        self.param=[self.dense1.param,self.dense2.param] # store the network parameters in a list
     
     
     def fp(self,x,a):  # forward propagation function, kernel uses it for forward propagation
-        cat=tf.concat([x,a],axis=1) # concatenate the state and action vectors along the first axis
-        x=tf.nn.relu(tf.matmul(cat,self.weight1)+self.bias1) # apply the first layer with ReLU activation
-        return tf.matmul(x,self.weight2)+self.bias2 # apply the second layer and return the output
+        cat=tf.concat([x,a],axis=1)
+        x=self.dense1(cat)
+        return self.dense2(x)
 
 
 class DDPG: # define a class for the DDPG agent
