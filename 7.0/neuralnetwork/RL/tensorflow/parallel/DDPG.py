@@ -1,4 +1,5 @@
 import tensorflow as tf # import TensorFlow library
+from Note import nn
 import numpy as np # import NumPy library
 import gym # import OpenAI Gym library
 import Note.nn.parallel.optimizer as o # import Note's optimizer module
@@ -46,8 +47,8 @@ class DDPG: # define a class for the DDPG agent
         self.target_critic=critic(state_dim,hidden_dim,action_dim) # create a target critic network for the agent
         self.actor_param=self.actor.param  # parameter list of actor network, kernel uses it list for backpropagation 
         self.critic_param=self.critic.param  # parameter list of critic network, kernel uses it list for backpropagation 
-        self.target_actor.param=self.actor_param.copy()  # copy the parameters from actor network to target actor network 
-        self.target_critic.param=self.critic_param.copy()  # copy the parameters from critic network to target critic network 
+        nn.assign_param(self.target_actor.param,self.actor_param.copy())  # copy the parameters from actor network to target actor network 
+        nn.assign_param(self.target_critic.param,self.critic_param.copy())  # copy the parameters from critic network to target critic network 
         self.param=[self.actor_param,self.critic_param]  # parameter list of both networks, kernel uses it list for backpropagation 
         self.sigma=sigma  # noise scale 
         self.gamma=gamma  # discount factor 
@@ -79,7 +80,7 @@ class DDPG: # define a class for the DDPG agent
     
     def update_param(self):  # update function, kernel uses it to update parameter
         for target_param,param in zip(self.target_actor.param,self.actor.param):  # for each pair of parameters in target actor network and actor network
-            target_param=target_param*(1.0-self.tau)+param*self.tau  # update the target parameter using soft update with factor tau
+            target_param.assign(target_param*(1.0-self.tau)+param*self.tau)  # update the target parameter using soft update with factor tau
         for target_param,param in zip(self.target_critic.param,self.critic.param):  # for each pair of parameters in target critic network and critic network
-            target_param=target_param*(1.0-self.tau)+param*self.tau  # update the target parameter using soft update with factor tau
+            target_param.assign(target_param*(1.0-self.tau)+param*self.tau)  # update the target parameter using soft update with factor tau
         return
