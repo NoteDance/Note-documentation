@@ -78,7 +78,7 @@ class DDPG: # define a class for the DDPG agent
     
     def update_param(self):  # update function, kernel uses it to update parameter
         for target_param,param in zip(self.target_actor.param,self.actor.param):  # for each pair of parameters in target actor network and actor network
-            target_param=target_param*(1.0-self.tau)+param*self.tau  # update the target parameter using soft update with factor tau
+            target_param.assign(target_param*(1.0-self.tau)+param*self.tau)  # update the target parameter using soft update with factor tau
         for target_param,param in zip(self.target_critic.param,self.critic.param):  # for each pair of parameters in target critic network and critic network
-            target_param=target_param*(1.0-self.tau)+param*self.tau  # update the target parameter using soft update with factor tau
+            target_param.assign(target_param*(1.0-self.tau)+param*self.tau)  # update the target parameter using soft update with factor tau
         return
