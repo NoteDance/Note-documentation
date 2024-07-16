@@ -36,7 +36,7 @@ class DDPG:
             self.device=torch.device('cuda')
         else:
             self.device=torch.device('cpu')
-        self.genv=gym.make('Pendulum-v0')
+        self.genv=gym.make('Pendulum-v1')
         state_dim=self.genv.observation_space.shape[0]
         action_dim=self.genv.action_space.shape[0]
         action_bound=self.genv.action_space.high[0]
