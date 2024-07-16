@@ -22,7 +22,7 @@ class DQN:
         self.param=self.nn.param
         self.pr=pr.pr()
         self.initial_TD=7
-        self._epsilon=0.0007
+        self.epsilon=0.0007
         self.alpha=0.7
         self.opt=tf.keras.optimizers.Adam()
         self.genv=gym.make('CartPole-v0')
