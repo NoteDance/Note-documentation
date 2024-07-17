@@ -67,7 +67,7 @@ class DDPG: # define a class for the DDPG agent
     def loss(self,s,a,next_s,r,d):  # loss function, kernel uses it to calculate loss
         a=tf.expand_dims(a,axis=1)  # expand the action vector to match the Q-value matrix shape
         next_q_value=self.target_critic.fp(next_s,self.target_actor.fp(next_s))  # get the Q-value for the next state and action from the target critic network
-        q_target=r+self.gamma*next_q_value*(1-tf.cast(d,'float32'))  # calculate the target value using Bellman equation with discount factor gamma
+        q_target=tf.cast(r,'float32')+self.gamma*next_q_value*(1-tf.cast(d,'float32'))  # calculate the target value using Bellman equation with discount factor gamma
         actor_loss=-tf.reduce_mean(self.critic.fp(s,self.actor.fp(s)))  # calculate the actor loss as the negative mean of the Q-value for the current state and action from the critic network
         critic_loss=tf.reduce_mean((self.critic.fp(s,a)-q_target)**2)  # calculate the critic loss as the mean squared error between Q-value and target value
         return [actor_loss,critic_loss]  # return a list of actor loss and critic loss
