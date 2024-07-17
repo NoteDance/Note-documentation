@@ -36,7 +36,7 @@ class DQN: # define a class for the DQN agent
         a=tf.expand_dims(a,axis=1) # expand the action vector to match the Q-value matrix shape
         q_value=tf.gather(self.nn.fp(s),a,axis=1,batch_dims=1) # get the Q-value for the selected action
         next_q_value=tf.reduce_max(self.target_q_net.fp(next_s),axis=1) # get the maximum Q-value for the next state from the target network
-        target=r+0.98*next_q_value*(1-d) # calculate the target value using Bellman equation with discount factor 0.98
+        target=r+0.98*next_q_value*(1-tf.cast(d,'float32')) # calculate the target value using Bellman equation with discount factor 0.98
         return tf.reduce_mean((q_value-target)**2) # return the mean squared error between Q-value and target value
         
     
