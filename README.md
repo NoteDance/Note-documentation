@@ -14,7 +14,11 @@ model.fit(train_loss, optimizer, 100)
 # model.set_up(epsilon=0.01,pool_size=10000,batch=64,update_step=10,trial_count=10,criterion=200)
 # model.fit(train_loss, optimizer, 100)
 
-# If save the model at intervals of 1 epoch, with a maximum of 2 saved file, and the file name is model.dat.
+# If use prioritized replay.
+# model.set_up(epsilon=0.01,pool_size=10000,batch=64,update_step=10,trial_count=10,criterion=200,pr=True,initial_TD=7,alpha=0.7)
+# model.fit(train_loss, optimizer, 100)
+
+# If save the model at intervals of 10 episode, with a maximum of 2 saved file, and the file name is model.dat.
 # model.path='model.dat'
 # model.save_freq=10
 # model. max_save_files=2
