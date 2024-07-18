@@ -43,12 +43,12 @@ model.fit(train_loss, optimizer, 100)
 # model.visualize_reward_loss()
 # model.visualize_comparison()
 
+# animate agent
+# model.animate_agent(200)
+
 # save
 # model.save_param('param.dat')
 # model.save('model.dat')
-
-# animate agent
-# model.animate_agent(200)
 ```
 ```python
 import torch
@@ -92,10 +92,10 @@ model.fit(optimizer, 100)
 # model.visualize_reward_loss()
 # model.visualize_comparison()
 
+# animate agent
+# model.animate_agent(200)
+
 # save
 # model.save_param('param.dat')
 # model.save('model.dat')
-
-# animate agent
-# model.animate_agent(200)
 ```
