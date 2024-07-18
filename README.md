@@ -46,6 +46,9 @@ model.fit(train_loss, optimizer, 100)
 # save
 # model.save_param('param.dat')
 # model.save('model.dat')
+
+# animate agent
+# model.animate_agent(200)
 ```
 ```python
 import torch
@@ -92,4 +95,7 @@ model.fit(optimizer, 100)
 # save
 # model.save_param('param.dat')
 # model.save('model.dat')
+
+# animate agent
+# model.animate_agent(200)
 ```
