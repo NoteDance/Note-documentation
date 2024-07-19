@@ -99,3 +99,13 @@ model.fit(optimizer, 100)
 # model.save_param('param.dat')
 # model.save('model.dat')
 ```
+```python
+import tensorflow as tf
+from Note.neuralnetwork.docs_example.DDPG_HER import DDPG
+
+model=DDPG(128,0.1,0.98,0.005)
+model.set_up(pool_size=10000,batch=256,HER=True)
+optimizer = tf.keras.optimizers.Adam()
+train_loss = tf.keras.metrics.Mean(name='train_loss')
+model.fit(train_loss, optimizer, 10)
+```
