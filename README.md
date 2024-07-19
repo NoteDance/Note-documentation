@@ -100,6 +100,7 @@ model.fit(optimizer, 100)
 # model.save('model.dat')
 ```
 ```python
+# Use HER
 import tensorflow as tf
 from Note.neuralnetwork.docs_example.DDPG_HER import DDPG
 
