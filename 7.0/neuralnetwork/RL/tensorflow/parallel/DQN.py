@@ -42,7 +42,7 @@ class DQN: # define a class for the DQN agent
         
     
     def update_param(self): # update function, kernel uses it to update parameter
-        nn.assign(self.target_q_net.param,self.param.copy()) # copy the parameters from the Q-network to the target network
+        nn.assign(self.target_q_net.param,self.param) # copy the parameters from the Q-network to the target network
         return
     
     

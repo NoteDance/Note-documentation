@@ -77,5 +77,5 @@ class PPO:
     
     
     def update_param(self):
-        nn.assign(self.nn.param,self.actor.param.copy())
+        nn.assign(self.nn.param,self.actor.param)
         return
