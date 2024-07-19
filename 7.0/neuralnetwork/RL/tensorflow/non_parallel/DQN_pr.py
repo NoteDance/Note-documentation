@@ -54,5 +54,5 @@ class DQN:
         
     
     def update_param(self):
-        nn.assign_param(self.target_q_net.param, self.param.copy())
+        nn.assign_param(self.target_q_net.param, self.param)
         return
