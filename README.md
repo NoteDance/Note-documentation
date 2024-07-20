@@ -6,8 +6,8 @@ https://github.com/NoteDance/Note/tree/Note-7.0/Note/neuralnetwork/docs_example
 # Train:
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.docs_example.DQN import DQN
-# from Note.neuralnetwork.docs_example.DQN_keras import DQN
+from Note.neuralnetwork.docs_example.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/DQN.py
+# from Note.neuralnetwork.docs_example.DQN_keras import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/DQN_keras.py
 
 model=DQN(4,128,2)
 model.action_count=2
@@ -57,7 +57,7 @@ model.fit(train_loss, optimizer, 100)
 ```
 ```python
 import torch
-from Note.neuralnetwork.docs_example.DQN_pytorch import DQN
+from Note.neuralnetwork.docs_example.DQN_pytorch import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/DQN_pytorch.py
 
 model=DQN(4,128,2)
 model.action_count=2
@@ -107,7 +107,7 @@ model.fit(optimizer, 100)
 ```python
 # Use HER
 import tensorflow as tf
-from Note.neuralnetwork.docs_example.DDPG_HER import DDPG
+from Note.neuralnetwork.docs_example.DDPG_HER import DDPG # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/DDPG_HER.py
 
 model=DDPG(128,0.1,0.98,0.005)
 model.set_up(pool_size=10000,batch=256,HER=True)
