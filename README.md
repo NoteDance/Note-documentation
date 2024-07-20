@@ -1,3 +1,8 @@
+# Build agent:
+You can learn how to build an agent from the examples in the following link.
+
+https://github.com/NoteDance/Note/tree/Note-7.0/Note/neuralnetwork/docs_example
+
 # Train:
 ```python
 import tensorflow as tf
