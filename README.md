@@ -5,7 +5,6 @@ from Note.neuralnetwork.docs_example.DQN import DQN # https://github.com/NoteDan
 # from Note.neuralnetwork.docs_example.DQN_keras import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/DQN_keras.py
 
 model=DQN(4,128,2)
-model.action_count=2
 model.set_up(epsilon=0.01,pool_size=10000,batch=64,update_step=10)
 optimizer = tf.keras.optimizers.Adam()
 train_loss = tf.keras.metrics.Mean(name='train_loss')
@@ -55,7 +54,6 @@ import torch
 from Note.neuralnetwork.docs_example.DQN_pytorch import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/DQN_pytorch.py
 
 model=DQN(4,128,2)
-model.action_count=2
 model.set_up(epsilon=0.01,pool_size=10000,batch=64,update_step=10)
 optimizer = torch.optim.Adam(model.param)
 model.fit(optimizer, 100)
