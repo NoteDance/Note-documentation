@@ -123,33 +123,33 @@ with strategy.scope():
   model=DQN(4,128,2)
   optimizer = tf.keras.optimizers.Adam()
 model.set_up(epsilon=0.01,pool_size=10000,batch=64,update_step=10)
-model.fit(GLOBAL_BATCH_SIZE, optimizer, 100)
+model.distributed_fit(GLOBAL_BATCH_SIZE, optimizer, 100)
 
 # If set criterion.
 # model.set_up(epsilon=0.01,pool_size=10000,batch=64,update_step=10,trial_count=10,criterion=200)
-# model.fit(GLOBAL_BATCH_SIZE, optimizer, 100)
+# model.distributed_fit(GLOBAL_BATCH_SIZE, optimizer, 100)
 
 # If use prioritized replay.
 # model.set_up(epsilon=0.01,pool_size=10000,batch=64,update_step=10,trial_count=10,criterion=200,pr=True,initial_TD=7,alpha=0.7)
-# model.fit(GLOBAL_BATCH_SIZE, optimizer, 100)
+# model.distributed_fit(GLOBAL_BATCH_SIZE, optimizer, 100)
 
 # If save the model at intervals of 10 episode, with a maximum of 2 saved file, and the file name is model.dat.
 # model.path='model.dat'
 # model.save_freq=10
 # model. max_save_files=2
-# model.fit(GLOBAL_BATCH_SIZE, optimizer, 100)
+# model.distributed_fit(GLOBAL_BATCH_SIZE, optimizer, 100)
 
 # If save parameters only
 # model.path='param.dat'
 # model.save_freq=10
 # model. max_save_files=2
 # model.save_param_only=True
-# model.fit(GLOBAL_BATCH_SIZE, optimizer, 100)
+# model.distributed_fit(GLOBAL_BATCH_SIZE, optimizer, 100)
 
 # If save best only
 # model.path='model.dat'
 # model.save_best_only=True
-# model.fit(GLOBAL_BATCH_SIZE, optimizer, 100)
+# model.distributed_fit(GLOBAL_BATCH_SIZE, optimizer, 100)
 
 # visualize
 # model.visualize_loss()
