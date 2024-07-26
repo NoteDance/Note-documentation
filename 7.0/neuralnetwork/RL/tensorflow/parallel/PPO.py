@@ -60,20 +60,7 @@ class PPO:
         clip_loss=-tf.math.minimum(sur1,sur2)
         entropy=action_prob*tf.math.log(action_prob+1e-8)
         clip_loss=clip_loss-self.alpha*entropy
-        return [tf.reduce_mean(clip_loss),tf.reduce_mean((TD)**2)]
-    
-    
-    def gradient(self,tape,loss):
-        actor_gradient=tape.gradient(loss[0],self.param[0])
-        critic_gradient=tape.gradient(loss[1],self.param[1])
-        return [actor_gradient,critic_gradient]
-    
-    
-    def opt(self,gradient):
-        self.opt.opt(gradient[0],self.param[0])
-        self.opt.opt(gradient[1],self.param[1])
-        self.actor_old.param=self.actor.param.copy()
-        return
+        return tf.reduce_mean(clip_loss)+tf.reduce_mean((TD)**2)
     
     
     def update_param(self):
