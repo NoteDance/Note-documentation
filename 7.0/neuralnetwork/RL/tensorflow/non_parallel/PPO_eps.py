@@ -55,20 +55,7 @@ class PPO:
         sur1=raito*TD
         sur2=tf.clip_by_value(raito,clip_value_min=1-self.clip_eps,clip_value_max=1+self.clip_eps)*TD
         clip_loss=-tf.math.minimum(sur1,sur2)
-        return [tf.reduce_mean(clip_loss),tf.reduce_mean((TD)**2)]
-    
-    
-    def gradient(self,tape,loss):
-        actor_gradient=tape.gradient(loss[0],self.param[0])
-        critic_gradient=tape.gradient(loss[1],self.param[1])
-        return [actor_gradient,critic_gradient]
-    
-    
-    def opt(self,gradient):
-        self.opt.apply_gradients(zip(gradient[0],self.param[0]))
-        self.opt.apply_gradients(zip(gradient[1],self.param[1]))
-        self.actor_old.param=self.actor.param.copy()
-        return
+        return tf.reduce_mean(clip_loss)+tf.reduce_mean((TD)**2)
     
     
     def update_param(self):
