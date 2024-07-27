@@ -103,7 +103,7 @@ import tensorflow as tf
 from Note.neuralnetwork.docs_example.PPO import PPO # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/PPO.py
 
 model=PPO(4,128,2,0.7,0.7)
-model.set_up(pool_size=10000,batch=64,PPO=True)
+model.set_up(pool_size=10000,batch=64,update_step=1000,PPO=True)
 optimizer = tf.keras.optimizers.Adam()
 train_loss = tf.keras.metrics.Mean(name='train_loss')
 model.fit(train_loss, optimizer, 100)
