@@ -205,5 +205,5 @@ with strategy.scope():
   optimizer = tf.keras.optimizers.Adam()
 model.set_up(epsilon=0.01,pool_size=10000,batch=64,update_steps=10)
 manager=mp.Manager()
-model.distributed_fit(GLOBAL_BATCH_SIZE, optimizer, 100, mp=mp, manager=manager)
+model.distributed_fit(GLOBAL_BATCH_SIZE, optimizer, 100, mp=mp, manager=manager, processes=7)
 ```
