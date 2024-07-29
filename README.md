@@ -1,4 +1,5 @@
 # Train:
+Agent built with Note and Keras.
 ```python
 import tensorflow as tf
 from Note.neuralnetwork.docs_example.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/DQN.py
@@ -50,6 +51,43 @@ model.fit(train_loss, optimizer, 100)
 # model.save('model.dat')
 ```
 ```python
+# Use PPO
+import tensorflow as tf
+from Note.neuralnetwork.docs_example.PPO import PPO # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/PPO.py
+
+model=PPO(4,128,2,0.7,0.7)
+model.set_up(pool_size=10000,batch=64,update_steps=1000,PPO=True)
+optimizer = tf.keras.optimizers.Adam()
+train_loss = tf.keras.metrics.Mean(name='train_loss')
+model.fit(train_loss, optimizer, 100)
+```
+```python
+# Use HER
+import tensorflow as tf
+from Note.neuralnetwork.docs_example.DDPG_HER import DDPG # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/DDPG_HER.py
+
+model=DDPG(128,0.1,0.98,0.005)
+model.set_up(pool_size=10000,batch=256,trial_count=10,HER=True)
+optimizer = tf.keras.optimizers.Adam()
+train_loss = tf.keras.metrics.Mean(name='train_loss')
+model.fit(train_loss, optimizer, 2000)
+```
+```python
+# Store in parallel
+import tensorflow as tf
+from Note.neuralnetwork.docs_example.multiprocessing.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/multiprocessing/DQN.py
+# from Note.neuralnetwork.docs_example.multiprocessing.DQN_keras import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/multiprocessing/DQN_keras.py
+import multiprocessing as mp
+
+model=DQN(4,128,2,7)
+model.set_up(epsilon=0.01,pool_size=10000,batch=64,update_batches=17)
+optimizer = tf.keras.optimizers.Adam()
+train_loss = tf.keras.metrics.Mean(name='train_loss')
+manager=mp.Manager()
+model.fit(train_loss, optimizer, 100, mp=mp, manager=manager, processes=7)
+```
+Agent built with PyTorch.
+```python
 import torch
 from Note.neuralnetwork.docs_example.DQN_pytorch import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/DQN_pytorch.py
 
@@ -98,42 +136,6 @@ model.fit(optimizer, 100)
 # model.save('model.dat')
 ```
 ```python
-# Use PPO
-import tensorflow as tf
-from Note.neuralnetwork.docs_example.PPO import PPO # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/PPO.py
-
-model=PPO(4,128,2,0.7,0.7)
-model.set_up(pool_size=10000,batch=64,update_steps=1000,PPO=True)
-optimizer = tf.keras.optimizers.Adam()
-train_loss = tf.keras.metrics.Mean(name='train_loss')
-model.fit(train_loss, optimizer, 100)
-```
-```python
-# Use HER
-import tensorflow as tf
-from Note.neuralnetwork.docs_example.DDPG_HER import DDPG # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/DDPG_HER.py
-
-model=DDPG(128,0.1,0.98,0.005)
-model.set_up(pool_size=10000,batch=256,trial_count=10,HER=True)
-optimizer = tf.keras.optimizers.Adam()
-train_loss = tf.keras.metrics.Mean(name='train_loss')
-model.fit(train_loss, optimizer, 2000)
-```
-```python
-# Store in parallel
-import tensorflow as tf
-from Note.neuralnetwork.docs_example.multiprocessing.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/multiprocessing/DQN.py
-# from Note.neuralnetwork.docs_example.multiprocessing.DQN_keras import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/multiprocessing/DQN_keras.py
-import multiprocessing as mp
-
-model=DQN(4,128,2,7)
-model.set_up(epsilon=0.01,pool_size=10000,batch=64,update_batches=17)
-optimizer = tf.keras.optimizers.Adam()
-train_loss = tf.keras.metrics.Mean(name='train_loss')
-manager=mp.Manager()
-model.fit(train_loss, optimizer, 100, mp=mp, manager=manager, processes=7)
-```
-```python
 # Store in parallel
 import torch
 from Note.neuralnetwork.docs_example.multiprocessing.DQN_pytorch import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/multiprocessing/DQN_pytorch.py
@@ -147,6 +149,7 @@ model.fit(optimizer, 100, mp=mp, manager=manager, processes=7)
 ```
 
 # Distributed training:
+Agent built with Note and Keras.
 ```python
 import tensorflow as tf
 from Note.neuralnetwork.docs_example.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/DQN.py
