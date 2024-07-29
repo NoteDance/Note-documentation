@@ -73,7 +73,7 @@ train_loss = tf.keras.metrics.Mean(name='train_loss')
 model.fit(train_loss, optimizer, 2000)
 ```
 ```python
-# Store in parallel
+# Store in parallel, this method uses Python's multiprocessing module to speed up trajectory collection and storage.
 import tensorflow as tf
 from Note.neuralnetwork.docs_example.multiprocessing.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/multiprocessing/DQN.py
 import multiprocessing as mp
@@ -135,7 +135,7 @@ model.fit(optimizer, 100)
 # model.save('model.dat')
 ```
 ```python
-# Store in parallel
+# Store in parallel, this method uses Python's multiprocessing module to speed up trajectory collection and storage.
 import torch
 from Note.neuralnetwork.docs_example.multiprocessing.DQN_pytorch import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/multiprocessing/DQN_pytorch.py
 import multiprocessing as mp
@@ -204,7 +204,7 @@ model.distributed_fit(GLOBAL_BATCH_SIZE, optimizer, 100)
 # model.save('model.dat')
 ```
 ```python
-# Store in parallel
+# Store in parallel, this method uses Python's multiprocessing module to speed up trajectory collection and storage.
 import tensorflow as tf
 from Note.neuralnetwork.docs_example.multiprocessing.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/multiprocessing/DQN.py
 # from Note.neuralnetwork.docs_example.multiprocessing.DQN_keras import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/multiprocessing/DQN_keras.py
