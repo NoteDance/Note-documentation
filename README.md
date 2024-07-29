@@ -126,7 +126,7 @@ from Note.neuralnetwork.docs_example.multiprocessing.DQN import DQN # https://gi
 # from Note.neuralnetwork.docs_example.multiprocessing.DQN_keras import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/DQN_keras.py
 import multiprocessing as mp
 
-model=DQN(4,128,2)
+model=DQN(4,128,2,7)
 model.set_up(epsilon=0.01,pool_size=10000,batch=64,update_batches=157)
 optimizer = tf.keras.optimizers.Adam()
 train_loss = tf.keras.metrics.Mean(name='train_loss')
@@ -201,7 +201,7 @@ BATCH_SIZE_PER_REPLICA = 64
 GLOBAL_BATCH_SIZE = BATCH_SIZE_PER_REPLICA * strategy.num_replicas_in_sync
 
 with strategy.scope():
-  model=DQN(4,128,2)
+  model=DQN(4,128,2,7)
   optimizer = tf.keras.optimizers.Adam()
 model.set_up(epsilon=0.01,pool_size=10000,batch=64,update_batches=157)
 manager=mp.Manager()
