@@ -136,7 +136,7 @@ model.fit(train_loss, optimizer, 100, mp=mp, manager=manager, processes=7)
 ```python
 # Store in parallel
 import torch
-from Note.neuralnetwork.docs_example.DQN_pytorch import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/multiprocessing/DQN_pytorch.py
+from Note.neuralnetwork.docs_example.multiprocessing.DQN_pytorch import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/multiprocessing/DQN_pytorch.py
 import multiprocessing as mp
 
 model=DQN(4,128,2,7)
