@@ -122,16 +122,28 @@ model.fit(train_loss, optimizer, 2000)
 ```python
 # Store in parallel
 import tensorflow as tf
-from Note.neuralnetwork.docs_example.multiprocessing.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/DQN.py
-# from Note.neuralnetwork.docs_example.multiprocessing.DQN_keras import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/DQN_keras.py
+from Note.neuralnetwork.docs_example.multiprocessing.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/multiprocessing/DQN.py
+# from Note.neuralnetwork.docs_example.multiprocessing.DQN_keras import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/multiprocessing/DQN_keras.py
 import multiprocessing as mp
 
 model=DQN(4,128,2,7)
-model.set_up(epsilon=0.01,pool_size=10000,batch=64,update_batches=157)
+model.set_up(epsilon=0.01,pool_size=10000,batch=64,update_batches=17)
 optimizer = tf.keras.optimizers.Adam()
 train_loss = tf.keras.metrics.Mean(name='train_loss')
 manager=mp.Manager()
 model.fit(train_loss, optimizer, 100, mp=mp, manager=manager, processes=7)
+```
+```python
+# Store in parallel
+import torch
+from Note.neuralnetwork.docs_example.DQN_pytorch import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/multiprocessing/DQN_pytorch.py
+import multiprocessing as mp
+
+model=DQN(4,128,2,7)
+model.set_up(epsilon=0.01,pool_size=10000,batch=64,update_batches=17)
+optimizer = torch.optim.Adam(model.param)
+manager=mp.Manager()
+model.fit(optimizer, 100, mp=mp, manager=manager, processes=7)
 ```
 
 # Distributed training:
@@ -192,8 +204,8 @@ model.distributed_fit(GLOBAL_BATCH_SIZE, optimizer, 100)
 ```python
 # Store in parallel
 import tensorflow as tf
-from Note.neuralnetwork.docs_example.multiprocessing.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/DQN.py
-# from Note.neuralnetwork.docs_example.multiprocessing.DQN_keras import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/DQN_keras.py
+from Note.neuralnetwork.docs_example.multiprocessing.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/multiprocessing/DQN.py
+# from Note.neuralnetwork.docs_example.multiprocessing.DQN_keras import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/multiprocessing/DQN_keras.py
 import multiprocessing as mp
 
 strategy = tf.distribute.MirroredStrategy()
@@ -203,7 +215,7 @@ GLOBAL_BATCH_SIZE = BATCH_SIZE_PER_REPLICA * strategy.num_replicas_in_sync
 with strategy.scope():
   model=DQN(4,128,2,7)
   optimizer = tf.keras.optimizers.Adam()
-model.set_up(epsilon=0.01,pool_size=10000,batch=64,update_batches=157)
+model.set_up(epsilon=0.01,pool_size=10000,batch=64,update_batches=17)
 manager=mp.Manager()
 model.distributed_fit(GLOBAL_BATCH_SIZE, optimizer, 100, mp=mp, manager=manager, processes=7)
 ```
