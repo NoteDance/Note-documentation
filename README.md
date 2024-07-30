@@ -127,34 +127,37 @@ kernel.visualize_reward()
 ### Saving multiple files in training:
 ```python
 import Note.RL.kernel as k   #import kernel module
+from Note.RL import rl
 import tensorflow as tf           #import tensorflow library
 import neuralnetwork.RL.tensorflow.non_parallrl.DQN as d   #import deep Q-network module
 dqn=d.DQN(4,128,2)                #create neural network object with 4 inputs, 128 hidden units and 2 outputs
 kernel=k.kernel(dqn)              #create kernel object with the network
 kernel.platform=tf                #set the platform to tensorflow
-kernel.set_up(epsilon=0.01,pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
+kernel.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
 kernel.train(100,path='model.dat',save_freq=20,max_save_files=3)                 #train the network for 100 episodes
 ```
 
 ### Stop training and saving when condition is met:
 ```python
 import Note.RL.kernel as k   #import kernel module
+from Note.RL import rl
 import neuralnetwork.RL.tensorflow.non_parallrl.DQN as d   #import deep Q-network module
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
 kernel=k.kernel(dqn)       #create kernel object with the network
 kernel.stop=True             #set the flag to stop training when a condition is met
-kernel.set_up(epsilon=0.01,pool_size=10000,batch=64,update_steps=10,trial_count=10,criterion=200) #set up the hyperparameters for training and the condition to stop training when the average reward of 10 trials is greater than 200
+kernel.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10,trial_count=10,criterion=200) #set up the hyperparameters for training and the condition to stop training when the average reward of 10 trials is greater than 200
 kernel.train(100)            #train the network for 500 episodes
 ```
 
 ### Visualization:
 ```python
 import Note.RL.kernel as k   #import kernel module
+from Note.RL import rl
 import neuralnetwork.RL.tensorflow.non_parallrl.DQN as d   #import deep Q-network module
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
 kernel=k.kernel(dqn)       #create kernel object with the network
 kernel.stop=True             #set the flag to stop training when a condition is met
-kernel.set_up(epsilon=0.01,pool_size=10000,batch=64,update_steps=10,trial_count=10,criterion=200) #set up the hyperparameters for training and the condition to stop training when the average reward of 10 trials is greater than 200
+kernel.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10,trial_count=10,criterion=200) #set up the hyperparameters for training and the condition to stop training when the average reward of 10 trials is greater than 200
 kernel.train(100)            #train the network for 500 episodes
 kernel.visualize_reward()    #visualize the reward
 kernel.visualize_train()     #visualize the loss
@@ -163,11 +166,12 @@ kernel.visualize_train()     #visualize the loss
 ### Set the print count:
 ```python
 import Note.RL.kernel as k   #import kernel module
+from Note.RL import rl
 import neuralnetwork.RL.tensorflow.non_parallrl.DQN as d   #import deep Q-network module
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
 kernel=k.kernel(dqn)       #create kernel object with the network
 kernel.stop=True             #set the flag to stop training when a condition is met
-kernel.set_up(epsilon=0.01,pool_size=10000,batch=64,update_steps=10,trial_count=10,criterion=200) #set up the hyperparameters for training and the condition to stop training when the average reward of 10 trials is greater than 200
+kernel.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10,trial_count=10,criterion=200) #set up the hyperparameters for training and the condition to stop training when the average reward of 10 trials is greater than 200
 kernel.train(100,p=3)            #train the network for 500 episodes
 ```
 
@@ -508,6 +512,7 @@ kernel.test(x_train,y_train,32)      #test the network performance on the train 
 ### PO1:
 ```python
 import Note.RL.parallel.kernel as k   #import kernel module
+from Note.RL import rl
 import neuralnetwork.RL.tensorflow.parallrl.DQN as d   #import deep Q-network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
@@ -515,7 +520,7 @@ kernel=k.kernel(dqn,5)       #create kernel object with the network and 5 proces
 kernel.episode=100           #set the number of episodes to 100
 manager=Manager()            #create manager object to share data among processes
 kernel.init(manager)         #initialize shared data with the manager
-kernel.set_up(epsilon=0.01,pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
+kernel.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
 kernel.PO=1                  #use PO1 algorithm for parallel optimization
 pool_lock=[Lock(),Lock(),Lock(),Lock(),Lock()] #create a list of locks for each process's replay pool
 lock=[Lock(),Lock(),Lock()]  #create a list of locks for synchronization
@@ -526,6 +531,7 @@ for p in range(5):           #loop over the processes
 ### PO2:
 ```python
 import Note.RL.parallel.kernel as k   #import kernel module
+from Note.RL import rl
 import neuralnetwork.RL.tensorflow.parallrl.DQN as d   #import deep Q-network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
@@ -533,7 +539,7 @@ kernel=k.kernel(dqn,5)       #create kernel object with the network and 5 proces
 kernel.episode=100           #set the number of episodes to 100
 manager=Manager()            #create manager object to share data among processes
 kernel.init(manager)         #initialize shared data with the manager
-kernel.set_up(epsilon=0.01,pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
+kernel.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
 kernel.PO=2                  #use PO2 algorithm for parallel optimization
 pool_lock=[Lock(),Lock(),Lock(),Lock(),Lock()] #create a list of locks for each process's replay pool
 lock=[Lock(),Lock(),Lock()]  #create a list of locks for synchronization
@@ -545,6 +551,7 @@ for p in range(5):           #loop over the processes
 ### PO3:
 ```python
 import Note.RL.parallel.kernel as k   #import kernel module
+from Note.RL import rl
 import neuralnetwork.RL.tensorflow.parallrl.DQN as d   #import deep Q-network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
@@ -552,7 +559,7 @@ kernel=k.kernel(dqn,5)       #create kernel object with the network and 5 proces
 kernel.episode=100           #set the number of episodes to 100
 manager=Manager()            #create manager object to share data among processes
 kernel.init(manager)         #initialize shared data with the manager
-kernel.set_up(epsilon=0.01,pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
+kernel.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
 kernel.PO=3                  #use PO3 algorithm for parallel optimization
 pool_lock=[Lock(),Lock(),Lock(),Lock(),Lock()] #create a list of locks for each process's replay pool
 lock=[Lock(),Lock(),Lock()]  #create three locks for synchronization
@@ -563,6 +570,7 @@ for p in range(5):           #loop over the processes
 ### Visualization:
 ```python
 import Note.RL.parallel.kernel as k   #import kernel module
+from Note.RL import rl
 import neuralnetwork.RL.tensorflow.parallrl.DQN as d   #import deep Q-network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
@@ -570,7 +578,7 @@ kernel=k.kernel(dqn,5)       #create kernel object with the network and 5 proces
 kernel.episode=100           #set the number of episodes to 100
 manager=Manager()            #create manager object to share data among processes
 kernel.init(manager)         #initialize shared data with the manager
-kernel.set_up(epsilon=0.01,pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
+kernel.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
 kernel.PO=3                  #use PO3 algorithm for parallel optimization
 pool_lock=[Lock(),Lock(),Lock(),Lock(),Lock()] #create a list of locks for each process's replay pool
 lock=[Lock(),Lock()]  #create three locks for synchronization
@@ -583,6 +591,7 @@ kernel.visualize_train()     #visualize the loss
 ### Saving multiple files in parallel training:
 ```python
 import Note.RL.parallel.kernel as k   #import kernel module
+from Note.RL import rl
 import neuralnetwork.RL.tensorflow.parallrl.DQN as d   #import deep Q-network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
@@ -590,7 +599,7 @@ kernel=k.kernel(dqn,5)       #create kernel object with the network and 5 proces
 kernel.episode=100           #set the number of episodes to 100
 manager=Manager()            #create manager object to share data among processes
 kernel.init(manager)         #initialize shared data with the manager
-kernel.set_up(epsilon=0.01,pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
+kernel.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
 kernel.PO=3                  #use PO3 algorithm for parallel optimization
 kernel.path='model.dat'
 kernel.save_freq=20
@@ -604,6 +613,7 @@ for p in range(5):           #loop over the processes
 ### Stop training and saving when condition is met:
 ```python
 import Note.RL.parallel.kernel as k   #import kernel module
+from Note.RL import rl
 import neuralnetwork.RL.tensorflow.parallrl.DQN as d   #import deep Q-network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
@@ -612,7 +622,7 @@ kernel.episode=100           #set the number of episodes to 100
 manager=Manager()            #create manager object to share data among processes
 kernel.init(manager)         #initialize shared data with the manager
 kernel.stop=True             #set the flag to stop training when a condition is met
-kernel.set_up(epsilon=0.01,pool_size=10000,batch=64,update_steps=10,trial_count=10,criterion=200) #set up the hyperparameters for training
+kernel.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10,trial_count=10,criterion=200) #set up the hyperparameters for training
 kernel.PO=3                  #use PO3 algorithm for parallel optimization
 pool_lock=[Lock(),Lock(),Lock(),Lock(),Lock()] #create a list of locks for each process's replay pool
 lock=[Lock(),Lock(),Lock()]  #create three locks for synchronization
@@ -623,6 +633,7 @@ for p in range(5):           #loop over the processes
 ### Process priority:
 ```python
 import Note.RL.parallel.kernel as k   #import kernel module
+from Note.RL import rl
 import neuralnetwork.RL.tensorflow.parallrl.DQN as d   #import deep Q-network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
@@ -631,7 +642,7 @@ kernel.episode=100           #set the number of episodes to 100
 manager=Manager()            #create manager object to share data among processes
 kernel.priority_flag=True    #set the flag to use priority scheduling for processes
 kernel.init(manager)         #initialize shared data with the manager
-kernel.set_up(epsilon=0.01,pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
+kernel.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
 kernel.PO=3                  #use PO3 algorithm for parallel optimization
 pool_lock=[Lock(),Lock(),Lock(),Lock(),Lock()] #create a list of locks for each process's replay pool
 lock=[Lock(),Lock()]  	     #create two locks for synchronization
