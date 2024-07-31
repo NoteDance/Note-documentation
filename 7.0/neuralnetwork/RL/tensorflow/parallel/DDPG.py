@@ -1,6 +1,5 @@
 import tensorflow as tf # import TensorFlow library
 from Note import nn
-import numpy as np # import NumPy library
 import gym # import OpenAI Gym library
 import Note.nn.parallel.optimizer as o # import Note's optimizer module
 
@@ -50,10 +49,6 @@ class DDPG: # define a class for the DDPG agent
         self.gamma=gamma  # discount factor 
         self.tau=tau  # soft update factor 
         self.optimizer=o.SGD(param=self.param) # optimizer, kernel uses it to optimize. Here we use a custom SGD optimizer
-    
-    
-    def noise(self):  # noise function, kernel uses it to generate exploration noise
-        return np.random.normal(scale=self.sigma)  # return a random sample from a normal distribution with zero mean and sigma scale
     
     
     def env(self,a=None,p=None,initial=None): # environment function, kernel uses it to interact with the environment
