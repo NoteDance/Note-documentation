@@ -1,6 +1,5 @@
 import torch
 import torch.nn.functional as F
-import numpy as np
 import gym
 
 
@@ -51,10 +50,6 @@ class DDPG:
         self.tau=tau
         self.actor_opt=torch.optim.Adam(self.actor.parameters(),lr=actor_lr)
         self.critic_opt=torch.optim.Adam(self.critic.parameters(),lr=critic_lr)
-    
-    
-    def noise(self):
-        return np.random.normal(scale=self.sigma)
     
     
     def env(self,a=None,initial=None):
