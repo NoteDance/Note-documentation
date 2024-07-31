@@ -1,6 +1,5 @@
 import tensorflow as tf # import TensorFlow library
 from Note import nn
-import numpy as np # import NumPy library
 import gym # import OpenAI Gym library
 
 
@@ -49,10 +48,6 @@ class DDPG: # define a class for the DDPG agent
         self.gamma=gamma  # discount factor 
         self.tau=tau  # soft update factor 
         self.opt=tf.keras.optimizers.Adam()  # optimizer, kernel uses it to optimize. Here we use Adam optimizer
-    
-    
-    def noise(self):  # noise function, kernel uses it to generate exploration noise
-        return np.random.normal(scale=self.sigma)  # return a random sample from a normal distribution with zero mean and sigma scale
     
     
     def env(self,a=None,initial=None):  # environment function, kernel uses it to interact with the environment
