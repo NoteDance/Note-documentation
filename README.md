@@ -89,6 +89,21 @@ train_loss = tf.keras.metrics.Mean(name='train_loss')
 manager=mp.Manager()
 model.fit(train_loss, optimizer, 100, mp=mp, manager=manager, processes=7)
 ```
+```python
+# This technology uses Python’s multiprocessing module to speed up trajectory collection and storage, I call it Pool Network.
+# Furthermore use Python’s multiprocessing module to speed up getting a batch of data.
+import tensorflow as tf
+from Note.RL import rl
+from Note.neuralnetwork.docs_example.DDPG_HER import DDPG # https://github.com/NoteDance/Note/blob/Note-7.0/Note/neuralnetwork/docs_example/multiprocessing/DDPG_HER.py
+import multiprocessing as mp
+
+model=DDPG(128,0.1,0.98,0.005,7)
+model.set_up(noise=rl.GaussianWhiteNoiseProcess(),pool_size=10000,batch=256,trial_count=10,HER=True)
+optimizer = tf.keras.optimizers.Adam()
+train_loss = tf.keras.metrics.Mean(name='train_loss')
+manager=mp.Manager()
+model.fit(train_loss, optimizer, 2000, mp=mp, manager=manager, processes=7, processes_her=4)
+```
 Agent built with PyTorch.
 ```python
 import torch
