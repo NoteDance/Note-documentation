@@ -5,7 +5,7 @@ Deep learning models built with Note are compatible with TensorFlow and can be t
 # Train:
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.docs_example.model1 import Model
+from Note.neuralnetwork.docs_example.DL.model1 import Model
 
 mnist = tf.keras.datasets.mnist
 
@@ -45,7 +45,7 @@ for epoch in range(EPOCHS):
 or
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.docs_example.model1 import Model
+from Note.neuralnetwork.docs_example.DL.model1 import Model
 
 mnist = tf.keras.datasets.mnist
 
@@ -125,7 +125,7 @@ model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_
 # Distributed training:
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.docs_example.model2 import Model
+from Note.neuralnetwork.docs_example.DL.model2 import Model
 
 fashion_mnist = tf.keras.datasets.fashion_mnist
 
