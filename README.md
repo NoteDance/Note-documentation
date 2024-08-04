@@ -186,7 +186,7 @@ for epoch in range(EPOCHS):
 or
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.docs_example.model2 import Model
+from Note.neuralnetwork.docs_example.DL.model2 import Model
 
 fashion_mnist = tf.keras.datasets.fashion_mnist
 
