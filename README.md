@@ -156,7 +156,7 @@ The models package in Note has models that can be trained in parallel on Note, s
 
 https://github.com/NoteDance/Note/tree/Note-7.0/Note/models/note
 
-**Documentation:** https://github.com/NoteDance/Note-documentation/tree/neural-network-7.0
+**Documentation:** https://github.com/NoteDance/Note-documentation/tree/note-7.0
 
 The following is an example of training on the CIFAR10 dataset.
 
