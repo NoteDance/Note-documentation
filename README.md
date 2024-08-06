@@ -5,7 +5,7 @@ Deep learning models built with Note are compatible with TensorFlow and can be t
 # Train:
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.docs_example.DL.model1 import Model
+from Note.models.docs_example.DL.model1 import Model
 
 mnist = tf.keras.datasets.mnist
 
@@ -45,7 +45,7 @@ for epoch in range(EPOCHS):
 or
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.docs_example.DL.model1 import Model
+from Note.models.docs_example.DL.model1 import Model
 
 mnist = tf.keras.datasets.mnist
 
@@ -125,7 +125,7 @@ model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_
 # Distributed training:
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.docs_example.DL.model2 import Model
+from Note.models.docs_example.DL.model2 import Model
 
 fashion_mnist = tf.keras.datasets.fashion_mnist
 
@@ -186,7 +186,7 @@ for epoch in range(EPOCHS):
 or
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.docs_example.DL.model2 import Model
+from Note.models.docs_example.DL.model2 import Model
 
 fashion_mnist = tf.keras.datasets.fashion_mnist
 
@@ -373,7 +373,7 @@ param=nn.restore_param('param.dat')
 The assign_param function allows you to assign trained parameters, such as downloaded pre-trained parameters, to the parameters of a neural network. These parameters should be stored in a list.
 ```python
 from Note import nn
-from Note.neuralnetwork.tf.ConViT import convit_tiny
+from Note.models.tf.ConViT import convit_tiny
 import pickle
 model=convit_tiny(embed_dim=48)
 input_file=open('param.dat','rb')
@@ -424,19 +424,19 @@ model.detach()
 
 ## ConvNeXt_tiny
 ```python
-from Note.neuralnetwork.tf.ConvNeXt import ConvNeXt
+from Note.models.tf.ConvNeXt import ConvNeXt
 convnext_tiny=ConvNeXt(model_type='tiny',classes=1000)
 ```
 
 ## ConvNeXtV2_atto
 ```python
-from Note.neuralnetwork.tf.ConvNeXtV2 import ConvNeXtV2
+from Note.models.tf.ConvNeXtV2 import ConvNeXtV2
 convnext_atto=ConvNeXtV2(model_type='atto',classes=1000)
 ```
 
 ## CLIP_large
 ```python
-from Note.neuralnetwork.tf.CLIP import CLIP
+from Note.models.tf.CLIP import CLIP
 clip=CLIP(
     embed_dim=1024,
     image_resolution=224,
@@ -453,49 +453,49 @@ clip=CLIP(
 
 ## DiT_B_4
 ```python
-from Note.neuralnetwork.tf.DiT import DiT_B_4
+from Note.models.tf.DiT import DiT_B_4
 dit=DiT_B_4()
 ```
 
 ## EfficientNetB0
 ```python
-from Note.neuralnetwork.tf.EfficientNet import EfficientNet
+from Note.models.tf.EfficientNet import EfficientNet
 efficientnetb0=EfficientNet(model_name='B0',classes=1000)
 ```
 
 ## EfficientNetV2S
 ```python
-from Note.neuralnetwork.tf.EfficientNetV2 import EfficientNetV2
+from Note.models.tf.EfficientNetV2 import EfficientNetV2
 efficientnetv2s=EfficientNetV2(model_name='efficientnetv2-s',classes=1000)
 ```
 
 ## Llama2_7B
 ```python
-from Note.neuralnetwork.tf.Llama2 import Llama2
+from Note.models.tf.Llama2 import Llama2
 llama=Llama2()
 ```
 
 ## MobileNetV2
 ```python
-from Note.neuralnetwork.tf.MobileNetV2 import MobileNetV2
+from Note.models.tf.MobileNetV2 import MobileNetV2
 mobilenet=MobileNetV2(classes=1000)
 ```
 
 ## MobileNetV3_large
 ```python
-from Note.neuralnetwork.tf.MobileNetV3 import MobileNetV3
+from Note.models.tf.MobileNetV3 import MobileNetV3
 mobilenet=MobileNetV3(model_type="large",classes=1000)
 ```
 
 ## ResNet50
 ```python
-from Note.neuralnetwork.tf.ResNet.ResNet50 import ResNet50
+from Note.models.tf.ResNet.ResNet50 import ResNet50
 resnet50=ResNet50(classes=1000)
 ```
 
 ## ViT
 ```python
-from Note.neuralnetwork.tf.ViT import ViT
+from Note.models.tf.ViT import ViT
 vit=ViT(
     image_size=224,
     patch_size=16,
@@ -515,7 +515,7 @@ vit=ViT(
 ## CaiT
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.tf.CaiT import cait_XXS24_224
+from Note.models.tf.CaiT import cait_XXS24_224
 
 model = cait_XXS24_224()
 
@@ -527,7 +527,7 @@ output = model(img) # (1, 1000)
 ## PiT
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.tf.PiT import pit_b
+from Note.models.tf.PiT import pit_b
 
 model = pit_b()
 
@@ -541,7 +541,7 @@ output = model(img) # (1, 1000)
 ## Cross ViT
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.tf.CrossViT import crossvit_tiny_224()
+from Note.models.tf.CrossViT import crossvit_tiny_224()
 
 model = crossvit_tiny_224()
 
@@ -553,7 +553,7 @@ output = model(img) # (1, 1000)
 ## Deep ViT
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.tf.DeepViT import DeepViT
+from Note.models.tf.DeepViT import DeepViT
 
 v = DeepViT(
     image_size = 256,
@@ -575,7 +575,7 @@ output = v(img) # (1, 1000)
 ## ViViT
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.tf.ViViT import ViViT
+from Note.models.tf.ViViT import ViViT
 
 v = ViViT(
     image_size = 128,          # image size
@@ -598,7 +598,7 @@ output = v(video) # (4, 1000)
 ## XCiT
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.tf.XCiT import xcit_nano_12_p16
+from Note.models.tf.XCiT import xcit_nano_12_p16
 
 model = xcit_nano_12_p16()
 
@@ -610,7 +610,7 @@ output = model(img) # (1, 1000)
 ## CvT
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.tf.CvT import CvT
+from Note.models.tf.CvT import CvT
 
 v = CvT(
     num_classes = 1000,
@@ -649,7 +649,7 @@ output = v(img) # (1, 1000)
 ## CCT
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.tf.CCT import CCT
+from Note.models.tf.CCT import CCT
 
 cct = CCT(
     img_size = (224, 448),
@@ -673,7 +673,7 @@ output = cct(img) # (1, 1000)
 ```
 Alternatively you can use one of several pre-defined models [2,4,6,7,8,14,16] which pre-define the number of layers, number of attention heads, the mlp ratio, and the embedding dimension.
 ```python
-from Note.neuralnetwork.tf.CCT import cct_14
+from Note.models.tf.CCT import cct_14
 
 cct = cct_14(
     img_size = 224,
@@ -692,7 +692,7 @@ cct = cct_14(
 ## MiT
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.tf.MiT import mit_b0
+from Note.models.tf.MiT import mit_b0
 model = mit_b0()
 
 batch_size = 10
@@ -706,7 +706,7 @@ output = model(img)
 ## BEiT
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.tf.BEiT import beit_base_patch16_224
+from Note.models.tf.BEiT import beit_base_patch16_224
 model = beit_base_patch16_224()
 
 batch_size = 10
@@ -720,7 +720,7 @@ output = model(img)
 ## SwinMLP
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.tf.SwinMLP import SwinMLP
+from Note.models.tf.SwinMLP import SwinMLP
 model = SwinMLP()
 
 batch_size = 10
@@ -734,7 +734,7 @@ output = model(img)
 ## SwinTransformerV2
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.tf.SwinTransformerV2 import SwinTransformerV2
+from Note.models.tf.SwinTransformerV2 import SwinTransformerV2
 model = SwinTransformerV2()
 
 batch_size = 10
@@ -748,7 +748,7 @@ output = model(img)
 ## ConViT
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.tf.ConViT import convit_tiny
+from Note.models.tf.ConViT import convit_tiny
 model = convit_tiny(embed_dim=48)
 
 batch_size = 10
@@ -762,7 +762,7 @@ output = model(img)
 ## PVT
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.tf.PVT import pvt_v2_b0
+from Note.models.tf.PVT import pvt_v2_b0
 
 model = pvt_v2_b0()
 
@@ -774,7 +774,7 @@ output = model(img) # (1, 1000)
 ## GCViT
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.tf.GCViT import gc_vit_xxtiny
+from Note.models.tf.GCViT import gc_vit_xxtiny
 
 model = gc_vit_xxtiny()
 
@@ -786,7 +786,7 @@ output = model(img) # (1, 1000)
 ## DaViT
 ```python
 import tensorflow as tf
-from Note.neuralnetwork.tf.DaViT import davit_tiny
+from Note.models.tf.DaViT import davit_tiny
 
 model = davit_tiny()
 
