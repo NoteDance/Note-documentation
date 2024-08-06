@@ -4,7 +4,7 @@
 ```python
 import Note.DL.kernel as k   #import kernel module
 import tensorflow as tf      #import tensorflow library
-import neuralnetwork.DL.tensorflow.non_parallel.nn as n   #import neural network module
+import models.DL.tensorflow.non_parallel.nn as n   #import neural network module
 mnist=tf.keras.datasets.mnist #load mnist dataset
 (x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
 x_train,x_test =x_train/255.0,x_test/255.0 #normalize data
@@ -32,7 +32,7 @@ kernel.train(32,1)            #train the network again with batch size 32 and ep
 ```python
 import Note.DL.kernel as k   #import kernel module
 import tensorflow as tf      #import tensorflow library
-import neuralnetwork.DL.tensorflow.non_parallel.nn_acc as n   #import neural network module with accuracy function
+import models.DL.tensorflow.non_parallel.nn_acc as n   #import neural network module with accuracy function
 mnist=tf.keras.datasets.mnist #load mnist dataset
 (x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
 x_train,x_test =x_train/255.0,x_test/255.0 #normalize data
@@ -48,7 +48,7 @@ kernel.test(x_test,y_test,32)#test the network performance on the test set with 
 ```python
 import Note.DL.kernel as k   #import kernel module
 import tensorflow as tf      #import tensorflow library
-import neuralnetwork.DL.tensorflow.non_parallel.nn as n   #import neural network module
+import models.DL.tensorflow.non_parallel.nn as n   #import neural network module
 mnist=tf.keras.datasets.mnist #load mnist dataset
 (x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
 x_train,x_test =x_train/255.0,x_test/255.0 #normalize data
@@ -63,7 +63,7 @@ kernel.train(32,5,path='model.dat',save_freq=1,max_save_files=3)           #trai
 ```python
 import Note.DL.kernel as k   #import kernel module
 import tensorflow as tf      #import tensorflow library
-import neuralnetwork.DL.tensorflow.non_parallel.nn as n   #import neural network module
+import models.DL.tensorflow.non_parallel.nn as n   #import neural network module
 mnist=tf.keras.datasets.mnist #load mnist dataset
 (x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
 x_train,x_test =x_train/255.0,x_test/255.0 #normalize data
@@ -80,7 +80,7 @@ kernel.train(32,5)           #train the network with batch size 32 and epoch 5
 ```python
 import Note.DL.kernel as k   #import kernel module
 import tensorflow as tf      #import tensorflow library
-import neuralnetwork.DL.tensorflow.non_parallel.nn as n   #import neural network module
+import models.DL.tensorflow.non_parallel.nn as n   #import neural network module
 mnist=tf.keras.datasets.mnist #load mnist dataset
 (x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
 x_train,x_test =x_train/255.0,x_test/255.0 #normalize data
@@ -98,7 +98,7 @@ kernel.visualize_train()     #visualize the loss
 ```python
 import Note.DL.kernel as k   #import kernel module
 import tensorflow as tf      #import tensorflow library
-import neuralnetwork.DL.tensorflow.non_parallel.nn as n   #import neural network module
+import models.DL.tensorflow.non_parallel.nn as n   #import neural network module
 mnist=tf.keras.datasets.mnist #load mnist dataset
 (x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
 x_train,x_test =x_train/255.0,x_test/255.0 #normalize data
@@ -116,7 +116,7 @@ kernel.train(32,5,p=3)           #train the network with batch size 32 and epoch
 import Note.RL.kernel as k   #import kernel module
 from Note.RL import rl
 import tensorflow as tf           #import tensorflow library
-import neuralnetwork.RL.tensorflow.non_parallrl.DDPG as d   #import deep deterministic policy gradient module
+import models.RL.tensorflow.non_parallrl.DDPG as d   #import deep deterministic policy gradient module
 ddpg=d.DDPG(64,0.01,0.98,0.005,5e-4,5e-3) #create neural network object with 64 inputs, 0.01 learning rate, 0.98 discount factor, 0.005 noise scale, 5e-4 actor learning rate and 5e-3 critic learning rate
 kernel=k.kernel(ddpg)             #create kernel object with the network
 kernel.platform=tf                #set the platform to tensorflow
@@ -130,7 +130,7 @@ kernel.visualize_reward()
 import Note.RL.kernel as k   #import kernel module
 from Note.RL import rl
 import tensorflow as tf           #import tensorflow library
-import neuralnetwork.RL.tensorflow.non_parallrl.DQN as d   #import deep Q-network module
+import models.RL.tensorflow.non_parallrl.DQN as d   #import deep Q-network module
 dqn=d.DQN(4,128,2)                #create neural network object with 4 inputs, 128 hidden units and 2 outputs
 kernel=k.kernel(dqn)              #create kernel object with the network
 kernel.platform=tf                #set the platform to tensorflow
@@ -142,7 +142,7 @@ kernel.train(100,path='model.dat',save_freq=20,max_save_files=3)                
 ```python
 import Note.RL.kernel as k   #import kernel module
 from Note.RL import rl
-import neuralnetwork.RL.tensorflow.non_parallrl.DQN as d   #import deep Q-network module
+import models.RL.tensorflow.non_parallrl.DQN as d   #import deep Q-network module
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
 kernel=k.kernel(dqn)       #create kernel object with the network
 kernel.stop=True             #set the flag to stop training when a condition is met
@@ -154,7 +154,7 @@ kernel.train(100)            #train the network for 500 episodes
 ```python
 import Note.RL.kernel as k   #import kernel module
 from Note.RL import rl
-import neuralnetwork.RL.tensorflow.non_parallrl.DQN as d   #import deep Q-network module
+import models.RL.tensorflow.non_parallrl.DQN as d   #import deep Q-network module
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
 kernel=k.kernel(dqn)       #create kernel object with the network
 kernel.stop=True             #set the flag to stop training when a condition is met
@@ -168,7 +168,7 @@ kernel.visualize_train()     #visualize the loss
 ```python
 import Note.RL.kernel as k   #import kernel module
 from Note.RL import rl
-import neuralnetwork.RL.tensorflow.non_parallrl.DQN as d   #import deep Q-network module
+import models.RL.tensorflow.non_parallrl.DQN as d   #import deep Q-network module
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
 kernel=k.kernel(dqn)       #create kernel object with the network
 kernel.stop=True             #set the flag to stop training when a condition is met
@@ -181,7 +181,7 @@ kernel.train(100,p=3)            #train the network for 500 episodes
 ```python
 import Note.DL.kernel as k   #import kernel module
 import tensorflow as tf      #import tensorflow library
-import neuralnetwork.DL.tensorflow.parallel.nn as n   #import neural network module
+import models.DL.tensorflow.parallel.nn as n   #import neural network module
 mnist=tf.keras.datasets.mnist #load mnist dataset
 (x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
 x_train,x_test =x_train/255.0,x_test/255.0 #normalize data
@@ -201,7 +201,7 @@ kernel.train(32,5,32)        #train the network with batch size 32, epoch 5 and 
 ```python
 import Note.DL.parallel.kernel as k   #import kernel module
 import tensorflow as tf              #import tensorflow library
-import neuralnetwork.DL.tensorflow.parallel.nn as n   #import neural network module
+import models.DL.tensorflow.parallel.nn as n   #import neural network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
 mnist=tf.keras.datasets.mnist        #load mnist dataset
 (x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
@@ -227,7 +227,7 @@ kernel.test(x_train,y_train,32)      #test the network performance on the train 
 ```python
 import Note.DL.parallel.kernel as k   #import kernel module
 import tensorflow as tf              #import tensorflow library
-import neuralnetwork.DL.tensorflow.parallel.nn as n   #import neural network module
+import models.DL.tensorflow.parallel.nn as n   #import neural network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
 mnist=tf.keras.datasets.mnist        #load mnist dataset
 (x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
@@ -253,7 +253,7 @@ kernel.test(x_train,y_train,32)      #test the network performance on the train 
 ```python
 import Note.DL.parallel.kernel as k   #import kernel module
 import tensorflow as tf              #import tensorflow library
-import neuralnetwork.DL.tensorflow.parallel.nn as n   #import neural network module
+import models.DL.tensorflow.parallel.nn as n   #import neural network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
 mnist=tf.keras.datasets.mnist        #load mnist dataset
 (x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
@@ -281,7 +281,7 @@ kernel.test(x_train,y_train,32)      #test the network performance on the train 
 ```python
 import Note.DL.parallel.kernel as k   #import kernel module
 import tensorflow as tf              #import tensorflow library
-import neuralnetwork.DL.tensorflow.parallel.nn as n   #import neural network module
+import models.DL.tensorflow.parallel.nn as n   #import neural network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
 mnist=tf.keras.datasets.mnist        #load mnist dataset
 (x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
@@ -307,7 +307,7 @@ kernel.test(x_train,y_train,32)      #test the network performance on the train 
 ```python
 import Note.DL.parallel.kernel as k   #import kernel module
 import tensorflow as tf              #import tensorflow library
-import neuralnetwork.DL.tensorflow.parallel.nn as n   #import neural network module
+import models.DL.tensorflow.parallel.nn as n   #import neural network module
 from multiprocessing import Process,Manager #import multiprocessing tools
 mnist=tf.keras.datasets.mnist        #load mnist dataset
 (x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
@@ -353,7 +353,7 @@ for p in range(3):                   #loop over the processes
 ```python
 import Note.DL.parallel.kernel as k   #import kernel module
 import tensorflow as tf              #import tensorflow library
-import neuralnetwork.DL.tensorflow.parallel.nn as n   #import neural network module
+import models.DL.tensorflow.parallel.nn as n   #import neural network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
 mnist=tf.keras.datasets.mnist        #load mnist dataset
 (x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
@@ -379,7 +379,7 @@ kernel.visualize_train()             #visualize the loss
 ```python
 import Note.DL.parallel.kernel as k   #import kernel module
 import tensorflow as tf              #import tensorflow library
-import neuralnetwork.DL.tensorflow.parallel.nn as n   #import neural network module
+import models.DL.tensorflow.parallel.nn as n   #import neural network module
 from multiprocessing import Process,Manager #import multiprocessing tools
 mnist=tf.keras.datasets.mnist        #load mnist dataset
 (x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
@@ -403,7 +403,7 @@ for p in range(3):                   #loop over the processes
 ```python
 import Note.DL.parallel.kernel as k   #import kernel module
 import tensorflow as tf              #import tensorflow library
-import neuralnetwork.DL.tensorflow.parallel.nn as n   #import neural network module
+import models.DL.tensorflow.parallel.nn as n   #import neural network module
 from multiprocessing import Process,Manager #import multiprocessing tools
 mnist=tf.keras.datasets.mnist        #load mnist dataset
 (x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
@@ -431,7 +431,7 @@ kernel.test(x_train,y_train,32)      #test the network performance on the train 
 ```python
 import Note.DL.parallel.kernel as k   #import kernel module
 import tensorflow as tf              #import tensorflow library
-import neuralnetwork.DL.tensorflow.parallel.nn as n   #import neural network module
+import models.DL.tensorflow.parallel.nn as n   #import neural network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
 mnist=tf.keras.datasets.mnist        #load mnist dataset
 (x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
@@ -457,7 +457,7 @@ for p in range(3):                   #loop over the processes
 ```python
 import Note.DL.parallel.kernel as k   #import kernel module
 import tensorflow as tf              #import tensorflow library
-import neuralnetwork.DL.tensorflow.parallel.nn as n   #import neural network module
+import models.DL.tensorflow.parallel.nn as n   #import neural network module
 from multiprocessing import Process,Manager #import multiprocessing tools
 mnist=tf.keras.datasets.mnist        #load mnist dataset
 (x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
@@ -485,7 +485,7 @@ kernel.test(x_train,y_train,32)      #test the network performance on the train 
 ```python
 import Note.DL.parallel.kernel as k   #import kernel module
 import tensorflow as tf              #import tensorflow library
-import neuralnetwork.DL.tensorflow.parallel.nn_attenuate as n   #import neural network module
+import models.DL.tensorflow.parallel.nn_attenuate as n   #import neural network module
 from multiprocessing import Process,Manager #import multiprocessing tools
 mnist=tf.keras.datasets.mnist        #load mnist dataset
 (x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
@@ -514,7 +514,7 @@ kernel.test(x_train,y_train,32)      #test the network performance on the train 
 ```python
 import Note.RL.parallel.kernel as k   #import kernel module
 from Note.RL import rl
-import neuralnetwork.RL.tensorflow.parallrl.DQN as d   #import deep Q-network module
+import models.RL.tensorflow.parallrl.DQN as d   #import deep Q-network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
 kernel=k.kernel(dqn,5)       #create kernel object with the network and 5 processes to train
@@ -533,7 +533,7 @@ for p in range(5):           #loop over the processes
 ```python
 import Note.RL.parallel.kernel as k   #import kernel module
 from Note.RL import rl
-import neuralnetwork.RL.tensorflow.parallrl.DQN as d   #import deep Q-network module
+import models.RL.tensorflow.parallrl.DQN as d   #import deep Q-network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
 kernel=k.kernel(dqn,5)       #create kernel object with the network and 5 processes to train
@@ -553,7 +553,7 @@ for p in range(5):           #loop over the processes
 ```python
 import Note.RL.parallel.kernel as k   #import kernel module
 from Note.RL import rl
-import neuralnetwork.RL.tensorflow.parallrl.DQN as d   #import deep Q-network module
+import models.RL.tensorflow.parallrl.DQN as d   #import deep Q-network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
 kernel=k.kernel(dqn,5)       #create kernel object with the network and 5 processes to train
@@ -572,7 +572,7 @@ for p in range(5):           #loop over the processes
 ```python
 import Note.RL.parallel.kernel as k   #import kernel module
 from Note.RL import rl
-import neuralnetwork.RL.tensorflow.parallrl.DQN as d   #import deep Q-network module
+import models.RL.tensorflow.parallrl.DQN as d   #import deep Q-network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
 kernel=k.kernel(dqn,5)       #create kernel object with the network and 5 processes to train
@@ -593,7 +593,7 @@ kernel.visualize_train()     #visualize the loss
 ```python
 import Note.RL.parallel.kernel as k   #import kernel module
 from Note.RL import rl
-import neuralnetwork.RL.tensorflow.parallrl.DQN as d   #import deep Q-network module
+import models.RL.tensorflow.parallrl.DQN as d   #import deep Q-network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
 kernel=k.kernel(dqn,5)       #create kernel object with the network and 5 processes to train
@@ -615,7 +615,7 @@ for p in range(5):           #loop over the processes
 ```python
 import Note.RL.parallel.kernel as k   #import kernel module
 from Note.RL import rl
-import neuralnetwork.RL.tensorflow.parallrl.DQN as d   #import deep Q-network module
+import models.RL.tensorflow.parallrl.DQN as d   #import deep Q-network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
 kernel=k.kernel(dqn,5)       #create kernel object with the network and 5 processes to train
@@ -635,7 +635,7 @@ for p in range(5):           #loop over the processes
 ```python
 import Note.RL.parallel.kernel as k   #import kernel module
 from Note.RL import rl
-import neuralnetwork.RL.tensorflow.parallrl.DQN as d   #import deep Q-network module
+import models.RL.tensorflow.parallrl.DQN as d   #import deep Q-network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
 kernel=k.kernel(dqn,5)       #create kernel object with the network and 5 processes to train
@@ -659,7 +659,7 @@ for p in range(5):           #loop over the processes
 ```python
 import Note.DL.kernel as k   #import kernel module
 import tensorflow as tf      #import tensorflow library
-from Note.nn.neuralnetwork.note.non_parallel.ConvNeXtV2 import ConvNeXtV2 #import neural network class
+from Note.nn.models.note.non_parallel.ConvNeXtV2 import ConvNeXtV2 #import neural network class
 from tensorflow.keras import datasets
 (train_images,train_labels),(test_images,test_labels)=datasets.cifar10.load_data()
 train_images,test_images=train_images/255.0,test_images/255.0
@@ -679,7 +679,7 @@ output=convnext_atto.fp(data)
 **Train:**
 ```python
 import Note.DL.kernel as k   #import kernel module
-from Note.nn.neuralnetwork.note.ConvNeXtV2 import ConvNeXtV2 #import neural network class
+from Note.nn.models.note.ConvNeXtV2 import ConvNeXtV2 #import neural network class
 convnext_atto=ConvNeXtV2(model_type='atto',classes=1000)  #create neural network object
 kernel=k.kernel(convnext_atto)                  #create kernel object with the network
 kernel.platform=tf           #set the platform to tensorflow
@@ -704,7 +704,7 @@ output=convnext_atto.fp(data)
 ```python
 import tensorflow as tf       #import tensorflow library
 from multiprocessing import Process #import multiprocessing tools
-import neuralnetwork.DL.tensorflow.parallel.nn_acc as n   #import neural network module with accuracy function
+import models.DL.tensorflow.parallel.nn_acc as n   #import neural network module with accuracy function
 import Note.DL.dl.test as t   #import parallel test module
 mnist=tf.keras.datasets.mnist #load mnist dataset
 (x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
@@ -723,7 +723,7 @@ loss,acc=test.loss_acc()          #calculate the loss and accuracy of the test
 ```python
 import Note.DL.kernel as k   #import kernel module
 import tensorflow as tf      #import tensorflow library
-import neuralnetwork.DL.tensorflow.non_parallel.nn_ol as n   #import neural network module with online learning
+import models.DL.tensorflow.non_parallel.nn_ol as n   #import neural network module with online learning
 mnist=tf.keras.datasets.mnist #load mnist dataset
 (x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
 x_train,x_test =x_train/255.0,x_test/255.0 #normalize data
@@ -741,7 +741,7 @@ You can test it before using the kernel training neural network.
 ```python
 from Note.DL.dl.check_nn import check #import check function from check_nn module
 import tensorflow as tf                #import tensorflow library
-import neuralnetwork.DL.tensorflow.non_parallel.nn as n   #import neural network module
+import models.DL.tensorflow.non_parallel.nn as n   #import neural network module
 mnist=tf.keras.datasets.mnist          #load mnist dataset
 (x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
 x_train,x_test =x_train/255.0,x_test/255.0 #normalize data
@@ -754,7 +754,7 @@ You can test it before using the kernel training neural network.
 ```python
 from Note.RL.rl.check_nn import check #import check function from check_nn module
 import tensorflow as tf                #import tensorflow library
-import neuralnetwork.RL.tensorflow.non_parallrl.DQN as d   #import deep Q-network module
+import models.RL.tensorflow.non_parallrl.DQN as d   #import deep Q-network module
 dqn=d.DQN(4,128,2)                     #create neural network object with 4 inputs, 128 hidden units and 2 outputs
 check(dqn,tf,2)                        #check the network with tensorflow platform and 2 actions
 ```
