@@ -65,42 +65,42 @@ train_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='train_accuracy
 test_loss = tf.keras.metrics.Mean(name='test_loss')
 test_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(name='test_accuracy')
 
-model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy)
+model.train(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy)
 
 # If use early stopping.
 # model.end_acc=0.9
-# model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy)
+# model.train(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy)
 
 # If save the model at intervals of 1 epoch, with a maximum of 2 saved file, and the file name is model.dat.
 # model.path='model.dat'
 # model.save_freq=1
 # model. max_save_files=2
-# model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy)
+# model.train(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy)
 
 # If save the model at intervals of 1875 batch, with a maximum of 2 saved file, and the file name is model.dat.
 # model.path='model.dat'
 # model.save_freq_=1875
 # model. max_save_files=2
-# model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy)
+# model.train(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy)
 
 # If save parameters only
 # model.path='param.dat'
 # model.save_freq=1
 # model. max_save_files=2
 # model.save_param_only=True
-# model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy)
+# model.train(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy)
 
 # If save best only
 # model.path='model.dat'
 # model.save_best_only=True
 # model.monitor='val_loss'
-# model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy)
+# model.train(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy)
 
 # If set steps_per_execution
 # model.path='model.dat'
 # model.end_acc=0.9
 # model.steps_per_execution=1875
-# model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy)
+# model.train(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy)
 
 # If use parallel test(experiment)
 # import multiprocessing as mp
@@ -109,7 +109,7 @@ model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_
 # loss_object = tf.keras.losses.SparseCategoricalCrossentropy()
 # test_loss = [tf.keras.metrics.Mean(name='test_loss') for _ in range(7)]
 # test_accuracy = [tf.keras.metrics.SparseCategoricalAccuracy(name='test_accuracy') for _ in range(7)]
-# model.fit(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy, 7, mp)
+# model.train(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy, 7, mp)
 
 # visualize
 # model.visualize_train()
@@ -226,26 +226,26 @@ with strategy.scope():
   model=Model()
   optimizer = tf.keras.optimizers.Adam()
 
-model.distributed_fit(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
+model.distributed_training(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
 EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
 
 # If use early stopping.
 # model.end_acc=0.9
-# model.distributed_fit(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
+# model.distributed_training(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
 # EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
 
 # If save the model at intervals of 2 epoch, with a maximum of 3 saved file, and the file name is model.dat.
 # model.path='model.dat'
 # model.save_freq=2
 # model.max_save_files=3
-# model.distributed_fit(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
+# model.distributed_training(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
 # EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
 
 # If save the model at intervals of 1094 batch, with a maximum of 3 saved file, and the file name is model.dat.
 # model.path='model.dat'
 # model.save_freq_=1094
 # model.max_save_files=3
-# model.distributed_fit(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
+# model.distributed_training(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
 # EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
 
 # If save parameters only
@@ -253,21 +253,21 @@ EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
 # model.save_freq=2
 # model.max_save_files=3
 # model.save_param_only=True
-# model.distributed_fit(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
+# model.distributed_training(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
 # EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
 
 # If save best only
 # model.path='model.dat'
 # model.save_best_only=True
 # model.monitor='val_loss'
-# model.distributed_fit(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
+# model.distributed_training(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
 # EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
 
 # If set steps_per_execution
 # model.path='model.dat'
 # model.end_acc=0.9
 # model.steps_per_execution=1094
-# model.distributed_fit(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
+# model.distributed_training(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
 # EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
 
 # visualize
