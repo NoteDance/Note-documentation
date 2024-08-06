@@ -5,7 +5,7 @@ Note is a machine learning library, supporting TensorFlow and PyTorch platforms,
 # Installation:
 To use Note, you need to download it from https://github.com/NoteDance/Note and then unzip it to the site-packages folder of your Python environment.
 
-To import the neural network example conveniently, you can download it from https://github.com/NoteDance/Note-documentation/tree/neural-network-example and unzip the neuralnetwork package to the site-packages folder of your Python environment.
+To import the neural network example conveniently, you can download it from https://github.com/NoteDance/Note-documentation/tree/neural-network-example and unzip the models package to the site-packages folder of your Python environment.
 
 
 # Build neural network trained with Note:
@@ -13,7 +13,7 @@ To import the neural network example conveniently, you can download it from http
 
 - Neural network class should define a forward propagation function fp(data), and if using parallel kernel, it should define fp(data,p) where p is the process number. fp passes in the data and returns output, a loss function loss(output,labels), and if using parallel kernel, it should define loss(output,labels,p) where p is the process number. loss passes in the output and labels and returns loss value. If using parallel kernel, it should also define an optimization function opt(gradient,p) and GradientTape(data,labels,p) where p is the process number. opt passes in the gradient and returns parameter, GradientTape passes in the data and labels and returns tape, output and loss. It should also have a self.param object, which is a list for storing the trainable parameters. The kernel needs this list to calculate the gradients and update the parameters.
 
-- The Note.neuralnetwork.note package contains more complex neural network implementations. For some unknown reason, neural networks built with Keras may not be able to train in parallel on Note. The neural networks in the Note.neuralnetwork.note package use the layer module provided by Note, so they can train in parallel on Note. I hope you can learn how to build more complex networks on Note from these neural network codes.
+- The Note.models.note package contains more complex neural network implementations. For some unknown reason, neural networks built with Keras may not be able to train in parallel on Note. The neural networks in the Note.models.note package use the layer module provided by Note, so they can train in parallel on Note. I hope you can learn how to build more complex networks on Note from these neural network codes.
 
 Examples of training neural networks with kernel are shown below.
 
@@ -24,7 +24,7 @@ Examples of training neural networks with kernel are shown below.
 ```python
 import Note.DL.kernel as k   #import kernel module
 import tensorflow as tf      #import tensorflow library
-import neuralnetwork.DL.tensorflow.non_parallel.nn as n   #import neural network module
+import models.DL.tensorflow.non_parallel.nn as n   #import neural network module
 mnist=tf.keras.datasets.mnist #load mnist dataset
 (x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
 x_train,x_test =x_train/255.0,x_test/255.0 #normalize data
@@ -55,7 +55,7 @@ Neural networks built with Keras may not be able to train in parallel on Note’
 ```python
 import Note.DL.parallel.kernel as k   #import kernel module
 import tensorflow as tf              #import tensorflow library
-import neuralnetwork.DL.tensorflow.parallel.nn as n   #import neural network module
+import models.DL.tensorflow.parallel.nn as n   #import neural network module
 from multiprocessing import Process,Manager #import multiprocessing tools
 mnist=tf.keras.datasets.mnist        #load mnist dataset
 (x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
@@ -78,11 +78,11 @@ kernel.test(x_train,y_train,32)      #test the network performance on the train 
 
 **Multidevice:**
 
-If you have multiple devices that you want to allocate, you can use the process index to freely assign devices to your operations. For example, if you are using TensorFlow as the platform(backend), you can use tf.device and assign_device to assign devices to the computation. Here is a simple example of a neural network: https://github.com/NoteDance/Note-documentation/blob/neural-network-example/7.0/neuralnetwork/DL/tensorflow/parallel/nn_device.py. The neuralnetwork package contains more complex examples of neural networks. Basically, the multiprocessing module is responsible for launching parallel processes and sharing some data, and the TensorFlow platform(backend) is responsible for computing and allocating computation to different devices.
+If you have multiple devices that you want to allocate, you can use the process index to freely assign devices to your operations. For example, if you are using TensorFlow as the platform(backend), you can use tf.device and assign_device to assign devices to the computation. Here is a simple example of a neural network: https://github.com/NoteDance/Note-documentation/blob/neural-network-example/7.0/models/DL/tensorflow/parallel/nn_device.py. The models package contains more complex examples of neural networks. Basically, the multiprocessing module is responsible for launching parallel processes and sharing some data, and the TensorFlow platform(backend) is responsible for computing and allocating computation to different devices.
 ```python
 import Note.DL.parallel.kernel as k   #import kernel module
 import tensorflow as tf              #import tensorflow library
-import neuralnetwork.DL.tensorflow.parallel.nn_device as n   #import neural network module
+import models.DL.tensorflow.parallel.nn_device as n   #import neural network module
 from multiprocessing import Process,Manager #import multiprocessing tools
 mnist=tf.keras.datasets.mnist        #load mnist dataset
 (x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
@@ -113,7 +113,7 @@ The version of gym used in the example is less than 0.26.0.
 import Note.RL.kernel as k   #import kernel module
 from Note.RL import rl
 import tensorflow as tf           #import tensorflow library
-import neuralnetwork.RL.tensorflow.non_parallrl.DQN as d   #import deep Q-network module
+import models.RL.tensorflow.non_parallrl.DQN as d   #import deep Q-network module
 dqn=d.DQN(4,128,2)                #create neural network object with 4 inputs, 128 hidden units and 2 outputs
 kernel=k.kernel(dqn)              #create kernel object with the network
 kernel.platform=tf                #set the platform to tensorflow
@@ -135,7 +135,7 @@ then pools would be used parallel training agent.
 ```python
 import Note.RL.parallel.kernel as k   #import kernel module
 from Note.RL import rl
-import neuralnetwork.RL.tensorflow.parallrl.DQN as d   #import deep Q-network module
+import models.RL.tensorflow.parallrl.DQN as d   #import deep Q-network module
 from multiprocessing import Process,Lock,Manager #import multiprocessing tools
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
 kernel=k.kernel(dqn,5)       #create kernel object with the network and 5 processes to train
@@ -152,9 +152,9 @@ for p in range(5):           #loop over the processes
 
 
 # Neural network:
-The neuralnetwork package in Note has models that can be trained in parallel on Note, such as ConvNeXt, EfficientNetV2, EfficientNet, etc. You only need to provide the training data and operate simply, then you can train these neural networks in parallel on Note.
+The models package in Note has models that can be trained in parallel on Note, such as ConvNeXt, EfficientNetV2, EfficientNet, etc. You only need to provide the training data and operate simply, then you can train these neural networks in parallel on Note.
 
-https://github.com/NoteDance/Note/tree/Note-7.0/Note/neuralnetwork/note
+https://github.com/NoteDance/Note/tree/Note-7.0/Note/models/note
 
 **Documentation:** https://github.com/NoteDance/Note-documentation/tree/neural-network-7.0
 
@@ -165,7 +165,7 @@ The following is an example of training on the CIFAR10 dataset.
 **Train:**
 ```python
 import Note.DL.parallel.kernel as k   #import kernel module
-from Note.neuralnetwork.note.ConvNeXtV2 import ConvNeXtV2 #import neural network class
+from Note.models.note.ConvNeXtV2 import ConvNeXtV2 #import neural network class
 from tensorflow.keras import datasets
 from multiprocessing import Process,Manager #import multiprocessing tools
 (train_images,train_labels),(test_images,test_labels)=datasets.cifar10.load_data()
@@ -193,7 +193,7 @@ output=convnext_atto.fp(data)
 **Train:**
 ```python
 import Note.DL.parallel.kernel as k   #import kernel module
-from Note.neuralnetwork.note.ConvNeXtV2 import ConvNeXtV2 #import neural network class
+from Note.models.note.ConvNeXtV2 import ConvNeXtV2 #import neural network class
 convnext_atto=ConvNeXtV2(model_type='atto',classes=1000)  #create neural network object
 kernel=k.kernel(convnext_atto)                  #create kernel object with the network
 kernel.process=3                     #set the number of processes to train
