@@ -3,8 +3,8 @@ Agent built with Note and Keras.
 ```python
 import tensorflow as tf
 from Note.RL import rl
-from Note.models.docs_example.RL.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/DQN.py
-# from Note.models.docs_example.RL.DQN_keras import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/DQN_keras.py
+from Note.models.docs_example.RL.note.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/note/DQN.py
+# from Note.models.docs_example.RL.keras.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/keras/DQN.py
 
 model=DQN(4,128,2)
 model.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10)
@@ -55,7 +55,7 @@ model.train(train_loss, optimizer, 100)
 # Use PPO
 import tensorflow as tf
 from Note.RL import rl
-from Note.models.docs_example.RL.PPO import PPO # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/PPO.py
+from Note.models.docs_example.RL.note.PPO import PPO # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/note/PPO.py
 
 model=PPO(4,128,2,0.7,0.7)
 model.set_up(policy=rl.SoftmaxPolicy(),pool_size=10000,batch=64,update_steps=1000,PPO=True)
@@ -67,7 +67,7 @@ model.train(train_loss, optimizer, 100)
 # Use HER
 import tensorflow as tf
 from Note.RL import rl
-from Note.models.docs_example.RL.DDPG_HER import DDPG # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/DDPG_HER.py
+from Note.models.docs_example.RL.note.DDPG_HER import DDPG # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/note/DDPG_HER.py
 
 model=DDPG(128,0.1,0.98,0.005)
 model.set_up(noise=rl.GaussianWhiteNoiseProcess(),pool_size=10000,batch=256,trial_count=10,HER=True)
@@ -79,7 +79,7 @@ model.train(train_loss, optimizer, 2000)
 # This technology uses Python’s multiprocessing module to speed up trajectory collection and storage, I call it Pool Network.
 import tensorflow as tf
 from Note.RL import rl
-from Note.models.docs_example.RL.multiprocessing.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/multiprocessing/DQN.py
+from Note.models.docs_example.RL.note.multiprocessing.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/note/multiprocessing/DQN.py
 import multiprocessing as mp
 
 model=DQN(4,128,2,7)
@@ -94,7 +94,7 @@ model.train(train_loss, optimizer, 100, mp=mp, manager=manager, processes=7)
 # Furthermore use Python’s multiprocessing module to speed up getting a batch of data.
 import tensorflow as tf
 from Note.RL import rl
-from Note.models.docs_example.RL.multiprocessing.DDPG_HER import DDPG # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/multiprocessing/DDPG_HER.py
+from Note.models.docs_example.RL.note.multiprocessing.DDPG_HER import DDPG # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/note/multiprocessing/DDPG_HER.py
 import multiprocessing as mp
 
 model=DDPG(128,0.1,0.98,0.005,7)
@@ -108,7 +108,7 @@ Agent built with PyTorch.
 ```python
 import torch
 from Note.RL import rl
-from Note.models.docs_example.RL.DQN_pytorch import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/DQN_pytorch.py
+from Note.models.docs_example.RL.pytorch.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/pytorch/DQN_pytorch.py
 
 model=DQN(4,128,2)
 model.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10)
@@ -158,7 +158,7 @@ model.train(optimizer, 100)
 # This technology uses Python’s multiprocessing module to speed up trajectory collection and storage, I call it Pool Network.
 import torch
 from Note.RL import rl
-from Note.models.docs_example.RL.multiprocessing.DQN_pytorch import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/multiprocessing/DQN_pytorch.py
+from Note.models.docs_example.RL.pytorch.multiprocessing.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/pytorch/multiprocessing/DQN.py
 import multiprocessing as mp
 
 model=DQN(4,128,2,7)
@@ -173,8 +173,8 @@ Agent built with Note and Keras.
 ```python
 import tensorflow as tf
 from Note.RL import rl
-from Note.models.docs_example.RL.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/DQN.py
-# from Note.models.docs_example.RL.DQN_keras import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/DQN_keras.py
+from Note.models.docs_example.RL.note.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/note/DQN.py
+# from Note.models.docs_example.RL.keras.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/keras/DQN.py
 
 strategy = tf.distribute.MirroredStrategy()
 BATCH_SIZE_PER_REPLICA = 64
@@ -229,8 +229,7 @@ model.distributed_training(GLOBAL_BATCH_SIZE, optimizer, 100)
 # This technology uses Python’s multiprocessing module to speed up trajectory collection and storage, I call it Pool Network.
 import tensorflow as tf
 from Note.RL import rl
-from Note.models.docs_example.RL.multiprocessing.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/multiprocessing/DQN.py
-# from Note.models.docs_example.RL.multiprocessing.DQN_keras import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/multiprocessing/DQN_keras.py
+from Note.models.docs_example.RL.note.multiprocessing.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/note/multiprocessing/DQN.py
 import multiprocessing as mp
 
 strategy = tf.distribute.MirroredStrategy()
