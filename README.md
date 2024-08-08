@@ -733,28 +733,3 @@ kernel.platform=tf           #set the platform to tensorflow
 kernel.data(x_train,y_train) #input train data and labels to the kernel
 kernel.train_online()        #train the network online
 ```
-
-
-# Check neural network:
-## DL:
-You can test it before using the kernel training neural network.
-```python
-from Note.DL.dl.check_nn import check #import check function from check_nn module
-import tensorflow as tf                #import tensorflow library
-import models.DL.tensorflow.non_parallel.nn as n   #import neural network module
-mnist=tf.keras.datasets.mnist          #load mnist dataset
-(x_train,y_train),(x_test,y_test)=mnist.load_data() #split data into train and test sets
-x_train,x_test =x_train/255.0,x_test/255.0 #normalize data
-nn=n.nn()                              #create neural network object
-check(nn,tf,x_train[:32],y_train[:32]) #check the network with tensorflow platform and a sample of 32 data points and labels
-```
-
-## RL:
-You can test it before using the kernel training neural network.
-```python
-from Note.RL.rl.check_nn import check #import check function from check_nn module
-import tensorflow as tf                #import tensorflow library
-import models.RL.tensorflow.non_parallrl.DQN as d   #import deep Q-network module
-dqn=d.DQN(4,128,2)                     #create neural network object with 4 inputs, 128 hidden units and 2 outputs
-check(dqn,tf,2)                        #check the network with tensorflow platform and 2 actions
-```
