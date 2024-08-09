@@ -17,7 +17,7 @@ model.train(train_loss, optimizer, 100)
 # model.train(train_loss, optimizer, 100)
 
 # If use prioritized replay.
-# model.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10,trial_count=10,criterion=200,pr=True,initial_TD=7,alpha=0.7)
+# model.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10,trial_count=10,criterion=200,PR=True,initial_TD=7,alpha=0.7)
 # model.train(train_loss, optimizer, 100)
 
 # If save the model at intervals of 10 episode, with a maximum of 2 saved file, and the file name is model.dat.
@@ -120,7 +120,7 @@ model.train(optimizer, 100)
 # model.train(optimizer, 100)
 
 # If use prioritized replay.
-# model.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10,trial_count=10,criterion=200,pr=True,initial_TD=7,alpha=0.7)
+# model.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10,trial_count=10,criterion=200,PR=True,initial_TD=7,alpha=0.7)
 # model.train(optimizer, 100)
 
 # If save the model at intervals of 10 episode, with a maximum of 2 saved file, and the file name is model.dat.
@@ -191,7 +191,7 @@ model.distributed_training(GLOBAL_BATCH_SIZE, optimizer, 100)
 # model.distributed_training(GLOBAL_BATCH_SIZE, optimizer, 100)
 
 # If use prioritized replay.
-# model.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10,trial_count=10,criterion=200,pr=True,initial_TD=7,alpha=0.7)
+# model.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10,trial_count=10,criterion=200,PR=True,initial_TD=7,alpha=0.7)
 # model.distributed_training(GLOBAL_BATCH_SIZE, optimizer, 100)
 
 # If save the model at intervals of 10 episode, with a maximum of 2 saved file, and the file name is model.dat.
