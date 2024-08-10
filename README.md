@@ -76,6 +76,18 @@ train_loss = tf.keras.metrics.Mean(name='train_loss')
 model.train(train_loss, optimizer, 2000)
 ```
 ```python
+# Use Multi-agent reinforcement learning
+import tensorflow as tf
+from Note.RL import rl
+from Note.models.docs_example.RL.note.MADDPG import DDPG # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/note/MADDPG.py
+
+model=DDPG(128,0.1,0.98,0.005)
+model.set_up(noise=rl.SoftmaxPolicy(),pool_size=3000,batch=32,trial_count=10,MA=True)
+optimizer = tf.keras.optimizers.Adam()
+train_loss = tf.keras.metrics.Mean(name='train_loss')
+model.train(train_loss, optimizer, 100)
+```
+```python
 # This technology uses Python’s multiprocessing module to speed up trajectory collection and storage, I call it Pool Network.
 import tensorflow as tf
 from Note.RL import rl
