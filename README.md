@@ -56,6 +56,7 @@ model.train(train_loss, optimizer, 100)
 import tensorflow as tf
 from Note.RL import rl
 from Note.models.docs_example.RL.note.PPO import PPO # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/note/PPO.py
+# from Note.models.docs_example.RL.keras.PPO import PPO # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/keras/PPO.py
 
 model=PPO(4,128,2,0.7,0.7)
 model.set_up(policy=rl.SoftmaxPolicy(),pool_size=10000,batch=64,update_steps=1000,PPO=True)
@@ -68,6 +69,7 @@ model.train(train_loss, optimizer, 100)
 import tensorflow as tf
 from Note.RL import rl
 from Note.models.docs_example.RL.note.DDPG_HER import DDPG # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/note/DDPG_HER.py
+# from Note.models.docs_example.RL.keras.DDPG_HER import DDPG # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/keras/DDPG_HER.py
 
 model=DDPG(128,0.1,0.98,0.005)
 model.set_up(noise=rl.GaussianWhiteNoiseProcess(),pool_size=10000,batch=256,criterion=-5,trial_count=10,HER=True)
@@ -80,6 +82,7 @@ model.train(train_loss, optimizer, 2000)
 import tensorflow as tf
 from Note.RL import rl
 from Note.models.docs_example.RL.note.MADDPG import DDPG # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/note/MADDPG.py
+# from Note.models.docs_example.RL.keras.MADDPG import DDPG # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/keras/MADDPG.py
 
 model=DDPG(128,0.1,0.98,0.005)
 model.set_up(noise=rl.SoftmaxPolicy(),pool_size=3000,batch=32,trial_count=10,MA=True)
