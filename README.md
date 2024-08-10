@@ -60,7 +60,7 @@ from Note.models.docs_example.RL.note.PPO import PPO # https://github.com/NoteDa
 
 model=PPO(4,128,2,0.7,0.7)
 model.set_up(policy=rl.SoftmaxPolicy(),pool_size=10000,batch=64,update_steps=1000,PPO=True)
-optimizer = tf.keras.optimizers.Adam()
+optimizer = [tf.keras.optimizers.Adam(1e-4),tf.keras.optimizers.Adam(5e-3)]
 train_loss = tf.keras.metrics.Mean(name='train_loss')
 model.train(train_loss, optimizer, 100)
 ```
@@ -73,7 +73,7 @@ from Note.models.docs_example.RL.note.DDPG_HER import DDPG # https://github.com/
 
 model=DDPG(128,0.1,0.98,0.005)
 model.set_up(noise=rl.GaussianWhiteNoiseProcess(),pool_size=10000,batch=256,criterion=-5,trial_count=10,HER=True)
-optimizer = tf.keras.optimizers.Adam()
+optimizer = [tf.keras.optimizers.Adam(),tf.keras.optimizers.Adam()]
 train_loss = tf.keras.metrics.Mean(name='train_loss')
 model.train(train_loss, optimizer, 2000)
 ```
@@ -86,7 +86,7 @@ from Note.models.docs_example.RL.note.MADDPG import DDPG # https://github.com/No
 
 model=DDPG(128,0.1,0.98,0.005)
 model.set_up(noise=rl.SoftmaxPolicy(),pool_size=3000,batch=32,trial_count=10,MA=True)
-optimizer = tf.keras.optimizers.Adam()
+optimizer = [tf.keras.optimizers.Adam(),tf.keras.optimizers.Adam()]
 train_loss = tf.keras.metrics.Mean(name='train_loss')
 model.train(train_loss, optimizer, 100)
 ```
@@ -114,7 +114,7 @@ import multiprocessing as mp
 
 model=DDPG(128,0.1,0.98,0.005,7)
 model.set_up(noise=rl.GaussianWhiteNoiseProcess(),pool_size=10000,batch=256,trial_count=10,HER=True)
-optimizer = tf.keras.optimizers.Adam()
+optimizer = [tf.keras.optimizers.Adam(),tf.keras.optimizers.Adam()]
 train_loss = tf.keras.metrics.Mean(name='train_loss')
 manager=mp.Manager()
 model.train(train_loss, optimizer, 2000, mp=mp, manager=manager, processes=7, processes_her=4)
