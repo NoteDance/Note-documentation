@@ -1,5 +1,6 @@
 # Train:
-Agent built with Note and Keras.
+## Note and Keras:
+Agent built with Note or Keras.
 ```python
 import tensorflow as tf
 from Note.RL import rl
@@ -119,6 +120,7 @@ train_loss = tf.keras.metrics.Mean(name='train_loss')
 manager=mp.Manager()
 model.train(train_loss, optimizer, 2000, mp=mp, manager=manager, processes=7, processes_her=4)
 ```
+## PyTorch:
 Agent built with PyTorch.
 ```python
 import torch
@@ -184,7 +186,8 @@ model.train(optimizer, 100, mp=mp, manager=manager, processes=7)
 ```
 
 # Distributed training:
-Agent built with Note and Keras.
+## Note and Keras:
+Agent built with Note or Keras.
 ```python
 import tensorflow as tf
 from Note.RL import rl
