@@ -43,7 +43,6 @@ model.train(train_loss, optimizer, 100)
 # model.visualize_loss()
 # model.visualize_reward()
 # model.visualize_reward_loss()
-# model.visualize_comparison()
 
 # animate agent
 # model.animate_agent(200)
@@ -162,7 +161,6 @@ model.train(optimizer, 100)
 # model.visualize_loss()
 # model.visualize_reward()
 # model.visualize_reward_loss()
-# model.visualize_comparison()
 
 # animate agent
 # model.animate_agent(200)
@@ -270,7 +268,6 @@ model.distributed_training(GLOBAL_BATCH_SIZE, optimizer, 100)
 # model.visualize_loss()
 # model.visualize_reward()
 # model.visualize_reward_loss()
-# model.visualize_comparison()
 
 # animate agent
 # model.animate_agent(200)
