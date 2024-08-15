@@ -415,13 +415,6 @@ model,optimizer=nn.restore('model.dat')
 
 
 # Build models:
-If you want to create a new model without affecting the existing models, please use detach() to separate the current model’s variables from the global variables in the Model.
-
-**separate the current model’s variables from the global variables in the Model**
-```python
-model.detach()
-```
-
 ## ConvNeXt_tiny
 ```python
 from Note.models.tf.ConvNeXt import ConvNeXt
