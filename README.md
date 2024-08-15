@@ -95,6 +95,7 @@ model.train(train_loss, optimizer, 100)
 import tensorflow as tf
 from Note.RL import rl
 from Note.models.docs_example.RL.note.multiprocessing.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/note/multiprocessing/DQN.py
+# from Note.models.docs_example.RL.keras.multiprocessing.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/keras/multiprocessing/DQN.py
 import multiprocessing as mp
 
 model=DQN(4,128,2,7)
