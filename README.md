@@ -4192,6 +4192,43 @@ normalizer.adapt(data)
 output = normalizer(data)
 ```
 
+# PatchDropout
+
+The `PatchDropout` class implements a form of dropout specifically designed for patch-based models like vision transformers. It randomly drops a subset of patches (input tokens) during training to improve generalization and robustness.
+
+**Initialization Parameters**
+
+- **prob** (float, optional): Probability of dropping a patch. Default is 0.5. Must be between 0 and 1.
+- **num_prefix_tokens** (int, optional): Number of prefix tokens to exclude from dropout, such as CLS tokens in transformers. Default is 1.
+- **ordered** (bool, optional): If True, the kept patches are ordered, useful for debugging or visualization. Default is False.
+- **return_indices** (bool, optional): If True, returns the indices of the patches that are kept after dropout. Default is False.
+
+**Methods**
+
+- **__call__(self, x, training=None)**: Applies the PatchDropout transformation to the input tensor.
+
+  - **Parameters**:
+    - **x**: Input tensor of shape `(B, L, D)` where `B` is the batch size, `L` is the number of patches, and `D` is the patch dimension.
+    - **training** (bool, optional): If True, applies dropout; if False, returns the input unchanged. If None, uses the internal training flag.
+
+  - **Returns**: The transformed tensor with some patches dropped. If `return_indices` is True, also returns the indices of the kept patches.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the PatchDropout layer
+patch_dropout = nn.PatchDropout(prob=0.5, num_prefix_tokens=1)
+
+# Generate some sample data
+data = tf.random.normal((2, 10, 64))  # Batch size 2, 10 patches, 64 dimensions each
+
+# Apply patch dropout
+output = patch_dropout(data, training=True)
+```
+
 # perdimscale_attention
 
 The `perdimscale_attention` class implements scaled dot-product attention with learned scales for individual dimensions, which can improve quality but might affect training stability.
@@ -4941,6 +4978,72 @@ data = tf.random.normal((2, 64, 64, 3))
 
 # Apply separable convolution
 output = conv(data)
+```
+
+# SpaceToDepth
+
+The `SpaceToDepth` class rearranges blocks of spatial data into depth. This operation is typically used in deep learning models for image processing to restructure the spatial dimensions of an image into the depth dimension, effectively increasing the number of channels.
+
+**Initialization Parameters**
+
+- **block_size** (int, optional): Size of the spatial block. The default and only supported value is 4.
+
+**Methods**
+
+- **__call__(self, x)**: Applies the space-to-depth transformation to the input tensor.
+
+  - **Parameters**:
+    - **x**: Input tensor of shape `(N, H, W, C)` where `N` is the batch size, `H` and `W` are height and width, and `C` is the number of channels.
+  
+  - **Returns**: Transformed tensor of shape `(N, H/block_size, W/block_size, C*block_size^2)`.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the SpaceToDepth layer
+space_to_depth = nn.SpaceToDepth(block_size=4)
+
+# Generate some sample data
+data = tf.random.normal((1, 16, 16, 3))
+
+# Apply space-to-depth transformation
+output = space_to_depth(data)
+```
+
+# DepthToSpace
+
+The `DepthToSpace` class performs the inverse operation of `SpaceToDepth`. It rearranges data from the depth dimension back into blocks of spatial data. This operation is useful when you need to reverse the effect of `SpaceToDepth` and recover the original spatial structure.
+
+**Initialization Parameters**
+
+- **block_size** (int): Size of the spatial block to be reconstructed.
+
+**Methods**
+
+- **__call__(self, x)**: Applies the depth-to-space transformation to the input tensor.
+
+  - **Parameters**:
+    - **x**: Input tensor of shape `(N, H, W, C)` where `N` is the batch size, `H` and `W` are height and width, and `C` is the number of channels.
+  
+  - **Returns**: Transformed tensor of shape `(N, H*block_size, W*block_size, C/block_size^2)`.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of the DepthToSpace layer
+depth_to_space = nn.DepthToSpace(block_size=4)
+
+# Generate some sample data
+data = tf.random.normal((1, 4, 4, 48))
+
+# Apply depth-to-space transformation
+output = depth_to_space(data)
 ```
 
 # spatial_dropout1d
