@@ -244,10 +244,6 @@ task_type, task_id, cluster_spec = (strategy.cluster_resolver.task_type,
 checkpoint_dir = os.path.join(util.get_temp_dir(), 'ckpt')
 checkpoint = tf.train.Checkpoint(
     model=multi_worker_model, epoch=multi_worker_model.epoch, step_in_epoch=multi_worker_model.step_in_epoch)
-write_checkpoint_dir = multi_worker_model.write_filepath(checkpoint_dir, task_type, task_id,
-                                      cluster_spec)
-checkpoint_manager = tf.train.CheckpointManager(
-    checkpoint, directory=write_checkpoint_dir, max_to_keep=1)
 
 # Restoring the checkpoint
 latest_checkpoint = tf.train.latest_checkpoint(checkpoint_dir)
@@ -255,7 +251,7 @@ if latest_checkpoint:
   checkpoint.restore(latest_checkpoint)
 
 multi_worker_model.distributed_training(multi_worker_dataset, loss_object, global_batch_size, optimizer, strategy,
-num_epochs=3, num_steps_per_epoch=70, train_accuracy=train_accuracy, write_checkpoint_dir=write_checkpoint_dir, checkpoint_manager=checkpoint_manager)
+num_epochs=3, num_steps_per_epoch=70, train_accuracy=train_accuracy, checkpoint=checkpoint, checkpoint_dir=checkpoint_dir)
 ```
 
 
