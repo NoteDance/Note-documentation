@@ -15,46 +15,6 @@ x_train, x_test = x_train / 255.0, x_test / 255.0
 model=Model()
 
 train_ds = tf.data.Dataset.from_tensor_slices((x_train, y_train)).batch(32)
-loss_object = tf.keras.losses.SparseCategoricalCrossentropy()
-optimizer = tf.keras.optimizers.Adam()
-train_loss = tf.keras.metrics.Mean(name='train_loss')
-
-@tf.function(jit_compile=True)
-def train_step(images, labels):
-  with tf.GradientTape() as tape:
-    predictions = model(images)
-    loss = loss_object(labels, predictions)
-  gradients = tape.gradient(loss, model.param)
-  optimizer.apply_gradients(zip(gradients, model.param))
-  train_loss(loss)
-
-EPOCHS = 5
-
-for epoch in range(EPOCHS):
-  # Reset the metrics at the start of the next epoch
-  train_loss.reset_states()
-
-  for images, labels in train_ds:
-    train_step(images, labels)
-
-  print(
-    f'Epoch {epoch + 1}, '
-    f'Loss: {train_loss.result()}, '
-  )
-```
-or
-```python
-import tensorflow as tf
-from Note.models.docs_example.DL.model1 import Model
-
-mnist = tf.keras.datasets.mnist
-
-(x_train, y_train), (x_test, y_test) = mnist.load_data()
-x_train, x_test = x_train / 255.0, x_test / 255.0
-
-model=Model()
-
-train_ds = tf.data.Dataset.from_tensor_slices((x_train, y_train)).batch(32)
 test_ds = tf.data.Dataset.from_tensor_slices((x_test, y_test)).batch(32)
 loss_object = tf.keras.losses.SparseCategoricalCrossentropy()
 optimizer = tf.keras.optimizers.Adam()
@@ -143,67 +103,6 @@ BATCH_SIZE_PER_REPLICA = 64
 GLOBAL_BATCH_SIZE = BATCH_SIZE_PER_REPLICA * strategy.num_replicas_in_sync
 EPOCHS = 10
 
-train_dataset = tf.data.Dataset.from_tensor_slices((train_images, train_labels)).shuffle(BUFFER_SIZE).batch(GLOBAL_BATCH_SIZE)
-train_dist_dataset = strategy.experimental_distribute_dataset(train_dataset)
-
-with strategy.scope():
-  loss_object = tf.keras.losses.SparseCategoricalCrossentropy(
-      reduction=tf.keras.losses.Reduction.NONE)
-  def compute_loss(labels, predictions):
-    per_example_loss = loss_object(labels, predictions)
-    return tf.nn.compute_average_loss(per_example_loss, global_batch_size=GLOBAL_BATCH_SIZE)
-
-with strategy.scope():
-  model=Model()
-  optimizer = tf.keras.optimizers.Adam()
-
-def train_step(inputs):
-  images, labels = inputs
-  with tf.GradientTape() as tape:
-    predictions = model(images)
-    loss = compute_loss(labels, predictions)
-  gradients = tape.gradient(loss, model.param)
-  optimizer.apply_gradients(zip(gradients, model.param))
-  return loss
-
-@tf.function(jit_compile=True)
-def distributed_train_step(dataset_inputs):
-  per_replica_losses = strategy.run(train_step, args=(dataset_inputs,))
-  return strategy.reduce(tf.distribute.ReduceOp.SUM, per_replica_losses,
-                         axis=None)
-
-for epoch in range(EPOCHS):
-  total_loss = 0.0
-  num_batches = 0
-  for x in train_dist_dataset:
-    total_loss += distributed_train_step(x)
-    num_batches += 1
-  train_loss = total_loss / num_batches
-
-  template = ("Epoch {}, Loss: {}")
-  print(template.format(epoch + 1, train_loss)
-```
-or
-```python
-import tensorflow as tf
-from Note.models.docs_example.DL.model2 import Model
-
-fashion_mnist = tf.keras.datasets.fashion_mnist
-
-(train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()
-
-train_images = train_images[..., None]
-test_images = test_images[..., None]
-
-train_images = train_images / np.float32(255)
-test_images = test_images / np.float32(255)
-
-strategy = tf.distribute.MirroredStrategy()
-
-BATCH_SIZE_PER_REPLICA = 64
-GLOBAL_BATCH_SIZE = BATCH_SIZE_PER_REPLICA * strategy.num_replicas_in_sync
-EPOCHS = 10
-
 train_dataset = tf.data.Dataset.from_tensor_slices((train_images, train_labels)).shuffle(BUFFER_SIZE).batch(GLOBAL_BATCH_SIZE) 
 test_dataset = tf.data.Dataset.from_tensor_slices((test_images, test_labels)).batch(GLOBAL_BATCH_SIZE) 
 
@@ -227,7 +126,7 @@ with strategy.scope():
   optimizer = tf.keras.optimizers.Adam()
 
 model.distributed_training(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
-EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
+EPOCHS, train_accuracy=train_accuracy, test_dist_dataset=test_dist_dataset, test_loss=test_loss, test_accuracy=test_accuracy)
 
 # If use early stopping.
 # model.end_acc=0.9
@@ -278,6 +177,85 @@ EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
 # save
 # model.save_param('param.dat')
 # model.save('model.dat')
+```
+Custom training loop with Keras and MultiWorkerMirroredStrategy
+```python
+import tensorflow as tf
+from Note.models.docs_example.DL.model2 import Model
+import numpy as np
+from multiprocessing import util
+import mnist
+import sys
+import os
+
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+os.environ.pop('TF_CONFIG', None)
+if '.' not in sys.path:
+  sys.path.insert(0, '.')
+
+def mnist_dataset(batch_size):
+  (x_train, y_train), _ = tf.keras.datasets.mnist.load_data()
+  # The `x` arrays are in uint8 and have values in the range [0, 255].
+  # You need to convert them to float32 with values in the range [0, 1]
+  x_train = x_train / np.float32(255)
+  y_train = y_train.astype(np.int64)
+  train_dataset = tf.data.Dataset.from_tensor_slices(
+      (x_train, y_train)).shuffle(60000)
+  return train_dataset
+
+def dataset_fn(global_batch_size, input_context):
+  batch_size = input_context.get_per_replica_batch_size(global_batch_size)
+  dataset = mnist_dataset(batch_size)
+  dataset = dataset.shard(input_context.num_input_pipelines,
+                          input_context.input_pipeline_id)
+  dataset = dataset.batch(batch_size)
+  return dataset
+
+tf_config = {
+    'cluster': {
+        'worker': ['localhost:12345', 'localhost:23456']
+    },
+    'task': {'type': 'worker', 'index': 0}
+}
+
+strategy = tf.distribute.MultiWorkerMirroredStrategy()
+with strategy.scope():
+  # Model building needs to be within `strategy.scope()`.
+  multi_worker_model = Model()
+  # The creation of optimizer and train_accuracy needs to be in
+  # `strategy.scope()` as well, since they create variables.
+  optimizer = tf.keras.optimizers.RMSprop(learning_rate=0.001)
+  loss_object = tf.keras.losses.SparseCategoricalCrossentropy(
+      reduction=tf.keras.losses.Reduction.NONE)
+  train_accuracy = tf.keras.metrics.SparseCategoricalAccuracy(
+      name='train_accuracy')
+
+per_worker_batch_size = 64
+num_workers = len(tf_config['cluster']['worker'])
+global_batch_size = per_worker_batch_size * num_workers
+
+with strategy.scope():
+  multi_worker_dataset = strategy.distribute_datasets_from_function(
+      lambda input_context: mnist.dataset_fn(global_batch_size, input_context))
+
+task_type, task_id, cluster_spec = (strategy.cluster_resolver.task_type,
+                                    strategy.cluster_resolver.task_id,
+                                    strategy.cluster_resolver.cluster_spec())
+checkpoint_dir = os.path.join(util.get_temp_dir(), 'ckpt')
+checkpoint = tf.train.Checkpoint(
+    model=multi_worker_model, epoch=multi_worker_model.epoch, step_in_epoch=multi_worker_model.step_in_epoch)
+write_checkpoint_dir = multi_worker_model.write_filepath(checkpoint_dir, task_type, task_id,
+                                      cluster_spec)
+checkpoint_manager = tf.train.CheckpointManager(
+    checkpoint, directory=write_checkpoint_dir, max_to_keep=1)
+
+# Restoring the checkpoint
+latest_checkpoint = tf.train.latest_checkpoint(checkpoint_dir)
+if latest_checkpoint:
+  checkpoint.restore(latest_checkpoint)
+
+multi_worker_model.distributed_training(multi_worker_dataset, loss_object, global_batch_size, optimizer, strategy,
+num_epochs=3, num_steps_per_epoch=70, train_accuracy=train_accuracy, write_checkpoint_dir=write_checkpoint_dir, checkpoint_manager=checkpoint_manager)
 ```
 
 
