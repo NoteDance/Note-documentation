@@ -238,9 +238,6 @@ with strategy.scope():
   multi_worker_dataset = strategy.distribute_datasets_from_function(
       lambda input_context: dataset_fn(global_batch_size, input_context))
 
-task_type, task_id, cluster_spec = (strategy.cluster_resolver.task_type,
-                                    strategy.cluster_resolver.task_id,
-                                    strategy.cluster_resolver.cluster_spec())
 checkpoint_dir = os.path.join(util.get_temp_dir(), 'ckpt')
 checkpoint = tf.train.Checkpoint(
     model=multi_worker_model, epoch=multi_worker_model.epoch, step_in_epoch=multi_worker_model.step_in_epoch)
