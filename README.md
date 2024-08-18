@@ -185,7 +185,6 @@ import tensorflow as tf
 from Note.models.docs_example.DL.model2 import Model
 import numpy as np
 from multiprocessing import util
-import mnist
 import sys
 import os
 
@@ -237,7 +236,7 @@ global_batch_size = per_worker_batch_size * num_workers
 
 with strategy.scope():
   multi_worker_dataset = strategy.distribute_datasets_from_function(
-      lambda input_context: mnist.dataset_fn(global_batch_size, input_context))
+      lambda input_context: dataset_fn(global_batch_size, input_context))
 
 task_type, task_id, cluster_spec = (strategy.cluster_resolver.task_type,
                                     strategy.cluster_resolver.task_id,
