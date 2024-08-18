@@ -221,8 +221,8 @@ model.train(train_loss, optimizer, 2000, mp=mp, manager=manager, processes=7, pr
 ```
 
 # Distributed training:
-## MirroredStrategy:
 Agent built with Note or Keras.
+## MirroredStrategy:
 ```python
 import tensorflow as tf
 from Note.RL import rl
