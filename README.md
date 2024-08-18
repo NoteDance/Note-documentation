@@ -407,7 +407,7 @@ checkpoint = tf.train.Checkpoint(
 
 multi_worker_model.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_batches=17)
 manager=mp.Manager()
-multi_worker_model.distributed_training(global_batch_size, optimizer, strategy, num_epochs=100, num_steps_per_epoch=12, checkpoint=checkpoint, checkpoint_dir=checkpoint_dir,
+multi_worker_model.distributed_training(global_batch_size, optimizer, strategy, num_epochs=100, checkpoint=checkpoint, checkpoint_dir=checkpoint_dir,
                     mp=mp, manager=manager, processes=7)
 ```
 
