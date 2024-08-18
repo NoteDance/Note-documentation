@@ -83,6 +83,7 @@ model.train(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, tes
 
 
 # Distributed training:
+## MirroredStrategy:
 ```python
 import tensorflow as tf
 from Note.models.docs_example.DL.model2 import Model
@@ -178,7 +179,7 @@ EPOCHS, train_accuracy=train_accuracy, test_dist_dataset=test_dist_dataset, test
 # model.save_param('param.dat')
 # model.save('model.dat')
 ```
-MultiWorkerMirroredStrategy
+## MultiWorkerMirroredStrategy:
 ```python
 import tensorflow as tf
 from Note.models.docs_example.DL.model2 import Model
