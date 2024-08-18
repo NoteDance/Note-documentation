@@ -221,7 +221,7 @@ model.train(train_loss, optimizer, 2000, mp=mp, manager=manager, processes=7, pr
 ```
 
 # Distributed training:
-## Note and Keras:
+## MirroredStrategy:
 Agent built with Note or Keras.
 ```python
 import tensorflow as tf
@@ -368,6 +368,47 @@ with strategy.scope():
 model.set_up(noise=rl.GaussianWhiteNoiseProcess(),pool_size=10000,trial_count=10,HER=True)
 manager=mp.Manager()
 model.distributed_training(GLOBAL_BATCH_SIZE, optimizer, strategy, 2000, mp=mp, manager=manager, processes=7, processes_her=4)
+```
+## MultiWorkerMirroredStrategy:
+```python
+import tensorflow as tf
+from Note.RL import rl
+from Note.models.docs_example.RL.note.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/note/DQN.py
+# from Note.models.docs_example.RL.keras.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/keras/DQN.py
+import multiprocessing as mp
+from multiprocessing import util
+import sys
+import os
+
+os.environ["CUDA_VISIBLE_DEVICES"] = "-1"
+os.environ.pop('TF_CONFIG', None)
+if '.' not in sys.path:
+  sys.path.insert(0, '.')
+
+tf_config = {
+    'cluster': {
+        'worker': ['localhost:12345', 'localhost:23456']
+    },
+    'task': {'type': 'worker', 'index': 0}
+}
+
+strategy = tf.distribute.MultiWorkerMirroredStrategy()
+per_worker_batch_size = 64
+num_workers = len(tf_config['cluster']['worker'])
+global_batch_size = per_worker_batch_size * num_workers
+
+with strategy.scope():
+  multi_worker_model = DQN(4,128,2)
+  optimizer = tf.keras.optimizers.Adam()
+
+checkpoint_dir = os.path.join(util.get_temp_dir(), 'ckpt')
+checkpoint = tf.train.Checkpoint(
+    model=multi_worker_model, epoch=multi_worker_model.epoch, step_in_epoch=multi_worker_model.step_in_epoch)
+
+multi_worker_model.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_batches=17)
+manager=mp.Manager()
+multi_worker_model.distributed_training(global_batch_size, optimizer, strategy, num_epochs=100, num_steps_per_epoch=12, checkpoint=checkpoint, checkpoint_dir=checkpoint_dir,
+                    mp=mp, manager=manager, processes=7)
 ```
 
 # Experimental:
