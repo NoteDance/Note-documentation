@@ -373,8 +373,8 @@ model.distributed_training(GLOBAL_BATCH_SIZE, optimizer, strategy, 2000, mp=mp, 
 ```python
 import tensorflow as tf
 from Note.RL import rl
-from Note.models.docs_example.RL.note.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/note/DQN.py
-# from Note.models.docs_example.RL.keras.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/keras/DQN.py
+from Note.models.docs_example.RL.note.multiprocessing.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/note/multiprocessing/DQN.py
+# from Note.models.docs_example.RL.keras.multiprocessing.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/keras/multiprocessing/DQN.py
 import multiprocessing as mp
 import sys
 import os
