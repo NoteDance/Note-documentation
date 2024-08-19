@@ -184,7 +184,6 @@ EPOCHS, train_accuracy=train_accuracy, test_dist_dataset=test_dist_dataset, test
 import tensorflow as tf
 from Note.models.docs_example.DL.model2 import Model
 import numpy as np
-from multiprocessing import util
 import sys
 import os
 
@@ -238,17 +237,8 @@ with strategy.scope():
   multi_worker_dataset = strategy.distribute_datasets_from_function(
       lambda input_context: dataset_fn(global_batch_size, input_context))
 
-checkpoint_dir = os.path.join(util.get_temp_dir(), 'ckpt')
-checkpoint = tf.train.Checkpoint(
-    model=multi_worker_model, epoch=multi_worker_model.epoch, step_in_epoch=multi_worker_model.step_in_epoch)
-
-# Restoring the checkpoint
-latest_checkpoint = tf.train.latest_checkpoint(checkpoint_dir)
-if latest_checkpoint:
-  checkpoint.restore(latest_checkpoint)
-
 multi_worker_model.distributed_training(multi_worker_dataset, loss_object, global_batch_size, optimizer, strategy,
-num_epochs=3, num_steps_per_epoch=70, train_accuracy=train_accuracy, checkpoint=checkpoint, checkpoint_dir=checkpoint_dir)
+num_epochs=3, num_steps_per_epoch=70, train_accuracy=train_accuracy)
 ```
 
 
