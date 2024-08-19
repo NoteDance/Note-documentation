@@ -402,7 +402,7 @@ with strategy.scope():
 
 multi_worker_model.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_batches=17)
 manager=mp.Manager()
-multi_worker_model.distributed_training(global_batch_size, optimizer, strategy, num_epochs=100,
+multi_worker_model.distributed_training(global_batch_size, optimizer, strategy, num_episodes=100,
                     mp=mp, manager=manager, processes=7)
 ```
 
