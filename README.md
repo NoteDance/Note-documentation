@@ -376,7 +376,6 @@ from Note.RL import rl
 from Note.models.docs_example.RL.note.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/note/DQN.py
 # from Note.models.docs_example.RL.keras.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/keras/DQN.py
 import multiprocessing as mp
-from multiprocessing import util
 import sys
 import os
 
@@ -401,13 +400,9 @@ with strategy.scope():
   multi_worker_model = DQN(4,128,2)
   optimizer = tf.keras.optimizers.Adam()
 
-checkpoint_dir = os.path.join(util.get_temp_dir(), 'ckpt')
-checkpoint = tf.train.Checkpoint(
-    model=multi_worker_model, epoch=multi_worker_model.epoch, step_in_epoch=multi_worker_model.step_in_epoch)
-
 multi_worker_model.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_batches=17)
 manager=mp.Manager()
-multi_worker_model.distributed_training(global_batch_size, optimizer, strategy, num_epochs=100, checkpoint=checkpoint, checkpoint_dir=checkpoint_dir,
+multi_worker_model.distributed_training(global_batch_size, optimizer, strategy, num_epochs=100,
                     mp=mp, manager=manager, processes=7)
 ```
 
