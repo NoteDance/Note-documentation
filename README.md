@@ -192,7 +192,7 @@ os.environ.pop('TF_CONFIG', None)
 if '.' not in sys.path:
   sys.path.insert(0, '.')
 
-def mnist_dataset(batch_size):
+def mnist_dataset():
   (x_train, y_train), _ = tf.keras.datasets.mnist.load_data()
   # The `x` arrays are in uint8 and have values in the range [0, 255].
   # You need to convert them to float32 with values in the range [0, 1]
@@ -202,13 +202,7 @@ def mnist_dataset(batch_size):
       (x_train, y_train)).shuffle(60000)
   return train_dataset
 
-def dataset_fn(global_batch_size, input_context):
-  batch_size = input_context.get_per_replica_batch_size(global_batch_size)
-  dataset = mnist_dataset(batch_size)
-  dataset = dataset.shard(input_context.num_input_pipelines,
-                          input_context.input_pipeline_id)
-  dataset = dataset.batch(batch_size)
-  return dataset
+train_dataset = mnist_dataset()
 
 tf_config = {
     'cluster': {
@@ -233,11 +227,7 @@ per_worker_batch_size = 64
 num_workers = len(tf_config['cluster']['worker'])
 global_batch_size = per_worker_batch_size * num_workers
 
-with strategy.scope():
-  multi_worker_dataset = strategy.distribute_datasets_from_function(
-      lambda input_context: dataset_fn(global_batch_size, input_context))
-
-multi_worker_model.distributed_training(multi_worker_dataset, loss_object, global_batch_size, optimizer, strategy,
+multi_worker_model.distributed_training(train_dataset, loss_object, global_batch_size, optimizer, strategy,
 num_epochs=3, num_steps_per_epoch=70, train_accuracy=train_accuracy)
 ```
 
