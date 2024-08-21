@@ -69,7 +69,7 @@ model.train(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, tes
 # loss_object = tf.keras.losses.SparseCategoricalCrossentropy()
 # test_loss = [tf.keras.metrics.Mean(name='test_loss') for _ in range(7)]
 # test_accuracy = [tf.keras.metrics.SparseCategoricalAccuracy(name='test_accuracy') for _ in range(7)]
-# model.train(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy, 7, mp)
+# model.train(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, test_ds, test_loss, test_accuracy, 7, parallel_test=True)
 
 # visualize
 # model.visualize_train()
