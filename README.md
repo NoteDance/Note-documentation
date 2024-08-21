@@ -128,44 +128,44 @@ EPOCHS, train_accuracy=train_accuracy, test_dataset=test_dataset, test_loss=test
 
 # If use early stopping.
 # model.end_acc=0.9
-# model.distributed_training(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
-# EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
+# model.distributed_training(train_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
+# EPOCHS, train_accuracy=train_accuracy, test_dataset=test_dataset, test_loss=test_loss, test_accuracy=test_accuracy)
 
 # If save the model at intervals of 2 epoch, with a maximum of 3 saved file, and the file name is model.dat.
 # model.path='model.dat'
 # model.save_freq=2
 # model.max_save_files=3
-# model.distributed_training(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
-# EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
+# model.distributed_training(train_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
+# EPOCHS, train_accuracy=train_accuracy, test_dataset=test_dataset, test_loss=test_loss, test_accuracy=test_accuracy)
 
 # If save the model at intervals of 1094 batch, with a maximum of 3 saved file, and the file name is model.dat.
 # model.path='model.dat'
 # model.save_freq_=1094
 # model.max_save_files=3
-# model.distributed_training(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
-# EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
+# model.distributed_training(train_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
+# EPOCHS, train_accuracy=train_accuracy, test_dataset=test_dataset, test_loss=test_loss, test_accuracy=test_accuracy)
 
 # If save parameters only
 # model.path='param.dat'
 # model.save_freq=2
 # model.max_save_files=3
 # model.save_param_only=True
-# model.distributed_training(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
-# EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
+# model.distributed_training(train_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
+# EPOCHS, train_accuracy=train_accuracy, test_dataset=test_dataset, test_loss=test_loss, test_accuracy=test_accuracy)
 
 # If save best only
 # model.path='model.dat'
 # model.save_best_only=True
 # model.monitor='val_loss'
-# model.distributed_training(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
-# EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
+# model.distributed_training(train_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
+# EPOCHS, train_accuracy=train_accuracy, test_dataset=test_dataset, test_loss=test_loss, test_accuracy=test_accuracy)
 
 # If set steps_per_execution
 # model.path='model.dat'
 # model.end_acc=0.9
 # model.steps_per_execution=1094
-# model.distributed_training(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
-# EPOCHS, train_accuracy, test_dist_dataset, test_loss, test_accuracy)
+# model.distributed_training(train_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
+# EPOCHS, train_accuracy=train_accuracy, test_dataset=test_dataset, test_loss=test_loss, test_accuracy=test_accuracy)
 
 # visualize
 # model.visualize_train()
