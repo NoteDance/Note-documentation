@@ -107,9 +107,6 @@ EPOCHS = 10
 train_dataset = tf.data.Dataset.from_tensor_slices((train_images, train_labels)).shuffle(BUFFER_SIZE).batch(GLOBAL_BATCH_SIZE) 
 test_dataset = tf.data.Dataset.from_tensor_slices((test_images, test_labels)).batch(GLOBAL_BATCH_SIZE) 
 
-train_dist_dataset = strategy.experimental_distribute_dataset(train_dataset)
-test_dist_dataset = strategy.experimental_distribute_dataset(test_dataset)
-
 with strategy.scope():
   loss_object = tf.keras.losses.SparseCategoricalCrossentropy(
       reduction=tf.keras.losses.Reduction.NONE)
@@ -126,8 +123,8 @@ with strategy.scope():
   model=Model()
   optimizer = tf.keras.optimizers.Adam()
 
-model.distributed_training(train_dist_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
-EPOCHS, train_accuracy=train_accuracy, test_dist_dataset=test_dist_dataset, test_loss=test_loss, test_accuracy=test_accuracy)
+model.distributed_training(train_dataset, loss_object, GLOBAL_BATCH_SIZE, optimizer, strategy,
+EPOCHS, train_accuracy=train_accuracy, test_dataset=test_dataset, test_loss=test_loss, test_accuracy=test_accuracy)
 
 # If use early stopping.
 # model.end_acc=0.9
