@@ -96,14 +96,12 @@ import tensorflow as tf
 from Note.RL import rl
 from Note.models.docs_example.RL.note.multiprocessing.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/note/multiprocessing/DQN.py
 # from Note.models.docs_example.RL.keras.multiprocessing.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/keras/multiprocessing/DQN.py
-import multiprocessing as mp
 
 model=DQN(4,128,2,7)
 model.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,update_batches=17)
 optimizer = tf.keras.optimizers.Adam()
 train_loss = tf.keras.metrics.Mean(name='train_loss')
-manager=mp.Manager()
-model.train(train_loss, optimizer, 100, mp=mp, manager=manager, processes=7)
+model.train(train_loss, optimizer, 100, pool_network=True, processes=7)
 ```
 ```python
 # This technology uses Python’s multiprocessing module to speed up trajectory collection and storage, I call it Pool Network.
@@ -111,14 +109,12 @@ model.train(train_loss, optimizer, 100, mp=mp, manager=manager, processes=7)
 import tensorflow as tf
 from Note.RL import rl
 from Note.models.docs_example.RL.note.multiprocessing.DDPG_HER import DDPG # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/note/multiprocessing/DDPG_HER.py
-import multiprocessing as mp
 
 model=DDPG(128,0.1,0.98,0.005,7)
 model.set_up(noise=rl.GaussianWhiteNoiseProcess(),pool_size=10000,trial_count=10,HER=True)
 optimizer = [tf.keras.optimizers.Adam(),tf.keras.optimizers.Adam()]
 train_loss = tf.keras.metrics.Mean(name='train_loss')
-manager=mp.Manager()
-model.train(train_loss, optimizer, 2000, mp=mp, manager=manager, processes=7, processes_her=4)
+model.train(train_loss, optimizer, 2000, pool_network=True, processes=7, processes_her=4)
 ```
 ## PyTorch:
 Agent built with PyTorch.
@@ -197,13 +193,11 @@ model.train(optimizer, 100)
 import torch
 from Note.RL import rl
 from Note.models.docs_example.RL.pytorch.multiprocessing.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/pytorch/multiprocessing/DQN.py
-import multiprocessing as mp
 
 model=DQN(4,128,2,7)
 model.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_batches=17)
 optimizer = torch.optim.Adam(model.param)
-manager=mp.Manager()
-model.train(optimizer, 100, mp=mp, manager=manager, processes=7)
+model.train(optimizer, 100, pool_network=True, processes=7)
 ```
 ```python
 # This technology uses Python’s multiprocessing module to speed up trajectory collection and storage, I call it Pool Network.
@@ -211,13 +205,11 @@ model.train(optimizer, 100, mp=mp, manager=manager, processes=7)
 import torch
 from Note.RL import rl
 from Note.models.docs_example.RL.pytorch.multiprocessing.DDPG_HER import DDPG # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/pytorch/multiprocessing/DDPG_HER.py
-import multiprocessing as mp
 
 model=DDPG(128,0.1,0.98,0.005,7)
 model.set_up(noise=rl.GaussianWhiteNoiseProcess(),pool_size=10000,batch=256,trial_count=10,HER=True)
 optimizer = [torch.optim.Adam(model.param[0]),torch.optim.Adam(model.param[1])]
-manager=mp.Manager()
-model.train(train_loss, optimizer, 2000, mp=mp, manager=manager, processes=7, processes_her=4)
+model.train(train_loss, optimizer, 2000, pool_network=True, processes=7, processes_her=4)
 ```
 
 # Distributed training:
@@ -337,7 +329,6 @@ import tensorflow as tf
 from Note.RL import rl
 from Note.models.docs_example.RL.note.multiprocessing.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/note/multiprocessing/DQN.py
 # from Note.models.docs_example.RL.keras.multiprocessing.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/keras/multiprocessing/DQN.py
-import multiprocessing as mp
 
 strategy = tf.distribute.MirroredStrategy()
 BATCH_SIZE_PER_REPLICA = 64
@@ -347,8 +338,7 @@ with strategy.scope():
   model=DQN(4,128,2,7)
   optimizer = tf.keras.optimizers.Adam()
 model.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,update_batches=17)
-manager=mp.Manager()
-model.distributed_training(GLOBAL_BATCH_SIZE, optimizer, strategy, 100, mp=mp, manager=manager, processes=7)
+model.distributed_training(GLOBAL_BATCH_SIZE, optimizer, strategy, 100, pool_network=True, processes=7)
 ```
 ```python
 # This technology uses Python’s multiprocessing module to speed up trajectory collection and storage, I call it Pool Network.
@@ -356,7 +346,6 @@ model.distributed_training(GLOBAL_BATCH_SIZE, optimizer, strategy, 100, mp=mp, m
 import tensorflow as tf
 from Note.RL import rl
 from Note.models.docs_example.RL.note.multiprocessing.DDPG_HER import DDPG # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/note/multiprocessing/DDPG_HER.py
-import multiprocessing as mp
 
 strategy = tf.distribute.MirroredStrategy()
 BATCH_SIZE_PER_REPLICA = 256
@@ -366,8 +355,7 @@ with strategy.scope():
   model=DDPG(128,0.1,0.98,0.005,7)
   optimizer = [tf.keras.optimizers.Adam(),tf.keras.optimizers.Adam()]
 model.set_up(noise=rl.GaussianWhiteNoiseProcess(),pool_size=10000,trial_count=10,HER=True)
-manager=mp.Manager()
-model.distributed_training(GLOBAL_BATCH_SIZE, optimizer, strategy, 2000, mp=mp, manager=manager, processes=7, processes_her=4)
+model.distributed_training(GLOBAL_BATCH_SIZE, optimizer, strategy, 2000, pool_network=True, processes=7, processes_her=4)
 ```
 ## MultiWorkerMirroredStrategy:
 ```python
@@ -375,7 +363,6 @@ import tensorflow as tf
 from Note.RL import rl
 from Note.models.docs_example.RL.note.multiprocessing.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/note/multiprocessing/DQN.py
 # from Note.models.docs_example.RL.keras.multiprocessing.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/keras/multiprocessing/DQN.py
-import multiprocessing as mp
 import sys
 import os
 
@@ -401,9 +388,8 @@ with strategy.scope():
   optimizer = tf.keras.optimizers.Adam()
 
 multi_worker_model.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_batches=17)
-manager=mp.Manager()
 multi_worker_model.distributed_training(global_batch_size, optimizer, strategy, num_episodes=100,
-                    mp=mp, manager=manager, processes=7)
+                    pool_network=True, processes=7)
 ```
 
 # Experimental:
@@ -413,21 +399,18 @@ multi_worker_model.distributed_training(global_batch_size, optimizer, strategy, 
 import tensorflow as tf
 from Note.RL import rl
 from Note.models.docs_example.RL.note.experimental.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/note/experimental/DQN.py
-import multiprocessing as mp
 
 model=DQN(4,128,2,7)
 model.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,update_batches=17)
 optimizer = tf.keras.optimizers.Adam()
 train_loss = tf.keras.metrics.Mean(name='train_loss')
-manager=mp.Manager()
-model.train(train_loss, optimizer, 100, mp=mp, manager=manager, processes=7)
+model.train(train_loss, optimizer, 100, pool_network=True, processes=7)
 ```
 ```python
 # This technology uses Python’s multiprocessing module to speed up trajectory collection and storage, I call it Pool Network.
 import tensorflow as tf
 from Note.RL import rl
 from Note.models.docs_example.RL.note.experimental.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/note/experimental/DQN.py
-import multiprocessing as mp
 
 strategy = tf.distribute.MirroredStrategy()
 BATCH_SIZE_PER_REPLICA = 64
@@ -437,8 +420,7 @@ with strategy.scope():
   model=DQN(4,128,2,7)
   optimizer = tf.keras.optimizers.Adam()
 model.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,update_batches=17)
-manager=mp.Manager()
-model.distributed_training(GLOBAL_BATCH_SIZE, optimizer, 100, mp=mp, manager=manager, processes=7)
+model.distributed_training(GLOBAL_BATCH_SIZE, optimizer, 100, pool_network=True, processes=7)
 ```
 ## PyTorch:
 ```python
@@ -446,11 +428,9 @@ model.distributed_training(GLOBAL_BATCH_SIZE, optimizer, 100, mp=mp, manager=man
 import torch
 from Note.RL import rl
 from Note.models.docs_example.RL.pytorch.experimental.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/pytorch/experimental/DQN.py
-import multiprocessing as mp
 
 model=DQN(4,128,2,7)
 model.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_batches=17)
 optimizer = torch.optim.Adam(model.param)
-manager=mp.Manager()
-model.train(optimizer, 100, mp=mp, manager=manager, processes=7)
+model.train(optimizer, 100, pool_network=True, processes=7)
 ```
