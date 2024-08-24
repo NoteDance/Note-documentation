@@ -225,6 +225,56 @@ global_batch_size = per_worker_batch_size * num_workers
 
 multi_worker_model.distributed_training(train_dataset, loss_object, global_batch_size, optimizer, strategy,
 num_epochs=3, num_steps_per_epoch=70, train_accuracy=train_accuracy)
+
+# If use early stopping.
+# model.end_acc=0.9
+# multi_worker_model.distributed_training(train_dataset, loss_object, global_batch_size, optimizer, strategy,
+# num_epochs=3, num_steps_per_epoch=70, train_accuracy=train_accuracy)
+
+# If save the model at intervals of 2 epoch, with a maximum of 3 saved file, and the file name is model.dat.
+# model.path='model.dat'
+# model.save_freq=2
+# model.max_save_files=3
+# multi_worker_model.distributed_training(train_dataset, loss_object, global_batch_size, optimizer, strategy,
+# num_epochs=3, num_steps_per_epoch=70, train_accuracy=train_accuracy)
+
+# If save the model at intervals of 70 batch, with a maximum of 3 saved file, and the file name is model.dat.
+# model.path='model.dat'
+# model.save_freq_=70
+# model.max_save_files=3
+# multi_worker_model.distributed_training(train_dataset, loss_object, global_batch_size, optimizer, strategy,
+# num_epochs=3, num_steps_per_epoch=70, train_accuracy=train_accuracy)
+
+# If save parameters only
+# model.path='param.dat'
+# model.save_freq=2
+# model.max_save_files=3
+# model.save_param_only=True
+# multi_worker_model.distributed_training(train_dataset, loss_object, global_batch_size, optimizer, strategy,
+# num_epochs=3, num_steps_per_epoch=70, train_accuracy=train_accuracy)
+
+# If save best only
+# model.path='model.dat'
+# model.save_best_only=True
+# model.monitor='val_loss'
+# multi_worker_model.distributed_training(train_dataset, loss_object, global_batch_size, optimizer, strategy,
+# num_epochs=3, num_steps_per_epoch=70, train_accuracy=train_accuracy)
+
+# If set steps_per_execution
+# model.path='model.dat'
+# model.end_acc=0.9
+# model.steps_per_execution=70
+# multi_worker_model.distributed_training(train_dataset, loss_object, global_batch_size, optimizer, strategy,
+# num_epochs=3, num_steps_per_epoch=70, train_accuracy=train_accuracy)
+
+# visualize
+# model.visualize_train()
+# model.visualize_test()
+# model.visualize_comparison()
+
+# save
+# model.save_param('param.dat')
+# model.save('model.dat')
 ```
 
 
