@@ -55,7 +55,7 @@ class PPO:
         sur1=raito*TD
         sur2=tf.clip_by_value(raito,clip_value_min=1-self.clip_eps,clip_value_max=1+self.clip_eps)*TD
         clip_loss=-tf.math.minimum(sur1,sur2)
-        return tf.reduce_mean(clip_loss)+tf.reduce_mean((TD)**2)
+        return [tf.reduce_mean(clip_loss),tf.reduce_mean((TD)**2)]
     
     
     def update_param(self):
