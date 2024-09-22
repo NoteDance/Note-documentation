@@ -116,6 +116,20 @@ optimizer = [tf.keras.optimizers.Adam(),tf.keras.optimizers.Adam()]
 train_loss = tf.keras.metrics.Mean(name='train_loss')
 model.train(train_loss, optimizer, 2000, pool_network=True, processes=7, processes_her=4)
 ```
+```python
+# This technology uses Python’s multiprocessing module to speed up trajectory collection and storage, I call it Pool Network.
+# Furthermore use Python’s multiprocessing module to speed up getting a batch of data.
+import tensorflow as tf
+from Note.RL import rl
+from Note.models.docs_example.RL.note.pool_network.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/note/pool_network/DQN.py
+# from Note.models.docs_example.RL.keras.pool_network.DQN import DQN # https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/keras/pool_network/DQN.py
+
+model=DQN(4,128,2,7)
+model.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,update_batches=17)
+optimizer = tf.keras.optimizers.Adam()
+train_loss = tf.keras.metrics.Mean(name='train_loss')
+model.train(train_loss, optimizer, 100, pool_network=True, processes=7, processes_pr=4)
+```
 ## PyTorch:
 Agent built with PyTorch.
 ```python
