@@ -657,7 +657,23 @@ These functions extend the `Model` class, allowing you to manage namespaces for 
 
 ---
 
-## 1. **`namespace(name=None)`**
+## 1. **`training(self, flag=False)`**
+   - **Function**: Sets the entire model or individual layers to training or evaluation mode.
+   - **Parameters**:
+     - `flag` (`bool`, optional): 
+       - `False` (default): Sets the model to evaluation mode.
+       - `True`: Sets the model to training mode.
+   - **Effect**: Updates the `train_flag` attribute of all layers in `self.layer_list`. If a layer does not have a `train_flag` attribute, it uses the `training` attribute instead. 
+
+   **Example**:
+   ```python
+   model.training(flag=True)
+   ```
+   **Result**: Sets all layers in the model to training mode by adjusting either `train_flag` or `training` attributes.
+
+---
+
+## 2. **`namespace(name=None)`**
    - **Function**: Assigns a namespace to layers in the model for tracking layers and parameters.
    - **Parameters**: 
      - `name` (`str`, optional): The name for the namespace of the model. If `None` is passed, no name is assigned to the model.
@@ -671,7 +687,7 @@ These functions extend the `Model` class, allowing you to manage namespaces for 
 
 ---
 
-## 2. **`freeze(self, name=None)`**
+## 3. **`freeze(self, name=None)`**
    - **Function**: Freezes the parameters of the model or a specific namespace, making them untrainable during training.
    - **Parameters**:
      - `name` (`str`, optional): Specifies the namespace to freeze. If `name` is `None`, it freezes the parameters in all namespaces.
@@ -685,7 +701,7 @@ These functions extend the `Model` class, allowing you to manage namespaces for 
 
 ---
 
-## 3. **`unfreeze(self, name=None)`**
+## 4. **`unfreeze(self, name=None)`**
    - **Function**: Unfreezes the parameters of the model or a specific namespace, making them trainable again.
    - **Parameters**:
      - `name` (`str`, optional): Specifies the namespace to unfreeze. If `name` is `None`, it unfreezes the parameters in all namespaces.
@@ -699,7 +715,7 @@ These functions extend the `Model` class, allowing you to manage namespaces for 
 
 ---
 
-## 4. **`eval(self, name=None, flag=True)`**
+## 5. **`eval(self, name=None, flag=True)`**
    - **Function**: Sets the model or specific namespaces to training or evaluation mode.
    - **Parameters**:
      - `name` (`str`, optional): Specifies the namespace to configure. If `name` is `None`, it iterates through all namespaces.
@@ -718,6 +734,8 @@ These functions extend the `Model` class, allowing you to manage namespaces for 
 
 ## Typical Use Cases:
 
+- **Global training or evaluation mode**:
+  - Use `training()` to set the entire model to training or evaluation mode. This is useful for switching between modes before starting the training or inference processes.
 - **Naming layers in the model**: 
   - When you want to control different blocks independently, use `namespace()` to assign a unique name to different layers or modules.
 - **Freezing or unfreezing layers**:
