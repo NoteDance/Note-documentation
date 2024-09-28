@@ -650,3 +650,79 @@ tensor = tf.Variable(tf.zeros([3, 5]))
 nn.sparse_(tensor, sparsity=0.1)
 print(tensor)
 ```
+
+# Model
+
+These functions extend the `Model` class, allowing you to manage namespaces for layers, control freezing and unfreezing of layers, and set training or evaluation modes. Below are the descriptions and usage of each function:
+
+---
+
+## 1. **`namespace(name=None)`**
+   - **Function**: Assigns a namespace to layers in the model for tracking layers and parameters.
+   - **Parameters**: 
+     - `name` (`str`, optional): The name for the namespace of the model. If `None` is passed, no name is assigned to the model.
+   - **Effect**: This function adds the layer name to `Model.name_list_`.
+
+   **Example**:
+   ```python
+   model.namespace('block1')
+   ```
+   **Result**: The namespace for the model is set to `block1`.
+
+---
+
+## 2. **`freeze(self, name=None)`**
+   - **Function**: Freezes the parameters of the model or a specific namespace, making them untrainable during training.
+   - **Parameters**:
+     - `name` (`str`, optional): Specifies the namespace to freeze. If `name` is `None`, it freezes the parameters in all namespaces.
+   - **Effect**: This function iterates through all parameters in `self.layer_param` and sets them to be untrainable (`_trainable=False`).
+
+   **Example**:
+   ```python
+   model.freeze('block1')
+   ```
+   **Result**: Freezes all layer parameters in the `block1` namespace, preventing them from being updated during training.
+
+---
+
+## 3. **`unfreeze(self, name=None)`**
+   - **Function**: Unfreezes the parameters of the model or a specific namespace, making them trainable again.
+   - **Parameters**:
+     - `name` (`str`, optional): Specifies the namespace to unfreeze. If `name` is `None`, it unfreezes the parameters in all namespaces.
+   - **Effect**: Iterates through all parameters in `self.layer_param` and sets them to be trainable (`_trainable=True`).
+
+   **Example**:
+   ```python
+   model.unfreeze('block1')
+   ```
+   **Result**: Unfreezes all layer parameters in the `block1` namespace, allowing them to be updated during training.
+
+---
+
+## 4. **`eval(self, name=None, flag=True)`**
+   - **Function**: Sets the model or specific namespaces to training or evaluation mode.
+   - **Parameters**:
+     - `name` (`str`, optional): Specifies the namespace to configure. If `name` is `None`, it iterates through all namespaces.
+     - `flag` (`bool`, optional): 
+       - `True`: Sets to evaluation mode (freezes layers).
+       - `False`: Sets to training mode.
+   - **Effect**: Controls the training state of each layer. When `flag=True`, the model is set to evaluation mode, and `train_flag=False`.
+
+   **Example**:
+   ```python
+   model.eval('block1', flag=True)
+   ```
+   **Result**: Sets all layers in `block1` to evaluation mode (`train_flag=False`).
+
+---
+
+## Typical Use Cases:
+
+- **Naming layers in the model**: 
+  - When you want to control different blocks independently, use `namespace()` to assign a unique name to different layers or modules.
+- **Freezing or unfreezing layers**:
+  - Use `freeze()` and `unfreeze()` to control which layers participate in gradient updates during training. For example, when fine-tuning a model, you may only want to unfreeze the top layers.
+- **Setting training or evaluation modes**:
+  - `eval()` allows you to easily switch between training and evaluation modes. During training, you may need to freeze certain layers or switch behaviors in some layers (like Batch Normalization, which behaves differently during training and inference).
+
+These methods provide flexibility in managing complex models, particularly when freezing parameters and adjusting training strategies.
