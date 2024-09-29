@@ -681,7 +681,9 @@ These functions extend the `Model` class, allowing you to manage namespaces for 
 
    **Example**:
    ```python
-   model.namespace('block1')
+   nn.Model.namespace('block1')
+   nn.dense(7,7)
+   nn.Model.namespace()
    ```
    **Result**: The namespace for the model is set to `block1`.
 
