@@ -653,7 +653,7 @@ print(tensor)
 
 # Model
 
-These functions extend the Model class, allowing you to manage namespaces for layers, control freezing and unfreezing of layers, add layers to the model, and set training or evaluation modes. Additionally, functions can be applied to layers for initialization or configuration. Below are the descriptions and usage of each function, including how add() and apply() work together.
+These functions extend the Model class, allowing you to manage namespaces for layers, control freezing and unfreezing of layers, and set training or evaluation modes. Additionally, functions can be applied to layers for initialization or configuration. Below are the descriptions and usage of each function.
 
 **Example**:
 ```python
