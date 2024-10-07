@@ -483,7 +483,7 @@ def set(self,
   The size of the batch sampled from the experience pool during training, affecting how much data is used in each training step.
 
 - **`update_batches`** (`int` or `None`):  
-  The number of batches to use when updating the network, controlling how frequently the network is updated. Defaults to `None`.
+  The number of batches to use when updating the network, applicable when using a pool network for storing experiences. Defaults to `None`.
 
 - **`update_steps`** (`int` or `None`):  
   The frequency at which the target Q network is updated, in terms of the number of steps.
