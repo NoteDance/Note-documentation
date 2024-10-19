@@ -120,7 +120,7 @@ import models.RL.tensorflow.non_parallrl.DDPG as d   #import deep deterministic 
 ddpg=d.DDPG(64,0.01,0.98,0.005,5e-4,5e-3) #create neural network object with 64 inputs, 0.01 learning rate, 0.98 discount factor, 0.005 noise scale, 5e-4 actor learning rate and 5e-3 critic learning rate
 kernel=k.kernel(ddpg)             #create kernel object with the network
 kernel.platform=tf                #set the platform to tensorflow
-kernel.set_up(noise=rl.GaussianWhiteNoiseProcess(),pool_size=10000,batch=64) #set up the hyperparameters for training
+kernel.set(noise=rl.GaussianWhiteNoiseProcess(),pool_size=10000,batch=64) #set up the hyperparameters for training
 kernel.train(200)                 #train the network for 200 episodes
 kernel.visualize_train()
 kernel.visualize_reward()
@@ -134,7 +134,7 @@ import models.RL.tensorflow.non_parallrl.DQN as d   #import deep Q-network modul
 dqn=d.DQN(4,128,2)                #create neural network object with 4 inputs, 128 hidden units and 2 outputs
 kernel=k.kernel(dqn)              #create kernel object with the network
 kernel.platform=tf                #set the platform to tensorflow
-kernel.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
+kernel.set(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
 kernel.train(100,path='model.dat',save_freq=20,max_save_files=3)                 #train the network for 100 episodes
 ```
 
@@ -146,7 +146,7 @@ import models.RL.tensorflow.non_parallrl.DQN as d   #import deep Q-network modul
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
 kernel=k.kernel(dqn)       #create kernel object with the network
 kernel.stop=True             #set the flag to stop training when a condition is met
-kernel.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10,trial_count=10,criterion=200) #set up the hyperparameters for training and the condition to stop training when the average reward of 10 trials is greater than 200
+kernel.set(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10,trial_count=10,criterion=200) #set up the hyperparameters for training and the condition to stop training when the average reward of 10 trials is greater than 200
 kernel.train(100)            #train the network for 500 episodes
 ```
 
@@ -158,7 +158,7 @@ import models.RL.tensorflow.non_parallrl.DQN as d   #import deep Q-network modul
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
 kernel=k.kernel(dqn)       #create kernel object with the network
 kernel.stop=True             #set the flag to stop training when a condition is met
-kernel.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10,trial_count=10,criterion=200) #set up the hyperparameters for training and the condition to stop training when the average reward of 10 trials is greater than 200
+kernel.set(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10,trial_count=10,criterion=200) #set up the hyperparameters for training and the condition to stop training when the average reward of 10 trials is greater than 200
 kernel.train(100)            #train the network for 500 episodes
 kernel.visualize_reward()    #visualize the reward
 kernel.visualize_train()     #visualize the loss
@@ -172,7 +172,7 @@ import models.RL.tensorflow.non_parallrl.DQN as d   #import deep Q-network modul
 dqn=d.DQN(4,128,2)           #create neural network object with 4 inputs, 128 hidden units and 2 outputs
 kernel=k.kernel(dqn)       #create kernel object with the network
 kernel.stop=True             #set the flag to stop training when a condition is met
-kernel.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10,trial_count=10,criterion=200) #set up the hyperparameters for training and the condition to stop training when the average reward of 10 trials is greater than 200
+kernel.set(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10,trial_count=10,criterion=200) #set up the hyperparameters for training and the condition to stop training when the average reward of 10 trials is greater than 200
 kernel.train(100,p=3)            #train the network for 500 episodes
 ```
 
@@ -521,7 +521,7 @@ kernel=k.kernel(dqn,5)       #create kernel object with the network and 5 proces
 kernel.episode=100           #set the number of episodes to 100
 manager=Manager()            #create manager object to share data among processes
 kernel.init(manager)         #initialize shared data with the manager
-kernel.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
+kernel.set(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
 kernel.PO=1                  #use PO1 algorithm for parallel optimization
 pool_lock=[Lock(),Lock(),Lock(),Lock(),Lock()] #create a list of locks for each process's replay pool
 lock=[Lock(),Lock()]  #create a list of locks for synchronization
@@ -540,7 +540,7 @@ kernel=k.kernel(dqn,5)       #create kernel object with the network and 5 proces
 kernel.episode=100           #set the number of episodes to 100
 manager=Manager()            #create manager object to share data among processes
 kernel.init(manager)         #initialize shared data with the manager
-kernel.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
+kernel.set(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
 kernel.PO=2                  #use PO2 algorithm for parallel optimization
 pool_lock=[Lock(),Lock(),Lock(),Lock(),Lock()] #create a list of locks for each process's replay pool
 lock=[Lock(),Lock()]  #create a list of locks for synchronization
@@ -560,7 +560,7 @@ kernel=k.kernel(dqn,5)       #create kernel object with the network and 5 proces
 kernel.episode=100           #set the number of episodes to 100
 manager=Manager()            #create manager object to share data among processes
 kernel.init(manager)         #initialize shared data with the manager
-kernel.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
+kernel.set(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
 kernel.PO=3                  #use PO3 algorithm for parallel optimization
 pool_lock=[Lock(),Lock(),Lock(),Lock(),Lock()] #create a list of locks for each process's replay pool
 lock=[Lock()]  #create three locks for synchronization
@@ -579,7 +579,7 @@ kernel=k.kernel(dqn,5)       #create kernel object with the network and 5 proces
 kernel.episode=100           #set the number of episodes to 100
 manager=Manager()            #create manager object to share data among processes
 kernel.init(manager)         #initialize shared data with the manager
-kernel.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
+kernel.set(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
 kernel.PO=3                  #use PO3 algorithm for parallel optimization
 pool_lock=[Lock(),Lock(),Lock(),Lock(),Lock()] #create a list of locks for each process's replay pool
 lock=[Lock(),Lock()]  #create three locks for synchronization
@@ -600,7 +600,7 @@ kernel=k.kernel(dqn,5)       #create kernel object with the network and 5 proces
 kernel.episode=100           #set the number of episodes to 100
 manager=Manager()            #create manager object to share data among processes
 kernel.init(manager)         #initialize shared data with the manager
-kernel.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
+kernel.set(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
 kernel.PO=3                  #use PO3 algorithm for parallel optimization
 kernel.path='model.dat'
 kernel.save_freq=20
@@ -623,7 +623,7 @@ kernel.episode=100           #set the number of episodes to 100
 manager=Manager()            #create manager object to share data among processes
 kernel.init(manager)         #initialize shared data with the manager
 kernel.stop=True             #set the flag to stop training when a condition is met
-kernel.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10,trial_count=10,criterion=200) #set up the hyperparameters for training
+kernel.set(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10,trial_count=10,criterion=200) #set up the hyperparameters for training
 kernel.PO=3                  #use PO3 algorithm for parallel optimization
 pool_lock=[Lock(),Lock(),Lock(),Lock(),Lock()] #create a list of locks for each process's replay pool
 lock=[Lock()]  #create three locks for synchronization
@@ -643,7 +643,7 @@ kernel.episode=100           #set the number of episodes to 100
 manager=Manager()            #create manager object to share data among processes
 kernel.priority_flag=True    #set the flag to use priority scheduling for processes
 kernel.init(manager)         #initialize shared data with the manager
-kernel.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
+kernel.set(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
 kernel.PO=3                  #use PO3 algorithm for parallel optimization
 pool_lock=[Lock(),Lock(),Lock(),Lock(),Lock()] #create a list of locks for each process's replay pool
 lock=[Lock()]  	     #create two locks for synchronization
