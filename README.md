@@ -524,7 +524,7 @@ kernel.init(manager)         #initialize shared data with the manager
 kernel.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
 kernel.PO=1                  #use PO1 algorithm for parallel optimization
 pool_lock=[Lock(),Lock(),Lock(),Lock(),Lock()] #create a list of locks for each process's replay pool
-lock=[Lock(),Lock(),Lock()]  #create a list of locks for synchronization
+lock=[Lock(),Lock()]  #create a list of locks for synchronization
 for p in range(5):           #loop over the processes
     Process(target=kernel.train,args=(p,lock,pool_lock)).start() #start each process with the train function and pass the process id, the number of episodes, the locks and the pool locks as arguments
 ```
@@ -543,7 +543,7 @@ kernel.init(manager)         #initialize shared data with the manager
 kernel.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
 kernel.PO=2                  #use PO2 algorithm for parallel optimization
 pool_lock=[Lock(),Lock(),Lock(),Lock(),Lock()] #create a list of locks for each process's replay pool
-lock=[Lock(),Lock(),Lock()]  #create a list of locks for synchronization
+lock=[Lock(),Lock()]  #create a list of locks for synchronization
 g_lock=Lock()                #create a global lock for gradient computing
 for p in range(5):           #loop over the processes
     Process(target=kernel.train,args=(p,lock,pool_lock,g_lock)).start() #start each process with the train function and pass the process id, the number of episodes, the locks, the pool locks and the global lock as arguments
@@ -563,7 +563,7 @@ kernel.init(manager)         #initialize shared data with the manager
 kernel.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
 kernel.PO=3                  #use PO3 algorithm for parallel optimization
 pool_lock=[Lock(),Lock(),Lock(),Lock(),Lock()] #create a list of locks for each process's replay pool
-lock=[Lock(),Lock(),Lock()]  #create three locks for synchronization
+lock=[Lock()]  #create three locks for synchronization
 for p in range(5):           #loop over the processes
     Process(target=kernel.train,args=(p,lock,pool_lock)).start() #start each process with the train function and pass the process id, the number of episodes, the locks and the pool locks as arguments
 ```
@@ -606,7 +606,7 @@ kernel.path='model.dat'
 kernel.save_freq=20
 kernel.max_save_files=3                   #set the maximum number of saved files
 pool_lock=[Lock(),Lock(),Lock(),Lock(),Lock()] #create a list of locks for each process's replay pool
-lock=[Lock(),Lock()]         #create two locks for synchronization
+lock=[Lock()]         #create two locks for synchronization
 for p in range(5):           #loop over the processes
     Process(target=kernel.train,args=(p,lock,pool_lock)).start() #start each process with the train function and pass the process id, the number of episodes, the locks and the pool locks as arguments
 ```
@@ -626,7 +626,7 @@ kernel.stop=True             #set the flag to stop training when a condition is 
 kernel.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10,trial_count=10,criterion=200) #set up the hyperparameters for training
 kernel.PO=3                  #use PO3 algorithm for parallel optimization
 pool_lock=[Lock(),Lock(),Lock(),Lock(),Lock()] #create a list of locks for each process's replay pool
-lock=[Lock(),Lock(),Lock()]  #create three locks for synchronization
+lock=[Lock()]  #create three locks for synchronization
 for p in range(5):           #loop over the processes
     Process(target=kernel.train,args=(p,lock,pool_lock)).start() #start each process with the train function and pass the process id, the number of episodes, the locks and the pool locks as arguments
 ```
@@ -646,7 +646,7 @@ kernel.init(manager)         #initialize shared data with the manager
 kernel.set_up(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10) #set up the hyperparameters for training
 kernel.PO=3                  #use PO3 algorithm for parallel optimization
 pool_lock=[Lock(),Lock(),Lock(),Lock(),Lock()] #create a list of locks for each process's replay pool
-lock=[Lock(),Lock()]  	     #create two locks for synchronization
+lock=[Lock()]  	     #create two locks for synchronization
 for p in range(5):           #loop over the processes
     Process(target=kernel.train,args=(p,lock,pool_lock)).start() #start each process with the train function and pass the process id, the number of episodes, the locks and the pool locks as arguments
 ```
