@@ -1008,7 +1008,7 @@ These methods provide flexibility in managing complex models, particularly when 
 
 ---
 
-## **`train`**
+## 8. **`train`**
 
 This method implements the training loop for the model, handling both training and testing (optional) over multiple epochs. It allows for configurable options like JIT (Just-In-Time) compilation, parallel testing, and automatic saving of model parameters.
 
@@ -1120,7 +1120,7 @@ This method provides flexibility in model training, especially for large models 
 
 ---
 
-## **`distributed_training`**
+## 9. **`distributed_training`**
 
 ### **Description:**
 The `distributed_training` function is responsible for performing distributed training across different TensorFlow distributed strategies, including `MirroredStrategy`, `MultiWorkerMirroredStrategy`, and `ParameterServerStrategy`. It allows training to be scaled across multiple devices (GPUs, TPUs, or across multiple machines), handling both training and evaluation logic with support for different dataset distributions, batch processing, and optimization across the distributed system.
