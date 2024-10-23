@@ -860,3 +860,148 @@ img = tf.random.normal([1, 224, 224, 3])
 
 output = model(img) # (1, 1000)
 ```
+
+# Model's functions
+These functions extend the Model class, allowing you to manage namespaces for layers, control freezing and unfreezing of layers, and set training or evaluation modes. Additionally, functions can be applied to layers for initialization or configuration. Below are the descriptions and usage of each function.
+
+**Example**:
+```python
+from Note import nn
+
+class Block:
+  def __init__(self):
+    nn.Model.add()
+    nn.Model.namespace('block')
+    self.layer1 = nn.dense(7, 7)
+    self.layer2 = nn.dense(7, 7)
+    nn.Model.namespace()
+    nn.Model.apply(self.init_weights)
+    
+    def init_weights(self, l):
+        if isinstance(l, nn.dense):
+            l.weight.assign(nn.trunc_normal_(l.weight, std=0.2))
+
+    def __call__(self, x):
+      return self.layer2(self.layer1)
+
+class Model:
+  def __init__(self):
+    self.block=Block()
+
+  def __call__(self, x):
+    return self.block(x)
+
+model = Model()
+```
+
+---
+
+## 1. **`add()`**
+   - **Function**: Adds a new layer name to the model and tracks the layers added sequentially.
+   - **Effect**: Increments the `Model.counter` by 1 and appends a new layer name to `Model.name_list` as `'layer' + str(Model.counter)`.
+
+   **Result**: Adds a new layer to `Model.name_list`, and the layer will be named `'layer1'`, `'layer2'`, and so on. 
+
+   **Relation to `apply()`**: `add()` is typically called before `apply()`. It registers a new layer in the model, and then `apply()` can be used to initialize or modify that layer's parameters.
+
+---
+
+## 2. **`apply(func)`**
+   - **Function**: Applies a given function `func` to each layer in the current namespace or initializes layer weights with `func`.
+   - **Parameters**:
+     - `func` (`callable`): A function to apply to each layer. If a layer has an `input_size`, the function is applied immediately. Otherwise, it assigns `func` to `layer.init_weights`.
+   - **Effect**: It iterates through the layers in `Model.layer_dict` under the current `Model.name_`, applies the function to layers with an `input_size`, or initializes layers by assigning the function to their `init_weights`.
+
+   **Result**: The `init_weights` function is applied to layers that have an `input_size`. Layers without an `input_size` will have their `init_weights` attribute set to the `init_weights` function.
+
+   **Relation to `add()`**: After calling `add()` to register a layer, `apply()` can then be used to apply transformations or initialize the layer’s weights. This ensures that operations are performed on all relevant layers in the model.
+
+---
+
+## 3. **`training(self, flag=False)`**
+   - **Function**: Sets the entire model or individual layers to training or evaluation mode.
+   - **Parameters**:
+     - `flag` (`bool`, optional): 
+       - `False` (default): Sets the model to evaluation mode.
+       - `True`: Sets the model to training mode.
+   - **Effect**: Updates the `train_flag` attribute of all layers in `self.layer_list`. If a layer does not have a `train_flag` attribute, it uses the `training` attribute instead. 
+
+   **Example**:
+   ```python
+   model.training(flag=True)
+   ```
+   **Result**: Sets all layers in the model to training mode by adjusting either `train_flag` or `training` attributes.
+
+---
+
+## 4. **`namespace(name=None)`**
+   - **Function**: Assigns a namespace to layers in the model for tracking layers and parameters.
+   - **Parameters**: 
+     - `name` (`str`, optional): The name for the namespace of the model. If `None` is passed, no name is assigned to the model.
+   - **Effect**: This function adds the layer name to `Model.name_list_`.
+
+   **Result**: The namespace for the model is set to `block`.
+
+---
+
+## 5. **`freeze(self, name=None)`**
+   - **Function**: Freezes the parameters of the model or a specific namespace, making them untrainable during training.
+   - **Parameters**:
+     - `name` (`str`, optional): Specifies the namespace to freeze. If `name` is `None`, it freezes the parameters in all namespaces.
+   - **Effect**: This function iterates through all parameters in `self.layer_param` and sets them to be untrainable (`_trainable=False`).
+
+   **Example**:
+   ```python
+   model.freeze('block')
+   ```
+   **Result**: Freezes all layer parameters in the `block` namespace, preventing them from being updated during training.
+
+---
+
+## 6. **`unfreeze(self, name=None)`**
+   - **Function**: Unfreezes the parameters of the model or a specific namespace, making them trainable again.
+   - **Parameters**:
+     - `name` (`str`, optional): Specifies the namespace to unfreeze. If `name` is `None`, it unfreezes the parameters in all namespaces.
+   - **Effect**: Iterates through all parameters in `self.layer_param` and sets them to be trainable (`_trainable=True`).
+
+   **Example**:
+   ```python
+   model.unfreeze('block')
+   ```
+   **Result**: Unfreezes all layer parameters in the `block` namespace, allowing them to be updated during training.
+
+---
+
+## 7. **`eval(self, name=None, flag=True)`**
+   - **Function**: Sets the model or specific namespaces to training or evaluation mode.
+   - **Parameters**:
+     - `name` (`str`, optional): Specifies the namespace to configure. If `name` is `None`, it iterates through all namespaces.
+     - `flag` (`bool`, optional): 
+       - `True`: Sets to evaluation mode (freezes layers).
+       - `False`: Sets to training mode.
+   - **Effect**: Controls the training state of each layer. When `flag=True`, the model is set to evaluation mode, and `train_flag=False`.
+
+   **Example**:
+   ```python
+   model.eval('block', flag=True)
+   ```
+   **Result**: Sets all layers in `block` to evaluation mode (`train_flag=False`).
+
+---
+
+## Typical Use Cases:
+
+- **Adding layers**:
+  - `add()` helps to keep track of the layers as they are added to the model, ensuring unique names are assigned sequentially.
+- **Applying functions to layers**:
+  - Use `apply()` to apply initialization or transformation functions to model layers, useful for weight initialization or custom configuration of layers after they have been added by `add()`.
+- **Global training or evaluation mode**:
+  - Use `training()` to set the entire model to training or evaluation mode. This is useful for switching between modes before starting the training or inference processes.
+- **Naming layers in the model**: 
+  - When you want to control different blocks independently, use `namespace()` to assign a unique name to different layers or modules.
+- **Freezing or unfreezing layers**:
+  - Use `freeze()` and `unfreeze()` to control which layers participate in gradient updates during training. For example, when fine-tuning a model, you may only want to unfreeze the top layers.
+- **Setting training or evaluation modes**:
+  - `eval()` allows you to easily switch between training and evaluation modes. During training, you may need to freeze certain layers or switch behaviors in some layers (like Batch Normalization, which behaves differently during training and inference).
+
+These methods provide flexibility in managing complex models, particularly when freezing parameters, applying functions, and adjusting training strategies.
