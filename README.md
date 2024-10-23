@@ -539,6 +539,151 @@ model.set(
 
 In this example, the agent computes the average reward every 100 trials. If the average reward reaches 200 or higher, the training process stops early. This method allows the agent to stop training once it reaches a desired performance level, improving training efficiency.
 
+# `RL.train`:
+## **Description**:
+This function handles the training loop of the reinforcement learning (RL) agent. It supports both single-process and multi-process training, along with the option to use a **pool network** for experience replay. Additionally, it provides support for Hindsight Experience Replay (HER), Prioritized Experience Replay (PR), and optional just-in-time (JIT) compilation for performance optimization.
+
+## **Arguments**:
+
+- **`train_loss`** (`tf.keras.metrics.Metric`): The loss metric used to evaluate the training loss during the optimization process.
+  
+- **`optimizer`** (`tf.keras.optimizers.Optimizer`): The optimizer used to update the model parameters during training.
+  
+- **`episodes`** (`int`, optional): The number of training episodes to run. If `None`, the training will continue indefinitely until a stopping criterion is met.
+
+- **`jit_compile`** (`bool`, optional, default=`True`): Whether to enable TensorFlow's JIT compilation for improved performance during training.
+  
+- **`pool_network`** (`bool`, optional, default=`True`): Whether to use a pool network for experiences collection.
+  
+- **`processes`** (`int`, optional): Number of parallel processes to use for data collection when using a pool network. If `None`, multi-processing is disabled.
+  
+- **`processes_her`** (`int`, optional): Number of parallel processes dedicated to Hindsight Experience Replay (HER). Only used if HER is enabled.
+  
+- **`processes_pr`** (`int`, optional): Number of parallel processes dedicated to Prioritized Experience Replay (PR). Only used if PR is enabled.
+  
+- **`shuffle`** (`bool`, optional, default=`False`): If `True`, experiences in the pool will be shuffled before sampling. This can help prevent overfitting to recent experiences.
+  
+- **`p`** (`int`, optional): A parameter that determines the update frequency for logging and printing intermediate results. If `None`, it defaults to `9`.
+
+## **Returns**:
+- No return value. The function prints progress at specified intervals and updates the model's parameters based on the training procedure.
+
+## **Details**:
+1. **Multiprocessing Setup**:
+   - If `pool_network=True`, the function sets up parallel processes to collect experiences in parallel using Python's `multiprocessing` library. Each process collects states, actions, rewards, and other necessary information, which are then aggregated into a shared experience pool.
+   
+2. **Training Procedure**:
+   - If a pool network is used, the agent gathers experiences from multiple parallel environments or processes and stores them in a shared memory pool. The training loop then samples batches from this pool to update the agent's neural network. Otherwise, the agent igathers experiences from environment and stores them in a pool and then updates the network using a different training method (`train2`).
+   
+   - For each episode, the loss is computed and accumulated in `self.loss_list`. This loss represents the agent's learning progress, and the model parameters are updated using the provided optimizer.
+   
+3. **Handling Special Experience Replay**:
+   - **Hindsight Experience Replay (HER)**: If HER is enabled, the function creates additional processes to manage HER-specific experience sampling and updates.
+   
+   - **Prioritized Experience Replay (PR)**: If PR is enabled, a prioritized experience replay buffer is updated with the TD-errors (Temporal Difference) of the experiences.
+
+4. **Logging and Saving**:
+   - The function prints progress messages every `p` episodes and logs key metrics like average reward and loss. The model can be saved at regular intervals (`self.save_freq`) and upon achieving a certain reward criterion (`self.criterion`).
+
+5. **Termination Criteria**:
+   - Training continues until the specified number of episodes (`episodes`) is reached, or in infinite mode (when `episodes=None`), until the reward criterion is met.
+
+## **Usage Example**:
+
+```python
+train_loss = tf.keras.metrics.Mean(name='train_loss')
+optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
+
+# Start training for 100 episodes using a pool network with 8 processes
+agent.train(train_loss=train_loss, optimizer=optimizer, episodes=100, pool_network=True, processes=8)
+```
+
+--- 
+
+This documentation provides a detailed explanation of each parameter and the internal behavior of the function, which should be useful for understanding its usage in reinforcement learning training loops.
+
+# `RL.distributed_training`:
+
+## **Description**:
+The `distributed_training` function is designed to handle distributed reinforcement learning (RL) training across multiple devices or workers. It supports various TensorFlow strategies, such as MirroredStrategy, MultiWorkerMirroredStrategy, and ParameterServerStrategy. The function is optimized for both single-node and multi-node setups, enabling distributed training with optional experience replay buffers, including prioritized and hindsight experience replay (HER). 
+
+This function also supports parallel data collection through a **pool network** and optional just-in-time (JIT) compilation for performance optimization.
+
+## **Parameters**:
+
+- **`global_batch_size`** (`int`): The total batch size for training distributed across devices or workers.
+
+- **`optimizer`** (`tf.keras.optimizers.Optimizer`): The optimizer used to update model parameters during training.
+
+- **`strategy`** (`tf.distribute.Strategy`): A TensorFlow distribution strategy to manage the distributed training setup. This could be `MirroredStrategy`, `MultiWorkerMirroredStrategy`, or `ParameterServerStrategy`.
+
+- **`episodes`** (`int`, optional): The number of training episodes to run. If set to `None`, the function will run indefinitely.
+
+- **`num_episodes`** (`int`, optional): Alternative to `episodes`, used in specific strategy cases like `MultiWorkerMirroredStrategy`. Defaults to `None`.
+
+- **`jit_compile`** (`bool`, optional, default=`True`): Whether to enable TensorFlow's Just-In-Time (JIT) compilation for performance optimization.
+
+- **`pool_network`** (`bool`, optional, default=`True`): Whether to use a pool network for experiences collection.
+
+- **`processes`** (`int`, optional): The number of parallel processes to use for data collection when `pool_network` is enabled. If set to `None`, multiprocessing is disabled.
+
+- **`processes_her`** (`int`, optional): The number of parallel processes dedicated to Hindsight Experience Replay (HER) data collection, if HER is enabled.
+
+- **`processes_pr`** (`int`, optional): The number of parallel processes for prioritized experience replay (PR) data collection, if PR is enabled.
+
+- **`shuffle`** (`bool`, optional, default=`False`): If `True`, shuffles the data in the pool before training to prevent overfitting to recent experiences.
+
+- **`p`** (`int`, optional): Controls how frequently to log intermediate results. If set to `None`, it defaults to `p=9`.
+
+## **Returns**:
+- **None**. The function logs training progress, including loss and reward information, at specified intervals. It may also save model parameters based on a given frequency.
+
+## **Details**:
+
+1. **Training with Distribution Strategies**:
+   - The function adapts to various TensorFlow distribution strategies:
+     - **`MirroredStrategy`**: For synchronous training across multiple GPUs on a single machine.
+     - **`MultiWorkerMirroredStrategy`**: For synchronous training across multiple workers.
+     - **`ParameterServerStrategy`**: For asynchronous training with parameter servers.
+
+2. **Parallel Data Collection (Pool Network)**:
+   - When `pool_network` is enabled, the function sets up parallel processes using Python's `multiprocessing` to collect experience (state, action, reward, next-state, done) from multiple environments. The data is stored in shared memory using multiprocessing managers.
+   - The data can be used to update the agent’s neural network either through traditional replay or advanced methods like HER or prioritized replay.
+
+3. **Handling HER and PR**:
+   - If HER is enabled (`processes_her` is not `None`), the function initializes additional buffers and processes to handle HER-specific data collection.
+   - Similarly, for prioritized replay (`processes_pr` is not `None`), the function maintains a TD-error (temporal difference error) list to prioritize experiences during replay.
+
+4. **Training Execution**:
+   - For each episode, the function collects experience using the pool network (if enabled) and updates the agent’s model parameters through the specified optimizer and distribution strategy. The loss is calculated either through a customized `train1` method (pool network) or `train2` method (direct training).
+   - After every few episodes (controlled by `p`), the function logs the loss, reward, and progress. If a performance criterion is met (e.g., a certain average reward threshold), the training may terminate early.
+
+5. **Model Saving**:
+   - The function saves model parameters periodically, based on a pre-specified frequency (`save_freq`). If the parameter `save_param_only` is set, only model parameters are saved, otherwise the full model is saved.
+
+6. **Time Tracking**:
+   - The function keeps track of the total training time, logging it at the end of the training session.
+
+## **Usage Example**:
+
+```python
+# Example usage of the distributed_training function
+global_batch_size = 64
+optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
+strategy = tf.distribute.MirroredStrategy()
+
+agent.distributed_training(
+    global_batch_size=global_batch_size, 
+    optimizer=optimizer, 
+    strategy=strategy, 
+    episodes=100, 
+    pool_network=True, 
+    processes=8
+)
+```
+
+In this example, the function runs distributed training using the `MirroredStrategy`, where experience is collected in parallel through 8 processes and stored in a pool buffer. Training runs for 100 episodes with a global batch size of 64.
+
 # `Policy classes`:
 
 ## **SoftmaxPolicy**
