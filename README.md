@@ -1005,3 +1005,247 @@ model = Model()
   - `eval()` allows you to easily switch between training and evaluation modes. During training, you may need to freeze certain layers or switch behaviors in some layers (like Batch Normalization, which behaves differently during training and inference).
 
 These methods provide flexibility in managing complex models, particularly when freezing parameters, applying functions, and adjusting training strategies.
+
+---
+
+## **`train`**
+
+This method implements the training loop for the model, handling both training and testing (optional) over multiple epochs. It allows for configurable options like JIT (Just-In-Time) compilation, parallel testing, and automatic saving of model parameters.
+
+---
+
+### **Parameters**:
+
+- **`train_ds`** (`Dataset`): 
+  - The dataset used for training. It should provide pairs of training data and corresponding labels.
+  
+- **`loss_object`** (`Loss Function`): 
+  - The loss function used to compute the training loss for each batch.
+
+- **`train_loss`** (`Metric`): 
+  - The metric that tracks the loss over the training batches.
+
+- **`optimizer`** (`Optimizer`): 
+  - The optimizer that updates model parameters based on computed gradients.
+
+- **`epochs`** (`int`, optional): 
+  - Number of epochs for which the model should be trained. If `None`, training will run indefinitely until manually stopped.
+
+- **`train_accuracy`** (`Metric`, optional): 
+  - The metric to track the accuracy during training. If not provided, accuracy tracking is skipped.
+
+- **`test_ds`** (`Dataset`, optional): 
+  - The dataset used for testing/validation during training. If `None`, no testing is performed.
+
+- **`test_loss`** (`Metric`, optional): 
+  - The metric that tracks the test loss after each epoch.
+
+- **`test_accuracy`** (`Metric`, optional): 
+  - The metric to track the test accuracy after each epoch. If not provided, accuracy tracking for the test dataset is skipped.
+
+- **`processes`** (`int`, optional): 
+  - The number of processes used for parallel testing. It is only used if `parallel_test` is set to `True`.
+
+- **`parallel_test`** (`bool`, optional): 
+  - If `True`, testing will be performed in parallel using multiprocessing. Otherwise, testing is done sequentially.
+
+- **`jit_compile`** (`bool`, optional, default=`True`): 
+  - If `True`, Just-In-Time (JIT) compilation is enabled for faster execution of the training step.
+
+- **`p`** (`int`, optional): 
+  - Controls the frequency of printing metrics during training. If `None`, it defaults to 9, and the printing frequency is derived from the number of epochs.
+
+---
+
+### **Behavior**:
+
+1. **Epoch and Printing Frequency**:
+   - The frequency of printing epoch metrics is determined by parameter `p`. If `p` is not provided, it is computed from the total number of epochs to ensure metrics are printed at regular intervals.
+   - If `parallel_test=True`, multiprocessing will be enabled for testing the model after each epoch.
+
+2. **Training Loop**:
+   - For each epoch, the model iterates over the training dataset `train_ds`.
+   - If `jit_compile=True`, the `train_step` function will be JIT compiled for faster execution. Otherwise, the uncompiled version `train_step_` will be used.
+   - During training, after every `steps_per_execution` steps (if defined), the model will compute the current training loss and accuracy. Testing will also be performed periodically if a `test_ds` is provided.
+
+3. **Testing**:
+   - After each epoch or at defined intervals, the model is tested on the `test_ds` (if provided), and the test loss and accuracy are tracked.
+   - Results from both training and testing are stored in corresponding lists (`train_loss_list`, `train_acc_list`, `test_loss_list`, and `test_acc_list`).
+
+4. **Model Saving**:
+   - The model will save its parameters at defined intervals based on `save_freq_` or after certain steps.
+   - Two saving modes are supported: saving the entire model or saving only the parameters, controlled by `save_param_only`.
+
+5. **Metrics Logging**:
+   - The training loss is logged at the end of each epoch, along with the training accuracy (if applicable).
+   - If a test dataset is provided, the test loss and accuracy are also printed at regular intervals.
+
+6. **Time Tracking**:
+   - The total training time for each epoch is tracked, and the cumulative training time is printed at the end of the training process.
+
+7. **Termination**:
+   - The training process terminates based on the `epochs` parameter or a custom stopping criterion defined by `self.end()`.
+
+---
+
+### **Return**:
+This method returns `None`. However, it logs the training and testing metrics and saves the model/parameters at intervals. It also prints the total time taken for training.
+
+---
+
+### **Example Usage**:
+
+```python
+# Assuming train_ds, test_ds, loss_object, optimizer are defined
+
+model.train(
+    train_ds=train_ds, 
+    loss_object=loss_object, 
+    train_loss=train_loss, 
+    optimizer=optimizer, 
+    epochs=50, 
+    train_accuracy=train_accuracy, 
+    test_ds=test_ds, 
+    test_loss=test_loss, 
+    test_accuracy=test_accuracy,
+    processes=4,
+    parallel_test=True,
+    jit_compile=True
+)
+```
+
+---
+
+This method provides flexibility in model training, especially for large models where parallel testing or periodic saving is required.
+
+---
+
+## **`distributed_training`**
+
+### **Description:**
+The `distributed_training` function is responsible for performing distributed training across different TensorFlow distributed strategies, including `MirroredStrategy`, `MultiWorkerMirroredStrategy`, and `ParameterServerStrategy`. It allows training to be scaled across multiple devices (GPUs, TPUs, or across multiple machines), handling both training and evaluation logic with support for different dataset distributions, batch processing, and optimization across the distributed system.
+
+### **Parameters:**
+
+- **`train_dataset`** (optional, `tf.data.Dataset`):  
+   The training dataset used for distributed training.
+
+- **`loss_object`** (optional, `tf.keras.losses.Loss`):  
+   The loss function used to compute the model's error during training.
+
+- **`global_batch_size`** (optional, `int`):  
+   The global batch size used for distributed training, accounting for all replicas involved in the process.
+
+- **`optimizer`** (optional, `tf.keras.optimizers.Optimizer`):  
+   The optimizer used to update the model's weights.
+
+- **`strategy`** (`tf.distribute.Strategy`):  
+   The distributed strategy (e.g., `MirroredStrategy`, `MultiWorkerMirroredStrategy`, or `ParameterServerStrategy`) that defines how training is distributed across multiple devices.
+
+- **`epochs`** (optional, `int`):  
+   The total number of epochs for training, specifically used with `MirroredStrategy`.
+
+- **`num_epochs`** (optional, `int`):  
+   The total number of epochs for training, particularly used with `MultiWorkerMirroredStrategy` and `ParameterServerStrategy`.
+
+- **`num_steps_per_epoch`** (optional, `int`):  
+   The number of steps to execute in each epoch during training.
+
+- **`train_accuracy`** (optional, `tf.keras.metrics.Accuracy`):  
+   A metric to track the model's accuracy on the training dataset.
+
+- **`test_dataset`** (optional, `tf.data.Dataset`):  
+   The test dataset used for evaluation during training.
+
+- **`test_loss`** (optional, `tf.keras.metrics.Mean`):  
+   A metric to track the loss on the test dataset.
+
+- **`test_accuracy`** (optional, `tf.keras.metrics.Accuracy`):  
+   A metric to track accuracy on the test dataset.
+
+- **`dataset_fn`** (optional, `function`):  
+   A function to preprocess or create the training dataset, mainly for use with `MultiWorkerMirroredStrategy` or `ParameterServerStrategy`.
+
+- **`test_dataset_fn`** (optional, `function`):  
+   A function to create the test dataset, particularly for `ParameterServerStrategy`.
+
+- **`global_test_batch_size`** (optional, `int`):  
+   The global batch size for test data evaluation.
+
+- **`eval_steps_per_epoch`** (optional, `int`):  
+   The number of evaluation steps to run after each epoch during test set evaluation.
+
+- **`jit_compile`** (`bool`, default `True`):  
+   Whether to enable TensorFlow's JIT (Just-In-Time) compilation to optimize training execution speed.
+
+- **`p`** (optional, `int`):  
+   A parameter used for adjusting the printing frequency of training progress during epochs. If not provided, defaults to `9`.
+
+### **Returns:**
+None. The function prints loss, accuracy, and other statistics during training and saves the model at regular intervals, if specified.
+
+---
+
+### **Key Features:**
+
+1. **Flexible Epoch Management:**  
+   The function allows for flexible epoch management with both `epochs` (for `MirroredStrategy`) and `num_epochs` (for `MultiWorkerMirroredStrategy` and `ParameterServerStrategy`). It also manages how frequently training progress should be printed, based on the total number of epochs and the value of `p`.
+
+2. **Distributed Strategy Handling:**  
+   The function supports three main distributed strategies:
+   - **`MirroredStrategy`**: Used for synchronous training across multiple GPUs on a single machine, utilizing `epochs`.
+   - **`MultiWorkerMirroredStrategy`**: For distributed training across multiple workers, distributing datasets and training workloads, utilizing `num_epochs`.
+   - **`ParameterServerStrategy`**: For training across multiple machines with parameter servers coordinating distributed computation, also utilizing `num_epochs`.
+
+3. **Training and Evaluation Loop:**  
+   The function alternates between training steps and evaluation steps (if `test_dataset` is provided), computing the loss and accuracy for both datasets. It also allows Just-In-Time (JIT) compilation to optimize training performance.
+
+4. **Automatic Model Saving:**  
+   The function provides options to save the model parameters or the entire model at regular intervals, based on the training progress.
+
+5. **JIT Compilation Option:**  
+   `jit_compile=True` enables TensorFlow's JIT compilation, which can improve training performance by compiling parts of the computation graph into optimized code.
+
+6. **Custom Dataset Function:**  
+   For strategies like `MultiWorkerMirroredStrategy` and `ParameterServerStrategy`, the function supports creating datasets dynamically using `dataset_fn` and `test_dataset_fn`.
+
+### **Usage Example:**
+```python
+# Example usage for distributed training with MirroredStrategy
+strategy = tf.distribute.MirroredStrategy()
+
+with strategy.scope():
+  model = Model()
+model.distributed_training(
+    train_dataset=train_dataset,
+    loss_object=tf.keras.losses.SparseCategoricalCrossentropy(),
+    global_batch_size=64,
+    optimizer=tf.keras.optimizers.Adam(),
+    strategy=strategy,
+    epochs=10,  # Used for MirroredStrategy
+    train_accuracy=tf.keras.metrics.SparseCategoricalAccuracy(),
+    test_dataset=test_dataset,
+    test_loss=tf.keras.metrics.Mean(),
+    test_accuracy=tf.keras.metrics.SparseCategoricalAccuracy()
+)
+
+# Example usage for distributed training with MultiWorkerMirroredStrategy
+strategy = tf.distribute.MultiWorkerMirroredStrategy()
+
+with strategy.scope():
+  model = Model()
+model.distributed_training(
+    train_dataset=train_dataset,
+    loss_object=tf.keras.losses.SparseCategoricalCrossentropy(),
+    global_batch_size=64,
+    optimizer=tf.keras.optimizers.Adam(),
+    strategy=strategy,
+    num_epochs=10,  # Used for MultiWorkerMirroredStrategy or ParameterServerStrategy
+    train_accuracy=tf.keras.metrics.SparseCategoricalAccuracy(),
+    test_dataset=test_dataset,
+    test_loss=tf.keras.metrics.Mean(),
+    test_accuracy=tf.keras.metrics.SparseCategoricalAccuracy()
+)
+```
+
+This documentation provides a detailed overview of the function, its parameters, and how it interacts with TensorFlow's distributed training strategies.
