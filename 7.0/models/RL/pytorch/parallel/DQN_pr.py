@@ -56,7 +56,9 @@ class DQN:
         q_value=self.nn(s).gather(1,a)
         next_q_value=self.target_q_net(next_s).max(1)[0].view(-1,1)
         target=r+0.98*next_q_value*(1-d)
-        return F.mse_loss(q_value,target)
+        TD=target-q_value
+        self.pr.update_TD(TD)
+        return torch.mean(TD**2)
     
     
     def backward(self,loss,p): #backward function,kernel uses it for backpropagation.
