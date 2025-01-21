@@ -650,3 +650,28 @@ tensor = tf.Variable(tf.zeros([3, 5]))
 nn.sparse_(tensor, sparsity=0.1)
 print(tensor)
 ```
+
+# constant_
+
+The `constant_` function initializes a tensor with a constant value.
+
+**Parameters**
+
+- **`tensor`**: A `tf.Variable` to be filled with the constant value.
+- **`val`**: The constant value to assign to all elements of the `tensor`. The value will be cast to the data type of the `tensor`.
+
+**Method**
+
+- **`constant_(tensor, val)`**: Fills the input `tensor` with the constant value `val`.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Example usage of constant_
+tensor = tf.Variable(tf.zeros([3, 5]))
+nn.constant_(tensor, val=3.14)
+print(tensor)
+```
