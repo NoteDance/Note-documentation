@@ -1071,7 +1071,7 @@ The `BlurPool2d` class creates a module that applies blurring and downsampling t
 
 - **`channels`** (int, optional): Number of input channels. If not provided, it will be inferred from the input tensor.
 - **`filt_size`** (int): Size of the binomial filter for blurring. Supported values are `3` (default) and `5`.
-- **`stride`** (int): Stride for the downsampling filter. Default is `2`.
+- **`strides`** (int): Stride for the downsampling filter. Default is `2`.
 - **`pad_mode`** (str): Padding mode to use. Default is `'REFLECT'`.
 
 **Methods**
