@@ -1453,6 +1453,67 @@ output = norm_mlp_head(input_tensor)
 print(output.shape)  # Should be (32, 1000) if num_classes is 1000
 ```
 
+# ConvNormAct
+
+The `ConvNormAct` class implements a combination of convolution, normalization, and activation layers, with optional anti-aliasing and dropout. It provides a modular and flexible way to define these operations for deep learning models.
+
+**Initialization Parameters**
+
+- **in_channels** (int): Number of input channels.
+- **out_channels** (int): Number of output channels.
+- **kernel_size** (int): Size of the convolution kernel. Default is 1.
+- **stride** (int): Stride of the convolution. Default is 1.
+- **dilation** (int): Dilation rate for convolution. Default is 1.
+- **groups** (int): Number of groups for group convolution. Default is 1.
+- **bias** (bool): Whether to include a bias term in the convolution. Default is False.
+- **apply_norm** (bool): Whether to apply normalization. Default is True.
+- **apply_act** (bool): Whether to apply activation. Default is True.
+- **norm_layer** (callable): Normalization layer. Default is `nn.batch_norm`.
+- **act_layer** (callable): Activation function. Default is `tf.nn.relu`.
+- **aa_layer** (callable or str): Anti-aliasing layer. Supports predefined layers like `'avg'` or `'blur'`. Default is None.
+- **drop_layer** (callable): Dropout layer. Default is None.
+- **drop_rate** (float): Dropout rate. Default is 0.
+
+**Methods**
+
+- **__call__(self, x)**: Applies the convolution, normalization, activation, and optional anti-aliasing and dropout to the input.
+
+  - **Parameters**:
+    - **x**: Input tensor.
+
+  - **Returns**: Processed tensor after applying the specified operations.
+
+**Attributes**
+
+- **in_channels** (int): Number of input channels.
+- **out_channels** (int): Number of output channels.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create a ConvNormAct instance
+conv_layer = nn.ConvNormAct(
+    in_channels=32, 
+    out_channels=64, 
+    kernel_size=3, 
+    stride=2, 
+    norm_layer=nn.batch_norm, 
+    act_layer=tf.nn.relu, 
+    aa_layer='blur', 
+    drop_layer=nn.dropout, 
+    drop_rate=0.1
+)
+
+# Input tensor
+x = tf.random.normal((2, 128, 128, 32))
+
+# Apply ConvNormAct
+output = conv_layer(x)
+```
+
 # conv1d
 
 The `conv1d` class implements a 1D convolutional layer, which is commonly used in processing sequential data such as time series or audio.
@@ -4530,7 +4591,7 @@ import tensorflow as tf
 from Note import nn
 
 # Create a NonLocalAttn instance
-nla = NonLocalAttn(in_channels=64)
+nla = nn.NonLocalAttn(in_channels=64)
 
 # Generate sample input
 x = tf.random.normal((2, 32, 32, 64))
@@ -4564,7 +4625,7 @@ import tensorflow as tf
 from Note import nn
 
 # Create a BilinearAttnTransform instance
-bat = BilinearAttnTransform(in_channels=128, block_size=8, groups=4)
+bat = nn.BilinearAttnTransform(in_channels=128, block_size=8, groups=4)
 
 # Generate sample input
 x = tf.random.normal((2, 64, 64, 128))
@@ -4602,7 +4663,7 @@ import tensorflow as tf
 from Note import nn
 
 # Create a BatNonLocalAttn instance
-bat_nla = BatNonLocalAttn(in_channels=128, block_size=7, groups=2)
+bat_nla = nn.BatNonLocalAttn(in_channels=128, block_size=7, groups=2)
 
 # Generate sample input
 x = tf.random.normal((2, 64, 64, 128))
