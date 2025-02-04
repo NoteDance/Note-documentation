@@ -1381,6 +1381,7 @@ These are the foundational steps for building a neural network by inheriting fro
 
 # LRFinder:
 **Usage:**
+
 Create a Note model, then execute this code:
 ```python
 # model is a Note model
