@@ -82,7 +82,7 @@ model.train(train_ds, loss_object, train_loss, optimizer, 5, train_accuracy, tes
 
 
 # Distributed training:
-## MirroredStrategy:
+**MirroredStrategy:**
 ```python
 import tensorflow as tf
 from Note.models.docs_example.DL.model2 import Model
@@ -175,7 +175,7 @@ EPOCHS, train_accuracy=train_accuracy, test_dataset=test_dataset, test_loss=test
 # model.save_param('param.dat')
 # model.save('model.dat')
 ```
-## MultiWorkerMirroredStrategy:
+**MultiWorkerMirroredStrategy:**
 ```python
 import tensorflow as tf
 from Note.models.docs_example.DL.model2 import Model
@@ -276,7 +276,7 @@ num_epochs=3, num_steps_per_epoch=70, train_accuracy=train_accuracy)
 # model.save_param('param.dat')
 # model.save('model.dat')
 ```
-## ParameterServerStrategy:
+**ParameterServerStrategy:**
 ```python
 import multiprocessing
 import os
@@ -488,19 +488,19 @@ model,optimizer=nn.restore('model.dat')
 
 
 # Build models:
-## ConvNeXt_tiny
+**ConvNeXt_tiny**
 ```python
 from Note.models.tf.ConvNeXt import ConvNeXt
 convnext_tiny=ConvNeXt(model_type='tiny',classes=1000)
 ```
 
-## ConvNeXtV2_atto
+**ConvNeXtV2_atto**
 ```python
 from Note.models.tf.ConvNeXtV2 import ConvNeXtV2
 convnext_atto=ConvNeXtV2(model_type='atto',classes=1000)
 ```
 
-## CLIP_large
+**CLIP_large**
 ```python
 from Note.models.tf.CLIP import CLIP
 clip=CLIP(
@@ -517,49 +517,49 @@ clip=CLIP(
   )
 ```
 
-## DiT_B_4
+**DiT_B_4**
 ```python
 from Note.models.tf.DiT import DiT_B_4
 dit=DiT_B_4()
 ```
 
-## EfficientNetB0
+**EfficientNetB0**
 ```python
 from Note.models.tf.EfficientNet import EfficientNet
 efficientnetb0=EfficientNet(model_name='B0',classes=1000)
 ```
 
-## EfficientNetV2S
+**EfficientNetV2S**
 ```python
 from Note.models.tf.EfficientNetV2 import EfficientNetV2
 efficientnetv2s=EfficientNetV2(model_name='efficientnetv2-s',classes=1000)
 ```
 
-## Llama2_7B
+**Llama2_7B**
 ```python
 from Note.models.tf.Llama2 import Llama2
 llama=Llama2()
 ```
 
-## MobileNetV2
+**MobileNetV2**
 ```python
 from Note.models.tf.MobileNetV2 import MobileNetV2
 mobilenet=MobileNetV2(classes=1000)
 ```
 
-## MobileNetV3_large
+**MobileNetV3_large**
 ```python
 from Note.models.tf.MobileNetV3 import MobileNetV3
 mobilenet=MobileNetV3(model_type="large",classes=1000)
 ```
 
-## ResNet50
+**ResNet50**
 ```python
 from Note.models.tf.ResNet.ResNet50 import ResNet50
 resnet50=ResNet50(classes=1000)
 ```
 
-## ViT
+**ViT**
 ```python
 from Note.models.tf.ViT import ViT
 vit=ViT(
@@ -578,7 +578,7 @@ vit=ViT(
 )
 ```
 
-## CaiT
+**CaiT**
 ```python
 import tensorflow as tf
 from Note.models.tf.CaiT import cait_XXS24_224
@@ -590,7 +590,7 @@ img = tf.random.normal((1, 224, 224, 3))
 output = model(img) # (1, 1000)
 ```
 
-## PiT
+**PiT**
 ```python
 import tensorflow as tf
 from Note.models.tf.PiT import pit_b
@@ -604,7 +604,7 @@ img = tf.random.normal((1, 224, 224, 3))
 output = model(img) # (1, 1000)
 ```
 
-## Cross ViT
+**Cross ViT**
 ```python
 import tensorflow as tf
 from Note.models.tf.CrossViT import crossvit_tiny_224()
@@ -616,7 +616,7 @@ img = tf.random.normal((1, 240, 240, 3))
 output = model(img) # (1, 1000)
 ```
 
-## Deep ViT
+**Deep ViT**
 ```python
 import tensorflow as tf
 from Note.models.tf.DeepViT import DeepViT
@@ -638,7 +638,7 @@ img = tf.random.normal((1, 256, 256, 3))
 output = v(img) # (1, 1000)
 ```
 
-## ViViT
+**ViViT**
 ```python
 import tensorflow as tf
 from Note.models.tf.ViViT import ViViT
@@ -661,7 +661,7 @@ video = tf.random.normal((4, 16, 128, 128, 3)) # (batch, frames, height, width, 
 output = v(video) # (4, 1000)
 ```
 
-## XCiT
+**XCiT**
 ```python
 import tensorflow as tf
 from Note.models.tf.XCiT import xcit_nano_12_p16
@@ -673,7 +673,7 @@ img = tf.random.normal([1, 224, 224, 3])
 output = model(img) # (1, 1000)
 ```
 
-## CvT
+**CvT**
 ```python
 import tensorflow as tf
 from Note.models.tf.CvT import CvT
@@ -712,7 +712,7 @@ img = tf.random.normal((1, 224, 224, 3))
 output = v(img) # (1, 1000)
 ```
 
-## CCT
+**CCT**
 ```python
 import tensorflow as tf
 from Note.models.tf.CCT import CCT
@@ -755,7 +755,7 @@ cct = cct_14(
 )
 ```
 
-## MiT
+**MiT**
 ```python
 import tensorflow as tf
 from Note.models.tf.MiT import mit_b0
@@ -769,7 +769,7 @@ img = tf.random.normal([batch_size, img_size, img_size, in_chans])
 output = model(img)
 ```
 
-## BEiT
+**BEiT**
 ```python
 import tensorflow as tf
 from Note.models.tf.BEiT import beit_base_patch16_224
@@ -783,7 +783,7 @@ img = tf.random.normal([batch_size, img_size, img_size,in_chans])
 output = model(img)
 ```
 
-## SwinMLP
+**SwinMLP**
 ```python
 import tensorflow as tf
 from Note.models.tf.SwinMLP import SwinMLP
@@ -797,7 +797,7 @@ img = tf.random.normal([batch_size, img_size, img_size,in_chans])
 output = model(img)
 ```
 
-## SwinTransformerV2
+**SwinTransformerV2**
 ```python
 import tensorflow as tf
 from Note.models.tf.SwinTransformerV2 import SwinTransformerV2
@@ -811,7 +811,7 @@ img = tf.random.normal([batch_size, img_size, img_size,in_chans])
 output = model(img)
 ```
 
-## ConViT
+**ConViT**
 ```python
 import tensorflow as tf
 from Note.models.tf.ConViT import convit_tiny
@@ -825,7 +825,7 @@ img = tf.random.normal([batch_size, img_size, img_size,in_chans])
 output = model(img)
 ```
 
-## PVT
+**PVT**
 ```python
 import tensorflow as tf
 from Note.models.tf.PVT import pvt_v2_b0
@@ -837,7 +837,7 @@ img = tf.random.normal([1, 224, 224, 3])
 output = model(img) # (1, 1000)
 ```
 
-## GCViT
+**GCViT**
 ```python
 import tensorflow as tf
 from Note.models.tf.GCViT import gc_vit_xxtiny
@@ -849,7 +849,7 @@ img = tf.random.normal([1, 224, 224, 3])
 output = model(img) # (1, 1000)
 ```
 
-## DaViT
+**DaViT**
 ```python
 import tensorflow as tf
 from Note.models.tf.DaViT import davit_tiny
@@ -896,7 +896,7 @@ model = Model()
 
 ---
 
-## 1. **`add()`**
+1. **`add()`**
    - **Function**: Adds a new layer name to the model and tracks the layers added sequentially.
    - **Effect**: Increments the `Model.counter` by 1 and appends a new layer name to `Model.name_list` as `'layer' + str(Model.counter)`.
 
@@ -906,7 +906,7 @@ model = Model()
 
 ---
 
-## 2. **`apply(func)`**
+2. **`apply(func)`**
    - **Function**: Applies a given function `func` to each layer in the current namespace or initializes layer weights with `func`.
    - **Parameters**:
      - `func` (`callable`): A function to apply to each layer. If a layer has an `input_size`, the function is applied immediately. Otherwise, it assigns `func` to `layer.init_weights`.
@@ -918,7 +918,7 @@ model = Model()
 
 ---
 
-## 3. **`training(self, flag=False)`**
+3. **`training(self, flag=False)`**
    - **Function**: Sets the entire model or individual layers to training or evaluation mode.
    - **Parameters**:
      - `flag` (`bool`, optional): 
@@ -934,7 +934,7 @@ model = Model()
 
 ---
 
-## 4. **`namespace(name=None)`**
+4. **`namespace(name=None)`**
    - **Function**: Assigns a namespace to layers in the model for tracking layers and parameters.
    - **Parameters**: 
      - `name` (`str`, optional): The name for the namespace of the model. If `None` is passed, no name is assigned to the model.
@@ -944,7 +944,7 @@ model = Model()
 
 ---
 
-## 5. **`freeze(self, name=None)`**
+5. **`freeze(self, name=None)`**
    - **Function**: Freezes the parameters of the model or a specific namespace, making them untrainable during training.
    - **Parameters**:
      - `name` (`str`, optional): Specifies the namespace to freeze. If `name` is `None`, it freezes the parameters in all namespaces.
@@ -958,7 +958,7 @@ model = Model()
 
 ---
 
-## 6. **`unfreeze(self, name=None)`**
+6. **`unfreeze(self, name=None)`**
    - **Function**: Unfreezes the parameters of the model or a specific namespace, making them trainable again.
    - **Parameters**:
      - `name` (`str`, optional): Specifies the namespace to unfreeze. If `name` is `None`, it unfreezes the parameters in all namespaces.
@@ -972,7 +972,7 @@ model = Model()
 
 ---
 
-## 7. **`eval(self, name=None, flag=True)`**
+7. **`eval(self, name=None, flag=True)`**
    - **Function**: Sets the model or specific namespaces to training or evaluation mode.
    - **Parameters**:
      - `name` (`str`, optional): Specifies the namespace to configure. If `name` is `None`, it iterates through all namespaces.
@@ -989,7 +989,7 @@ model = Model()
 
 ---
 
-## Typical Use Cases:
+**Typical Use Cases:**
 
 - **Adding layers**:
   - `add()` helps to keep track of the layers as they are added to the model, ensuring unique names are assigned sequentially.
@@ -1008,12 +1008,12 @@ These methods provide flexibility in managing complex models, particularly when 
 
 ---
 
-## 8. **`cast_param`**
+8. **`cast_param`**
 
-### **Description**
+**Description**
 The `cast_param` method converts the data type of parameters within the model to a specified type. This is useful for optimizing model performance by ensuring consistent data types, or for adapting parameters to the precision requirements of specific hardware (e.g., changing to `float16` for faster computation on GPUs).
 
-### **Parameters**
+**Parameters**
 - **`key`** (optional, `str`):  
    Specifies the key in `param_dict` for the parameters to be cast. If `key` is provided, only the parameters under that key are cast to the new data type.  
    **Default**: `None` (casts all parameters in `self.param`).
@@ -1021,10 +1021,10 @@ The `cast_param` method converts the data type of parameters within the model to
 - **`dtype`** (`tf.DType`):  
    The data type to which parameters should be cast (e.g., `tf.float32`, `tf.float16`).
 
-### **Returns**
+**Returns**
 None. The method modifies the data types of parameters in place.
 
-### **Usage**
+**Usage**
 ```python
 # Cast all model parameters to float32
 model.cast_param(dtype=tf.float32)
@@ -1039,21 +1039,21 @@ This method efficiently manages parameter data types, ensuring that parameters a
 
 ---
 
-## 9. **`summary`**
+9. **`summary`**
 
-### **Description:**
+**Description:**
 The `summary` function provides an overview of the model’s parameters and memory usage. It calculates the total number of parameters in the model, categorizing them into trainable and non-trainable parameters. Additionally, it displays the memory usage of each category in a human-readable format (e.g., Bytes, KB, MB, or GB).
 
-### **Returns:**
+**Returns:**
 None. The function prints the model summary directly, showing:
 - **Total params**: The total number of parameters in the model and their memory usage.
 - **Trainable params**: The number of parameters that can be updated during training and their memory usage.
 - **Non-trainable params**: The number of parameters that remain constant during training (e.g., frozen layers) and their memory usage.
 
-### **Memory Format Conversion:**
+**Memory Format Conversion:**
 The function includes an internal helper, `format_memory`, that converts memory from bytes to the most appropriate unit (Bytes, KB, MB, GB), rounding to two decimal places for readability.
 
-### **Example Output:**
+**Example Output:**
 ```
 Model Summary
 -------------
@@ -1062,7 +1062,7 @@ Trainable params: 407050 (1.55 MB)
 Non-trainable params: 0 (0.00 Byte)
 ```
 
-### **Usage Example:**
+**Usage Example:**
 ```python
 model = Model()
 model.summary()
@@ -1072,13 +1072,13 @@ This function is useful for obtaining an at-a-glance view of the model’s archi
 
 ---
 
-## 10. **`train`**
+10. **`train`**
 
 This method implements the training loop for the model, handling both training and testing (optional) over multiple epochs. It allows for configurable options like JIT (Just-In-Time) compilation, parallel testing, and automatic saving of model parameters.
 
 ---
 
-### **Parameters**:
+**Parameters**:
 
 - **`train_ds`** (`Dataset`): 
   - The dataset used for training. It should provide pairs of training data and corresponding labels.
@@ -1121,7 +1121,7 @@ This method implements the training loop for the model, handling both training a
 
 ---
 
-### **Behavior**:
+**Behavior**:
 
 1. **Epoch and Printing Frequency**:
    - The frequency of printing epoch metrics is determined by parameter `p`. If `p` is not provided, it is computed from the total number of epochs to ensure metrics are printed at regular intervals.
@@ -1152,12 +1152,12 @@ This method implements the training loop for the model, handling both training a
 
 ---
 
-### **Return**:
+**Return**:
 This method returns `None`. However, it logs the training and testing metrics and saves the model/parameters at intervals. It also prints the total time taken for training.
 
 ---
 
-### **Example Usage**:
+**Example Usage**:
 
 ```python
 # Assuming train_ds, test_ds, loss_object, optimizer are defined
@@ -1184,12 +1184,12 @@ This method provides flexibility in model training, especially for large models 
 
 ---
 
-## 11. **`distributed_training`**
+11. **`distributed_training`**
 
-### **Description:**
+**Description:**
 The `distributed_training` function is responsible for performing distributed training across different TensorFlow distributed strategies, including `MirroredStrategy`, `MultiWorkerMirroredStrategy`, and `ParameterServerStrategy`. It allows training to be scaled across multiple devices (GPUs, TPUs, or across multiple machines), handling both training and evaluation logic with support for different dataset distributions, batch processing, and optimization across the distributed system.
 
-### **Parameters:**
+**Parameters:**
 
 - **`train_dataset`** (optional, `tf.data.Dataset`):  
    The training dataset used for distributed training.
@@ -1245,12 +1245,12 @@ The `distributed_training` function is responsible for performing distributed tr
 - **`p`** (optional, `int`):  
    A parameter used for adjusting the printing frequency of training progress during epochs. If not provided, defaults to `9`.
 
-### **Returns:**
+**Returns:**
 None. The function prints loss, accuracy, and other statistics during training and saves the model at regular intervals, if specified.
 
 ---
 
-### **Key Features:**
+**Key Features:**
 
 1. **Flexible Epoch Management:**  
    The function allows for flexible epoch management with both `epochs` (for `MirroredStrategy`) and `num_epochs` (for `MultiWorkerMirroredStrategy` and `ParameterServerStrategy`). It also manages how frequently training progress should be printed, based on the total number of epochs and the value of `p`.
@@ -1273,7 +1273,7 @@ None. The function prints loss, accuracy, and other statistics during training a
 6. **Custom Dataset Function:**  
    For strategies like `MultiWorkerMirroredStrategy` and `ParameterServerStrategy`, the function supports creating datasets dynamically using `dataset_fn` and `test_dataset_fn`.
 
-### **Usage Example:**
+**Usage Example:**
 ```python
 # Example usage for distributed training with MirroredStrategy
 strategy = tf.distribute.MirroredStrategy()
@@ -1316,17 +1316,17 @@ This documentation provides a detailed overview of the function, its parameters,
 
 ---
 
-## **`get_info`**
+**`get_info`**
 
 The `get_info` function retrieves the info of the `Model` instance. These settings include parameters related to model saving, training, evaluation, and distributed processing, which are useful for reproducing training conditions or debugging.
 
-### Parameters
+**Parameters**
 The function does not require any parameters.
 
-### Returns
+**Returns**
 - **info (dict)**: A dictionary containing model info.
 
-### Description
+**Description**
 The `get_info` function:
 1. Checks the value of `config_flag` to determine which set of configurations to retrieve.
    - If info_flag is 0, it retrieves a set of parameters suited for training setups.
@@ -1338,7 +1338,7 @@ The `get_info` function makes use of `try-except` blocks to handle potential err
 
 # Building a Neural Network by Inheriting from the Model Class
 
-## **Define a Custom Model Class**
+**Define a Custom Model Class**
 
 1. Create a custom model class that inherits from `nn.Model`.
 2. Define network layers in the `__init__` method.
@@ -1364,17 +1364,52 @@ class Model(nn.Model):
         return self.d2(x)    # Output layer (logits without activation)
 ```
 
-## **Code Explanation**
+**Code Explanation**
 
 1. **Convolutional Layer (`self.conv1`)**: Defines a 2D convolutional layer to extract features from the input images.
 2. **Flatten Layer (`self.flatten`)**: Reshapes the convolutional output into a one-dimensional vector to feed into dense layers.
 3. **Dense Layer (`self.d1`)**: Defines a dense layer with 128 units for high-level feature extraction.
 4. **Output Layer (`self.d2`)**: Defines an output layer with 10 units for classifying the 10 digit classes (0-9).
 
-## **Summary**
+**Summary**
 
 By inheriting from the `Model` class, you can create a neural network with a custom structure. The `__init__` method is used to define the layers, and the `__call__` method sets up the forward propagation logic. This setup allows for easy addition of new layers and flexible expansion of the network structure.
 
 ---
 
 These are the foundational steps for building a neural network by inheriting from the `Model` class.
+
+# LRFinder:
+**Usage:**
+Create a Note model, then execute this code:
+```python
+# model is a Note model
+model.optimizer = tf.keras.optimizers.Adam()
+lr_finder = LRFinder(model)
+
+# Train a model with batch size 512 for 5 epochs
+# with learning rate growing exponentially from 0.0001 to 1
+lr_finder.find(N, train_ds, loss_object, train_loss, start_lr=0.0001, end_lr=1, batch_size=512, epochs=5)
+```
+or
+```python
+# model is a Note model
+model.optimizer = tf.keras.optimizers.Adam()
+strategy = tf.distribute.MirroredStrategy()
+lr_finder = LRFinder(model)
+
+# Train a model with batch size 512 for 5 epochs
+# with learning rate growing exponentially from 0.0001 to 1
+lr_finder.find(N, train_ds, loss_object, strategy=strategy, start_lr=0.0001, end_lr=1, batch_size=512, epochs=5)
+```
+```python
+# Plot the loss, ignore 20 batches in the beginning and 5 in the end
+lr_finder.plot_loss(n_skip_beginning=20, n_skip_end=5)
+```
+```python
+# Plot rate of change of the loss
+# Ignore 20 batches in the beginning and 5 in the end
+# Smooth the curve using simple moving average of 20 batches
+# Limit the range for y axis to (-0.02, 0.01)
+lr_finder.plot_loss_change(sma=20, n_skip_beginning=20, n_skip_end=5, y_lim=(-0.01, 0.01))
+```
