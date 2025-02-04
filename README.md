@@ -1,5 +1,5 @@
 # Train:
-## Note and Keras:
+**Note and Keras:**
 Agent built with Note or Keras.
 ```python
 import tensorflow as tf
@@ -11,29 +11,29 @@ model=DQN(4,128,2)
 model.set(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10)
 optimizer = tf.keras.optimizers.Adam()
 train_loss = tf.keras.metrics.Mean(name='train_loss')
-model.train(train_loss, optimizer, 100)
+model.train(train_loss, optimizer, 100, pool_network=False)
 
 # If set criterion.
 # model.set(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10,trial_count=10,criterion=200)
-# model.train(train_loss, optimizer, 100)
+# model.train(train_loss, optimizer, 100, pool_network=False)
 
 # If save the model at intervals of 10 episode, with a maximum of 2 saved file, and the file name is model.dat.
 # model.path='model.dat'
 # model.save_freq=10
 # model. max_save_files=2
-# model.train(train_loss, optimizer, 100)
+# model.train(train_loss, optimizer, 100, pool_network=False)
 
 # If save parameters only
 # model.path='param.dat'
 # model.save_freq=10
 # model. max_save_files=2
 # model.save_param_only=True
-# model.train(train_loss, optimizer, 100)
+# model.train(train_loss, optimizer, 100, pool_network=False)
 
 # If save best only
 # model.path='model.dat'
 # model.save_best_only=True
-# model.train(train_loss, optimizer, 100)
+# model.train(train_loss, optimizer, 100, pool_network=False)
 
 # visualize
 # model.visualize_loss()
@@ -58,7 +58,7 @@ model=PPO(4,128,2,0.7,0.7)
 model.set(policy=rl.SoftmaxPolicy(),pool_size=10000,batch=64,update_steps=1000,PPO=True)
 optimizer = [tf.keras.optimizers.Adam(1e-4),tf.keras.optimizers.Adam(5e-3)]
 train_loss = tf.keras.metrics.Mean(name='train_loss')
-model.train(train_loss, optimizer, 100)
+model.train(train_loss, optimizer, 100, pool_network=False)
 ```
 ```python
 # Use HER.
@@ -71,7 +71,7 @@ model=DDPG(128,0.1,0.98,0.005)
 model.set(noise=rl.GaussianWhiteNoiseProcess(),pool_size=10000,batch=256,criterion=-5,trial_count=10,HER=True)
 optimizer = [tf.keras.optimizers.Adam(),tf.keras.optimizers.Adam()]
 train_loss = tf.keras.metrics.Mean(name='train_loss')
-model.train(train_loss, optimizer, 2000)
+model.train(train_loss, optimizer, 2000, pool_network=False)
 ```
 ```python
 # Use Multi-agent reinforcement learning.
@@ -84,7 +84,7 @@ model=DDPG(128,0.1,0.98,0.005)
 model.set(policy=rl.SoftmaxPolicy(),pool_size=3000,batch=32,trial_count=10,MARL=True)
 optimizer = [tf.keras.optimizers.Adam(),tf.keras.optimizers.Adam()]
 train_loss = tf.keras.metrics.Mean(name='train_loss')
-model.train(train_loss, optimizer, 100)
+model.train(train_loss, optimizer, 100, pool_network=False)
 ```
 ```python
 # This technology uses Python’s multiprocessing module to speed up trajectory collection and storage, I call it Pool Network.
@@ -128,7 +128,7 @@ optimizer = tf.keras.optimizers.Adam()
 train_loss = tf.keras.metrics.Mean(name='train_loss')
 model.train(train_loss, optimizer, 100, pool_network=True, processes=7, processes_pr=4)
 ```
-## PyTorch:
+**PyTorch:**
 Agent built with PyTorch.
 ```python
 import torch
@@ -138,33 +138,33 @@ from Note.models.docs_example.RL.pytorch.DQN import DQN
 model=DQN(4,128,2)
 model.set(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10)
 optimizer = torch.optim.Adam(model.param)
-model.train(optimizer, 100)
+model.train(optimizer, 100, pool_network=False)
 
 # If set criterion.
 # model.set(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10,trial_count=10,criterion=200)
-# model.train(optimizer, 100)
+# model.train(optimizer, 100, pool_network=False)
 
 # If use prioritized replay.
 # model.set(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=64,update_steps=10,trial_count=10,criterion=200,PR=True,initial_TD=7,alpha=0.7)
-# model.train(optimizer, 100)
+# model.train(optimizer, 100, pool_network=False)
 
 # If save the model at intervals of 10 episode, with a maximum of 2 saved file, and the file name is model.dat.
 # model.path='model.dat'
 # model.save_freq=10
 # model. max_save_files=2
-# model.train(optimizer, 100)
+# model.train(optimizer, 100, pool_network=False)
 
 # If save parameters only
 # model.path='param.dat'
 # model.save_freq=10
 # model. max_save_files=2
 # model.save_param_only=True
-# model.train(optimizer, 100)
+# model.train(optimizer, 100, pool_network=False)
 
 # If save best only
 # model.path='model.dat'
 # model.save_best_only=True
-# model.train(optimizer, 100)
+# model.train(optimizer, 100, pool_network=False)
 
 # visualize
 # model.visualize_loss()
@@ -187,7 +187,7 @@ from Note.models.docs_example.RL.pytorch.DDPG_HER import DDPG
 model=DDPG(128,0.1,0.98,0.005)
 model.set(noise=rl.GaussianWhiteNoiseProcess(),pool_size=10000,batch=256,criterion=-5,trial_count=10,HER=True)
 optimizer = [torch.optim.Adam(model.param[0]),torch.optim.Adam(model.param[1])]
-model.train(optimizer, 2000)
+model.train(optimizer, 2000, pool_network=False)
 ```
 ```python
 # Use Multi-agent reinforcement learning.
@@ -198,7 +198,7 @@ from Note.models.docs_example.RL.pytorch.MADDPG import DDPG
 model=DDPG(128,0.1,0.98,0.005)
 model.set(policy=rl.SoftmaxPolicy(),pool_size=3000,batch=32,trial_count=10,MARL=True)
 optimizer = [torch.optim.Adam(model.param[0]),torch.optim.Adam(model.param[1])]
-model.train(optimizer, 100)
+model.train(optimizer, 100, pool_network=False)
 ```
 ```python
 # This technology uses Python’s multiprocessing module to speed up trajectory collection and storage, I call it Pool Network.
@@ -226,7 +226,7 @@ model.train(train_loss, optimizer, 2000, pool_network=True, processes=7, process
 
 # Distributed training:
 Agent built with Note or Keras.
-## MirroredStrategy:
+**MirroredStrategy:**
 ```python
 import tensorflow as tf
 from Note.RL import rl
@@ -241,29 +241,29 @@ with strategy.scope():
   model=DQN(4,128,2)
   optimizer = tf.keras.optimizers.Adam()
 model.set(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=GLOBAL_BATCH_SIZE,update_steps=10)
-model.distributed_training(optimizer, strategy, 100)
+model.distributed_training(optimizer, strategy, 100, pool_network=False)
 
 # If set criterion.
 # model.set(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,batch=GLOBAL_BATCH_SIZE,update_steps=10,trial_count=10,criterion=200)
-# model.distributed_training(optimizer, strategy, 100)
+# model.distributed_training(optimizer, strategy, 100, pool_network=False)
 
 # If save the model at intervals of 10 episode, with a maximum of 2 saved file, and the file name is model.dat.
 # model.path='model.dat'
 # model.save_freq=10
 # model. max_save_files=2
-# model.distributed_training(optimizer, strategy, 100)
+# model.distributed_training(optimizer, strategy, 100, pool_network=False)
 
 # If save parameters only
 # model.path='param.dat'
 # model.save_freq=10
 # model. max_save_files=2
 # model.save_param_only=True
-# model.distributed_training(optimizer, strategy, 100)
+# model.distributed_training(optimizer, strategy, 100, pool_network=False)
 
 # If save best only
 # model.path='model.dat'
 # model.save_best_only=True
-# model.distributed_training(optimizer, strategy, 100)
+# model.distributed_training(optimizer, strategy, 100, pool_network=False)
 
 # visualize
 # model.visualize_loss()
@@ -293,7 +293,7 @@ with strategy.scope():
   optimizer = [tf.keras.optimizers.Adam(1e-4),tf.keras.optimizers.Adam(5e-3)]
 
 model.set(policy=rl.SoftmaxPolicy(),pool_size=10000,batch=GLOBAL_BATCH_SIZE,update_steps=1000,PPO=True)
-model.distributed_training(optimizer, strategy, 100)
+model.distributed_training(optimizer, strategy, 100, pool_network=False)
 ```
 ```python
 # Use HER.
@@ -311,7 +311,7 @@ with strategy.scope():
   optimizer = [tf.keras.optimizers.Adam(),tf.keras.optimizers.Adam()]
 
 model.set(noise=rl.GaussianWhiteNoiseProcess(),pool_size=10000,batch=GLOBAL_BATCH_SIZE,criterion=-5,trial_count=10,HER=True)
-model.distributed_training(optimizer, strategy, 2000)
+model.distributed_training(optimizer, strategy, 2000, pool_network=False)
 ```
 ```python
 # Use Multi-agent reinforcement learning
@@ -329,7 +329,7 @@ with strategy.scope():
   optimizer = [tf.keras.optimizers.Adam(),tf.keras.optimizers.Adam()]
 
 model.set(policy=rl.SoftmaxPolicy(),pool_size=3000,trial_count=10,MARL=True)
-model.distributed_training(optimizer, strategy, 100)
+model.distributed_training(optimizer, strategy, 100, pool_network=False)
 ```
 ```python
 # This technology uses Python’s multiprocessing module to speed up trajectory collection and storage, I call it Pool Network.
@@ -366,7 +366,7 @@ with strategy.scope():
 model.set(noise=rl.GaussianWhiteNoiseProcess(),pool_size=10000,batch=GLOBAL_BATCH_SIZE,trial_count=10,HER=True)
 model.distributed_training(optimizer, strategy, 2000, pool_network=True, processes=7, processes_her=4)
 ```
-## MultiWorkerMirroredStrategy:
+**MultiWorkerMirroredStrategy:**
 ```python
 import tensorflow as tf
 from Note.RL import rl
@@ -441,12 +441,12 @@ multi_worker_model.distributed_training(optimizer, strategy, num_episodes=100,
 
 # `RL.set`:
 
-## **Function Description**:
+**Function Description**:
 The `set` function configures various parameters of the Reinforcement Learning (RL) agent. These parameters control the policy, noise, experience pool, batch size, update frequency, and training termination conditions. By adjusting these settings, users can fine-tune the agent's behavior and training process to suit specific RL tasks.
 
 ---
 
-## **Function Signature**:
+**Function Signature**:
 ```python
 def set(self, 
         policy=None, 
@@ -468,7 +468,7 @@ def set(self,
 
 ---
 
-## **Parameter Description**:
+**Parameter Description**:
 
 - **`policy`** (`rl.Policy` or `None`):  
   Specifies the policy object for the agent, which controls how actions are selected in each state.
@@ -520,7 +520,7 @@ def set(self,
 
 ---
 
-## **Usage Example**:
+**Usage Example**:
 
 ```python
 # Create an instance of a DQN agent
@@ -543,10 +543,10 @@ model.set(
 In this example, the agent computes the average reward every 100 trials. If the average reward reaches 200 or higher, the training process stops early. This method allows the agent to stop training once it reaches a desired performance level, improving training efficiency.
 
 # `RL.train`:
-## **Description**:
+**Description**:
 This function handles the training loop of the reinforcement learning (RL) agent. It supports both single-process and multi-process training, along with the option to use a **pool network** for experience replay. Additionally, it provides support for Hindsight Experience Replay (HER), Prioritized Experience Replay (PR), and optional just-in-time (JIT) compilation for performance optimization.
 
-## **Arguments**:
+**Arguments**:
 
 - **`train_loss`** (`tf.keras.metrics.Metric`): The loss metric used to evaluate the training loss during the optimization process.
   
@@ -568,10 +568,10 @@ This function handles the training loop of the reinforcement learning (RL) agent
   
 - **`p`** (`int`, optional): A parameter that determines the update frequency for logging and printing intermediate results. If `None`, it defaults to `9`.
 
-## **Returns**:
+**Returns**:
 - No return value. The function prints progress at specified intervals and updates the model's parameters based on the training procedure.
 
-## **Details**:
+**Details**:
 1. **Multiprocessing Setup**:
    - If `pool_network=True`, the function sets up parallel processes to collect experiences in parallel using Python's `multiprocessing` library. Each process collects states, actions, rewards, and other necessary information, which are then aggregated into a shared experience pool.
    
@@ -591,7 +591,7 @@ This function handles the training loop of the reinforcement learning (RL) agent
 5. **Termination Criteria**:
    - Training continues until the specified number of episodes (`episodes`) is reached, or in infinite mode (when `episodes=None`), until the reward criterion is met.
 
-## **Usage Example**:
+**Usage Example**:
 
 ```python
 train_loss = tf.keras.metrics.Mean(name='train_loss')
@@ -607,12 +607,12 @@ This documentation provides a detailed explanation of each parameter and the int
 
 # `RL.distributed_training`:
 
-## **Description**:
+**Description**:
 The `distributed_training` function is designed to handle distributed reinforcement learning (RL) training across multiple devices or workers. It supports various TensorFlow strategies, such as MirroredStrategy, MultiWorkerMirroredStrategy, and ParameterServerStrategy. The function is optimized for both single-node and multi-node setups, enabling distributed training with optional experience replay buffers, including prioritized and hindsight experience replay (HER). 
 
 This function also supports parallel data collection through a **pool network** and optional just-in-time (JIT) compilation for performance optimization.
 
-## **Parameters**:
+**Parameters**:
 
 - **`optimizer`** (`tf.keras.optimizers.Optimizer`): The optimizer used to update model parameters during training.
 
@@ -636,10 +636,10 @@ This function also supports parallel data collection through a **pool network** 
 
 - **`p`** (`int`, optional): Controls how frequently to log intermediate results. If set to `None`, it defaults to `p=9`.
 
-## **Returns**:
+**Returns**:
 - **None**. The function logs training progress, including loss and reward information, at specified intervals. It may also save model parameters based on a given frequency.
 
-## **Details**:
+**Details**:
 
 1. **Training with Distribution Strategies**:
    - The function adapts to various TensorFlow distribution strategies:
@@ -665,7 +665,7 @@ This function also supports parallel data collection through a **pool network** 
 6. **Time Tracking**:
    - The function keeps track of the total training time, logging it at the end of the training session.
 
-## **Usage Example**:
+**Usage Example**:
 
 ```python
 # Example usage of the distributed_training function
@@ -687,12 +687,12 @@ In this example, the function runs distributed training using the `MirroredStrat
 
 # `Policy classes`:
 
-## **SoftmaxPolicy**
+**SoftmaxPolicy**
 
-### **Description**:
+**Description**:
 Implements a softmax policy for multinomial distribution. This policy selects actions based on a probability distribution, where each action has a probability proportional to the exponentiated Q-value or reward estimate.
 
-### **Methods**:
+**Methods**:
 
 - **`select_action(nb_actions, probs)`**:
   - **Arguments**:
@@ -701,7 +701,7 @@ Implements a softmax policy for multinomial distribution. This policy selects ac
   - **Returns**:
     - `action` (`int`): The action selected according to the probability distribution `probs`.
 
-### **Usage**:
+**Usage**:
 Use `SoftmaxPolicy` with the `set` function of an RL agent:
 ```python
 policy = SoftmaxPolicy()
@@ -710,18 +710,18 @@ model.set(policy=policy)
 
 ---
 
-## **EpsGreedyQPolicy**
+**EpsGreedyQPolicy**
 
-### **Description**:
+**Description**:
 Implements the epsilon-greedy policy. With probability `epsilon`, this policy selects a random action to encourage exploration. Otherwise, it selects the action with the highest estimated Q-value.
 
-### **Constructor**:
+**Constructor**:
 
 - **`__init__(eps=.1)`**:
   - **Arguments**:
     - `eps` (`float`): Epsilon value representing the probability of choosing a random action. Defaults to `0.1`.
 
-### **Methods**:
+**Methods**:
 
 - **`select_action(q_values)`**:
   - **Arguments**:
@@ -729,7 +729,7 @@ Implements the epsilon-greedy policy. With probability `epsilon`, this policy se
   - **Returns**:
     - `action` (`int`): The selected action, either random (with probability `eps`) or the best action (with probability `1 - eps`).
 
-### **Usage**:
+**Usage**:
 Use `EpsGreedyQPolicy` with the `set` function of an RL agent:
 ```python
 policy = EpsGreedyQPolicy(eps=0.05)
@@ -738,12 +738,12 @@ model.set(policy=policy)
 
 ---
 
-## **AdaptiveEpsGreedyPolicy**
+**AdaptiveEpsGreedyPolicy**
 
-### **Description**:
+**Description**:
 Implements an adaptive epsilon-greedy policy. This policy dynamically adjusts the epsilon value based on the training step to balance exploration and exploitation. With a probability of `epsilon`, the policy selects a random action to encourage exploration; otherwise, it selects the action with the highest estimated Q-value.
 
-### **Constructor**:
+**Constructor**:
 
 - **`__init__(initial_eps=1.0, min_eps=0.1, decay_rate=0.0001)`**:
   - **Arguments**:
@@ -751,7 +751,7 @@ Implements an adaptive epsilon-greedy policy. This policy dynamically adjusts th
     - `min_eps` (`float`): The minimum epsilon value, representing the lowest exploration rate. Defaults to `0.1`.
     - `decay_rate` (`float`): The rate at which epsilon decreases over time. Defaults to `0.0001`.
 
-### **Methods**:
+**Methods**:
 
 - **`select_action(q_values, step_counter)`**:
   - **Arguments**:
@@ -760,7 +760,7 @@ Implements an adaptive epsilon-greedy policy. This policy dynamically adjusts th
   - **Returns**:
     - `action` (`int`): The selected action, either random (with probability `epsilon`) or the best action (with probability `1 - epsilon`).
 
-### **Usage**:
+**Usage**:
 Use `AdaptiveEpsGreedyPolicy` with the `set` function of an RL agent:
 ```python
 policy = AdaptiveEpsGreedyPolicy(initial_eps=1.0, min_eps=0.1, decay_rate=0.0001)
@@ -769,12 +769,12 @@ model.set(policy=policy)
 
 ---
 
-## **GreedyQPolicy**
+**GreedyQPolicy**
 
-### **Description**:
+**Description**:
 Implements the greedy policy, where the agent always selects the action with the highest estimated Q-value. This policy does not explore other actions.
 
-### **Methods**:
+**Methods**:
 
 - **`select_action(q_values)`**:
   - **Arguments**:
@@ -782,7 +782,7 @@ Implements the greedy policy, where the agent always selects the action with the
   - **Returns**:
     - `action` (`int`): The action with the highest Q-value.
 
-### **Usage**:
+**Usage**:
 Use `GreedyQPolicy` with the `set` function of an RL agent:
 ```python
 policy = GreedyQPolicy()
@@ -791,19 +791,19 @@ model.set(policy=policy)
 
 ---
 
-## **BoltzmannQPolicy**
+**BoltzmannQPolicy**
 
-### **Description**:
+**Description**:
 Implements the Boltzmann Q Policy. This policy selects actions based on a probability distribution derived from exponentiated Q-values, where higher Q-values have higher probabilities. The `tau` parameter controls the exploration: higher `tau` values result in more exploration, while lower values focus on exploitation.
 
-### **Constructor**:
+**Constructor**:
 
 - **`__init__(tau=1., clip=(-500., 500.))`**:
   - **Arguments**:
     - `tau` (`float`): Temperature parameter controlling exploration. Default is `1.0`.
     - `clip` (`tuple`): Range to clip the Q-values before exponentiation. Default is `(-500., 500.)`.
 
-### **Methods**:
+**Methods**:
 
 - **`select_action(q_values)`**:
   - **Arguments**:
@@ -811,7 +811,7 @@ Implements the Boltzmann Q Policy. This policy selects actions based on a probab
   - **Returns**:
     - `action` (`int`): The selected action according to the Boltzmann distribution of Q-values.
 
-### **Usage**:
+**Usage**:
 Use `BoltzmannQPolicy` with the `set` function of an RL agent:
 ```python
 policy = BoltzmannQPolicy(tau=0.5)
@@ -820,12 +820,12 @@ model.set(policy=policy)
 
 ---
 
-## **MaxBoltzmannQPolicy**
+**MaxBoltzmannQPolicy**
 
-### **Description**:
+**Description**:
 Combines epsilon-greedy and Boltzmann Q-policy. With probability `epsilon`, the agent follows the Boltzmann distribution to select an action. With probability `1 - epsilon`, it selects the action with the highest Q-value.
 
-### **Constructor**:
+**Constructor**:
 
 - **`__init__(eps=.1, tau=1., clip=(-500., 500.))`**:
   - **Arguments**:
@@ -833,7 +833,7 @@ Combines epsilon-greedy and Boltzmann Q-policy. With probability `epsilon`, the 
     - `tau` (`float`): Temperature parameter for Boltzmann exploration.
     - `clip` (`tuple`): Range to clip the Q-values. Default is `(-500., 500.)`.
 
-### **Methods**:
+**Methods**:
 
 - **`select_action(q_values)`**:
   - **Arguments**:
@@ -841,7 +841,7 @@ Combines epsilon-greedy and Boltzmann Q-policy. With probability `epsilon`, the 
   - **Returns**:
     - `action` (`int`): The selected action, either based on Boltzmann exploration or the greedy choice.
 
-### **Usage**:
+**Usage**:
 Use `MaxBoltzmannQPolicy` with the `set` function of an RL agent:
 ```python
 policy = MaxBoltzmannQPolicy(eps=0.1, tau=0.5)
@@ -850,18 +850,18 @@ model.set(policy=policy)
 
 ---
 
-## **BoltzmannGumbelQPolicy**
+**BoltzmannGumbelQPolicy**
 
-### **Description**:
+**Description**:
 Implements the Boltzmann-Gumbel exploration policy, which is invariant to the mean of rewards but sensitive to reward variance. This policy uses Gumbel noise to perturb the Q-values for exploration and adapts over time based on the parameter `C`.
 
-### **Constructor**:
+**Constructor**:
 
 - **`__init__(C=1.0)`**:
   - **Arguments**:
     - `C` (`float`): Exploration parameter to adjust for variance in rewards.
 
-### **Methods**:
+**Methods**:
 
 - **`select_action(q_values, step_counter)`**:
   - **Arguments**:
@@ -870,7 +870,7 @@ Implements the Boltzmann-Gumbel exploration policy, which is invariant to the me
   - **Returns**:
     - `action` (`int`): The selected action based on Boltzmann-Gumbel exploration.
 
-### **Usage**:
+**Usage**:
 Use `BoltzmannGumbelQPolicy` with the `set` function of an RL agent:
 ```python
 policy = BoltzmannGumbelQPolicy(C=1.0)
@@ -879,19 +879,19 @@ model.set(policy=policy)
 
 ---
 
-## **GumbelSoftmaxPolicy**
+**GumbelSoftmaxPolicy**
 
-### **Description**:
+**Description**:
 Implements the Gumbel Softmax policy for continuous action spaces. This policy samples from a Gumbel distribution and returns one-hot encoded actions for discrete action selection.
 
-### **Constructor**:
+**Constructor**:
 
 - **`__init__(temperature=1.0, eps=0.01)`**:
   - **Arguments**:
     - `temperature` (`float`): Temperature parameter for Gumbel sampling.
     - `eps` (`float`): Epsilon value for exploration in the one-hot encoding process.
 
-### **Methods**:
+**Methods**:
 
 - **`onehot_from_logits(logits)`**:
   - **Arguments**:
@@ -918,7 +918,7 @@ Implements the Gumbel Softmax policy for continuous action spaces. This policy s
   - **Returns**:
     - `y` (`np.ndarray`): One-hot encoded action sampled using Gumbel softmax.
 
-### **Usage**:
+**Usage**:
 Use `GumbelSoftmaxPolicy` with the `set` function of an RL agent:
 ```python
 policy = GumbelSoftmaxPolicy(temperature=0.5, eps=0.01)
@@ -931,12 +931,12 @@ This documentation provides detailed descriptions and usage examples for each po
 
 # `Noise classes`:
 
-## **GaussianWhiteNoiseProcess**
+**GaussianWhiteNoiseProcess**
 
-### **Description**:
+**Description**:
 Implements a Gaussian white noise process, generating noise from a Gaussian distribution with mean `mu` and time-varying standard deviation `sigma` (which anneals over time). This type of noise is commonly used in exploration strategies for continuous action spaces.
 
-### **Constructor**:
+**Constructor**:
 - **`__init__(mu=0., sigma=1., sigma_min=None, n_steps_annealing=1000, size=1)`**:
   - **Arguments**:
     - `mu` (`float`): Mean of the Gaussian distribution.
@@ -945,14 +945,14 @@ Implements a Gaussian white noise process, generating noise from a Gaussian dist
     - `n_steps_annealing` (`int`): Number of steps over which the annealing occurs.
     - `size` (`int`): Size of the noise vector to be sampled.
 
-### **Methods**:
+**Methods**:
 
 - **`sample()`**:
   - Generates a sample of Gaussian noise based on the current standard deviation (`sigma`), which anneals over time.
   - **Returns**:
     - `sample` (`np.ndarray`): Sampled noise from the Gaussian distribution.
 
-### **Usage**:
+**Usage**:
 ```python
 noise = GaussianWhiteNoiseProcess(mu=0., sigma=1., sigma_min=0.1, n_steps_annealing=1000, size=1)
 model.set(noise=noise)
@@ -960,12 +960,12 @@ model.set(noise=noise)
 
 ---
 
-## **OrnsteinUhlenbeckProcess**
+**OrnsteinUhlenbeckProcess**
 
-### **Description**:
+**Description**:
 This process generates noise using the Ornstein-Uhlenbeck process, a continuous-time stochastic process often used to model time-correlated noise. It is frequently applied in reinforcement learning, especially for exploration in environments with continuous action spaces (e.g., DDPG). The noise tends to revert to the mean over time, controlled by the parameter `theta`.
 
-### **Constructor**:
+**Constructor**:
 - **`__init__(theta, mu=0., sigma=1., dt=1e-2, size=1, sigma_min=None, n_steps_annealing=1000)`**:
   - **Arguments**:
     - `theta` (`float`): Rate of mean reversion (higher `theta` means stronger pull towards `mu`).
@@ -976,7 +976,7 @@ This process generates noise using the Ornstein-Uhlenbeck process, a continuous-
     - `sigma_min` (`float`): Minimum standard deviation for annealing.
     - `n_steps_annealing` (`int`): Number of steps over which the standard deviation anneals.
 
-### **Methods**:
+**Methods**:
 
 - **`sample()`**:
   - Generates a noise sample based on the current state of the process and updates the internal state.
@@ -986,7 +986,7 @@ This process generates noise using the Ornstein-Uhlenbeck process, a continuous-
 - **`reset_states()`**:
   - Resets the internal state (`x_prev`) of the process to a random value drawn from a Gaussian distribution.
 
-### **Usage**:
+**Usage**:
 ```python
 noise = OrnsteinUhlenbeckProcess(theta=0.15, mu=0., sigma=0.3, dt=1e-2, size=1)
 model.set(noise=noise)
@@ -1002,7 +1002,7 @@ These noise processes, such as `GaussianWhiteNoiseProcess` and `OrnsteinUhlenbec
 
 This example demonstrates how to construct a reinforcement learning (RL) agent by extending a custom `RL` base class. The implementation uses both `Model` and `RL` classes to structure the agent modularly. Here, `Model` serves as a neural network wrapper, while `RL` manages RL-specific components.
 
-## Step 1: Import `nn` and Define the Neural Network (Q-network) Class
+**Step 1: Import `nn` and Define the Neural Network (Q-network) Class**
 
 In this step, we start by importing `nn` from `Note`, a module that provides layer utilities and parameter management. The `Qnet` class, which inherits from the `Model` base class, uses `nn` layers for efficient Q-network construction.
 
@@ -1022,7 +1022,7 @@ class Qnet(nn.Model):
 
 Here, the `Model` superclass provides foundational methods for defining layers and managing parameters, making the setup of complex architectures more straightforward.
 
-## Step 2: Create the DQN Agent by Extending the RL Class and Set Up the Environment
+**Step 2: Create the DQN Agent by Extending the RL Class and Set Up the Environment**
 
 The `DQN` class represents the agent, inheriting core reinforcement learning functionalities by extending the `RL` base class.
 
@@ -1054,7 +1054,7 @@ class DQN(nn.RL):
         nn.assign_param(self.target_q_net.param, self.param)
 ```
 
-### Explanation of Methods
+**Explanation of Methods**
 
 - **`action` Method**: This method takes the current state `s` as input and computes the Q-values using the Q-network (`q_net`). In the context of the RL class, the action method provides output for the RL class to select actions based on the policy. It returns the predicted Q-values for each possible action, which can then be used to determine the best action to take according to the agent's policy. This function effectively allows the agent to decide its next move based on learned values, facilitating exploration and exploitation.
 
@@ -1064,7 +1064,7 @@ class DQN(nn.RL):
 
 Using `nn`, the `RL` base class handles much of the reinforcement learning logic, like parameter updates and replay buffer management, streamlining the creation of a DQN agent.
 
-## Step 3: Initialize the Model and Train the Agent
+**Step 3: Initialize the Model and Train the Agent**
 
 After defining both `Qnet` and `DQN`, we can instantiate the agent, set hyperparameters, and begin training using the `RL` class’s `train` method. The `train` method simplifies the training loop and efficiently manages data collection and updates.
 
@@ -1076,21 +1076,57 @@ model = DQN(4, 128, 2)
 model.set(policy=rl.EpsGreedyQPolicy(0.01), pool_size=10000, batch=64, update_steps=10)
 optimizer = tf.keras.optimizers.Adam()
 train_loss = tf.keras.metrics.Mean(name='train_loss')
-model.train(train_loss, optimizer, 100)
+model.train(train_loss, optimizer, 100, pool_network=False)
 ``` 
 
 This setup showcases how `nn`, `Model`, and `RL` components work together to streamline the development of reinforcement learning agents.
 
-## HER(Hindsight Experience Replay):
+**HER(Hindsight Experience Replay):**
 
 **Creating the `reward_done_func` function**:
    - `reward_done_func` is a custom reward function used to determine whether the agent has reached its goal and to provide an appropriate reward. In HER, this function also considers “substitute goals” (i.e., the states the agent actually reached) to dynamically adjust the reward. The function calculates reward values based on the agent’s distance from the goal (or other criteria) and determines whether the episode should end.
 
 To enable a RL-based agent to support HER, an additional `reward_done_func` function needs to be defined.
 
-## MARL(Multi-agent reinforcement learning):
+**MARL(Multi-agent reinforcement learning):**
 
 **Creating the `reward_done_func_ma` function**:
    - In multi-agent environments, each agent may have its own reward function and criteria for completion, depending on individual or team-based goals. The `reward_done_func_ma` can be adapted to multi-agent scenarios to compute rewards and evaluate termination conditions for each agent based on their interactions and objectives. This function ensures that agents receive rewards tailored to their specific goals, supporting individual learning.
 
 To enable a RL-based agent to support MARL, an additional `reward_done_func_ma` function needs to be defined.
+
+# LRFinder_rl:
+**Usage:**
+
+Create a Note agent, then execute this code:
+```python
+# agent is a Note agent
+agent.optimizer = tf.keras.optimizers.Adam()
+lr_finder = LRFinder(agent)
+
+# Train a agent with 5 episodes
+# with learning rate growing exponentially from 0.0001 to 1
+lr_finder.find(train_loss, pool_network=False, start_lr=0.0001, end_lr=1, episodes=5)
+```
+or
+```python
+# agent is a Note agent
+agent.optimizer = tf.keras.optimizers.Adam()
+strategy = tf.distribute.MirroredStrategy()
+lr_finder = LRFinder(agent)
+
+# Train a agent with 5 episodes
+# with learning rate growing exponentially from 0.0001 to 1
+lr_finder.find(pool_network=False, strategy=strategy, start_lr=0.0001, end_lr=1, episodes=5)
+```
+```python
+# Plot the reward, ignore 20 batches in the beginning and 5 in the end
+lr_finder.plot_reward(n_skip_beginning=20, n_skip_end=5)
+```
+```python
+# Plot rate of change of the reward
+# Ignore 20 batches in the beginning and 5 in the end
+# Smooth the curve using simple moving average of 20 batches
+# Limit the range for y axis to (-0.02, 0.01)
+lr_finder.plot_reward_change(sma=20, n_skip_beginning=20, n_skip_end=5, y_lim=(-0.01, 0.01))
+```
