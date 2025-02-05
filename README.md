@@ -1384,9 +1384,10 @@ These are the foundational steps for building a neural network by inheriting fro
 
 Create a Note model, then execute this code:
 ```python
+from Note import nn
 # model is a Note model
 model.optimizer = tf.keras.optimizers.Adam()
-lr_finder = LRFinder(model)
+lr_finder = nn.LRFinder(model)
 
 # Train a model with batch size 512 for 5 epochs
 # with learning rate growing exponentially from 0.0001 to 1
@@ -1394,10 +1395,11 @@ lr_finder.find(N, train_ds, loss_object, train_loss, start_lr=0.0001, end_lr=1, 
 ```
 or
 ```python
+from Note import nn
 # model is a Note model
 model.optimizer = tf.keras.optimizers.Adam()
 strategy = tf.distribute.MirroredStrategy()
-lr_finder = LRFinder(model)
+lr_finder = nn.LRFinder(model)
 
 # Train a model with batch size 512 for 5 epochs
 # with learning rate growing exponentially from 0.0001 to 1
