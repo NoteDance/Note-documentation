@@ -1100,9 +1100,10 @@ To enable a RL-based agent to support MARL, an additional `reward_done_func_ma` 
 
 Create a Note agent, then execute this code:
 ```python
+from Note import nn
 # agent is a Note agent
 agent.optimizer = tf.keras.optimizers.Adam()
-lr_finder = LRFinder(agent)
+lr_finder = nn.LRFinder_rl(agent)
 
 # Train a agent with 5 episodes
 # with learning rate growing exponentially from 0.0001 to 1
@@ -1110,10 +1111,11 @@ lr_finder.find(train_loss, pool_network=False, start_lr=0.0001, end_lr=1, episod
 ```
 or
 ```python
+from Note import nn
 # agent is a Note agent
 agent.optimizer = tf.keras.optimizers.Adam()
 strategy = tf.distribute.MirroredStrategy()
-lr_finder = LRFinder(agent)
+lr_finder = nn.LRFinder_rl(agent)
 
 # Train a agent with 5 episodes
 # with learning rate growing exponentially from 0.0001 to 1
