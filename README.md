@@ -1105,7 +1105,7 @@ from Note import nn
 agent.optimizer = tf.keras.optimizers.Adam()
 lr_finder = nn.LRFinder_rl(agent)
 
-# Train a agent with 5 episodes
+# Train a agent with 77 episodes
 # with learning rate growing exponentially from 0.0001 to 1
 # N: Total number of iterations (or mini-batch steps) over which the learning rate is increased.
 #    This parameter determines how many updates occur between the starting learning rate (start_lr)
@@ -1120,7 +1120,7 @@ lr_finder = nn.LRFinder_rl(agent)
 #              early episodes may have lower rewards (due to limited experience) compared to later ones.
 #              By using only the recent window_size rewards, we obtain a more stable and current estimate
 #              of the reward statistics for normalization.
-lr_finder.find(train_loss, pool_network=False, N=100, window_size=window_size, start_lr=0.0001, end_lr=1, episodes=100)
+lr_finder.find(train_loss, pool_network=False, N=77, window_size=7, start_lr=0.0001, end_lr=1, episodes=77)
 ```
 or
 ```python
@@ -1130,7 +1130,7 @@ agent.optimizer = tf.keras.optimizers.Adam()
 strategy = tf.distribute.MirroredStrategy()
 lr_finder = nn.LRFinder_rl(agent)
 
-# Train a agent with 5 episodes
+# Train a agent with 77 episodes
 # with learning rate growing exponentially from 0.0001 to 1
 # N: Total number of iterations (or mini-batch steps) over which the learning rate is increased.
 #    This parameter determines how many updates occur between the starting learning rate (start_lr)
@@ -1145,7 +1145,7 @@ lr_finder = nn.LRFinder_rl(agent)
 #              early episodes may have lower rewards (due to limited experience) compared to later ones.
 #              By using only the recent window_size rewards, we obtain a more stable and current estimate
 #              of the reward statistics for normalization.
-lr_finder.find(pool_network=False, strategy=strategy, N=100, window_size=window_size, start_lr=0.0001, end_lr=1, episodes=100)
+lr_finder.find(pool_network=False, strategy=strategy, N=77, window_size=7, start_lr=0.0001, end_lr=1, episodes=77)
 ```
 ```python
 # Plot the reward, ignore 20 batches in the beginning and 5 in the end
