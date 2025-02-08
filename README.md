@@ -1107,6 +1107,13 @@ lr_finder = nn.LRFinder_rl(agent)
 
 # Train a agent with 5 episodes
 # with learning rate growing exponentially from 0.0001 to 1
+# N: Total number of iterations (or mini-batch steps) over which the learning rate is increased.
+#    This parameter determines how many updates occur between the starting learning rate (start_lr)
+#    and the ending learning rate (end_lr). The learning rate is increased exponentially by a fixed
+#    multiplicative factor computed as:
+#         factor = (end_lr / start_lr) ** (1.0 / N)
+#    This ensures that after N updates, the learning rate will reach exactly end_lr.
+#
 # window_size: The size of the sliding window (i.e., the number of most recent episodes)
 #              used to compute the moving average and standard deviation of the rewards.
 #              This normalization helps smooth out the reward signal and adjust for the fact that
@@ -1125,6 +1132,13 @@ lr_finder = nn.LRFinder_rl(agent)
 
 # Train a agent with 5 episodes
 # with learning rate growing exponentially from 0.0001 to 1
+# N: Total number of iterations (or mini-batch steps) over which the learning rate is increased.
+#    This parameter determines how many updates occur between the starting learning rate (start_lr)
+#    and the ending learning rate (end_lr). The learning rate is increased exponentially by a fixed
+#    multiplicative factor computed as:
+#         factor = (end_lr / start_lr) ** (1.0 / N)
+#    This ensures that after N updates, the learning rate will reach exactly end_lr.
+#
 # window_size: The size of the sliding window (i.e., the number of most recent episodes)
 #              used to compute the moving average and standard deviation of the rewards.
 #              This normalization helps smooth out the reward signal and adjust for the fact that
