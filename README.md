@@ -1391,6 +1391,7 @@ lr_finder = nn.LRFinder(model)
 
 # Train a model with batch size 512 for 5 epochs
 # with learning rate growing exponentially from 0.0001 to 1
+# N = x_train[0].shape[0] if isinstance(x_train, list) else x_train.shape[0]
 lr_finder.find(N, train_ds, loss_object, train_loss, start_lr=0.0001, end_lr=1, batch_size=512, epochs=5)
 ```
 or
@@ -1403,6 +1404,7 @@ lr_finder = nn.LRFinder(model)
 
 # Train a model with batch size 512 for 5 epochs
 # with learning rate growing exponentially from 0.0001 to 1
+# N = x_train[0].shape[0] if isinstance(x_train, list) else x_train.shape[0]
 lr_finder.find(N, train_ds, loss_object, strategy=strategy, start_lr=0.0001, end_lr=1, batch_size=512, epochs=5)
 ```
 ```python
