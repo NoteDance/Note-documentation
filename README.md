@@ -1107,7 +1107,13 @@ lr_finder = nn.LRFinder_rl(agent)
 
 # Train a agent with 5 episodes
 # with learning rate growing exponentially from 0.0001 to 1
-lr_finder.find(train_loss, pool_network=False, start_lr=0.0001, end_lr=1, episodes=5)
+# window_size: The size of the sliding window (i.e., the number of most recent episodes)
+#              used to compute the moving average and standard deviation of the rewards.
+#              This normalization helps smooth out the reward signal and adjust for the fact that
+#              early episodes may have lower rewards (due to limited experience) compared to later ones.
+#              By using only the recent window_size rewards, we obtain a more stable and current estimate
+#              of the reward statistics for normalization.
+lr_finder.find(train_loss, pool_network=False, N=100, window_size=window_size, start_lr=0.0001, end_lr=1, episodes=100)
 ```
 or
 ```python
@@ -1119,7 +1125,13 @@ lr_finder = nn.LRFinder_rl(agent)
 
 # Train a agent with 5 episodes
 # with learning rate growing exponentially from 0.0001 to 1
-lr_finder.find(pool_network=False, strategy=strategy, start_lr=0.0001, end_lr=1, episodes=5)
+# window_size: The size of the sliding window (i.e., the number of most recent episodes)
+#              used to compute the moving average and standard deviation of the rewards.
+#              This normalization helps smooth out the reward signal and adjust for the fact that
+#              early episodes may have lower rewards (due to limited experience) compared to later ones.
+#              By using only the recent window_size rewards, we obtain a more stable and current estimate
+#              of the reward statistics for normalization.
+lr_finder.find(pool_network=False, strategy=strategy, N=100, window_size=window_size, start_lr=0.0001, end_lr=1, episodes=100)
 ```
 ```python
 # Plot the reward, ignore 20 batches in the beginning and 5 in the end
