@@ -675,3 +675,49 @@ tensor = tf.Variable(tf.zeros([3, 5]))
 nn.constant_(tensor, val=3.14)
 print(tensor)
 ```
+
+# solve_triangular
+
+The `solve_triangular` function solves a triangular system of linear equations using TensorFlow operations. It can handle both left- and right-sided systems and optionally assumes that the triangular matrix has unit diagonal elements.
+
+**Parameters**
+
+- **A**: A 2-dimensional `tf.Tensor` representing the triangular matrix.  
+- **B**: A `tf.Tensor` representing the right-hand side matrix or vector.  
+- **upper** (bool): Indicates whether the matrix `A` is upper triangular. If `True`, `A` is considered upper triangular; otherwise, it is considered lower triangular.  
+- **left** (bool, optional): Determines the side of the equation to solve. If `True` (default), the function solves `A * X = B`; if `False`, it solves `X * A = B`.  
+- **unitriangular** (bool, optional): If set to `True`, the function assumes `A` is unit triangular, meaning its diagonal elements are all ones. In this case, the diagonal of `A` is replaced with ones before solving. Default is `False`.
+
+**Method**
+
+- **solve_triangular(A, B, *, upper, left=True, unitriangular=False)**:  
+  1. If `unitriangular` is `True`, replaces the diagonal of `A` with ones.  
+  2. If `left` is `True`, it solves the system `A * X = B` using TensorFlow's `tf.linalg.triangular_solve`, with the `lower` parameter set based on the value of `upper`.  
+  3. If `left` is `False`, it solves the system `X * A = B` by transposing `A` and `B`, solving the transposed system, and then transposing the result back.  
+  4. Returns the solution tensor `X`.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Example: Solving A * X = B where A is lower triangular.
+A = tf.constant([[2.0, 0.0],
+                 [3.0, 1.0]])
+B = tf.constant([4.0, 7.0])
+
+# Solve the system assuming A is lower triangular (upper=False)
+X = nn.solve_triangular(A, B, upper=False)
+print(X)
+
+# Example: Solving X * A = B for an upper triangular A.
+A = tf.constant([[2.0, 3.0],
+                 [0.0, 1.0]])
+B = tf.constant([[4.0, 5.0],
+                 [6.0, 7.0]])
+
+# Solve the system from the right side (left=False)
+X = nn.solve_triangular(A, B, upper=True, left=False)
+print(X)
+```
