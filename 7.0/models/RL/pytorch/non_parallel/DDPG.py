@@ -71,14 +71,13 @@ class DDPG:
         q_target=r+self.gamma*next_q_value*(1-d)
         actor_loss=-torch.mean(self.critic(s,self.actor(s)))
         critic_loss=F.mse_loss(self.critic(s,a),q_target)
-        return [actor_loss,critic_loss]
+        return actor_loss+critic_loss
     
     
     def backward(self,loss):
         self.actor_opt.zero_grad()
-        loss[0].backward()
         self.critic_opt.zero_grad()
-        loss[1].backward()
+        loss.backward()
         return
     
     
