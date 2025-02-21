@@ -11,7 +11,7 @@ class Qnet: # define a class for the Q-network
         self.dense2 = nn.dense(action_dim, hidden_dim)
         self.param=[self.dense1.param,self.dense2.param] # store the network parameters in a list
     
-    def fp(self,x):  # forward propagation function, kernel uses it for forward propagation
+    def __call__(self,x):  # forward propagation function, kernel uses it for forward propagation
         x = self.dense2(self.dense1(x))
         return x
     
@@ -45,8 +45,8 @@ class DQN: # define a class for the DQN agent
     
     def loss(self,s,a,next_s,r,d): # loss function, kernel uses it to calculate loss
         a=tf.expand_dims(a,axis=1) # expand the action vector to match the Q-value matrix shape
-        q_value=tf.gather(self.nn.fp(s),a,axis=1,batch_dims=1) # get the Q-value for the selected action
-        next_q_value=tf.reduce_max(self.target_q_net.fp(next_s),axis=1) # get the maximum Q-value for the next state from the target network
+        q_value=tf.gather(self.nn(s),a,axis=1,batch_dims=1) # get the Q-value for the selected action
+        next_q_value=tf.reduce_max(self.target_q_net(next_s),axis=1) # get the maximum Q-value for the next state from the target network
         target=tf.cast(r,'float32')+0.98*next_q_value*(1-tf.cast(d,'float32')) # calculate the target value using Bellman equation with discount factor 0.98
         TD=q_value-target
         self.pr.update_TD(TD)
