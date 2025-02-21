@@ -9,7 +9,7 @@ class actor:
         self.dense2 = nn.dense(action_dim, hidden_dim)
         self.param=[self.dense1.param,self.dense2.param] # store the network parameters in a list
     
-    def fp(self,x):
+    def __call__(self,x):
         x=self.dense1(x)
         return tf.nn.softmax(self.dense2(x))
 
@@ -20,7 +20,7 @@ class critic:
         self.dense2 = nn.dense(1, hidden_dim)
         self.param=[self.dense1.param,self.dense2.param] # store the network parameters in a list
     
-    def fp(self,x):
+    def __call__(self,x):
         x=self.dense1(x)
         return self.dense2(x)
     
@@ -48,9 +48,9 @@ class PPO:
     
     def loss(self,s,a,next_s,r,d):
         a=tf.expand_dims(a,axis=1)
-        raito=tf.gather(self.actor.fp(s),a,axis=1,batch_dims=1)/tf.gather(self.nn.fp(s),a,axis=1,batch_dims=1)
-        value=self.critic.fp(s)
-        value_tar=tf.cast(r,'float32')+0.98*self.critic.fp(next_s)*(1-tf.cast(d,'float32'))
+        raito=tf.gather(self.actor(s),a,axis=1,batch_dims=1)/tf.gather(self.nn(s),a,axis=1,batch_dims=1)
+        value=self.critic(s)
+        value_tar=tf.cast(r,'float32')+0.98*self.critic(next_s)*(1-tf.cast(d,'float32'))
         TD=value_tar-value
         sur1=raito*TD
         sur2=tf.clip_by_value(raito,clip_value_min=1-self.clip_eps,clip_value_max=1+self.clip_eps)*TD

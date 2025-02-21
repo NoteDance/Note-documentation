@@ -11,7 +11,7 @@ class actor: # define a class for the actor network
         self.param=[self.dense1.param,self.dense2.param] # store the network parameters in a list
     
     
-    def fp(self,x):  # forward propagation function, kernel uses it for forward propagation
+    def __call__(self,x):  # forward propagation function, kernel uses it for forward propagation
         x = self.dense1(x)
         return self.dense2(x)*self.action_bound
 
@@ -23,7 +23,7 @@ class critic: # define a class for the critic network
         self.param=[self.dense1.param,self.dense2.param] # store the network parameters in a list
     
     
-    def fp(self,x,a):  # forward propagation function, kernel uses it for forward propagation
+    def __call__(self,x,a):  # forward propagation function, kernel uses it for forward propagation
         cat=tf.concat([x,a],axis=1)
         x=self.dense1(cat)
         return self.dense2(x)
@@ -61,10 +61,10 @@ class DDPG: # define a class for the DDPG agent
     
     def loss(self,s,a,next_s,r,d):  # loss function, kernel uses it to calculate loss
         a=tf.expand_dims(a,axis=1)  # expand the action vector to match the Q-value matrix shape
-        next_q_value=self.target_critic.fp(next_s,self.target_actor.fp(next_s))  # get the Q-value for the next state and action from the target critic network
+        next_q_value=self.target_critic(next_s,self.target_actor(next_s))  # get the Q-value for the next state and action from the target critic network
         q_target=tf.cast(r,'float32')+self.gamma*next_q_value*(1-tf.cast(d,'float32'))  # calculate the target value using Bellman equation with discount factor gamma
-        actor_loss=-tf.reduce_mean(self.critic.fp(s,self.actor.fp(s)))  # calculate the actor loss as the negative mean of the Q-value for the current state and action from the critic network
-        critic_loss=tf.reduce_mean((self.critic.fp(s,a)-q_target)**2)  # calculate the critic loss as the mean squared error between Q-value and target value
+        actor_loss=-tf.reduce_mean(self.critic(s,self.actor(s)))  # calculate the actor loss as the negative mean of the Q-value for the current state and action from the critic network
+        critic_loss=tf.reduce_mean((self.critic(s,a)-q_target)**2)  # calculate the critic loss as the mean squared error between Q-value and target value
         return actor_loss+critic_loss  # return a sum of actor loss and critic loss
         
     

@@ -10,7 +10,7 @@ class Qnet:
         self.dense2 = nn.dense(action_dim, hidden_dim)
         self.param=[self.dense1.param,self.dense2.param] # store the network parameters in a list   
     
-    def fp(self,x):
+    def __call__(self,x):
         x = self.dense2(self.dense1(x))
         return x
     
@@ -44,8 +44,8 @@ class DQN:
     
     def loss(self,s,a,next_s,r,d):
         a=tf.expand_dims(a,axis=1)
-        q_value=tf.gather(self.nn.fp(s),a,axis=1,batch_dims=1)
-        next_q_value=tf.reduce_max(self.target_q_net.fp(next_s),axis=1)
+        q_value=tf.gather(self.nn(s),a,axis=1,batch_dims=1)
+        next_q_value=tf.reduce_max(self.target_q_net(next_s),axis=1)
         target=tf.cast(r,'float32')+0.98*next_q_value*(1-tf.cast(d,'float32'))
         target=tf.expand_dims(target,axis=1)
         TD=target-q_value
