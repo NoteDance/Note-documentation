@@ -48,7 +48,7 @@ class DDPG: # define a class for the DDPG agent
         self.sigma=sigma  # noise scale 
         self.gamma=gamma  # discount factor 
         self.tau=tau  # soft update factor 
-        self.optimizer=o.SGD(param=self.param) # optimizer, kernel uses it to optimize. Here we use a custom SGD optimizer
+        self.optimizer=[o.SGD(param=self.param[0]),o.SGD(param=self.param[1])] # optimizer, kernel uses it to optimize. Here we use a custom SGD optimizer
     
     
     def env(self,a=None,p=None,initial=None): # environment function, kernel uses it to interact with the environment
@@ -75,3 +75,9 @@ class DDPG: # define a class for the DDPG agent
         for target_param,param in zip(self.target_critic.param,self.critic.param):  # for each pair of parameters in target critic network and critic network
             target_param.assign(target_param*(1.0-self.tau)+param*self.tau)  # update the target parameter using soft update with factor tau
         return
+    
+    
+    def opt(self,gradient): # optimization function, kernel uses it to optimize parameter
+        self.optimizer[0](gradient,self.param[0]) # apply the custom momentum optimizer to update the parameters using the gradient
+        self.optimizer[1](gradient,self.param[1])
+        return self.param

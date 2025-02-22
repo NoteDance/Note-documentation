@@ -1,7 +1,7 @@
 import tensorflow as tf
 from Note import nn
 import gym
-from Note.nn.parallel.optimizer import SGD
+import Note.nn.parallel.optimizer as o
 
 
 class actor:
@@ -34,7 +34,7 @@ class PPO:
         self.critic=critic(state_dim,hidden_dim)
         self.clip_eps=clip_eps
         self.param=[self.actor.param,self.critic.param]
-        self.opt=SGD(param=self.param)
+        self.opt=[o.SGD(param=self.param[0]),o.SGD(param=self.param[1])]
         self.genv=[gym.make('CartPole-v0') for _ in range(5)]
     
     
@@ -62,3 +62,9 @@ class PPO:
     def update_param(self):
         nn.assign(self.nn.param,self.actor.param)
         return
+    
+    
+    def opt(self,gradient):
+        self.optimizer[0](gradient,self.param[0])
+        self.optimizer[1](gradient,self.param[1])
+        return self.param
