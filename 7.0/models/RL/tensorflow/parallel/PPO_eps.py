@@ -28,12 +28,12 @@ class critic:
     
 class PPO:
     def __init__(self,state_dim,hidden_dim,action_dim,clip_eps):
+        self.actor_=actor(state_dim,hidden_dim,action_dim)
         self.actor=actor(state_dim,hidden_dim,action_dim)
-        self.nn=actor(state_dim,hidden_dim,action_dim)
-        nn.assign(self.nn.param,self.actor.param.copy())
+        nn.assign(self.actor.param,self.actor_.param)
         self.critic=critic(state_dim,hidden_dim)
         self.clip_eps=clip_eps
-        self.param=[self.actor.param,self.critic.param]
+        self.param=[self.actor_.param,self.critic.param]
         self.opt=[o.SGD(param=self.param[0]),o.SGD(param=self.param[1])]
         self.genv=[gym.make('CartPole-v0') for _ in range(5)]
     
@@ -49,7 +49,7 @@ class PPO:
     
     def loss(self,s,a,next_s,r,d):
         a=tf.expand_dims(a,axis=1)
-        raito=tf.gather(self.actor(s),a,axis=1,batch_dims=1)/tf.gather(self.nn(s),a,axis=1,batch_dims=1)
+        raito=tf.gather(self.actor_(s),a,axis=1,batch_dims=1)/tf.gather(self.actor(s),a,axis=1,batch_dims=1)
         value=self.critic(s)
         value_tar=tf.cast(r,'float32')+0.98*self.critic(next_s)*(1-tf.cast(d,'float32'))
         TD=value_tar-value
@@ -60,7 +60,7 @@ class PPO:
     
     
     def update_param(self):
-        nn.assign(self.nn.param,self.actor.param)
+        nn.assign(self.actor.param,self.actor_.param)
         return
     
     
