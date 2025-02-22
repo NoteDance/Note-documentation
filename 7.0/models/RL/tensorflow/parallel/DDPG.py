@@ -78,6 +78,6 @@ class DDPG: # define a class for the DDPG agent
     
     
     def opt(self,gradient): # optimization function, kernel uses it to optimize parameter
-        self.optimizer[0](gradient[0],self.param[0]) # apply the custom momentum optimizer to update the parameters using the gradient
-        self.optimizer[1](gradient[1],self.param[1])
-        return self.param
+        param1=self.optimizer[0](gradient[0],self.param[0]) # apply the custom momentum optimizer to update the parameters using the gradient
+        param2=self.optimizer[1](gradient[1],self.param[1])
+        return [param1,param2]

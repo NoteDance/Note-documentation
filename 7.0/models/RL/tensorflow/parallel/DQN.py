@@ -47,5 +47,5 @@ class DQN: # define a class for the DQN agent
     
     
     def opt(self,gradient): # optimization function, kernel uses it to optimize parameter
-        self.optimizer(gradient,self.param) # apply the custom momentum optimizer to update the parameters using the gradient
-        return self.param
+        param=self.optimizer(gradient,self.param) # apply the custom momentum optimizer to update the parameters using the gradient
+        return param
