@@ -148,6 +148,7 @@ pool_lock=[Lock(),Lock(),Lock(),Lock(),Lock()] #create a list of locks for each 
 lock=[Lock()]         #create two locks for synchronization
 for p in range(5):           #loop over the processes
     Process(target=kernel.train,args=(p,lock,pool_lock)).start() #start each process with the train function and pass the process id, the number of episodes, the locks and the pool locks as arguments
+kernel.update_nn_param()             #update the network parameters after training
 ```
 
 
