@@ -65,6 +65,6 @@ class PPO:
     
     
     def opt(self,gradient):
-        self.optimizer[0](gradient,self.param[0])
-        self.optimizer[1](gradient,self.param[1])
+        self.optimizer[0](gradient[0],self.param[0])
+        self.optimizer[1](gradient[1],self.param[1])
         return self.param
