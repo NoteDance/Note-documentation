@@ -1418,3 +1418,28 @@ lr_finder.plot_loss(n_skip_beginning=20, n_skip_end=5)
 # Limit the range for y axis to (-0.02, 0.01)
 lr_finder.plot_loss_change(sma=20, n_skip_beginning=20, n_skip_end=5, y_lim=(-0.01, 0.01))
 ```
+
+# OptFinder:
+**Usage:**
+
+Create a Note model, then execute this code:
+```python
+from Note import nn
+# model is a Note model
+optimizers = [tf.keras.optimizers.Adam(), tf.keras.optimizers.AdamW(), tf.keras.optimizers.Adamax()]
+opt_finder = nn.OptFinder(model, optimizers)
+
+# Train a model with batch size 512 for 5 epochs
+opt_finder.find(train_ds, loss_object, train_loss, batch_size=512)
+```
+or
+```python
+from Note import nn
+# model is a Note model
+optimizers = [tf.keras.optimizers.Adam(), tf.keras.optimizers.AdamW(), tf.keras.optimizers.Adamax()]
+strategy = tf.distribute.MirroredStrategy()
+opt_finder = nn.OptFinder(model, optimizers)
+
+# Train a model with batch size 512 for 5 epochs
+opt_finder.find(train_ds, loss_object, strategy=strategy, batch_size=512)
+```
