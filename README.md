@@ -721,3 +721,40 @@ B = tf.constant([[4.0, 5.0],
 X = nn.solve_triangular(A, B, upper=True, left=False)
 print(X)
 ```
+
+# sparse_mask
+
+The `sparse_mask` function constructs a new sparse tensor by using the indices and dense shape from a provided sparse tensor (`mask_sparse`) while extracting the corresponding values from a dense tensor (`dense_tensor`).
+
+**Parameters**
+
+- **dense_tensor**: A `tf.Tensor` containing the source values.
+- **mask_sparse**: A `tf.sparse.SparseTensor` whose `indices` and `dense_shape` determine the positions in `dense_tensor` from which to gather values.
+
+**Method**
+
+- **sparse_mask(dense_tensor, mask_sparse)**:  
+  1. Retrieves the indices from `mask_sparse`.
+  2. Uses `tf.gather_nd` to extract the corresponding values from `dense_tensor`.
+  3. Returns a new `tf.sparse.SparseTensor` with the gathered values and the same indices and dense shape as `mask_sparse`.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create a dense tensor
+dense = tf.constant([[1, 2, 3],
+                     [4, 5, 6],
+                     [7, 8, 9]])
+
+# Create a sparse mask with specific indices
+indices = tf.constant([[0, 1], [2, 2]])
+mask_sparse = tf.sparse.SparseTensor(indices=indices, values=[0, 0], dense_shape=[3, 3])
+
+# Construct a new sparse tensor using the mask from the dense tensor
+sparse_result = nn.sparse_mask(dense, mask_sparse)
+print("Sparse result:")
+print(tf.sparse.to_dense(sparse_result))
+```
