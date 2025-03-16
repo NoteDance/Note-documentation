@@ -7043,3 +7043,42 @@ images = tf.random.normal([5, 256, 256, 3])
 transforms = tf.constant([1, 0, 0, 0, 1, 0, 0, 0], shape=(1, 8), dtype=tf.float32)
 transformed_images = nn.transform(images, transforms)
 ```
+
+# DynamicTanh
+
+The `DynamicTanh` class implements a dynamic tanh activation module with learnable scaling, weight, and bias parameters. It applies a scaled tanh activation to the input and then adjusts the result with learnable affine parameters, allowing the activation function to adapt during training.
+
+**Initialization Parameters**
+
+- **normalized_shape** (tuple or list of ints): The shape of the features to be normalized. This defines the dimensions for the learnable weight and bias parameters.
+- **alpha_init_value** (float): The initial scaling factor applied to the input before the tanh activation. Default is 0.5.
+
+**Methods**
+
+- **`__call__(self, x)`**: Applies the DynamicTanh transformation to the input tensor.
+  
+  - **Parameters**:
+    - **x** (Tensor): The input tensor.
+  
+  - **Returns**: A tensor computed as follows:
+    1. Scale the input by the learnable parameter `alpha`.
+    2. Apply the tanh activation.
+    3. Scale the result by a learnable weight and add a learnable bias.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an instance of DynamicTanh
+dynamic_tanh = nn.DynamicTanh(normalized_shape=(64,), alpha_init_value=0.5)
+
+# Generate some sample data
+x = tf.random.normal((32, 64))  # Example input: batch of 32 samples, each with 64 features
+
+# Apply the DynamicTanh activation
+output = dynamic_tanh(x)
+
+print(output.shape)  # Should print: (32, 64)
+```
