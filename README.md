@@ -861,7 +861,7 @@ img = tf.random.normal([1, 224, 224, 3])
 output = model(img) # (1, 1000)
 ```
 
-# Model's functions
+# Model's functions:
 These functions extend the Model class, allowing you to manage namespaces for layers, control freezing and unfreezing of layers, and set training or evaluation modes. Additionally, functions can be applied to layers for initialization or configuration. Below are the descriptions and usage of each function.
 
 **Example**:
@@ -1336,7 +1336,7 @@ The `get_info` function:
 
 The `get_info` function makes use of `try-except` blocks to handle potential errors if certain attributes are not defined in the current info.
 
-# Building a Neural Network by Inheriting from the Model Class
+# Building a Neural Network by Inheriting from the Model Class:
 
 **Define a Custom Model Class**
 
