@@ -1443,3 +1443,142 @@ opt_finder = nn.OptFinder(model, optimizers)
 # Train a model with batch size 512 for 5 epochs
 opt_finder.find(train_ds, loss_object, strategy=strategy, batch_size=512)
 ```
+
+# ModelFinder:
+
+**Overview**
+
+The **ModelFinder** class is designed to help identify the best model during training by comparing losses across multiple models. It trains several models in parallel (using multiprocessing) and records the loss information at the end of each epoch. If the current epoch is the final one and the model’s loss is lower than the best recorded loss, the shared log is updated with the best optimizer and the lowest loss. This mechanism allows you to determine which model performed best after training.
+
+This class supports two training modes:
+- **Standard Training:** Invokes the model's `train` method.
+- **Distributed Training:** When a distributed strategy is provided, it calls the model’s `distributed_training` method.
+
+---
+
+**Key Attributes**
+
+- **models**  
+  *Type:* `list`  
+  *Description:* A list of model instances to be trained, each of which will run in its own process.
+
+- **optimizers**  
+  *Type:* `list`  
+  *Description:* A list of optimizers corresponding to the models, which are used during the training process.
+
+- **logs**  
+  *Type:* Shared dictionary (created with `multiprocessing.Manager().dict()`)  
+  *Description:* Records key information during training. Initially, it contains:
+  - `best_loss`: Set to a large value (1e9) as a starting point for comparison.
+  - Later, `best_opt` may be added to store the optimizer corresponding to the lowest loss.
+
+- **lock**  
+  *Type:* `multiprocessing.Lock`  
+  *Description:* A multiprocessing lock to ensure safe access and modification of the shared `logs` dictionary among processes.
+
+- **epochs**  
+  *Type:* `int`  
+  *Description:* The total number of training epochs, set in the `find` method. It is used to determine if the current epoch is the final one.
+
+---
+
+**Main Methods**
+
+**1. `__init__(self, models, optimizers)`**
+
+**Purpose:**  
+Initializes a ModelFinder instance by setting the list of models and optimizers. It also creates a shared logs dictionary and a multiprocessing lock.
+
+**Parameters:**
+- `models`: A list of model instances.
+- `optimizers`: A list of optimizers corresponding to the models.
+
+**Details:**  
+The constructor uses `multiprocessing.Manager` to create a shared `logs` dictionary, pre-setting `best_loss` to a high value (1e9) for later comparisons. A multiprocessing lock (`lock`) is created to ensure thread safety when multiple processes access the shared data.
+
+**2. `on_epoch_end(self, epoch, logs, model=None, lock=None)`**
+
+**Purpose:**  
+Serves as a callback function executed at the end of each epoch. It checks whether the current epoch is the last one and, if so, updates the shared log with the best loss and corresponding optimizer.
+
+**Parameters:**
+- `epoch`: The current epoch number (starting from 0).
+- `logs`: A dictionary containing training information for the current epoch, which must include the key `'loss'`.
+- `model`: The model instance being trained (used to access the model's optimizer).
+- `lock`: The multiprocessing lock used to synchronize access to the shared log.
+
+**Key Logic:**
+1. Acquire the lock using `lock.acquire()` to protect shared resources.
+2. Retrieve the current loss from the `logs` dictionary.
+3. Check if the current epoch is the final one (`epoch + 1 == self.epochs`).
+4. If the current loss is lower than the previously recorded `best_loss`, update:
+   - `logs['best_loss']` with the current loss.
+   - `logs['best_opt']` with the model's optimizer.
+5. Release the lock using `lock.release()`.
+
+**3. `find(self, train_ds=None, loss_object=None, train_loss=None, strategy=None, batch_size=64, epochs=1, jit_compile=True)`**
+
+**Purpose:**  
+Starts the multiprocessing training of multiple models and uses a callback function to record the best loss and corresponding optimizer during training.
+
+**Parameters:**
+- `train_ds`: The training dataset.
+- `loss_object`: The loss function used to compute training error.
+- `train_loss`: The metric used to compute the training loss.
+- `strategy`: The distributed training strategy (optional). If provided, the distributed training mode is used; otherwise, standard training is performed.
+- `batch_size`: The batch size for training (default is 64).
+- `epochs`: The total number of training epochs.
+- `jit_compile`: Whether to enable JIT compilation for faster training (default is True).
+
+**Key Logic:**
+1. Store the passed `epochs` value in `self.epochs`.
+2. Loop over each model and, for each:
+   - Use `functools.partial` to create a `partial_callback` that binds the model, lock, and callback function to `epoch_end_callback`.
+   - Create a callback instance using `nn.LambdaCallback` that triggers `on_epoch_end`.
+   - Assign the corresponding optimizer to the model.
+3. Depending on whether a `strategy` is provided, select the training method:
+   - If `strategy` is `None`, use the model’s `train` method (standard training).
+   - Otherwise, use the model’s `distributed_training` method (distributed training) with a lambda function that directly calls `on_epoch_end`.
+4. For each model, start a new process with the corresponding training parameters (such as training dataset, loss function, number of epochs, callbacks, etc.).
+5. Wait for all processes to finish by calling `join()` on each process.
+
+---
+
+**Example Usage**
+
+Below is an example demonstrating how to use ModelFinder to train multiple models and select the best one based on the training loss.
+
+```python
+from Note import nn
+
+# Assume model1 and model2 are properly initialized models, and optimizer1 and optimizer2 are their respective optimizers
+model1 = ...  # Initialize model 1
+model2 = ...  # Initialize model 2
+optimizer1 = ...  # Optimizer for model 1
+optimizer2 = ...  # Optimizer for model 2
+
+# Create lists of models and optimizers
+models = [model1, model2]
+optimizers = [optimizer1, optimizer2]
+
+# Initialize a ModelFinder instance
+model_finder = nn.ModelFinder(models, optimizers)
+
+# Prepare training dataset and loss function (example)
+train_dataset = ...  # Training dataset
+loss_function = ...  # Loss function
+train_loss_metric = ...  # Training loss metric
+
+# Execute training in standard mode (without distributed strategy)
+model_finder.find(
+    train_ds=train_dataset,
+    loss_object=loss_function,
+    train_loss=train_loss_metric,
+    epochs=10,
+    jit_compile=True
+)
+
+# After training, the best result can be accessed via model_finder.logs
+print("Best Loss:", model_finder.logs['best_loss'])
+print("Best Optimizer:", model_finder.logs['best_opt'])
+```
