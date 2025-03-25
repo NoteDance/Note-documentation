@@ -439,7 +439,7 @@ multi_worker_model.distributed_training(optimizer, strategy, num_episodes=100,
 # model.save('model.dat')
 ```
 
-# `RL.set`:
+# RL.set:
 
 **Function Description**:
 The `set` function configures various parameters of the Reinforcement Learning (RL) agent. These parameters control the policy, noise, experience pool, batch size, update frequency, and training termination conditions. By adjusting these settings, users can fine-tune the agent's behavior and training process to suit specific RL tasks.
@@ -542,7 +542,7 @@ model.set(
 
 In this example, the agent computes the average reward every 100 trials. If the average reward reaches 200 or higher, the training process stops early. This method allows the agent to stop training once it reaches a desired performance level, improving training efficiency.
 
-# `RL.train`:
+# RL.train:
 **Description**:
 This function handles the training loop of the reinforcement learning (RL) agent. It supports both single-process and multi-process training, along with the option to use a **pool network** for experience replay. Additionally, it provides support for Hindsight Experience Replay (HER), Prioritized Experience Replay (PR), and optional just-in-time (JIT) compilation for performance optimization.
 
@@ -605,7 +605,7 @@ agent.train(train_loss=train_loss, optimizer=optimizer, episodes=100, pool_netwo
 
 This documentation provides a detailed explanation of each parameter and the internal behavior of the function, which should be useful for understanding its usage in reinforcement learning training loops.
 
-# `RL.distributed_training`:
+# RL.distributed_training:
 
 **Description**:
 The `distributed_training` function is designed to handle distributed reinforcement learning (RL) training across multiple devices or workers. It supports various TensorFlow strategies, such as MirroredStrategy, MultiWorkerMirroredStrategy, and ParameterServerStrategy. The function is optimized for both single-node and multi-node setups, enabling distributed training with optional experience replay buffers, including prioritized and hindsight experience replay (HER). 
@@ -685,7 +685,7 @@ agent.distributed_training(
 
 In this example, the function runs distributed training using the `MirroredStrategy`, where experience is collected in parallel through 8 processes and stored in a pool buffer. Training runs for 100 episodes with a global batch size of 64.
 
-# `Policy classes`:
+# Policy classes:
 
 **SoftmaxPolicy**
 
@@ -929,7 +929,7 @@ model.set(policy=policy)
 
 This documentation provides detailed descriptions and usage examples for each policy class and reflects the typical way of passing these policies to an RL agent using the `set` function.
 
-# `Noise classes`:
+# Noise classes:
 
 **GaussianWhiteNoiseProcess**
 
@@ -998,7 +998,7 @@ These noise processes, such as `GaussianWhiteNoiseProcess` and `OrnsteinUhlenbec
 
 ---
 
-# `Building a Custom Agent by Extending the RL Base Class`
+# Building a Custom Agent by Extending the RL Base Class:
 
 This example demonstrates how to construct a reinforcement learning (RL) agent by extending a custom `RL` base class. The implementation uses both `Model` and `RL` classes to structure the agent modularly. Here, `Model` serves as a neural network wrapper, while `RL` manages RL-specific components.
 
@@ -1184,7 +1184,7 @@ opt_finder = nn.OptFinder_rl(agent, optimizers)
 opt_finder.find(pool_network=False, strategy=strategy, episodes=7)
 ```
 
-# AgentFinder
+# AgentFinder:
 
 **Overview**
 
