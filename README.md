@@ -758,3 +758,39 @@ sparse_result = nn.sparse_mask(dense, mask_sparse)
 print("Sparse result:")
 print(tf.sparse.to_dense(sparse_result))
 ```
+
+# nan_to_num
+
+The `nan_to_num` function replaces all `NaN` values in a tensor with a specified numeric value. It optionally allows writing the result to an output tensor.
+
+**Parameters**
+
+- **tensor**: A `tf.Tensor` containing the values to be processed.
+- **nan** (float, optional): The value to replace any `NaN` values in the `tensor`. Default is `0.0`.
+- **out** (optional): A `tf.Variable` to which the resulting tensor will be assigned. If provided, the function assigns the result to `out` and returns it; otherwise, it returns a new tensor with the replacements.
+
+**Method**
+
+- **`nan_to_num(tensor, nan=0.0, out=None)`**:  
+  1. Uses `tf.math.is_nan` to identify `NaN` values within the `tensor`.
+  2. Applies `tf.where` to substitute these `NaN` values with the specified `nan` parameter.
+  3. If the `out` parameter is provided, assigns the resulting tensor to `out` and returns it; otherwise, returns the new tensor directly.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create a tensor with some NaN values
+tensor = tf.constant([1.0, float('nan'), 3.0, float('nan')])
+
+# Replace NaNs with 0.0 (default behavior)
+result = nn.nan_to_num(tensor)
+print("Result with default replacement (0.0):", result)
+
+# Replace NaNs with a different value and assign to an existing variable
+output_tensor = tf.Variable(tf.zeros_like(tensor))
+nn.nan_to_num(tensor, nan=-1.0, out=output_tensor)
+print("Result with replacement (-1.0) in output tensor:", output_tensor)
+```
