@@ -480,11 +480,6 @@ or
 ```python
 model.restore('model.dat')
 ```
-or
-```python
-from Note import nn
-model,optimizer=nn.restore('model.dat')
-```
 
 
 # Build models:
