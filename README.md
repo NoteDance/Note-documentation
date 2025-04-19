@@ -794,3 +794,54 @@ output_tensor = tf.Variable(tf.zeros_like(tensor))
 nn.nan_to_num(tensor, nan=-1.0, out=output_tensor)
 print("Result with replacement (-1.0) in output tensor:", output_tensor)
 ```
+
+# coalesce_sparse
+
+The `coalesce_sparse` function merges duplicate entries in a sparse tensor by summing their values, resulting in a properly “coalesced” `tf.SparseTensor`.
+
+**Parameters**
+
+- **`sp`** (`tf.SparseTensor`):  
+  A sparse tensor potentially containing duplicate indices.
+
+**Returns**
+
+- **`tf.SparseTensor`**:  
+  A new sparse tensor with:
+  - **`indices`**: Unique coordinates from `sp.indices`.
+  - **`values`**: Summed values for each unique coordinate.
+  - **`dense_shape`**: Same as `sp.dense_shape`.
+
+**Method**
+
+- **`coalesce_sparse(sp: tf.SparseTensor) -> tf.SparseTensor`**  
+  1. Casts `sp.dense_shape` to `int64`.  
+  2. Constructs **multipliers** for row-major linear indexing via the cumulative product of `dense_shape[1:]` and a trailing 1.  
+  3. Converts N‑D indices to 1‑D **linear indices** by dotting with `multipliers`.  
+  4. Uses `tf.unique` to extract **unique linear indices** and **segment IDs** mapping each original index to its unique group citeturn1search0.  
+  5. Applies `tf.math.unsorted_segment_sum` to **sum** `sp.values` across each segment ID citeturn2search0.  
+  6. Converts unique linear indices back to N‑D indices with `tf.unravel_index` and stacks them.  
+  7. Returns a new `tf.SparseTensor` constructed from these coalesced indices and summed values, preserving the original shape.
+
+> **Merging duplicates** in sparse tensors ensures correct aggregation of values when the same coordinate appears multiple times citeturn0search0.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create a SparseTensor with duplicate indices
+indices = tf.constant([[0, 1], [0, 1], [1, 2]])
+values = tf.constant([3.0, 4.0, 5.0])
+dense_shape = [3, 4]
+sp = tf.sparse.SparseTensor(indices=indices, values=values, dense_shape=dense_shape)
+
+# Coalesce duplicates
+coalesced_sp = nn.coalesce_sparse(sp)
+print(tf.sparse.to_dense(coalesced_sp))
+# Expected dense output:
+# [[0, 7, 0, 0],
+#  [0, 0, 5, 0],
+#  [0, 0, 0, 0]]
+```
