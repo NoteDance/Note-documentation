@@ -845,3 +845,29 @@ print(tf.sparse.to_dense(coalesced_sp))
 #  [0, 0, 5, 0],
 #  [0, 0, 0, 0]]
 ```
+
+# softplus
+
+The `softplus` function applies a smooth approximation to the ReLU (Rectified Linear Unit) activation, with optional scaling and thresholding for numerical stability.
+
+**Parameters**
+
+- **x**: A `tf.Tensor` containing input values.
+- **beta** (float, optional): A scaling factor applied to the input before computing the softplus. Default is `1.0`.
+- **threshold** (float, optional): A cutoff value. When the scaled input exceeds this threshold, the function returns the input directly to avoid overflow. Default is `20.0`.
+
+**Method**
+
+- **softplus(x, beta=1.0, threshold=20.0)**: Computes the softplus activation.
+ 
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Example usage of softplus
+x = tf.constant([-5.0, 0.0, 5.0, 30.0])
+y = nn.softplus(x)
+print(y)
+```
