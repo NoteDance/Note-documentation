@@ -1097,6 +1097,53 @@ To enable a RL-based agent to support HER, an additional `reward_done_func` func
 
 To enable a RL-based agent to support MARL, an additional `reward_done_func_ma` function needs to be defined.
 
+# Save model parameters:
+```python
+import pickle
+output_file=open('param.dat','wb')
+pickle.dump(model.param,output_file)
+output_file.close()
+```
+or
+```python
+model.save_param('param.dat')
+```
+
+# Restore model parameters:
+```python
+import pickle
+input_file=open('param.dat','rb')
+param=pickle.load(input_file)
+input_file.close()
+```
+or
+```python
+model.restore_param('param.dat')
+```
+or
+```python
+from Note import nn
+param=nn.restore_param('param.dat')
+```
+
+# Save model:
+```python
+model.save('model.dat')
+```
+
+# Restore model:
+```python
+# distributed training
+with strategy.scope():
+    model = MyModel(...)
+    model.restore('model.dat')
+```
+or
+```python
+model = MyModel(...)
+model.restore('model.dat')
+```
+
 # LRFinder_rl:
 **Usage:**
 
