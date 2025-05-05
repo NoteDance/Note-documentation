@@ -458,26 +458,20 @@ nn.assign_param(model.param,param)
 
 # Save model:
 ```python
-import pickle
-output_file=open('model.dat','wb')
-pickle.dump(model,output_file)
-output_file.close()
-```
-or
-```python
 model.save('model.dat')
 ```
 
 
 # Restore model:
 ```python
-import pickle
-input_file=open('model.dat','rb')
-model=pickle.load(input_file)
-input_file.close()
+# distributed training
+with strategy.scope():
+    model = MyModel(...)
+    model.restore('model.dat')
 ```
 or
 ```python
+model = MyModel(...)
 model.restore('model.dat')
 ```
 
