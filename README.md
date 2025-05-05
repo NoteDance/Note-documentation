@@ -871,3 +871,42 @@ x = tf.constant([-5.0, 0.0, 5.0, 30.0])
 y = nn.softplus(x)
 print(y)
 ```
+
+# narrow
+
+The **narrow** function extracts a subtensor (slice) along a specified dimension, analogous to PyTorch’s `Tensor.narrow`, by using TensorFlow’s `tf.slice`.
+
+**Parameters**
+
+- **tensor** (`tf.Tensor`):  The source tensor from which to extract the slice. Can be of any rank.
+- **dim** (`int`): The dimension (axis) along which to slice. Supports negative indices (e.g. `-1` refers to the last axis).
+- **start** (`int`): The index in the specified dimension at which to begin the slice (zero‑based).
+- **size** (`int`): The number of elements to include along the specified dimension.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create a 3×4 tensor
+t = tf.constant([[ 1,  2,  3,  4],
+                 [ 5,  6,  7,  8],
+                 [ 9, 10, 11, 12]], dtype=tf.int32)
+
+# Extract 2 columns starting at column index 1 (second column)
+# Equivalent to t[:, 1:1+2]
+n = nn.narrow(t, dim=1, start=1, size=2)
+print(n.numpy())
+# Output:
+# [[ 2,  3],
+#  [ 6,  7],
+#  [10, 11]]
+
+# Extract 1 row starting at row index 0
+# Equivalent to t[0:0+1, :]
+m = nn.narrow(t, dim=0, start=0, size=1)
+print(m.numpy())
+# Output:
+# [[1, 2, 3, 4]]
+```
