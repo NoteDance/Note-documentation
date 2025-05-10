@@ -1572,5 +1572,5 @@ model_finder.find(
 
 # After training, the best result can be accessed via model_finder.logs
 print("Best Loss:", model_finder.logs['best_loss'])
-print("Best Optimizer:", model_finder.logs['best_opt'])
+print("Best Loss Model:", model_finder.logs['best_loss_model'])
 ```
