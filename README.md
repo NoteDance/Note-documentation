@@ -1236,7 +1236,7 @@ opt_finder = nn.OptFinder_rl(agent, optimizers)
 opt_finder.find(pool_network=False, strategy=strategy, episodes=7)
 ```
 
-# AgentFinder:
+# ParallelFinder:
 
 **Overview**
 
@@ -1383,7 +1383,7 @@ agents = [agent1, agent2]
 optimizers = [optimizer1, optimizer2]
 
 # Initialize the AgentFinder instance
-agent_finder = nn.AgentFinder(agents, optimizers)
+parallel_finder = nn.ParallelFinder_rl(agents, optimizers)
 
 # Assume train_loss is defined as a function or metric for calculating training loss (if needed)
 train_loss = ...
@@ -1392,7 +1392,7 @@ train_loss = ...
 metrics_choice = 'reward'  # or 'loss'
 
 # Execute training with 10 episodes and enable JIT compilation
-agent_finder.find(
+parallel_finder.find(
     train_loss=train_loss,
     pool_network=True,
     processes=4,
