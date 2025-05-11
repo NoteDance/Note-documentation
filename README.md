@@ -1436,7 +1436,7 @@ opt_finder = nn.OptFinder(model, optimizers)
 opt_finder.find(train_ds, loss_object, strategy=strategy, batch_size=512)
 ```
 
-# ModelFinder:
+# ParallelFinder:
 
 **Overview**
 
@@ -1554,7 +1554,7 @@ models = [model1, model2]
 optimizers = [optimizer1, optimizer2]
 
 # Initialize a ModelFinder instance
-model_finder = nn.ModelFinder(models, optimizers)
+parallel_finder = nn.ParallelFinder(models, optimizers)
 
 # Prepare training dataset and loss function (example)
 train_dataset = ...  # Training dataset
@@ -1562,7 +1562,7 @@ loss_function = ...  # Loss function
 train_loss_metric = ...  # Training loss metric
 
 # Execute training in standard mode (without distributed strategy)
-model_finder.find(
+parallel_finder.find(
     train_ds=train_dataset,
     loss_object=loss_function,
     train_loss=train_loss_metric,
