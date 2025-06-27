@@ -7082,3 +7082,176 @@ output = dynamic_tanh(x)
 
 print(output.shape)  # Should print: (32, 64)
 ```
+
+# EvoNorm2dB0
+
+The **EvoNorm2dB0** layer implements the “B0” variant of Evolving Normalization-Activation (EvoNorm) for 2D feature maps, combining instance normalization and parametric non-linearity.
+
+**Initialization Parameters**
+
+- **`num_features`** (int): Number of channels in the input.
+- **`apply_act`** (bool): If `True`, applies the non-linear activation component. Default: `True`.
+- **`momentum`** (float): Momentum for running variance update. Default: `0.1`.
+- **`eps`** (float): Small epsilon to avoid divide-by-zero. Default: `1e-3`.
+
+**Methods**
+
+- **`__call__(self, x)`**:  
+  - **`x`**: 4D input tensor `[B, H, W, C]`.  
+  - **Returns**: Normalized and activated output tensor of same shape.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# B0 EvoNorm for 64 channels
+evo_b0 = nn.EvoNorm2dB0(num_features=64)
+
+# Apply to a batch of feature maps
+x = tf.random.normal((8, 32, 32, 64))
+y = evo_b0(x)
+````
+
+# EvoNorm2dB1
+
+The **EvoNorm2dB1** layer implements the “B1” EvoNorm variant, which normalizes and then applies a learnable non-linearity.
+
+**Initialization Parameters**
+
+* **`num_features`** (int): Number of channels.
+* **`apply_act`** (bool): If `True`, applies activation. Default: `True`.
+* **`momentum`** (float): Momentum for running variance update. Default: `0.1`.
+* **`eps`** (float): Epsilon for numerical stability. Default: `1e-5`.
+
+**Methods**
+
+* **`__call__(self, x)`**:
+
+  * **`x`**: Input tensor `[B, H, W, C]`.
+  * **Returns**: Normalized & activated tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+evo_b1 = nn.EvoNorm2dB1(num_features=128)
+y = evo_b1(tf.random.normal((4, 16, 16, 128)))
+```
+
+# EvoNorm2dB2
+
+The **EvoNorm2dB2** variant replaces the activation in B1 with a “minus” operation for stability.
+
+**Initialization Parameters**
+
+Identical to `EvoNorm2dB1`.
+
+**Methods**
+
+* **`__call__(self, x)`**:
+
+  * **`x`**: Input `[B, H, W, C]`.
+  * **Returns**: Normalized output.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+evo_b2 = nn.EvoNorm2dB2(num_features=128)
+y = evo_b2(tf.random.normal((4, 16, 16, 128)))
+```
+
+# EvoNorm2dS0 / S0a
+
+The **EvoNorm2dS0** and **S0a** layers implement “S0” group-based EvoNorm, combining a gated activation with group standard deviation.
+
+**Initialization Parameters**
+
+* **`num_features`** (int): Number of channels.
+* **`groups`** (int): Number of groups for group-std. Default: `32`.
+* **`group_size`** (int, optional): Alternative to `groups`; must divide `num_features`.
+* **`apply_act`** (bool): If `True`, applies gating. Default: `True`.
+* **`eps`** (float): Epsilon for stability. Default: `1e-5`.
+
+**Methods**
+
+* **`__call__(self, x)`**:
+
+  * **`x`**: Input `[B, H, W, C]`.
+  * **Returns**: Gated, group-normalized output.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+evo_s0 = nn.EvoNorm2dS0(num_features=64, groups=16)
+y = evo_s0(tf.random.normal((2, 28, 28, 64)))
+```
+
+# EvoNorm2dS1 / S1a
+
+The **EvoNorm2dS1** and **S1a** layers apply a SiLU (or identity) activation followed by group-std normalization.
+
+**Initialization Parameters**
+
+* **`num_features`** (int): Channels.
+* **`groups`** (int): Groups for std. Default: `32`.
+* **`group_size`** (int, optional): Alternative grouping.
+* **`apply_act`** (bool): If `True`, applies non-linearity. Default: `True`.
+* **`act_layer`** (callable, optional): Activation function. Default: `tf.nn.silu`.
+* **`eps`** (float): Stability epsilon. Default: `1e-5`.
+
+**Methods**
+
+* **`__call__(self, x)`**:
+
+  * **`x`**: `[B, H, W, C]`.
+  * **Returns**: Activated & group-normalized tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+evo_s1 = nn.EvoNorm2dS1(num_features=128, groups=16)
+y = evo_s1(tf.random.normal((4, 32, 32, 128)))
+```
+
+# EvoNorm2dS2 / S2a
+
+The **EvoNorm2dS2** and **S2a** classes normalize with group-RMS (root-mean-square) and optional activation.
+
+**Initialization Parameters**
+
+* **`num_features`** (int): Number of channels.
+* **`groups`** (int): Groups for RMS. Default: `32`.
+* **`group_size`** (int, optional).
+* **`apply_act`** (bool): If `True`, applies activation. Default: `True`.
+* **`act_layer`** (callable, optional). Default: `tf.nn.silu`.
+* **`eps`** (float): Stability epsilon. Default: `1e-5`.
+
+**Methods**
+
+* **`__call__(self, x)`**:
+
+  * **`x`**: Input `[B, H, W, C]`.
+  * **Returns**: Activated & RMS-normalized tensor.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+evo_s2 = nn.EvoNorm2dS2(num_features=64, groups=8)
+y = evo_s2(tf.random.normal((1, 28, 28, 64)))
+```
