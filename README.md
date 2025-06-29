@@ -1308,17 +1308,17 @@ This documentation provides a detailed overview of the function, its parameters,
 
 ---
 
-**`get_info`**
+12. **`get_info`**
 
 The `get_info` function retrieves the info of the `Model` instance. These settings include parameters related to model saving, training, evaluation, and distributed processing, which are useful for reproducing training conditions or debugging.
 
-**Parameters**
+**Parameters:**
 The function does not require any parameters.
 
-**Returns**
+**Returns:**
 - **info (dict)**: A dictionary containing model info.
 
-**Description**
+**Description:**
 The `get_info` function:
 1. Checks the value of `config_flag` to determine which set of configurations to retrieve.
    - If info_flag is 0, it retrieves a set of parameters suited for training setups.
@@ -1327,6 +1327,60 @@ The `get_info` function:
 3. Attempts to retrieve additional settings related to batch size, loss functions, optimizers, epochs, and distributed strategy settings if available.
 
 The `get_info` function makes use of `try-except` blocks to handle potential errors if certain attributes are not defined in the current info.
+
+---
+
+13. **`register`**
+
+**Description:**
+
+The `register` function is called within a layer’s constructor to register the layer instance (`self`) with the `Model`. It ensures the layer instance is marked as trainable and organizes it under the current namespace for later management (e.g., freezing or evaluation).
+
+**Signature:**
+
+```python
+def register(layer)
+```
+
+**Parameters:**
+
+* **`layer`** (`Layer` instance):
+  The layer object (i.e., `self` inside a layer’s `__init__`) to be registered with the model.
+
+**Behavior:**
+
+1. **Enable Training Mode**
+   Sets `layer.training = True` to mark the layer instance as trainable.
+
+2. **Append to Global Layer List**
+   Adds the layer instance to the class‐level list `Model.layer_list`, which holds all layer instances in creation order.
+
+3. **Namespace‐Based Evaluation Tracking**
+   If a namespace (`Model.name`) is currently set:
+
+   * If this namespace is not yet in `Model.layer_eval`, it initializes an empty list for it.
+   * Appends the layer instance to `Model.layer_eval[Model.name]`, grouping layers by their namespace for selective operations like toggling evaluation mode.
+
+**Usage Example:**
+
+```python
+class MyLayer(nn.Layer):
+    def __init__(self):
+        # Inside layer constructor, register this instance:
+        Model.register(self)
+        # ... layer initialization ...
+
+# Assuming namespace is set:
+Model.namespace('block1')
+layer = MyLayer()
+Model.namespace()
+```
+
+After calling `register`, `layer` will:
+
+* Be marked as trainable.
+* Appear in `Model.layer_list`.
+* Be added to `Model.layer_eval['block1']` for namespace-based evaluation control.
 
 # Building a Neural Network by Inheriting from the Model Class:
 
