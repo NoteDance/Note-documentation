@@ -7255,3 +7255,80 @@ from Note import nn
 evo_s2 = nn.EvoNorm2dS2(num_features=64, groups=8)
 y = evo_s2(tf.random.normal((1, 28, 28, 64)))
 ```
+
+# PatchEmbed
+
+The **PatchEmbed** layer converts a 2D image into a sequence of flattened patch embeddings, as used in Vision Transformers.
+
+**Initialization Parameters**
+
+- **`img_size`** (int or tuple of int): Input image size (H, W). Default: `224`.  
+- **`patch_size`** (int): Size of each square patch. Default: `16`.  
+- **`in_chans`** (int): Number of input channels. Default: `3`.  
+- **`embed_dim`** (int): Dimension of the output embedding. Default: `768`.  
+- **`norm_layer`** (callable, optional): Normalization layer applied after embedding. Default: `None`.  
+- **`flatten`** (bool): If `True`, output shape is `(B, num_patches, embed_dim)`. Default: `True`.  
+- **`output_fmt`** (str, optional): Alternate output format (e.g. `"NHWC"`). Default: `None`.  
+- **`bias`** (bool): If `True`, adds bias to the patch projection. Default: `True`.  
+- **`strict_img_size`** (bool): If `True`, requires input size exactly `img_size`. Default: `True`.  
+- **`dynamic_img_pad`** (bool): If `True`, pads inputs so they divide evenly by `patch_size`. Default: `False`.  
+
+**Methods**
+
+- **`__call__(self, x)`**  
+  - **`x`**: 4D image tensor of shape `[B, H, W, C]`.  
+  - **Returns**:  
+    - If `flatten=True`: `[B, num_patches, embed_dim]`.  
+    - Else, returns a feature map `[B, H/ps, W/ps, embed_dim]` (or other `output_fmt`).
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create a patch embedder
+pe = nn.PatchEmbed(img_size=224, patch_size=16, in_chans=3, embed_dim=768)
+
+# Dummy image batch
+x = tf.random.normal((2, 224, 224, 3))
+
+# Compute patches
+patches = pe(x)  # shape (2, 196, 768)
+````
+
+# PatchEmbedWithSize
+
+The **PatchEmbedWithSize** subclass returns both the patch embeddings and the spatial grid size.
+
+**Initialization Parameters**
+
+Same as `PatchEmbed`.
+
+**Methods**
+
+* **`__call__(self, x)`**
+
+  * **`x`**: Input tensor `[B, H, W, C]`.
+  * **Returns**:
+
+    1. Patch embeddings of shape `[B, num_patches, embed_dim]`.
+    2. `feat_size`: Tuple `(H/ps, W/ps)` giving the grid dimensions.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create the embedder
+pe2 = nn.PatchEmbedWithSize(img_size=224, patch_size=16, in_chans=3, embed_dim=768)
+
+# Dummy image batch
+x = tf.random.normal((2, 224, 224, 3))
+
+# Forward pass
+patches, (Gh, Gw) = pe2(x)
+print(patches.shape)  # (2, 196, 768)
+print(Gh, Gw)         # 14 14
+```
