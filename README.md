@@ -7332,3 +7332,53 @@ patches, (Gh, Gw) = pe2(x)
 print(patches.shape)  # (2, 196, 768)
 print(Gh, Gw)         # 14 14
 ```
+
+# SplitBatchNorm
+
+The **SplitBatchNorm** class extends `batch_norm` by splitting each training batch into multiple sub‑batches and applying separate BatchNorm statistics per split, which can improve robustness in small‑batch scenarios.
+
+**Initialization Parameters**
+
+- **`num_features`** (int): Number of feature channels to normalize.  
+- **`eps`** (float): Small constant to avoid division by zero. Default: `1e-5`.  
+- **`momentum`** (float): Momentum for the running mean/variance. Default: `0.9`.  
+- **`center`** (bool): If `True`, add learnable offset `beta`. Default: `True`.  
+- **`scale`** (bool): If `True`, add learnable scale `gamma`. Default: `True`.  
+- **`num_splits`** (int): Number of splits to divide the batch into (must be ≥2). Default: `2`.  
+
+**Methods**
+
+- **`__call__(self, input, training=None)`**  
+  Applies SplitBatchNorm to `input`.  
+  - If `training=True`:  
+    - Splits the batch dimension into `num_splits` equal parts,  
+    - Applies the base BatchNorm to the first split and auxiliary BNs to the remaining splits,  
+    - Concatenates the normalized splits along the batch axis.  
+  - If `training=False`:  
+    - Applies the base `batch_norm` to the entire batch (shared running statistics).  
+
+  **Parameters**:  
+  - **`input`**: 4D tensor `[B, H, W, C]`.  
+  - **`training`** (bool, optional): Overrides the layer’s `.training` flag.  
+
+  **Returns**:  
+  - Normalized tensor of same shape as `input`.  
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create a SplitBatchNorm layer with 4 splits
+sbn = nn.SplitBatchNorm(num_features=64, num_splits=4)
+
+# Dummy input batch of 32 images, 64 channels
+x = tf.random.normal((32, 128, 128, 64))
+
+# Training pass (splits into 4 × 8 images)
+y_train = sbn(x, training=True)
+
+# Inference pass (single batch normalization)
+y_eval = sbn(x, training=False)
+```
