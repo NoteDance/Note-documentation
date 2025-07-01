@@ -7335,34 +7335,33 @@ print(Gh, Gw)         # 14 14
 
 # SplitBatchNorm
 
-The **SplitBatchNorm** class extends `batch_norm` by splitting each training batch into multiple sub‑batches and applying separate BatchNorm statistics per split, which can improve robustness in small‑batch scenarios.
+The `SplitBatchNorm` class extends `batch_norm` to perform batch normalization over smaller splits of the batch during training, allowing for improved regularization on large batches by averaging statistics over sub–batches.
 
 **Initialization Parameters**
 
-- **`num_features`** (int): Number of feature channels to normalize.  
-- **`eps`** (float): Small constant to avoid division by zero. Default: `1e-5`.  
-- **`momentum`** (float): Momentum for the running mean/variance. Default: `0.9`.  
-- **`center`** (bool): If `True`, add learnable offset `beta`. Default: `True`.  
-- **`scale`** (bool): If `True`, add learnable scale `gamma`. Default: `True`.  
-- **`num_splits`** (int): Number of splits to divide the batch into (must be ≥2). Default: `2`.  
+- **`num_features`** (`int`): Number of feature channels to normalize.  
+- **`eps`** (`float`): Small constant to avoid division by zero (default: `1e-5`).  
+- **`momentum`** (`float`): Momentum for the running statistics (default: `0.9`).  
+- **`center`** (`bool`): If `True`, add offset `beta` to the normalized tensor (default: `True`).  
+- **`scale`** (`bool`): If `True`, multiply by `gamma` (default: `True`).  
+- **`num_splits`** (`int`): Number of splits to divide the batch into during training (must be ≥ 2).  
 
 **Methods**
 
-- **`__call__(self, input, training=None)`**  
-  Applies SplitBatchNorm to `input`.  
-  - If `training=True`:  
-    - Splits the batch dimension into `num_splits` equal parts,  
-    - Applies the base BatchNorm to the first split and auxiliary BNs to the remaining splits,  
-    - Concatenates the normalized splits along the batch axis.  
-  - If `training=False`:  
-    - Applies the base `batch_norm` to the entire batch (shared running statistics).  
+- **`__call__(self, input, training=None, mask=None)`**  
+  Applies split batch normalization.  
 
-  **Parameters**:  
-  - **`input`**: 4D tensor `[B, H, W, C]`.  
-  - **`training`** (bool, optional): Overrides the layer’s `.training` flag.  
+  - **Parameters**:  
+    - **`input`** (`tf.Tensor`): Input tensor of shape `(B, ..., C)` where `B` is divisible by `num_splits`.  
+    - **`training`** (`bool`, optional): If `True`, use training mode (split the batch); if `False`, use running statistics.  
+    - **`mask`** (`tensor`, optional): Not used (for API compatibility).  
 
-  **Returns**:  
-  - Normalized tensor of same shape as `input`.  
+  - **Returns**:  
+    - Normalized output tensor of same shape as `input`.  
+
+  - **Behavior**:  
+    - In **training** mode, splits `input` into `num_splits` chunks of size `B/num_splits` along the batch dimension, applies a separate `batch_norm` to each chunk (one main + `num_splits-1` auxiliary layers), and concatenates them back.  
+    - In **inference** (`training=False`), applies a single standard `batch_norm` over the full batch.  
 
 **Example Usage**
 
@@ -7370,15 +7369,116 @@ The **SplitBatchNorm** class extends `batch_norm` by splitting each training bat
 import tensorflow as tf
 from Note import nn
 
-# Create a SplitBatchNorm layer with 4 splits
+# Create a SplitBatchNorm layer that splits the batch into 4 sub–batches
 sbn = nn.SplitBatchNorm(num_features=64, num_splits=4)
 
-# Dummy input batch of 32 images, 64 channels
-x = tf.random.normal((32, 128, 128, 64))
+# Dummy input with batch size 16 (divisible by 4)
+x = tf.random.normal((16, 32, 32, 64))
 
-# Training pass (splits into 4 × 8 images)
+# Training
 y_train = sbn(x, training=True)
 
-# Inference pass (single batch normalization)
+# Inference
 y_eval = sbn(x, training=False)
+````
+
+# PatchEmbedResamplerFixedOrigSize
+
+The `PatchEmbedResamplerFixedOrigSize` class resamples pretrained patch‑embedding weights from a fixed original spatial size to a new patch size using a cached pseudoinverse of the resize matrix, for efficient on‑the‑fly weight adaptation.
+
+**Initialization Parameters**
+
+- **`orig_size`** (`Tuple[int, int]`): Original patch embedding height and width (H_orig, W_orig).  
+- **`interpolation`** (`str`): Resize interpolation mode, e.g. `"bicubic"` (default).  
+- **`antialias`** (`bool`): Whether to apply an anti‑aliasing filter during resize (default: `True`).  
+
+**Methods**
+
+- **`__call__(self, patch_embed, new_size: List[int])`**  
+  Resamples a 4D conv weight tensor of shape `(H_orig, W_orig, in_ch, out_ch)` to `(H_new, W_new, in_ch, out_ch)`.  
+
+  - **Parameters**:  
+    - **`patch_embed`**: 4D `tf.Tensor` of original conv weights.  
+    - **`new_size`** (`List[int]`): Target `[H_new, W_new]` for the patch spatial dimensions.  
+
+  - **Returns**:  
+    - Resampled 4D weight tensor of shape `(H_new, W_new, in_ch, out_ch)`.  
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Suppose original patch embed uses 16×16 spatial patches
+orig_size = (16, 16)
+resampler = nn.PatchEmbedResamplerFixedOrigSize(orig_size)
+
+# Original conv weights [16,16,3,768]
+orig_w = tf.random.normal((16, 16, 3, 768))
+
+# Resample to 14×14 patches
+new_w = resampler(orig_w, new_size=[14, 14])
+````
+
+# PatchEmbedInterpolator
+
+The `PatchEmbedInterpolator` class dynamically resamples patch‑embedding weights (both linear and Conv2D) to support variable patch sizes at training or inference time.
+
+**Initialization Parameters**
+
+* **`base_patch_size`** (`Tuple[int, int]`): The patch height and width used at model initialization.
+* **`in_chans`** (`int`): Number of input channels (default: `3`).
+* **`embed_dim`** (`int`): Embedding dimension per patch (default: `768`).
+* **`interpolation`** (`str`): Resize interpolation mode (default: `"bicubic"`).
+* **`antialias`** (`bool`): Whether to apply anti‑aliasing (default: `True`).
+
+**Methods**
+
+* **`resample_linear_weight(self, weight, target_patch_size: Tuple[int,int])`**
+  Reshapes a `[P*P*C, D]` linear weight into `[P,P,C,D]`, resizes it to `target_patch_size`, and flattens back.
+
+* **`resample_conv_weight(self, weight, target_patch_size: Tuple[int,int])`**
+  Directly resizes a `[P,P,C,D]` conv weight to `[P_new,P_new,C,D]`.
+
+* **`__call__(self, patches, proj_weight, proj_bias=None, patch_size=None, is_linear=True)`**
+  Applies patch embedding to input `patches`, automatically resampling `proj_weight` (and `proj_bias`) if `patch_size != base_patch_size`.
+
+  * **Parameters**:
+
+    * **`patches`**:
+
+      * Linear + resampling: `[B, N, Ph, Pw, C]`
+      * Linear no-resampling: `[B, N, Ph*Pw*C]`
+      * Conv mode: `[B, H, W, C]`
+    * **`proj_weight`**: Original weight tensor (linear or conv).
+    * **`proj_bias`** (optional): Bias tensor.
+    * **`patch_size`** (`Tuple[int,int]`, optional): Current patch size.
+    * **`is_linear`** (`bool`): `True` for linear projection, `False` for conv.
+
+  * **Returns**:
+
+    * Embedded patch tensor of shape `[B, N, D]` (linear) or `[B, H', W', D]` (conv).
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Base patches are 16×16
+interp = nn.PatchEmbedInterpolator(base_patch_size=(16, 16), in_chans=3, embed_dim=768)
+
+# Example linear weight [16*16*3, 768]
+linear_w = tf.random.normal((16*16*3, 768))
+# Resample to 14×14
+resampled_w = interp.resample_linear_weight(linear_w, target_patch_size=(14, 14))
+
+# Example conv weight [16,16,3,768]
+conv_w = tf.random.normal((16, 16, 3, 768))
+resampled_conv_w = interp.resample_conv_weight(conv_w, target_patch_size=(14, 14))
+
+# Apply to patches in linear mode
+patches = tf.random.normal((2, 196, 14, 14, 3))  # B=2, N=196, Ph=14
+output = interp(patches, proj_weight=linear_w, proj_bias=None, patch_size=(14,14), is_linear=True)
 ```
