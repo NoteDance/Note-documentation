@@ -929,7 +929,7 @@ model = Model()
 4. **`namespace(name=None)`**
    - **Function**: Assigns a namespace to layers in the model for tracking layers and parameters.
    - **Parameters**: 
-     - `name` (`str`, optional): The name for the namespace of the model. If `None` is passed, no name is assigned to the model.
+     - `name` (`str`, optional): The name for the namespace of the model.
    - **Effect**: This function adds the layer name to `Model.name_list_`.
 
    **Result**: The namespace for the model is set to `block`.
