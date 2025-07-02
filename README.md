@@ -7482,3 +7482,50 @@ resampled_conv_w = interp.resample_conv_weight(conv_w, target_patch_size=(14, 14
 patches = tf.random.normal((2, 196, 14, 14, 3))  # B=2, N=196, Ph=14
 output = interp(patches, proj_weight=linear_w, proj_bias=None, patch_size=(14,14), is_linear=True)
 ```
+
+# CondConv2d
+
+The `CondConv2d` class implements Conditionally Parameterized Convolutions (CondConv) where each input sample selects a weighted combination of expert convolutional kernels via learned routing weights, enabling dynamic per-sample filters and efficient inference.
+
+**Initialization Parameters**
+
+- **`filters`** (`int`): Number of output channels (filters).  
+- **`kernel_size`** (`int` or `tuple`): Spatial size of the convolutional kernel (default: `3`).  
+- **`input_size`** (`int`, optional): Number of input channels. If `None`, inferred on first call.  
+- **`strides`** (`int` or `tuple`): Convolution stride (default: `1`).  
+- **`padding`** (`str` or `int`): Padding mode or explicit pad width (default: computed to preserve spatial dims).  
+- **`dilations`** (`int` or `tuple`): Convolution dilation rate (default: `1`).  
+- **`groups`** (`int`): Number of convolution groups (default: `1`).  
+- **`use_bias`** (`bool`): Whether to include a per-expert bias term (default: `False`).  
+- **`num_experts`** (`int`): Number of expert kernels to mix (default: `4`).  
+
+**Methods**
+
+- **`__call__(self, x, routing_weights)`**  
+  Performs a batched convolution where each sample in `x` uses its own mixture of expert kernels.  
+
+  - **Parameters**:  
+    - **`x`** (`tf.Tensor`): Input tensor of shape `(B, H, W, C_in)`.  
+    - **`routing_weights`** (`tf.Tensor`): Weights of shape `(B, num_experts)` that specify how to combine the expert kernels for each sample.  
+
+  - **Returns**:  
+    - Output tensor of shape `(B, H_out, W_out, filters)`.  
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create a CondConv2d layer with 64 output filters and 4 experts
+condconv = nn.CondConv2d(filters=64, kernel_size=3, input_size=32, num_experts=4)
+
+# Dummy input batch of 8 images, 32 channels
+x = tf.random.normal((8, 128, 128, 32))
+
+# Learn or compute routing weights for each of the 8 samples
+routing = tf.nn.softmax(tf.random.normal((8, 4)), axis=-1)
+
+# Apply CondConv2d
+y = condconv(x, routing)  # shape (8, 128, 128, 64)
+````
