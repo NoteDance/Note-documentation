@@ -7529,3 +7529,70 @@ routing = tf.nn.softmax(tf.random.normal((8, 4)), axis=-1)
 # Apply CondConv2d
 y = condconv(x, routing)  # shape (8, 128, 128, 64)
 ````
+
+# Layer
+
+The `Layer` class is the base class for building neural network modules with automatic parameter and sub-layer tracking.
+
+**Initialization Parameters**
+
+- None
+
+**Attributes**
+
+- **`_own_params`** (`list`): Parameters created directly in this layer.  
+- **`_sub_layers`** (`list`): Child layers assigned as attributes.  
+- **`_param_assignments`** (`list`): Temporarily holds parameters added during `__init__`.
+
+**Methods**
+
+- **`add_param(self, var)`**  
+  Registers a `tf.Variable` or `nn.Parameter` with this layer during initialization.
+
+  - **Parameters**:  
+    - **`var`** (`tf.Variable` or `nn.Parameter`): The parameter to add.
+
+- **`param(self)`**  
+  Recursively collects and returns the list of all parameters in this layer and its sub‑layers.
+
+  - **Returns**:  
+    - `List[tf.Variable]`: All parameters contained in this layer hierarchy.
+
+- **`__call__(cls, *args, **kwargs)`** *(in `LayerMeta` metaclass)*  
+  Finalizes any deferred parameter registrations immediately after `__init__` and returns the new layer instance.
+
+  - **Parameters**:  
+    - `*args, **kwargs`: Passed through to `Layer.__init__`.
+
+- **`__setattr__(self, name, value)`**  
+  Overrides attribute assignment to automatically register any sub‑layers (instances of `Layer`) added to this layer.
+
+  - **Parameters**:  
+    - **`name`** (`str`): Attribute name.  
+    - **`value`** (`any`): Attribute value; if a `Layer`, it becomes a sub‑layer.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+class MyLayer(nn.Layer):
+    def __init__(self, in_features, out_features):
+        super().__init__()
+        # Create and register a weight parameter
+        self.weight = nn.Parameter(tf.random.normal([in_features, out_features]))
+        # Create and register a bias parameter
+        self.bias = nn.Parameter(tf.zeros([out_features]))
+
+    def __call__(self, x):
+        return tf.matmul(x, self.weight) + self.bias
+
+# Instantiate and use
+layer = MyLayer(10, 5)
+input_tensor = tf.random.normal((2, 10))
+output = layer(input_tensor)
+
+# Inspect all parameters
+print(layer.param)  # [layer.weight, layer.bias]
+````
