@@ -5125,36 +5125,41 @@ output = mha(query, value)
 
 # RMSNorm
 
-The `RMSNorm` class implements Root Mean Square Layer Normalization.
+The `RMSNorm` class implements Root Mean Square Layer Normalization, normalizing inputs by their RMS (root mean square) value instead of variance, optionally over a partial dimension.
 
 **Initialization Parameters**
 
-- **`dims`** (int): Dimensionality of the input.
-- **`eps`** (float): Small constant to avoid division by zero. Default is `1e-6`.
-- **`dtype`** (str): Data type for the layer. Default is `'float32'`.
+- **`d`** (int): The feature dimension (model size).
+- **`p`** (float): Fraction of features to include in RMS computation (between 0 and 1). Default is `-1.0`, which disables partial mode and uses all features.
+- **`eps`** (float): Small epsilon to avoid division by zero. Default is `1e-8`.
+- **`bias`** (bool): If `True`, adds a learnable offset (beta). Default is `False`.
 
 **Methods**
 
-- **`__call__(self, x)`**: Applies RMS normalization.
+- **`__call__(self, x)`**  
+  Applies RMS normalization to the input tensor `x`.
 
   - **Parameters**:
-    - **`x`**: Input tensor.
-  - **Returns**: Normalized output tensor.
+    - **`x`** (`tf.Tensor`): Input of shape `[..., d]` where the last dimension equals `d`.
+
+  - **Returns**:  
+    - `tf.Tensor`: The normalized and scaled output of the same shape as `x`.
 
 **Example Usage**
 
 ```python
+import tensorflow as tf
 from Note import nn
 
-# Create an instance of the RMSNorm layer
-rms_norm = nn.RMSNorm(dims=128)
+# Create an RMSNorm layer for d=512 features
+rms = nn.RMSNorm(d=512, p=0.5, eps=1e-6, bias=True)
 
-# Generate some sample data
-data = tf.random.normal((2, 10, 128))
+# Input tensor of shape [batch, seq_len, 512]
+x = tf.random.normal((8, 128, 512))
 
-# Apply RMS normalization
-output = rms_norm(data)
-```
+# Apply RMSNorm
+y = rms(x)
+````
 
 # RNN
 
@@ -7595,4 +7600,51 @@ output = layer(input_tensor)
 
 # Inspect all parameters
 print(layer.param)  # [layer.weight, layer.bias]
+````
+
+# GhostBatchNorm
+
+The `GhostBatchNorm` class implements Ghost Batch Normalization, which splits the batch into smaller “ghost” batches to improve stability and regularization, especially for small overall batch sizes.
+
+**Initialization Parameters**
+
+- **`input_size`** (int): Number of feature channels.
+- **`virtual_bs`** (int): Size of each ghost batch.
+- **`momentum`** (float): Momentum for the running mean and variance. Default is `0.9`.
+- **`beta_initializer`** (str): Initializer for the beta (offset) parameter. Default is `'zeros'`.
+- **`gamma_initializer`** (str): Initializer for the gamma (scale) parameter. Default is `'ones'`.
+- **`moving_mean_initializer`** (str): Initializer for the running mean. Default is `'zeros'`.
+- **`moving_variance_initializer`** (str): Initializer for the running variance. Default is `'ones'`.
+- **`dtype`** (str): Data type for computations and parameters. Default is `'float32'`.
+
+**Methods**
+
+- **`__call__(self, X)`**  
+  Applies Ghost Batch Normalization to the input tensor `X`.
+
+  - **Parameters**:
+    - **`X`** (`tf.Tensor`): Input of shape `[B, ..., C]`, where `C == input_size`.
+
+  - **Returns**:  
+    - `tf.Tensor`: The normalized and scaled output of the same shape as `X`.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create a GhostBatchNorm layer
+gbn = nn.GhostBatchNorm(input_size=64, virtual_bs=16)
+
+# Simulate a batch of feature maps [batch, height, width, channels]
+x = tf.random.normal((32, 28, 28, 64))
+
+# Apply Ghost BatchNorm during training
+gbn.training = True
+y = gbn(x)
+
+# Switch to inference
+gbn.training = False
+y_infer = gbn(x)
 ````
