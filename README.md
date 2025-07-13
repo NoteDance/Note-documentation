@@ -7648,3 +7648,57 @@ y = gbn(x)
 gbn.training = False
 y_infer = gbn(x)
 ````
+
+# BatchRenorm
+
+The `BatchRenorm` family implements batch renormalization, extending batch normalization by correcting batch statistics towards running estimates, which improves training stability when batch sizes are small or vary.
+
+**Initialization Parameters**
+
+- **`input_size`** (int): Number of features (channels) in the input.
+- **`epsilon`** (float): Small constant to avoid division by zero. Default is `1e-3`.
+- **`momentum`** (float): Momentum for updating running mean/variance. Default is `0.99`.
+- **`affine`** (bool): If `True`, applies learnable scale (`gamma`) and shift (`beta`). Default is `True`.
+- **`beta_initializer`** (str): Initializer for the learnable offset (`beta`). Default is `'zeros'`.
+- **`gamma_initializer`** (str): Initializer for the learnable scale (`gamma`). Default is `'ones'`.
+- **`moving_mean_initializer`** (str): Initializer for the running mean. Default is `'zeros'`.
+- **`moving_variance_initializer`** (str): Initializer for the running variance. Default is `'ones'`.
+- **`dtype`** (str): Data type for parameters and computation. Default is `'float32'`.
+
+The following classes specify the input dimensionality:
+
+- **`BatchRenorm1d`**: for 2D or 3D inputs (`[B, C]` or `[B, L, C]`)
+- **`BatchRenorm2d`**: for 4D inputs (`[B, H, W, C]`)
+- **`BatchRenorm3d`**: for 5D inputs (`[B, D, H, W, C]`)
+
+**Methods**
+
+- **`__call__(self, x, mask=None)`**  
+  Applies batch renormalization to the input `x`.
+
+  - **Parameters**:
+    - **`x`** (`tf.Tensor`): Input tensor.
+    - **`mask`** (bool tensor, optional): Boolean mask to exclude padded/invalid positions from statistics (shape matching all dims except channel).
+
+  - **Returns**:  
+    - `tf.Tensor`: The renormalized output tensor, same shape as `x`.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# 2D case: apply BatchRenorm2d to a conv feature map
+brn = nn.BatchRenorm2d(input_size=64)
+
+# Fake feature map [batch, height, width, channels]
+x = tf.random.normal((8, 32, 32, 64))
+
+# Training mode
+y_train = brn(x)
+
+# Inference mode
+brn.training = False
+y_eval = brn(x)
+````
