@@ -7702,3 +7702,52 @@ y_train = brn(x)
 brn.training = False
 y_eval = brn(x)
 ````
+
+# SwitchNorm
+
+The `SwitchNorm` layers combine instance, layer and (optionally) batch normalization by learning per-statistic gates to adaptively weight each normalization’s contribution.
+
+**Initialization Parameters**
+
+- **`input_size`** (int, optional): Number of channels (features). If not provided, inferred on first call.
+- **`eps`** (float): Small constant to avoid division by zero. Default: `1e-5`.
+- **`momentum`** (float): Momentum for updating running batch statistics. Default: `0.9` (or `0.997` in 1d).
+- **`using_moving_average`** (bool): If `True`, update running stats with exponential moving average; otherwise accumulate. Default: `True`.
+- **`using_bn`** (bool, 2d/3d only): If `True`, include batch statistics in the switch. Default: `True`.
+- **`last_gamma`** (bool, 2d/3d only): If `True`, defer applying learned `gamma` until after the switch. Default: `False`.
+- **`dtype`** (str): Data type for parameters and computation. Default: `'float32'`.
+
+**Methods**
+
+- **`__call__(self, x)`**  
+  Applies SwitchNorm to the input tensor `x`.
+
+  - **Parameters**:
+    - **`x`** (`tf.Tensor`):  
+      - `SwitchNorm1d`: 2D `[B, C]` or 3D `[B, L, C]`  
+      - `SwitchNorm2d`: 4D `[B, H, W, C]`  
+      - `SwitchNorm3d`: 5D `[B, D, H, W, C]`
+  - **Returns**:  
+    - `tf.Tensor`: Normalized output, same shape as `x`.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# 1D sequence case
+sn1 = nn.SwitchNorm1d(input_size=128)
+x1 = tf.random.normal((32, 128))
+y1 = sn1(x1)
+
+# 2D feature map case
+sn2 = nn.SwitchNorm2d(input_size=64)
+x2 = tf.random.normal((16, 32, 32, 64))
+y2 = sn2(x2)
+
+# 3D volumetric case
+sn3 = nn.SwitchNorm3d(input_size=32)
+x3 = tf.random.normal((8, 16, 16, 16, 32))
+y3 = sn3(x3)
+````
