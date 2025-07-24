@@ -7754,3 +7754,101 @@ sn3 = nn.SwitchNorm3d(input_size=32)
 x3 = tf.random.normal((8, 16, 16, 16, 32))
 y3 = sn3(x3)
 ````
+
+# Attention
+
+The `Attention` class implements standard multi‑head self‑attention as used in Transformer models. It supports optional Q/K normalization, fused attention kernels for efficiency, and configurable dropout.
+
+**Initialization Parameters**
+
+- **`dim`** (int): Dimensionality of the input token embeddings.
+- **`num_heads`** (int): Number of attention heads. Must divide `dim`. Default: 8.
+- **`qkv_bias`** (bool): If `True`, add a bias to the Q/K/V projections. Default: False.
+- **`qk_norm`** (bool): If `True`, apply a normalization layer to Q and K before attention. Default: False.
+- **`scale_norm`** (bool): If `True`, apply a normalization layer to the attention output before projection. Default: False.
+- **`proj_bias`** (bool): If `True`, add a bias to the output projection. Default: True.
+- **`attn_drop`** (float): Dropout rate on the attention weights. Default: 0.0.
+- **`proj_drop`** (float): Dropout rate after the output projection. Default: 0.0.
+- **`norm_layer`** (Callable): A normalization constructor (e.g. `nn.layer_norm`) used if `qk_norm` or `scale_norm` is enabled.
+- **`use_fused_attn`** (bool, optional): If `True` and supported, use the fused scaled‑dot‑product kernel for speed.
+
+**Methods**
+
+- **`__call__(self, x, attn_mask=None)`**  
+  Perform multi‑head self‑attention on input `x`.
+
+  - **Parameters**:
+    - **`x`** (`Tensor`, shape `(B, N, C)`): Input token embeddings.
+    - **`attn_mask`** (`Tensor`, optional): Additive attention mask of shape `(B, num_heads, N, N)`.
+  - **Returns**:  
+    - Output tensor of shape `(B, N, C)` after attention, normalization, projection, and dropout.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create a self‑attention layer
+attn = nn.Attention(dim=512, num_heads=8, qkv_bias=True, attn_drop=0.1, proj_drop=0.1)
+
+# Inputs: batch of 10 sequences, each of length 50, embedding dim 512
+x = tf.random.normal((10, 50, 512))
+
+# Apply attention (no mask)
+y = attn(x)
+````
+
+# AttentionRope
+
+The `AttentionRope` class extends `Attention` with Rotary Positional Embeddings (RoPE) support and optional unfused Q/K/V projection. It allows prefix tokens to bypass rotary encoding.
+
+**Initialization Parameters**
+
+* **`dim`** (int): Dimensionality of the input token embeddings.
+* **`num_heads`** (int): Number of attention heads. Default: 8.
+* **`qkv_bias`** (bool): If `True`, add bias to the Q/K/V projections. Default: True.
+* **`qkv_fused`** (bool): If `True`, use a single fused projection for Q/K/V; otherwise create separate projections. Default: True.
+* **`num_prefix_tokens`** (int): Number of leading tokens (e.g. CLS) to exclude from rotary embedding. Default: 1.
+* **`attn_drop`** (float): Dropout rate on attention weights. Default: 0.0.
+* **`proj_drop`** (float): Dropout rate after the output projection. Default: 0.0.
+* **`attn_head_dim`** (int, optional): Per-head dimension; if `None`, computed as `dim // num_heads`.
+* **`norm_layer`** (Callable): Normalization constructor for Q/K or output normalization if `qk_norm` or `scale_norm` is enabled.
+* **`qk_norm`** (bool): If `True`, apply normalization to Q/K. Default: False.
+* **`scale_norm`** (bool): If `True`, apply normalization to attention outputs. Default: False.
+* **`proj_bias`** (bool): If `True`, add bias to the output projection. Default: True.
+* **`use_fused_attn`** (bool, optional): If `True` and available, use fused scaled‑dot‑product kernel.
+
+**Methods**
+
+* **`__call__(self, x, rope=None, attn_mask=None)`**
+  Perform rotary‑augmented multi‑head self‑attention on input `x`.
+
+  * **Parameters**:
+
+    * **`x`** (`Tensor`, shape `(B, N, C)`): Input token embeddings.
+    * **`rope`** (`Tensor`, optional): Rotary position embedding factors of shape `(N, C_head)`.
+    * **`attn_mask`** (`Tensor`, optional): Additive attention mask.
+  * **Returns**:
+
+    * Output tensor of shape `(B, N, C)`.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create RoPE‑enabled attention
+attn_rope = nn.AttentionRope(
+    dim=512, num_heads=8, qkv_bias=True, qkv_fused=False,
+    num_prefix_tokens=1, attn_drop=0.1, proj_drop=0.1,
+    norm_layer=nn.layer_norm, qk_norm=True, scale_norm=True,
+)
+
+# Dummy rotary embeddings
+rope = tf.random.normal((50, 64))  # seq_len 50, head_dim 64
+
+x = tf.random.normal((10, 50, 512))
+y = attn_rope(x, rope=rope)
+```
