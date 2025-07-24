@@ -7548,6 +7548,9 @@ The `Layer` class is the base class for building neural network modules with aut
 - **`_own_params`** (`list`): Parameters created directly in this layer.  
 - **`_sub_layers`** (`list`): Child layers assigned as attributes.  
 - **`_param_assignments`** (`list`): Temporarily holds parameters added during `__init__`.
+- **`name`** (str): The attribute name used when this layer was assigned to a parent layer. It reflects how the layer is referenced within its parent.
+- **`name_`** (str): The layer’s name, defaulting to the class.
+- **`layer_list`** (list): List of child layers in definition order.
 
 **Methods**
 
