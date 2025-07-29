@@ -7852,3 +7852,40 @@ rope = tf.random.normal((50, 64))  # seq_len 50, head_dim 64
 x = tf.random.normal((10, 50, 512))
 y = attn_rope(x, rope=rope)
 ```
+
+# AdaNorm
+
+The `AdaNorm` class implements Adaptive Normalization (AdaNorm), which normalizes inputs based on their per-feature mean and variance and applies a learnable scaling with an adaptive term.
+
+**Initialization Parameters**
+
+- **`normalized_shape`** (int or tuple of int): Shape of the features to normalize (e.g. embedding dimension).
+- **`k`** (float): Scaling factor for the adaptive term. Default: `0.1`.
+- **`eps`** (float): Small constant to avoid division by zero when computing variance. Default: `1e-5`.
+- **`bias`** (bool): If `True`, add a learnable bias term after normalization. Default: `False`.
+
+**Methods**
+
+- **`__call__(self, input)`**  
+  Apply AdaNorm to the input tensor.
+
+  - **Parameters**:
+    - **`input`** (`Tensor`, shape `(..., normalized_shape)`): The tensor to normalize.
+  - **Returns**:  
+    - The normalized and adaptively scaled tensor of the same shape as `input`.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create an AdaNorm layer for 128-dimensional features
+adanorm = nn.AdaNorm(normalized_shape=128, k=0.2, eps=1e-6, bias=True)
+
+# Sample input: batch of 32, sequence length 10, feature dim 128
+x = tf.random.normal((32, 10, 128))
+
+# Apply AdaNorm
+y = adanorm(x)
+````
