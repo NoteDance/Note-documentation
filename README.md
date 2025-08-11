@@ -443,7 +443,7 @@ multi_worker_model.distributed_training(optimizer, strategy, num_episodes=100,
 
 # RL.set:
 
-**Function Description**:
+**Description**:
 The `set` function configures various parameters of the Reinforcement Learning (RL) agent. These parameters control the policy, noise, experience pool, batch size, update frequency, and training termination conditions. By adjusting these settings, users can fine-tune the agent's behavior and training process to suit specific RL tasks.
 
 ---
@@ -603,8 +603,6 @@ optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
 agent.train(train_loss=train_loss, optimizer=optimizer, episodes=100, pool_network=True, processes=8)
 ```
 
---- 
-
 This documentation provides a detailed explanation of each parameter and the internal behavior of the function, which should be useful for understanding its usage in reinforcement learning training loops.
 
 # RL.distributed_training:
@@ -686,6 +684,72 @@ agent.distributed_training(
 ```
 
 In this example, the function runs distributed training using the `MirroredStrategy`, where experience is collected in parallel through 8 processes and stored in a pool buffer. Training runs for 100 episodes with a global batch size of 64.
+
+# RL.adjust_window_size:
+
+**Description**:
+Compute an adaptive experience-replay window size based on the *effective sample size* (ESS) of the prioritized weights. This function estimates how many recent experiences should be kept (vs. discarded) by converting the ESS into a desired number of kept samples, applying optional exponential moving average (EMA) smoothing to the ESS, and returning the number of oldest entries to drop (the window size). It supports both single-process and pool-network (multi-process) setups.
+
+**Arguments**:
+
+* **`p`** (`int`): Process index when `pool_network=True`. Selects which sub-pool's weight vector to evaluate. If `pool_network=False`, `p` is ignored.
+* **`scale`** (`float`, optional, default=`1.0`): Multiplier applied to the (smoothed) ESS to compute the desired number of samples to keep. Values >1 increase the kept size (smaller window), values <1 decrease it (larger window).
+* **`smooth_alpha`** (`float`, optional, default=`0.2`): EMA smoothing coefficient in `[0,1]` used to smooth ESS over time. Higher values weight the newest ESS more; lower values emphasize past ESS.
+
+**Returns**:
+
+* **`window_size`** (`int`): Suggested number of oldest samples to remove from the experience pool. Computed as `len(weights) - desired_keep`. Guaranteed to be a non-negative integer under normal conditions (see Notes).
+
+**Details**:
+
+1. **Choose source of weights**:
+
+   * If `self.pool_network == True` the function reads `weights = np.array(self.ratio_list[p])` — the per-process ratio array used for prioritized sampling in that sub-pool.
+   * If `self.pool_network == False` the function reads `weights = np.array(self.prioritized_replay.ratio)` — the global prioritized weights array.
+
+2. **Compute ESS**:
+
+   * Calls `self.compute_ess_from_weights(weights)`, which:
+
+     * clips weights to a minimum positive value (to avoid zeros),
+     * normalizes them to a probability vector `p`,
+     * computes ESS as `1 / sum(p^2)`.
+   * ESS is a continuous estimate of how many “effective” independent samples exist given the weight distribution.
+
+3. **EMA smoothing**:
+
+   * The function stores smoothed ESS in `self.ema_ess`.
+   * For `pool_network==True`, `self.ema_ess` is a list and `self.ema_ess[p]` is updated. For single-process mode it is a scalar.
+   * New smoothed ESS is `ema = smooth_alpha * ess + (1.0 - smooth_alpha) * prev_ema` (or `ema = ess` if no prior EMA exists).
+
+4. **Desired kept samples and window size**:
+
+   * `desired_keep = np.clip(int(ema * scale), 1, len(weights) - 1)`
+
+     * Intuition: convert (smoothed) ESS to an integer number of samples to keep, optionally scaled.
+     * The clip prevents degeneracy by requiring at least one sample kept and at most `len(weights)-1`.
+   * `window_size = len(weights) - desired_keep`
+
+     * This is the number of oldest entries to remove; the caller can then slice arrays like `state_pool = state_pool[window_size:]`.
+
+5. **Side effects**:
+
+   * Updates `self.ema_ess` (or `self.ema_ess[p]`) with the new smoothed ESS value.
+   * Does **not** modify replay buffers or ratio/TD arrays — it only returns the window size. The caller is responsible for actually removing entries.
+
+6. **Assumptions & edge cases**:
+
+   * The function assumes `weights` has length ≥ 2. If `len(weights) <= 1` the code `np.clip(..., 1, len(weights)-1)` may produce an invalid clip range (upper < lower) and raise a `ValueError` or produce unexpected results. It is recommended to guard against this by checking `len(weights)` before calling (or adding a small wrapper).
+   * If weights contain zeros or extremely small values, `compute_ess_from_weights` already protects against divide-by-zero by clipping to a small positive minimum.
+
+7. **Complexity**:
+
+   * Time complexity is O(n) where n is the number of weights (dominant cost is computing ESS).
+
+**Usage Example**:
+
+https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/keras/PPO_pr.py
+https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/note/PPO_pr.py
 
 # Policy classes:
 
