@@ -748,8 +748,8 @@ Compute an adaptive experience-replay window size based on the *effective sample
 
 **Usage Example**:
 
-https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/keras/PPO_pr.py
-https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/note/PPO_pr.py
+https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/note/pool_network/PPO_pr.py
+https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/RL/keras/pool_network/PPO_pr.py
 
 # Policy classes:
 
