@@ -4716,24 +4716,26 @@ output = normalizer(data)
 
 # PatchDropout
 
-The `PatchDropout` class implements a form of dropout specifically designed for patch-based models like vision transformers. It randomly drops a subset of patches (input tokens) during training to improve generalization and robustness.
+`PatchDropout` implements stochastic patch/token dropping for transformer-style inputs. It randomly keeps a subset of patch tokens during training to reduce compute and acts as a structured dropout while always preserving a fixed number of prefix tokens (e.g. CLS).
 
 **Initialization Parameters**
 
-- **prob** (float, optional): Probability of dropping a patch. Default is 0.5. Must be between 0 and 1.
-- **num_prefix_tokens** (int, optional): Number of prefix tokens to exclude from dropout, such as CLS tokens in transformers. Default is 1.
-- **ordered** (bool, optional): If True, the kept patches are ordered, useful for debugging or visualization. Default is False.
-- **return_indices** (bool, optional): If True, returns the indices of the patches that are kept after dropout. Default is False.
+* **prob** (float): Drop probability for non-prefix patches (0 ≤ prob < 1). Default `0.5`.
+* **num\_prefix\_tokens** (int): Number of leading tokens to always keep (e.g. CLS or other prefix tokens). Default `1`.
+* **ordered** (bool): If `True`, the kept token indices are sorted so returned tokens preserve original order. Default `False`.
 
 **Methods**
 
-- **__call__(self, x, training=None)**: Applies the PatchDropout transformation to the input tensor.
+* **`__call__(self, x: tf.Tensor) -> tf.Tensor`**
 
-  - **Parameters**:
-    - **x**: Input tensor of shape `(B, L, D)` where `B` is the batch size, `L` is the number of patches, and `D` is the patch dimension.
-    - **training** (bool, optional): If True, applies dropout; if False, returns the input unchanged. If None, uses the internal training flag.
+  * **Parameters**:
 
-  - **Returns**: The transformed tensor with some patches dropped. If `return_indices` is True, also returns the indices of the kept patches.
+    * **x** (`tf.Tensor`, shape `(B, L, D)`): Input token/patch tensor (batch, length, dim).
+  * **Behavior**:
+
+    * If the layer is in evaluation mode (`training == False`) or `prob == 0.0`, returns `x` unchanged.
+    * Otherwise, selects `num_keep = max(1, int(L * (1 - prob)))` non-prefix tokens to keep per example. If `ordered=True` the kept tokens preserve original patch order. Prefix tokens (first `num_prefix_tokens`) are always preserved.
+  * **Returns**: Output tensor with shape `(B, num_prefix_tokens + num_keep, D)`.
 
 **Example Usage**
 
@@ -4741,14 +4743,51 @@ The `PatchDropout` class implements a form of dropout specifically designed for 
 import tensorflow as tf
 from Note import nn
 
-# Create an instance of the PatchDropout layer
-patch_dropout = nn.PatchDropout(prob=0.5, num_prefix_tokens=1)
+pd = nn.PatchDropout(prob=0.5, num_prefix_tokens=1, ordered=False)
 
-# Generate some sample data
-data = tf.random.normal((2, 10, 64))  # Batch size 2, 10 patches, 64 dimensions each
+x = tf.random.normal((4, 65, 128))  # batch=4, length=65 (1 prefix + 64 patches), dim=128
+pd.training = True
 
-# Apply patch dropout
-output = patch_dropout(data, training=True)
+out = pd(x)  # returns tensor with prefix + kept patches
+```
+
+# PatchDropoutWithIndices
+
+`PatchDropoutWithIndices` has the same behavior as `PatchDropout` but additionally returns the per-example indices of the kept (non-prefix) tokens. This is useful when you need to map outputs back to the original sequence positions (e.g., for visualization or position-aware processing).
+
+**Initialization Parameters**
+
+* **prob** (float): Drop probability for non-prefix patches (0 ≤ prob < 1). Default `0.5`.
+* **num\_prefix\_tokens** (int): Number of leading tokens to always keep. Default `1`.
+* **ordered** (bool): If `True`, the kept token indices are sorted so returned tokens preserve original order. Default `False`.
+
+**Methods**
+
+* **`__call__(self, x: tf.Tensor) -> Tuple[tf.Tensor, Optional[tf.Tensor]]`**
+
+  * **Parameters**:
+
+    * **x** (`tf.Tensor`, shape `(B, L, D)`): Input token/patch tensor.
+  * **Behavior**:
+
+    * If evaluation mode or `prob == 0.0`, returns `(x, None)`.
+    * Otherwise returns `(output, keep_indices)` where `keep_indices` is a `tf.Tensor` of shape `(B, num_keep)` containing the indices of the kept non-prefix tokens for each example. If `ordered=True`, indices are sorted.
+  * **Returns**: Tuple `(output_tensor, keep_indices_or_None)`.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+pd_idx = nn.PatchDropoutWithIndices(prob=0.5, num_prefix_tokens=1, ordered=True)
+
+x = tf.random.normal((4, 65, 128))  # batch=4, length=65 (1 prefix + 64 patches), dim=128
+pd_idx.training = True
+
+out, idx = pd_idx(x)
+# out: tensor with prefix + kept patches
+# idx: tensor of shape (4, num_keep) with kept indices per example (or None if not in training)
 ```
 
 # perdimscale_attention
@@ -7885,7 +7924,7 @@ adanorm = nn.AdaNorm(normalized_shape=128, k=0.2, eps=1e-6, bias=True)
 
 # Sample input: batch of 32, sequence length 10, feature dim 128
 x = tf.random.normal((32, 10, 128))
-
+```
 # Apply AdaNorm
 y = adanorm(x)
 ````
