@@ -910,3 +910,56 @@ print(m.numpy())
 # Output:
 # [[1, 2, 3, 4]]
 ```
+
+# unfold
+
+The unfold function extracts sliding local blocks from a given tensor along a specified dimension, similar to PyTorch’s `Tensor.unfold`. It returns a view of the tensor where the selected dimension is expanded into overlapping frames.
+
+**Parameters**
+
+* **x**: A TensorFlow tensor of any rank.
+* **dim** (int): The dimension index along which to extract sliding windows. Can be negative to index from the end.
+* **size** (int): The length of each sliding window.
+* **step** (int): The step size between the starts of consecutive windows.
+
+**Method**
+
+* **unfold(x, dim, size, step)**: Returns a tensor with an extra dimension for the number of frames and another for the frame size, preserving the order of other dimensions.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Example usage of unfold
+tensor = tf.reshape(tf.range(24), (2, 3, 4))  # Shape: (2, 3, 4)
+result = nn.unfold(tensor, dim=1, size=2, step=1)
+print(result.shape)  # Expected shape: (2, 2, 4, 2)
+```
+
+# median
+
+The median function computes the median value(s) of a tensor along a specified axis.
+
+**Parameters**
+
+* **x**: A TensorFlow tensor of any rank containing numeric values.
+* **axis** (int, optional): The axis along which to compute the median. Defaults to -1 (last axis).
+* **keepdims** (bool, optional): If True, retains reduced dimensions with length 1. Defaults to False.
+
+**Method**
+
+* **median(x, axis=-1, keepdims=False)**: Returns the median value(s) along the given axis, with shape determined by `keepdims`.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Example usage of median
+tensor = tf.constant([[1, 3, 5], [2, 4, 6]])
+result = nn.median(tensor, axis=1)
+print(result)  # Expected: [3, 4]
+```
