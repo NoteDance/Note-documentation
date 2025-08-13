@@ -6276,42 +6276,6 @@ content_attention_output, query_attention_output = attention_layer(
 )
 ```
 
-# unfold
-
-The `unfold` class extracts patches from the input tensor and flattens them, useful for operations like convolutional layers in neural networks.
-
-**Initialization Parameters**
-
-- **`kernel`** (int): Size of the extraction kernel.
-- **`stride`** (int): Stride for the sliding window. Default is `1`.
-- **`padding`** (int): Amount of padding to add to the input. Default is `0`.
-- **`dilation`** (int): Dilation rate for the sliding window. Default is `1`.
-
-**Methods**
-
-- **`__call__(self, x)`**: Applies the unfolding operation to the input `x`.
-
-  - **Parameters**:
-    - **`x`**: Input tensor.
-
-  - **Returns**: Tensor with extracted patches.
-
-**Example Usage**
-
-```python
-import tensorflow as tf
-from Note import nn
-
-# Create an instance of the unfold layer
-unfold = nn.unfold(kernel=3, stride=1, padding=1)
-
-# Generate some sample data
-data = tf.random.normal((2, 5, 5, 3))
-
-# Apply unfolding
-output = unfold(data)
-```
-
 # unit_norm
 
 The `unit_norm` class normalizes the input tensor along specified axes so that each input in the batch has a unit L2 norm.
@@ -7928,3 +7892,44 @@ x = tf.random.normal((32, 10, 128))
 # Apply AdaNorm
 y = adanorm(x)
 ````
+
+# MedianPool2d
+
+The `MedianPool2d` class implements 2D median pooling, which replaces each sliding window in the input with the median value of its elements.  
+When `stride=1`, it can also be used as a median filter for image noise reduction.
+
+**Initialization Parameters**
+
+- **kernel_size** (int or tuple): Size of the pooling window. Default is `3`.
+- **strides** (int or tuple): Stride of the pooling operation. Default is `1`.
+- **padding** (int or 4-tuple): Explicit padding in `(left, right, top, bottom)` format. Default is `0`.
+- **same** (bool): If `True`, automatically computes padding to ensure output size matches input size (TensorFlow `"SAME"` style). Default is `False`.
+
+**Methods**
+
+- **__call__(self, x)**: Applies 2D median pooling to the input tensor.
+
+  - **Parameters**:
+    - **x** (`tf.Tensor`): Input tensor of shape `(batch, height, width, channels)`.
+  
+  - **Returns**:
+    - `tf.Tensor`: Output tensor after median pooling.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create a MedianPool2d layer with 3x3 kernel and stride 1
+mp = nn.MedianPool2d(kernel_size=3, strides=1, same=True)
+
+# Sample input: batch=1, height=5, width=5, channels=1
+x = tf.random.normal((1, 5, 5, 1))
+
+# Apply median pooling
+output = mp(x)
+
+print("Input shape:", x.shape)
+print("Output shape:", output.shape)
+```
