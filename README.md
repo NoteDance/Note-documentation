@@ -7888,7 +7888,7 @@ adanorm = nn.AdaNorm(normalized_shape=128, k=0.2, eps=1e-6, bias=True)
 
 # Sample input: batch of 32, sequence length 10, feature dim 128
 x = tf.random.normal((32, 10, 128))
-```
+
 # Apply AdaNorm
 y = adanorm(x)
 ````
