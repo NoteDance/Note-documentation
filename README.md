@@ -7933,3 +7933,60 @@ output = mp(x)
 print("Input shape:", x.shape)
 print("Output shape:", output.shape)
 ```
+
+# MixedConv2d
+
+The `MixedConv2d` class implements a mixed (or split) grouped 2D convolution where the input channels are split into groups and each group is convolved with a different kernel size. This follows the MixConv idea (MixConv / MixNet): using multiple kernel sizes in parallel to increase receptive-field diversity while keeping compute efficient.
+
+**Key behavior**
+
+- The input channels are split into `G` groups (where `G` is the number of kernel sizes provided).
+- Each group is processed by its own `nn.conv2d` with the corresponding kernel size; outputs are concatenated along the channel dimension.
+- If `depthwise=True`, each group's conv is depthwise (groups = in_channels_for_group).
+- If a scalar `kernel_size` is given, it behaves like a standard grouped conv with a single group.
+- **Note:** This implementation expects channel-first tensors `(batch, channels, height, width)`.
+
+**Initialization Parameters**
+
+- **filters** (int): Total number of output channels (sum of out channels across all groups).
+- **kernel_size** (int or list[int]): Single kernel size or a list of kernel sizes (one per group). If a list is provided, its length determines the number of groups.
+- **input_size** (int, optional): Number of input channels. Used to compute splits. (If `None`, the layer must be constructed/built with a known input.)
+- **strides** (int or tuple, optional): Convolution stride. Default `1`.
+- **padding** (str or int, optional): Either `'SAME'` / `'VALID'` or an integer (symmetric padding). If not `'SAME'/'VALID'`, symmetric padding is computed from the kernel size and strides.
+- **dilations** (int or tuple, optional): Dilation for convolution. Default `1`.
+- **depthwise** (bool, optional): If `True`, use depthwise convolution for each split (groups = in_channels_for_split). Default `False`.
+- **\*\*kwargs**: Additional keyword args forwarded to `nn.conv2d`.
+
+**Methods**
+
+- **__call__(self, x)**
+
+  - **Parameters**:
+    - **x** (`tf.Tensor`): Input tensor of shape `(batch, channels, height, width)` (channel-first).
+  - **Returns**:
+    - `tf.Tensor`: Output tensor after applying the mixed convolutions and concatenating group outputs. Shape is `(batch, filters, H_out, W_out)` where `filters` is the sum of each group's out channels.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Create a MixedConv2d that uses three kernel sizes (3,5,7),
+# splits input channels into 3 groups, and produces 64 output channels.
+mc = nn.MixedConv2d(
+    filters=64,
+    kernel_size=[3, 5, 7],
+    input_size=32,     # total input channels
+    strides=1,
+    padding='SAME',
+    depthwise=False
+)
+
+# Sample input: batch=2, channels=32, height=56, width=56 (NCHW)
+x = tf.random.normal((2, 32, 56, 56))
+
+# Apply mixed convolution
+y = mc(x)
+print("Output shape:", y.shape)  # -> (2, 64, 56, 56)
+```
