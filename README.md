@@ -120,8 +120,8 @@ model.train(train_loss, optimizer, 2000, pool_network=True, processes=7, process
 # Furthermore use Python’s multiprocessing module to speed up getting a batch of data.
 import tensorflow as tf
 from Note.RL import rl
-from Note.models.docs_example.RL.note.pool_network.DQN_PR import DQN
-# from Note.models.docs_example.RL.keras.pool_network.DQN_PR import DQN
+from Note.models.docs_example.RL.note.pool_network.DQN_pr import DQN
+# from Note.models.docs_example.RL.keras.pool_network.DQN_pr import DQN
 
 model=DQN(4,128,2,7)
 model.set(policy=rl.EpsGreedyQPolicy(0.01),pool_size=10000,update_batches=17)
