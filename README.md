@@ -7990,3 +7990,161 @@ x = tf.random.normal((2, 32, 56, 56))
 y = mc(x)
 print("Output shape:", y.shape)  # -> (2, 64, 56, 56)
 ```
+
+# StdConv2d
+
+`StdConv2d` implements a 2D convolution with **Weight Standardization** applied to the convolution weights before the forward conv. Weight Standardization normalizes kernel weights per-output-channel (or per-filter) by their mean and variance which can help training stability especially with small batch sizes.
+
+**Initialization Parameters**
+
+- **in_channel** (int): Number of input channels.
+- **out_channels** (int): Number of output channels (filters).
+- **kernel_size** (int or tuple): Convolution kernel size.
+- **strides** (int or tuple, optional): Convolution stride. Default `1`.
+- **padding** (str or int, optional): `'SAME'`, `'VALID'` or integer-symmetric padding. If `None`, computed from kernel/stride/dilation.
+- **dilations** (int or tuple, optional): Dilation rate. Default `1`.
+- **groups** (int, optional): Number of convolution groups. Default `1`.
+- **use_bias** (bool, optional): Whether to include a bias term. Default `False`.
+- **eps** (float, optional): Small epsilon added when normalizing weights. Default `1e-6`.
+
+**Methods**
+
+- **__call__(self, x)**
+
+  - **Parameters**:
+    - **x** (`tf.Tensor`): Input tensor (e.g. shape `(B, H, W, C)`).
+  - **Returns**:
+    - `tf.Tensor`: Convolved output after applying weight-standardized weights.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+layer = nn.StdConv2d(in_channel=32, out_channels=64, kernel_size=3, strides=1, padding='SAME')
+x = tf.random.normal((1, 56, 56, 32))   # B, H, W, C
+y = layer(x)
+print(y.shape)
+````
+
+# StdConv2dSame
+
+`StdConv2dSame` is the same as `StdConv2d` but with TensorFlow-style `SAME`/`VALID` padding support by default. It applies Weight Standardization to weights and performs the convolution using the specified padding mode.
+
+**Initialization Parameters**
+
+* **in\_channel** (int): Number of input channels.
+* **out\_channels** (int): Number of output channels (filters).
+* **kernel\_size** (int or tuple): Convolution kernel size.
+* **strides** (int or tuple, optional): Convolution stride. Default `1`.
+* **padding** (str, optional): `'SAME'` or `'VALID'` (default `'SAME'`).
+* **dilations** (int or tuple, optional): Dilation rate. Default `1`.
+* **groups** (int, optional): Number of convolution groups. Default `1`.
+* **use\_bias** (bool, optional): Whether to include a bias term. Default `False`.
+* **eps** (float, optional): Small epsilon added when normalizing weights. Default `1e-6`.
+
+**Methods**
+
+* ****call**(self, x)**
+
+  * **Parameters**:
+
+    * **x** (`tf.Tensor`): Input tensor (e.g. shape `(B, H, W, C)`).
+  * **Returns**:
+
+    * `tf.Tensor`: Convolved output after applying weight-standardized weights using TF-style padding.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+layer = nn.StdConv2dSame(in_channel=32, out_channels=64, kernel_size=3, padding='SAME')
+x = tf.random.normal((1, 56, 56, 32))
+y = layer(x)
+print(y.shape)
+```
+
+# ScaledStdConv2d
+
+`ScaledStdConv2d` implements **Scaled Weight Standardization**: weights are standardized and then scaled by a learned `gain` and a scale factor derived from fan-in (gamma). This variant is used to better control signal propagation (e.g. in NFNets / unnormalized ResNets).
+
+**Initialization Parameters**
+
+* **in\_channels** (int): Number of input channels.
+* **out\_channels** (int): Number of output channels (filters).
+* **kernel\_size** (int or tuple): Convolution kernel size.
+* **strides** (int or tuple, optional): Convolution stride. Default `1`.
+* **padding** (str or int, optional): `'SAME'`, `'VALID'` or integer-symmetric padding. If `None`, computed from kernel/stride/dilation.
+* **dilations** (int or tuple, optional): Dilation rate. Default `1`.
+* **groups** (int, optional): Number of convolution groups. Default `1`.
+* **use\_bias** (bool, optional): Whether to include a bias term. Default `True`.
+* **gamma** (float, optional): Base scale multiplier. Default `1.0`.
+* **eps** (float, optional): Small epsilon for numerical stability. Default `1e-6`.
+* **gain\_init** (float, optional): Initial value for learned gain parameter. Default `1.0`.
+
+**Methods**
+
+* ****call**(self, x)**
+
+  * **Parameters**:
+
+    * **x** (`tf.Tensor`): Input tensor (e.g. shape `(B, H, W, C)`).
+  * **Returns**:
+
+    * `tf.Tensor`: Convolved output using scaled, weight-standardized filters.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+layer = nn.ScaledStdConv2d(in_channels=32, out_channels=64, kernel_size=3, strides=1, padding='SAME', gain_init=1.0)
+x = tf.random.normal((1, 56, 56, 32))
+y = layer(x)
+print(y.shape)
+```
+
+# ScaledStdConv2dSame
+
+`ScaledStdConv2dSame` is `ScaledStdConv2d` with TF-style `'SAME'`/`'VALID'` padding support and the same scaled weight-standardization behavior.
+
+**Initialization Parameters**
+
+* **in\_channels** (int): Number of input channels.
+* **out\_channels** (int): Number of output channels (filters).
+* **kernel\_size** (int or tuple): Convolution kernel size.
+* **strides** (int or tuple, optional): Convolution stride. Default `1`.
+* **padding** (str, optional): `'SAME'` or `'VALID'` (default `'SAME'`).
+* **dilations** (int or tuple, optional): Dilation rate. Default `1`.
+* **groups** (int, optional): Number of convolution groups. Default `1`.
+* **use\_bias** (bool, optional): Whether to include a bias term. Default `True`.
+* **gamma** (float, optional): Base scale multiplier. Default `1.0`.
+* **eps** (float, optional): Small epsilon for numerical stability. Default `1e-6`.
+* **gain\_init** (float, optional): Initial value for learned gain parameter. Default `1.0`.
+
+**Methods**
+
+* ****call**(self, x)**
+
+  * **Parameters**:
+
+    * **x** (`tf.Tensor`): Input tensor (e.g. shape `(B, H, W, C)`).
+  * **Returns**:
+
+    * `tf.Tensor`: Convolved output using scaled, weight-standardized filters with TF-style padding.
+
+**Example Usage**
+
+```python
+import tensorflow as tf
+from Note import nn
+
+layer = nn.ScaledStdConv2dSame(in_channels=32, out_channels=64, kernel_size=3, padding='SAME', gain_init=1.0)
+x = tf.random.normal((1, 56, 56, 32))
+y = layer(x)
+print(y.shape)
+```
