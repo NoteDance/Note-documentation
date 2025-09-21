@@ -1382,6 +1382,102 @@ After calling `register`, `layer` will:
 * Appear in `Model.layer_list`.
 * Be added to `Model.layer_eval['block1']` for namespace-based evaluation control.
 
+14. **`adabatch`**
+
+**Description:**
+
+`adabatch` adaptively selects and sets a new training batch size based on an empirical estimate of the gradient variance. It samples a small number of mini-batches from `train_ds`, computes gradient variance via the model's `backward`/`backward_` methods and `estimate_gradient_variance`, smooths the measurement with an EMA, and proposes a new batch size that moves the observed gradient noise toward a user-specified `target_noise`. Optionally it adjusts optimizer learning rates, and returns a `tf.data.Dataset` batched to the new size (optionally shuffled).
+
+**Signature:**
+
+```python
+def adabatch(self,
+            train_ds,
+            num_samples,
+            target_noise=1e-3,
+            scale=1.0,
+            smooth_alpha=0.2,
+            min_batch=None,
+            max_batch=None,
+            align=None,
+            lr_params=None,
+            buffer_size=None,
+            jit_compile=True)
+```
+
+**Parameters:**
+
+* **`train_ds`** (`tf.data.Dataset`)
+  The training dataset used to sample mini-batches for variance estimation.
+
+* **`num_samples`** (`int`)
+  Number of mini-batches to sample from `train_ds` for estimating gradient variance. Larger values increase estimation quality but cost more compute.
+
+* **`target_noise`** (`float`, default `1e-3`)
+  Desired (target) gradient noise level. The algorithm scales the current batch size to move the estimated noise toward this target.
+
+* **`scale`** (`float`, default `1.0`)
+  Extra multiplicative factor applied when computing the candidate new batch size.
+
+* **`smooth_alpha`** (`float`, default `0.2`)
+  Smoothing coefficient for an exponential moving average (EMA) of the noise estimate:
+  `ema = smooth_alpha * current + (1 - smooth_alpha) * previous`.
+
+* **`min_batch`** (`int`, optional)
+  Minimum allowed batch size. If `None`, defaults to `max(1, self.batch // 2)`.
+
+* **`max_batch`** (`int`, optional)
+  Maximum allowed batch size. If `None`, defaults to a value derived from `self.state_pool` (implementation dependent).
+
+* **`align`** (`int`, optional)
+  If set, the computed `new_batch` is rounded down to the nearest multiple of `align`. If `None`, defaults to `self.batch`.
+
+* **`lr_params`** (`any`, optional)
+  When provided, `adabatch` calls `self.adjust_lr(lr_params, ...)` to update learning rates based on the new noise estimate. Supports a single optimizer or a list of optimizers. If an optimizer exposes `.adamw_lr`, that will be updated too.
+
+* **`buffer_size`** (`int`, optional)
+  If set, the returned dataset will be `train_ds.shuffle(buffer_size).batch(new_batch)`. If not set, returns `train_ds.batch(new_batch)`.
+
+* **`jit_compile`** (`bool`, default `True`)
+  Whether to use the JIT compiled `backward` function (`@tf.function(jit_compile=True)`) or the non-JIT `backward_` (`@tf.function`) for gradient computation during variance estimation.
+
+**Behavior / Side Effects:**
+
+1. **Estimate gradient variance**
+   Calls `self.estimate_gradient_variance(train_ds, self.batch, num_samples, jit_compile)` to compute an empirical variance estimate of gradients over `num_samples` mini-batches. This uses `backward` / `backward_` to compute gradients w\.r.t. `self.param`.
+
+2. **EMA smoothing**
+   Maintains / updates `self.ema_noise` using `smooth_alpha`. If `self.ema_noise` is `None`, it is initialized to the current estimate.
+
+3. **Compute candidate batch size**
+   Computes a candidate `base_new_batch = round(self.batch * (ema_noise / target_noise) * scale)`, then clips it to `[min_batch, max_batch]`, aligns to `align` (if provided), and guarantees at least 1.
+
+4. **Update model state**
+
+   * Stores the old batch size in `self.batch_size_old`.
+   * Sets `self.buffer_size = buffer_size`.
+   * Updates `self.batch_size = new_batch`.
+
+5. **Optional learning-rate adjustment**
+   If `lr_params` is provided, adjusts optimizer learning rates:
+
+   * If `self.optimizer` is a list, iterate and update each optimizer’s `.learning_rate` (and `.adamw_lr` if present).
+   * If a single optimizer, update its `.learning_rate` (and `.adamw_lr` if present).
+
+6. **Return new dataset**
+   Returns `train_ds.shuffle(buffer_size).batch(new_batch)` if `buffer_size` is provided; otherwise returns `train_ds.batch(new_batch)`.
+
+7. **Notes / requirements / assumptions**
+
+   * Expects `self.batch` (current batch granularity), `self.batch_size` and `self.state_pool` (or compatible) to exist.
+   * `estimate_gradient_variance` may be expensive (computes gradients over `num_samples` mini-batches). Choose `num_samples` to balance cost/quality.
+   * The method relies on `self.compute_loss` when running under a distributed `self.strategy`, otherwise on `self.loss_object`. Ensure those are defined.
+   * When using JIT (`jit_compile=True`) compilation overhead may be incurred on first call.
+
+**Usage Example:**
+
+https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/DL/model6.py
+
 # Building a Neural Network by Inheriting from the Model Class:
 
 **Define a Custom Model Class**
