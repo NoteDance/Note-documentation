@@ -22,8 +22,7 @@ class DQN:
         self.target_q_net=Qnet(state_dim,hidden_dim,action_dim)
         self.param=self.nn.param
         self.pr=pr.pr()
-        self.initial_TD=np.array(7.).astype('float32')
-        self.pr.TD=self.initial_TD
+        self.pr.TD=np.array(7.).astype('float32')
         self.epsilon=0.0007
         self.alpha=0.7
         self.opt=tf.keras.optimizers.Adam()
