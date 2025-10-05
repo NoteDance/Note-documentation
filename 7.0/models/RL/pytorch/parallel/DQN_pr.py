@@ -26,7 +26,7 @@ class DQN:
             self.device=torch.device('cpu')
         self.nn=Qnet(state_dim,hidden_dim,action_dim).to(self.device)
         self.target_q_net=Qnet(state_dim,hidden_dim,action_dim).to(self.device)
-        self.pr=pr.pr_mp_()
+        self.pr=pr.pr_mp()
         self.pr.TD=np.array(7.).astype('float32')
         self.epsilon=0.0007
         self.alpha=0.7
