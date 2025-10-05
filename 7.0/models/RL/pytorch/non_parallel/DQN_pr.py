@@ -26,8 +26,7 @@ class DQN:
         self.nn=Qnet(state_dim,hidden_dim,action_dim).to(self.device)
         self.target_q_net=Qnet(state_dim,hidden_dim,action_dim).to(self.device)
         self.pr=pr.pr()
-        self.initial_TD=np.array(7.).astype('float32')
-        self.pr.TD=self.initial_TD
+        self.pr.TD=np.array(7.).astype('float32')
         self._epsilon=0.0007
         self.alpha=0.7
         self.optimizer=torch.optim.Adam(self.nn.parameters(),lr=2e-3)
