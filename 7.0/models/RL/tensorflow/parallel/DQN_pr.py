@@ -23,8 +23,7 @@ class DQN: # define a class for the DQN agent
         self.target_q_net=Qnet(state_dim,hidden_dim,action_dim) # create a target Q-network for the agent
         self.param=self.nn.param   # parameter list, kernel uses it list for backpropagation
         self.pr=pr.pr_mp()
-        self.initial_TD=np.array(7.).astype('float32')
-        self.pr.TD=self.initial_TD
+        self.pr.TD=np.array(7.).astype('float32')
         self.epsilon=0.0007
         self.alpha=0.7
         self.optimizer=o.SGD(param=self.param) # optimizer, kernel uses it to optimize. Here we use a custom SGD optimizer
