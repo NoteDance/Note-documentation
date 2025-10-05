@@ -1,5 +1,6 @@
 import tensorflow as tf # import TensorFlow library
 from Note import nn
+import numpy as np
 import Note.RL.rl.prioritized_replay as pr
 import gym # import OpenAI Gym library
 import Note.nn.parallel.optimizer as o # import Note's optimizer module
@@ -22,7 +23,8 @@ class DQN: # define a class for the DQN agent
         self.target_q_net=Qnet(state_dim,hidden_dim,action_dim) # create a target Q-network for the agent
         self.param=self.nn.param   # parameter list, kernel uses it list for backpropagation
         self.pr=pr.pr_mp()
-        self.initial_TD=tf.Variable(7.)
+        self.initial_TD=np.array(7.).astype('float32')
+        self.pr.TD=self.initial_TD
         self.epsilon=0.0007
         self.alpha=0.7
         self.optimizer=o.SGD(param=self.param) # optimizer, kernel uses it to optimize. Here we use a custom SGD optimizer
