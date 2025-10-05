@@ -1,4 +1,5 @@
 import torch
+import numpy as np
 import Note.RL.rl.prioritized_replay as pr
 import gym
 import torch.nn.functional as F
@@ -26,7 +27,8 @@ class DQN:
         self.nn=Qnet(state_dim,hidden_dim,action_dim).to(self.device)
         self.target_q_net=Qnet(state_dim,hidden_dim,action_dim).to(self.device)
         self.pr=pr.pr_mp_()
-        self.initial_TD=7.
+        self.initial_TD=np.array(7.).astype('float32')
+        self.pr.TD=self.initial_TD
         self.epsilon=0.0007
         self.alpha=0.7
         self.optimizer=[torch.optim.Adam(self.nn.parameters(),lr=2e-3) for _ in range(5)] #optimizer,kernel uses it to optimize.
