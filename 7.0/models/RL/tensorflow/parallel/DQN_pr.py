@@ -24,6 +24,7 @@ class DQN: # define a class for the DQN agent
         self.param=self.nn.param   # parameter list, kernel uses it list for backpropagation
         self.pr=pr.pr_mp()
         self.pr.TD=np.array(7.).astype('float32')
+        self.pr.TD_=tf.Variable(tf.zeros([64]))
         self.epsilon=0.0007
         self.alpha=0.7
         self.optimizer=o.SGD(param=self.param) # optimizer, kernel uses it to optimize. Here we use a custom SGD optimizer
