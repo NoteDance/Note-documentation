@@ -23,6 +23,7 @@ class DQN:
         self.param=self.nn.param
         self.pr=pr.pr()
         self.pr.TD=np.array(7.).astype('float32')
+        self.pr.TD_=tf.Variable(tf.zeros([64]))
         self.epsilon=0.0007
         self.alpha=0.7
         self.opt=tf.keras.optimizers.Adam()
