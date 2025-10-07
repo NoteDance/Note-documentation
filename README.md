@@ -963,3 +963,47 @@ tensor = tf.constant([[1, 3, 5], [2, 4, 6]])
 result = nn.median(tensor, axis=1)
 print(result)  # Expected: [3, 4]
 ```
+
+# calculate_drop_path_rates
+
+The `calculate_drop_path_rates` function generates drop-path (stochastic depth) rates either per-block across the whole network or stage-wise (same rates within each stage), using a linear schedule from 0 up to a specified maximum rate.
+
+**Parameters**
+
+* **`drop_path_rate`** (float): The maximum drop-path rate reached at the last block (end of schedule).
+* **`depths`** (int or list of int):
+
+  * If an `int`: interpreted as the total number of blocks (per-block scheduling).
+  * If a `list[int]`: interpreted as depths per stage (sum equals total blocks); used for stage-wise scheduling when `stagewise=True`, or for per-block scheduling when `stagewise=False`.
+* **`stagewise`** (bool, optional): If `True`, produces a stage-wise list of rate lists (one list per stage, where rates within a stage are contiguous and come from a linear ramp across the full model). If `False`, produces a single flat list of per-block rates. Default is `False`. When `depths` is an `int`, `stagewise` **must** be `False`.
+
+**Method**
+
+* **`calculate_drop_path_rates(drop_path_rate, depths, stagewise=False)`**:
+
+  1. If `depths` is an `int` (total depth) and `stagewise` is `False`, returns a list of length `depths` produced by sampling linearly from `0.0` to `drop_path_rate`.
+  2. If `depths` is a `list[int]` and `stagewise` is `False`, returns a flat list of length `sum(depths)` formed by a linear ramp from `0.0` to `drop_path_rate` (per-block rates across all stages).
+  3. If `depths` is a `list[int]` and `stagewise` is `True`, computes a linear ramp of length `sum(depths)`, then splits that sequence into sublists according to `depths`, returning a list-of-lists where each inner list contains the rates for the corresponding stage.
+  4. If `depths` is an `int` but `stagewise` is `True`, a `ValueError` is raised because stage-wise scheduling requires per-stage depths.
+
+**Example Usage**
+
+python
+
+```python
+import tensorflow as tf
+from Note import nn
+
+# Per-block scheduling for a total of 6 blocks
+drop_path_rate = 0.2
+total_depth = 6
+per_block_rates = nn.calculate_drop_path_rates(drop_path_rate, total_depth, stagewise=False)
+print("Per-block rates:", per_block_rates)
+# Example output: [0.0, 0.04, 0.08, 0.12, 0.16, 0.2]
+
+# Stage-wise scheduling for 3 stages with depths [2, 2, 2]
+depths_per_stage = [2, 2, 2]
+stagewise_rates = nn.calculate_drop_path_rates(drop_path_rate, depths_per_stage, stagewise=True)
+print("Stage-wise rates:", stagewise_rates)
+# Example output: [[0.0, 0.04], [0.08, 0.12], [0.16, 0.2]]
+```
