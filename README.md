@@ -694,7 +694,7 @@ Compute an adaptive experience-replay window size based on the *effective sample
 
 * **`p`** (`int`): Process index when `pool_network=True`. Selects which sub-pool's weight vector to evaluate. If `pool_network=False`, `p` is ignored.
 * **`scale`** (`float`, optional, default=`1.0`): Multiplier applied to the (smoothed) ESS to compute the desired number of samples to keep. Values >1 increase the kept size (smaller window), values <1 decrease it (larger window).
-* **`smooth_alpha`** (`float`, optional, default=`0.2`): EMA smoothing coefficient in `[0,1]` used to smooth ESS over time. Higher values weight the newest ESS more; lower values emphasize past ESS.
+* **`smooth`** (`float`, optional, default=`0.2`): EMA smoothing coefficient in `[0,1]` used to smooth ESS over time. Higher values weight the newest ESS more; lower values emphasize past ESS.
 
 **Returns**:
 
@@ -720,7 +720,7 @@ Compute an adaptive experience-replay window size based on the *effective sample
 
    * The function stores smoothed ESS in `self.ema_ess`.
    * For `pool_network==True`, `self.ema_ess` is a list and `self.ema_ess[p]` is updated. For single-process mode it is a scalar.
-   * New smoothed ESS is `ema = smooth_alpha * ess + (1.0 - smooth_alpha) * prev_ema` (or `ema = ess` if no prior EMA exists).
+   * New smoothed ESS is `ema = smooth * ess + (1.0 - smooth) * prev_ema` (or `ema = ess` if no prior EMA exists).
 
 4. **Desired kept samples and window size**:
 
@@ -758,7 +758,7 @@ This method dynamically adjusts the batch size for training based on the Effecti
 
 **Arguments**:
 
-- **`smooth_alpha`** (`float`, default=`0.2`): The smoothing coefficient for the EMA of ESS, controlling adaptation speed to new ESS values.
+- **`smooth`** (`float`, default=`0.2`): The smoothing coefficient for the EMA of ESS, controlling adaptation speed to new ESS values.
   
 - **`batch_params`** (`dict`, optional): Dictionary for batch adjustment. Keys: `'scale'` (scaling factor, default 1.0), `'min'` (min batch, optional), `'max'` (max batch, optional), `'align'` (alignment granularity, optional).
   
@@ -818,7 +818,7 @@ This method dynamically adjusts the batch size based on estimated gradient noise
   
 - **`target_noise`** (`float`, default=`1e-3`): Target gradient noise level; adjusts batch to achieve this.
   
-- **`smooth_alpha`** (`float`, default=`0.2`): EMA smoothing for noise estimate.
+- **`smooth`** (`float`, default=`0.2`): EMA smoothing for noise estimate.
   
 - **`batch_params`** (`dict`, optional): For batch adjustment. Keys: `'scale'` (default 1.0), `'min'`/`'max'` (bounds), `'align'` (granularity).
   
@@ -874,7 +874,7 @@ This wrapper method unifies ESS-based and GNS-based adjustments by dispatching t
   
 - **`num_samples`** (`int`, optional): For GNS estimation (required if `target_noise` provided).
   
-- **`smooth_alpha`** (`float`, default=`0.2`): EMA smoothing for ESS or noise.
+- **`smooth`** (`float`, default=`0.2`): EMA smoothing for ESS or noise.
   
 - **`batch_params`** (`dict`, optional): For batch scaling/bounds/alignment.
   
