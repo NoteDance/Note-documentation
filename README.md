@@ -702,6 +702,203 @@ model.save_param('param.dat')
 model.save('model.dat')
 ```
 
+# Building a Custom Agent by Extending the RL Base Class
+
+This example shows how to create a fully functional reinforcement learning agent by inheriting from the provided `RL` base class. The design leverages two key components from the `Note` framework:
+
+- `nn.Model`: A lightweight neural network base class that simplifies layer definition and parameter management.
+- `nn.RL`: The powerful reinforcement learning base class that handles replay buffers, parallel environments (Pool Network), prioritized replay, training loops, saving/loading, visualization, and more.
+
+By combining these, you can build complex agents (DQN, DDPG, PPO, etc.) with minimal boilerplate code.
+
+## Step 1: Define the Neural Network (Q-Network)
+
+```python
+from Note import nn
+
+class Qnet(nn.Model):
+    def __init__(self, state_dim, hidden_dim, action_dim):
+        super().__init__()
+        self.dense1 = nn.dense(hidden_dim, state_dim, activation='relu')
+        self.dense2 = nn.dense(action_dim, hidden_dim)
+    
+    def __call__(self, x):
+        x = self.dense1(x)
+        x = self.dense2(x)
+        return x
+```
+
+The `nn.Model` base class automatically collects all layers and manages trainable parameters via `self.param`.
+
+## Step 2: Create the DQN Agent by Inheriting from `RL`
+
+```python
+import gym
+import tensorflow as tf
+
+class DQN(nn.RL):
+    def __init__(self, state_dim, hidden_dim, action_dim):
+        super().__init__()
+        
+        # Main and target Q-networks
+        self.q_net = Qnet(state_dim, hidden_dim, action_dim)
+        self.target_q_net = Qnet(state_dim, hidden_dim, action_dim)
+        
+        # Use main network parameters for optimization
+        self.param = self.q_net.param
+        
+        # Built-in environment (CartPole-v0)
+        self.env = gym.make('CartPole-v0').env  # .env removes time limit warning
+
+    # Forward pass: returns Q-values for given states
+    def action(self, s):
+        return self.q_net(s)
+
+    # Loss computation (called during training)
+    def __call__(self, s, a, next_s, r, d):
+        # Gather Q-values for taken actions
+        a = tf.expand_dims(a, axis=1)
+        current_q = tf.gather(self.q_net(s), a, axis=1, batch_dims=1)
+        
+        # Double DQN: use online net to select, target net to evaluate
+        next_q_online = self.q_net(next_s)
+        best_action = tf.argmax(next_q_online, axis=1, output_type=tf.int32)
+        best_action = tf.expand_dims(best_action, axis=1)
+        next_q_target = tf.gather(self.target_q_net(next_s), best_action, axis=1, batch_dims=1)
+        
+        # TD target
+        target = r + 0.99 * next_q_target * (1.0 - d)
+        
+        # Huber loss for stability (optional, or use MSE)
+        td_error = current_q - tf.stop_gradient(target)
+        loss = tf.reduce_mean(tf.square(td_error))
+        
+        return loss
+
+    # Soft target network update (polyak averaging) - optional but recommended
+    def update_param(self):
+        tau = 0.005  # Soft update rate
+        for target_param, param in zip(self.target_q_net.param, self.q_net.param):
+            target_param.assign(tau * param + (1.0 - tau) * target_param)
+```
+
+### Key Methods Explained
+
+- `action(self, s)`: Returns Q-values. Used by the base `RL` class during action selection (combined with policy/noise).
+- `__call__(self, s, a, next_s, r, d)`: Computes the training loss. Called automatically during gradient updates.
+- `update_param(self)`: Called periodically (via `update_steps` or `update_batches`) to synchronize the target network. Override for soft/hard updates.
+
+## Step 3: Train the Agent
+
+```python
+import tensorflow as tf
+from Note.RL import rl
+
+# Instantiate and configure
+model = DQN(state_dim=4, hidden_dim=128, action_dim=2)
+
+model.set(
+    policy=rl.EpsGreedyQPolicy(eps=0.05),   # Exploration policy
+    pool_size=100000,                       # Replay buffer size
+    batch=64,                               # Mini-batch size
+    update_steps=10                         # Update target every 10 steps
+)
+
+# Optimizer and loss tracker
+optimizer = tf.keras.optimizers.Adam(learning_rate=1e-3)
+train_loss = tf.keras.metrics.Mean(name='train_loss')
+
+# Train
+model.train(
+    train_loss=train_loss,
+    optimizer=optimizer,
+    episodes=500,
+    pool_network=False  # Set True + processes=N for parallel environments
+)
+```
+
+### Optional Enhancements
+
+```python
+# Early stopping when average reward over last 50 episodes >= 195
+model.set(trial_count=50, criterion=195.0)
+
+# Periodic checkpointing (keep max 3 files)
+model.path = 'dqn_cartpole.dat'
+model.save_freq = 20
+model.max_save_files = 3
+```
+
+## Supporting Hindsight Experience Replay (HER)
+
+To use **HER**, define a custom reward function that evaluates achievement of arbitrary goals:
+
+```python
+class DDPG_HER(nn.RL):
+    def __init__(...):
+        ...
+        self.env = gym.make('FetchReach-v1')
+
+    def reward_done_func(self, achieved_goal, desired_goal):
+        distance = np.linalg.norm(achieved_goal - desired_goal, axis=-1)
+        done = distance < 0.05
+        reward = -1.0 if not done else 0.0
+        return reward, done
+```
+
+Then enable HER:
+
+```python
+model.set(HER=True, batch=256, pool_size=100000)
+```
+
+The base class automatically relabels failed trajectories with achieved states as substitute goals.
+
+## Supporting Multi-Agent RL (MARL)
+
+For multi-agent scenarios, define a per-agent reward/done function:
+
+```python
+class MADDPG(nn.RL):
+    def __init__(...):
+        ...
+        self.env = multi_agent_env  # Custom multi-agent env
+
+    def reward_done_func_ma(self, rewards, dones):
+        # rewards: list/array of rewards for each agent
+        # dones: list/array of done flags for each agent
+        return rewards, dones
+```
+
+Then enable MARL:
+
+```python
+model.set(MARL=True, batch=64)
+```
+
+The base class handles joint state/action processing and centralized training.
+
+## Visualization & Evaluation
+
+```python
+# Plot training curves
+model.visualize_reward()
+model.visualize_loss()
+model.visualize_reward_loss()
+
+# Animate the trained agent
+model.animate_agent(max_steps=500)
+
+# Manual save/load
+model.save('my_dqn.dat')
+model.save_param('my_dqn_params.dat')
+
+# Restore
+model.restore('my_dqn.dat')
+```
+
+This pattern — inheriting from `nn.RL`, defining `action`, `__call__`, and optionally `update_param` + custom reward functions — allows you to rapidly prototype state-of-the-art agents while leveraging the full power of the framework (parallel collection, prioritized replay, distributed training, adaptive hyperparameters, etc.).
+
 # Policy classes:
 
 **SoftmaxPolicy**
@@ -1014,103 +1211,6 @@ model.set(noise=noise)
 These noise processes, such as `GaussianWhiteNoiseProcess` and `OrnsteinUhlenbeckProcess`, are typically used to introduce randomness during action selection in continuous action space reinforcement learning algorithms like DDPG. You can set them up as the noise generator in your RL agent's `set` function.These processes help in efficient exploration by generating noise that is added to the agent’s actions during training.
 
 ---
-
-# Building a Custom Agent by Extending the RL Base Class:
-
-This example demonstrates how to construct a reinforcement learning (RL) agent by extending a custom `RL` base class. The implementation uses both `Model` and `RL` classes to structure the agent modularly. Here, `Model` serves as a neural network wrapper, while `RL` manages RL-specific components.
-
-**Step 1: Import `nn` and Define the Neural Network (Q-network) Class**
-
-In this step, we start by importing `nn` from `Note`, a module that provides layer utilities and parameter management. The `Qnet` class, which inherits from the `Model` base class, uses `nn` layers for efficient Q-network construction.
-
-```python
-from Note import nn
-
-class Qnet(nn.Model):
-    def __init__(self, state_dim, hidden_dim, action_dim):
-        super().__init__()
-        self.dense1 = nn.dense(hidden_dim, state_dim, activation='relu')
-        self.dense2 = nn.dense(action_dim, hidden_dim)
-    
-    def __call__(self, x):
-        x = self.dense2(self.dense1(x))
-        return x
-```
-
-Here, the `Model` superclass provides foundational methods for defining layers and managing parameters, making the setup of complex architectures more straightforward.
-
-**Step 2: Create the DQN Agent by Extending the RL Class and Set Up the Environment**
-
-The `DQN` class represents the agent, inheriting core reinforcement learning functionalities by extending the `RL` base class.
-
-The agent’s Q-network and target network, `q_net` and `target_q_net`, are constructed using the `Qnet` class, where `nn` provides functions to define dense layers, activations, and to handle parameters more conveniently. Additionally, `self.env` initializes the "CartPole-v0" environment from `gym` directly within the agent, so it has a predefined environment for interaction.
-
-```python
-import gym
-
-class DQN(nn.RL):
-    def __init__(self, state_dim, hidden_dim, action_dim):
-        super().__init__()
-        self.q_net = Qnet(state_dim, hidden_dim, action_dim)
-        self.target_q_net = Qnet(state_dim, hidden_dim, action_dim)
-        self.param = self.q_net.param  # Parameters managed by `nn`
-        self.env = gym.make('CartPole-v0')  # Environment created within the agent class
-    
-    def action(self, s):
-        return self.q_net(s)
-    
-    def __call__(self, s, a, next_s, r, d):
-        a = tf.expand_dims(a, axis=1)
-        q_value = tf.gather(self.q_net(s), a, axis=1, batch_dims=1)
-        next_q_value = tf.reduce_max(self.target_q_net(next_s), axis=1)
-        target = tf.cast(r, 'float32') + 0.98 * next_q_value * (1 - tf.cast(d, 'float32'))
-        TD = (q_value - target)
-        return tf.reduce_mean(TD ** 2)
-    
-    def update_param(self):
-        nn.assign_param(self.target_q_net.param, self.param)
-```
-
-**Explanation of Methods**
-
-- **`action` Method**: This method takes the current state `s` as input and computes the Q-values using the Q-network (`q_net`). In the context of the RL class, the action method provides output for the RL class to select actions based on the policy. It returns the predicted Q-values for each possible action, which can then be used to determine the best action to take according to the agent's policy. This function effectively allows the agent to decide its next move based on learned values, facilitating exploration and exploitation.
-
-- **`__call__` Method**: This method defines the loss calculation for DQN. It computes the Temporal Difference (TD) error by comparing the Q-value of the chosen action against the target Q-value. The target Q-value is derived from the reward and the maximum Q-value in the next state, adjusted by the discount factor.
-
-- **`update_param` Method**: This method updates the parameters of the target Q-network (`target_q_net`) with those of the main Q-network (`q_net`). It ensures that the target network stays slightly behind the main network, stabilizing the training by providing more consistent target values.
-
-Using `nn`, the `RL` base class handles much of the reinforcement learning logic, like parameter updates and replay buffer management, streamlining the creation of a DQN agent.
-
-**Step 3: Initialize the Model and Train the Agent**
-
-After defining both `Qnet` and `DQN`, we can instantiate the agent, set hyperparameters, and begin training using the `RL` class’s `train` method. The `train` method simplifies the training loop and efficiently manages data collection and updates.
-
-```python
-import tensorflow as tf
-from Note.RL import rl
-
-model = DQN(4, 128, 2)
-model.set(policy=rl.EpsGreedyQPolicy(0.01), pool_size=10000, batch=64, update_steps=10)
-optimizer = tf.keras.optimizers.Adam()
-train_loss = tf.keras.metrics.Mean(name='train_loss')
-model.train(train_loss, optimizer, 100, pool_network=False)
-``` 
-
-This setup showcases how `nn`, `Model`, and `RL` components work together to streamline the development of reinforcement learning agents.
-
-**HER(Hindsight Experience Replay):**
-
-**Creating the `reward_done_func` function**:
-   - `reward_done_func` is a custom reward function used to determine whether the agent has reached its goal and to provide an appropriate reward. In HER, this function also considers “substitute goals” (i.e., the states the agent actually reached) to dynamically adjust the reward. The function calculates reward values based on the agent’s distance from the goal (or other criteria) and determines whether the episode should end.
-
-To enable a RL-based agent to support HER, an additional `reward_done_func` function needs to be defined.
-
-**MARL(Multi-agent reinforcement learning):**
-
-**Creating the `reward_done_func_ma` function**:
-   - In multi-agent environments, each agent may have its own reward function and criteria for completion, depending on individual or team-based goals. The `reward_done_func_ma` can be adapted to multi-agent scenarios to compute rewards and evaluate termination conditions for each agent based on their interactions and objectives. This function ensures that agents receive rewards tailored to their specific goals, supporting individual learning.
-
-To enable a RL-based agent to support MARL, an additional `reward_done_func_ma` function needs to be defined.
 
 # Save model parameters:
 ```python
