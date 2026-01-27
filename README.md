@@ -439,20 +439,20 @@ model.apply_decay('dense_weight', weight_decay=0.9, flag=False)
 
 | Method                          | Description                                                                 |
 |---------------------------------|-----------------------------------------------------------------------------|
-| `train()`                       | Standard single-device training loop with optional **Prioritized Experience Replay** (PER) support |
-| `distributed_training()`        | Distributed training supporting `MirroredStrategy`, `MultiWorkerMirroredStrategy`, and `ParameterServerStrategy`, with optional PER support |
-| `test()`                        | Evaluate model on test dataset (supports parallel testing via multiprocessing) |
-| `save()` / `restore()`          | Save/load complete model (architecture + parameters + optimizer state)      |
+| `train()`                       | Single-device training loop with **Prioritized Experience Replay** (PER) and **parallel training & validation** support |
+| `distributed_training()`        | Distributed training (`MirroredStrategy`, `MultiWorkerMirroredStrategy`, `ParameterServerStrategy`) with PER and parallel validation support |
+| `test()`                        | Evaluate on test dataset (supports multiprocessing-based parallel evaluation) |
+| `save()` / `restore()`          | Save/load full model (architecture + parameters + optimizer state)           |
 | `save_param()` / `restore_param()` | Save/load parameters only                                                |
-| `summary()`                     | Print parameter count, trainable/non-trainable stats, and memory usage      |
-| `training(flag)`                | Globally set training (`True`) or evaluation (`False`) mode                 |
-| `freeze(name)` / `unfreeze(name)` | Freeze or unfreeze parameters in a namespace (or all if `name=None`)      |
+| `summary()`                     | Print parameter counts, trainable/non-trainable stats, and memory usage      |
+| `training(flag)`                | Set global training (`True`) or evaluation (`False`) mode                   |
+| `freeze(name)` / `unfreeze(name)` | Freeze/unfreeze parameters by namespace (or all if `name=None`)            |
 | `eval(name, flag)`              | Set namespace (or all) to evaluation (`flag=True`) or training mode         |
-| `fine_tuning(num_classes, flag)`| Replace head and control freezing for transfer learning                     |
-| `cast_param(key, dtype)`        | Cast parameter data types (all or by key)                                   |
-| `visualize_train()`             | Plot training loss and accuracy curves                                       |
-| `visualize_test()`              | Plot validation/test loss and accuracy curves                               |
-| `visualize_comparison()`        | Overlay train vs validation/test curves                                     |
+| `fine_tuning(num_classes, flag)`| Replace head and control backbone freezing for transfer learning           |
+| `cast_param(key, dtype)`        | Cast parameter data types (all or selectively by key)                       |
+| `visualize_train()`             | Plot training loss/accuracy curves                                           |
+| `visualize_test()`              | Plot validation/test loss/accuracy curves                                   |
+| `visualize_comparison()`        | Overlay train vs validation/test curves                                      |
 | `adabatch()`                    | Adaptive batch size adjustment based on gradient noise                      |
 | `get_info()`                    | Return dictionary of current training/configuration state                   |
 
@@ -460,91 +460,111 @@ model.apply_decay('dense_weight', weight_decay=0.9, flag=False)
 
 Both methods share the same core parameters. `distributed_training()` adds strategy-specific arguments (`strategy`, `global_batch_size`, `num_steps_per_epoch`, etc.).
 
-| Parameter                | Type                     | Default | Description                                                                 |
-|--------------------------|--------------------------|---------|-----------------------------------------------------------------------------|
-| `train_ds` / `train_dataset` | `tf.data.Dataset`    | -       | Training dataset                                                            |
-| `loss_object`            | `tf.keras.losses.Loss`   | -       | Loss function                                                               |
-| `train_loss`             | `tf.keras.metrics.Metric`| -       | Metric to track training loss                                               |
-| `optimizer`              | `tf.keras.optimizers.Optimizer` | `None` | Optimizer (optional, can be set later)                               |
-| `epochs` / `num_epochs`  | `int` / `None`           | `None`  | Number of epochs (if `None`, train indefinitely)                            |
-| `train_accuracy`         | `tf.keras.metrics.Metric`| `None`  | Optional accuracy metric for training                                       |
-| `test_ds` / `test_dataset` | `tf.data.Dataset`     | `None`  | Validation/test dataset                                                     |
-| `test_loss`              | `tf.keras.metrics.Metric`| `None`  | Validation loss metric                                                      |
-| `test_accuracy`          | `tf.keras.metrics.Metric`| `None`  | Validation accuracy metric                                                  |
-| `PR`                     | `bool`                   | `False` | Enable **Prioritized Experience Replay** (PER)                               |
-| `train_data`             | `np.ndarray` / `None`    | `None`  | Full training data array (required when `PR=True`)                          |
-| `train_labels`           | `np.ndarray` / `None`    | `None`  | Full training labels array (required when `PR=True`)                         |
-| `alpha`                  | `float` / `None`         | `None`  | Prioritization exponent α (used when `PR=True`)                             |
-| `ess_threshold`          | `float` / `None`         | `None`  | Target effective sample size for dynamic update scaling                     |
-| `scale`                  | `float` / `None`         | `None`  | Scaling factor for adjusting updates based on ESS                           |
-| `num_updates`            | `int` / `None`           | `None`  | Base number of updates per cycle when using PER                             |
-| `min_num_updates`        | `int` / `None`           | `None`  | Minimum updates per cycle                                                   |
-| `max_num_updates`        | `int` / `None`           | `None`  | Maximum updates per cycle                                                   |
-| `processes`              | `int` / `None`           | `None`  | Number of processes for parallel validation/testing                         |
-| `parallel_test`          | `bool`                   | `False` | Enable multiprocessing for validation                                       |
-| `jit_compile`            | `bool`                   | `True`  | Enable XLA/JIT compilation for train/test steps                             |
-| `p`                      | `int` / `None`           | `None`  | Controls printing frequency (~every 10% of epochs by default)               |
+| Parameter                    | Type                     | Default | Description                                                                 |
+|------------------------------|--------------------------|---------|-----------------------------------------------------------------------------|
+| `train_ds` / `train_dataset` | `tf.data.Dataset`        | -       | Training dataset                                                            |
+| `loss_object`                | `tf.keras.losses.Loss`   | -       | Loss function                                                               |
+| `train_loss`                 | `tf.keras.metrics.Metric`| -       | Metric to track training loss                                               |
+| `optimizer`                  | `tf.keras.optimizers.Optimizer` | `None` | Optimizer (can be set later)                                          |
+| `epochs` / `num_epochs`      | `int` / `None`           | `None`  | Number of epochs (`None` → train indefinitely)                              |
+| `train_accuracy`             | `tf.keras.metrics.Metric`| `None`  | Optional training accuracy metric                                           |
+| `test_ds` / `test_dataset`   | `tf.data.Dataset`        | `None`  | Validation/test dataset (used when `parallel_training_and_test=False`)      |
+| `test_loss`                  | `tf.keras.metrics.Metric`| `None`  | Validation loss metric                                                      |
+| `test_accuracy`              | `tf.keras.metrics.Metric`| `None`  | Validation accuracy metric                                                  |
+| `parallel_training_and_test` | `bool`                   | `False` | Run validation in separate process (non-blocking)                           |
+| `test_data`                  | `np.ndarray` / `None`    | `None`  | Full validation data array (required when `parallel_training_and_test=True`)|
+| `test_labels`                | `np.ndarray` / `None`    | `None`  | Full validation labels array (required when `parallel_training_and_test=True`)|
+| `test_batch_size`            | `int` / `None`           | `None`  | Validation batch size (defaults to training batch size if `None`)           |
+| `test_freq`                  | `int`                    | `1`     | Run validation every N epochs                                               |
+| `PR`                         | `bool`                   | `False` | Enable **Prioritized Experience Replay**                                    |
+| `train_data`                 | `np.ndarray` / `None`    | `None`  | Full training data array (required when `PR=True`)                          |
+| `train_labels`               | `np.ndarray` / `None`    | `None`  | Full training labels array (required when `PR=True`)                         |
+| `alpha`                      | `float` / `None`         | `None`  | Prioritization exponent α (used when `PR=True`)                             |
+| `ess_threshold`              | `float` / `None`         | `None`  | Target effective sample size for dynamic update scaling                     |
+| `scale`                      | `float`                  | `1.0`   | Scaling factor for update frequency adjustment                              |
+| `num_updates`                | `int` / `None`           | `None`  | Base number of updates per PER cycle                                        |
+| `min_num_updates`            | `int` / `None`           | `None`  | Minimum updates per cycle                                                   |
+| `max_num_updates`            | `int` / `None`           | `None`  | Maximum updates per cycle                                                   |
+| `processes`                  | `int` / `None`           | `None`  | Number of processes for parallel validation                                 |
+| `parallel_test`              | `bool`                   | `False` | Enable multiprocessing for validation (when `parallel_training_and_test=False`) |
+| `jit_compile`                | `bool`                   | `True`  | Enable XLA/JIT compilation for train/test steps                             |
+| `p`                          | `int` / `None`           | `None`  | Print frequency control (~every 10% of epochs by default)                   |
 
-## Prioritized Replay Training
+## Prioritized Experience Replay (PER)
 
-Prioritized Replay (PR) enables intelligent sample selection during training by prioritizing samples with higher loss values. This technique can improve training efficiency and model performance.
+When `PR=True`, training alternates between standard and prioritized sampling:
 
-**Key Features:**
-- Alternates between standard training (even epochs) and prioritized sampling (odd epochs)
-- Dynamically adjusts number of updates based on Effective Sample Size (ESS)
-- Automatically tracks and updates sample priorities
+- **Even epochs**: Standard training, priorities updated based on loss
+- **Odd epochs**: Prioritized sampling + adaptive number of updates based on Effective Sample Size (ESS)
 
-**Example Usage:**
-
+**Example:**
 ```python
 model.train(
     train_ds=train_ds,
-    loss_object=loss_object,
+    loss_object=loss_obj,
     train_loss=train_loss,
     optimizer=optimizer,
-    epochs=10,
-    train_accuracy=train_accuracy,
-    # Prioritized Replay parameters
+    epochs=20,
     PR=True,
     train_data=x_train,
     train_labels=y_train,
-    alpha=0.6,                    # Priority exponent
-    ess_threshold=1000.0,         # ESS threshold
-    scale=1.0,                    # Scaling factor
-    num_updates=100,              # Base updates per epoch
-    min_num_updates=50,           # Minimum updates
-    max_num_updates=200           # Maximum updates
+    alpha=0.6,
+    ess_threshold=1000.0,
+    scale=1.0,
+    num_updates=200,
+    min_num_updates=100,
+    max_num_updates=400
 )
 ```
 
-**How it Works:**
-1. **Even epochs (0, 2, 4, ...)**: Normal training, updates sample priorities based on loss
-2. **Odd epochs (1, 3, 5, ...)**: Samples based on priorities, uses adaptive number of updates
-3. ESS is computed to determine if enough diverse samples are being selected
-4. Number of updates is adjusted dynamically: `num_updates_adjusted = scale * ESS / ess_threshold * num_updates`
+## Parallel Training & Validation
 
-**Benefits:**
-- Focuses training on harder examples
-- Can lead to faster convergence
-- Improves model generalization
+When `parallel_training_and_test=True`, validation runs in a background process, allowing training to continue without waiting for evaluation.
+
+**Key Benefits:**
+- Non-blocking validation → faster epoch throughput
+- Useful for large validation sets or slow evaluation
+
+**Required Parameters:**
+- `test_data`, `test_labels`: Full validation arrays (NumPy)
+- `test_batch_size`: Validation batch size
+- `test_freq`: Evaluate every N epochs
+
+**Example:**
+```python
+model.train(
+    train_ds=train_ds,
+    loss_object=loss_obj,
+    train_loss=train_loss,
+    optimizer=optimizer,
+    epochs=50,
+    parallel_training_and_test=True,
+    test_data=x_val,
+    test_labels=y_val,
+    test_batch_size=128,
+    test_freq=2  # Validate every 2 epochs
+)
+```
+
+Validation metrics are collected asynchronously and logged when available.
 
 ## Model Attributes (Configuration)
 
-These can be set directly on the model instance before/during training.
+Set directly on the model instance.
 
-| Attribute                | Type      | Default       | Description                                                                 |
-|--------------------------|-----------|---------------|-----------------------------------------------------------------------------|
-| `path`                   | `str`     | `None`        | Checkpoint file path                                                        |
-| `save_freq`              | `int`     | `1`           | Save every N epochs                                                         |
-| `save_freq_`             | `int`     | `None`        | Save every N batches (overrides `save_freq`)                                |
-| `max_save_files`         | `int`     | `None`        | Maximum number of checkpoint files to retain                                |
-| `save_best_only`         | `bool`    | `False`       | Save only when monitored metric improves                                    |
-| `save_param_only`        | `bool`    | `False`       | Save only parameters (not full model)                                       |
-| `monitor`                | `str`     | `'val_loss'`  | Metric for best-model saving (`'val_loss'` or `'val_accuracy'`)             |
-| `end_loss` / `end_acc`   | `float`   | `None`        | Early stopping thresholds on training loss/accuracy                         |
-| `end_test_loss` / `end_test_acc` | `float` | `None`        | Early stopping thresholds on validation loss/accuracy                       |
-| `steps_per_execution`    | `int`     | `None`        | Perform evaluation/checkpoint every N steps                                 |
-| `callbacks`              | `list`    | `[]`          | List of callback objects with Keras-style hooks (`on_epoch_begin`, etc.)     |
+| Attribute                    | Type      | Default       | Description                                                                 |
+|------------------------------|-----------|---------------|-----------------------------------------------------------------------------|
+| `path`                       | `str`     | `None`        | Checkpoint file path                                                        |
+| `save_freq`                  | `int`     | `1`           | Save every N epochs                                                         |
+| `save_freq_`                 | `int`     | `None`        | Save every N batches (overrides `save_freq`)                                |
+| `max_save_files`             | `int`     | `None`        | Maximum number of checkpoint files to keep                                  |
+| `save_best_only`             | `bool`    | `False`       | Save only when monitored metric improves                                    |
+| `save_param_only`            | `bool`    | `False`       | Save only parameters (not full model)                                       |
+| `monitor`                    | `str`     | `'val_loss'`  | Metric for best-model saving (`'val_loss'` or `'val_accuracy'`)             |
+| `end_loss` / `end_acc`       | `float`   | `None`        | Early stopping on training loss/accuracy                                    |
+| `end_test_loss` / `end_test_acc` | `float` | `None`        | Early stopping on validation loss/accuracy                                  |
+| `steps_per_execution`        | `int`     | `None`        | Evaluate/checkpoint every N steps                                           |
+| `callbacks`                  | `list`    | `[]`          | List of Keras-style callback objects                                        |
 
 ---
 
@@ -559,8 +579,6 @@ See the [examples directory](https://github.com/NoteDance/Note/tree/Note-7.0/Not
 - Custom callbacks
 
 ---
-
-These are the foundational steps for building a neural network by inheriting from the `Model` class.
 
 # LRFinder:
 **Usage:**
