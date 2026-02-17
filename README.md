@@ -439,8 +439,8 @@ model.apply_decay('dense_weight', weight_decay=0.9, flag=False)
 
 | Method                          | Description                                                                 |
 |---------------------------------|-----------------------------------------------------------------------------|
-| `train()`                       | Single-device training loop with **Prioritized Experience Replay** (PER) and **parallel training & validation** support |
-| `distributed_training()`        | Distributed training (`MirroredStrategy`, `MultiWorkerMirroredStrategy`, `ParameterServerStrategy`) with PER and parallel validation support |
+| `train()`                       | Single-device training loop with **Prioritized Experience Replay** (PER), **parallel training & validation**, and **parallel training & saving** support |
+| `distributed_training()`        | Distributed training (`MirroredStrategy`, `MultiWorkerMirroredStrategy`, `ParameterServerStrategy`) with PER, parallel validation, and parallel saving support |
 | `test()`                        | Evaluate on test dataset (supports multiprocessing-based parallel evaluation) |
 | `save()` / `restore()`          | Save/load full model (architecture + parameters + optimizer state)           |
 | `save_param()` / `restore_param()` | Save/load parameters only                                                |
@@ -472,6 +472,7 @@ Both methods share the same core parameters. `distributed_training()` adds strat
 | `test_loss`                  | `tf.keras.metrics.Metric`| `None`  | Validation loss metric                                                      |
 | `test_accuracy`              | `tf.keras.metrics.Metric`| `None`  | Validation accuracy metric                                                  |
 | `parallel_training_and_test` | `bool`                   | `False` | Run validation in separate process (non-blocking)                           |
+| `parallel_training_and_save` | `bool`                   | `False` | Run checkpoint saving in separate process (non-blocking)                    |
 | `test_data`                  | `np.ndarray` / `None`    | `None`  | Full validation data array (required when `parallel_training_and_test=True`)|
 | `test_labels`                | `np.ndarray` / `None`    | `None`  | Full validation labels array (required when `parallel_training_and_test=True`)|
 | `test_batch_size`            | `int` / `None`           | `None`  | Validation batch size (defaults to training batch size if `None`)           |
@@ -519,11 +520,11 @@ model.train(
 
 ## Parallel Training & Validation
 
-When `parallel_training_and_test=True`, validation runs in a background process, allowing training to continue without waiting for evaluation.
+When `parallel_training_and_test=True`, validation runs in a background process, allowing training to continue without blocking.
 
 **Key Benefits:**
-- Non-blocking validation → faster epoch throughput
-- Useful for large validation sets or slow evaluation
+- Non-blocking validation → higher epoch throughput
+- Ideal for large validation sets or expensive evaluation
 
 **Required Parameters:**
 - `test_data`, `test_labels`: Full validation arrays (NumPy)
@@ -547,6 +548,33 @@ model.train(
 ```
 
 Validation metrics are collected asynchronously and logged when available.
+
+## Parallel Training & Saving
+
+When `parallel_training_and_save=True`, checkpoint saving runs in a background process, preventing I/O from blocking training.
+
+**Key Benefits:**
+- Non-blocking saves → no training pauses during checkpointing
+- Useful for frequent saves or large models
+
+**Behavior:**
+- Saves are triggered normally (by `save_freq`, `save_freq_`, or best metric)
+- Full model or parameters are copied and saved in a separate process
+- File naming follows the same rules as regular saving
+
+**Example:**
+```python
+model.train(
+    train_ds=train_ds,
+    loss_object=loss_obj,
+    train_loss=train_loss,
+    optimizer=optimizer,
+    epochs=100,
+    path='checkpoints/model.dat',
+    save_freq=5,
+    parallel_training_and_save=True
+)
+```
 
 ## Model Attributes (Configuration)
 
