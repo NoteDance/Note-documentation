@@ -473,6 +473,7 @@ Both methods share the same core parameters. `distributed_training()` adds strat
 | `test_accuracy`              | `tf.keras.metrics.Metric`| `None`  | Validation accuracy metric                                                  |
 | `parallel_training_and_test` | `bool`                   | `False` | Run validation in separate process (non-blocking)                           |
 | `parallel_training_and_save` | `bool`                   | `False` | Run checkpoint saving in separate process (non-blocking)                    |
+| `parallel_dump`                 | `bool`                | `False`   | When `True` and combined with `parallel_training_and_save`, saves parameters and optimizer states **in parallel** to a **folder** (one file per variable) instead of a single `.dat` file. Ideal for extremely large models. |
 | `test_data`                  | `np.ndarray` / `None`    | `None`  | Full validation data array (required when `parallel_training_and_test=True`)|
 | `test_labels`                | `np.ndarray` / `None`    | `None`  | Full validation labels array (required when `parallel_training_and_test=True`)|
 | `test_batch_size`            | `int` / `None`           | `None`  | Validation batch size (defaults to training batch size if `None`)           |
@@ -575,6 +576,12 @@ model.train(
     parallel_training_and_save=True
 )
 ```
+
+## Note on Parallel Dumping (`parallel_dump=True`)
+- Creates a folder at the specified `path`.
+- Each parameter and optimizer state is saved in a separate file (`param_X.dat`, `state_X.dat`).
+- Significantly reduces memory pressure and enables saving of models too large for single-file pickling.
+- Requires `parallel_training_and_save=True`.
 
 ## Model Attributes (Configuration)
 
