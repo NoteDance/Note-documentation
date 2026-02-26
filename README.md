@@ -157,7 +157,7 @@ model.max_save_files = 3  # Keep only last 3 checkpoints
 model.save_freq_ = 1875  # Save every 1875 batches
 
 # Save only best model
-model.save_best_only = True
+model.save_top_k = 2
 model.monitor = 'val_loss'  # or 'val_accuracy'
 
 # Save parameters only (smaller file size)
@@ -587,19 +587,23 @@ model.train(
 
 Set directly on the model instance.
 
-| Attribute                    | Type      | Default       | Description                                                                 |
-|------------------------------|-----------|---------------|-----------------------------------------------------------------------------|
-| `path`                       | `str`     | `None`        | Checkpoint file path                                                        |
-| `save_freq`                  | `int`     | `1`           | Save every N epochs                                                         |
-| `save_freq_`                 | `int`     | `None`        | Save every N batches (overrides `save_freq`)                                |
-| `max_save_files`             | `int`     | `None`        | Maximum number of checkpoint files to keep                                  |
-| `save_best_only`             | `bool`    | `False`       | Save only when monitored metric improves                                    |
-| `save_param_only`            | `bool`    | `False`       | Save only parameters (not full model)                                       |
-| `monitor`                    | `str`     | `'val_loss'`  | Metric for best-model saving (`'val_loss'` or `'val_accuracy'`)             |
-| `end_loss` / `end_acc`       | `float`   | `None`        | Early stopping on training loss/accuracy                                    |
-| `end_test_loss` / `end_test_acc` | `float` | `None`        | Early stopping on validation loss/accuracy                                  |
-| `steps_per_execution`        | `int`     | `None`        | Evaluate/checkpoint every N steps                                           |
-| `callbacks`                  | `list`    | `[]`          | List of Keras-style callback objects                                        |
+| Attribute                        | Type      | Default         | Description |
+|----------------------------------|-----------|-----------------|-------------|
+| `path`                           | `str`     | `None`          | Base path for saving checkpoints (file or directory) |
+| `save_freq`                      | `int`     | `1`             | Save checkpoint every N epochs |
+| `save_freq_`                     | `int`     | `None`          | Save checkpoint every N batches (overrides `save_freq`) |
+| `max_save_files`                 | `int`     | `1`             | Maximum number of checkpoints to keep (when `save_top_k=None`) |
+| `save_top_k`                     | `int`     | `1`             | Keep only the top K best checkpoints based on monitored metric (recommended) |
+| `save_last`                      | `bool`    | `True`          | Additionally save the final epoch as `-last.dat` (or `-last` folder) |
+| `save_best_only`                 | `bool`    | `False`         | Save only when the monitored metric improves |
+| `monitor`                        | `str`     | `'val_loss'`    | Metric to monitor (`'val_loss'` or `'val_accuracy'`) |
+| `patience`                       | `int`     | `None`          | Early stopping patience: stop training after this many epochs with no improvement |
+| `save_param_only`                | `bool`    | `False`         | Save only model parameters (exclude architecture and optimizer state) |
+| `parallel_training_and_save`     | `bool`    | `False`         | Save checkpoints asynchronously in a background process (non-blocking) |
+| `parallel_dump`                  | `bool`    | `False`         | **Parallel Parameter Dump**: Save each variable as a separate file in a folder (strongly recommended for very large models) |
+| `callbacks`                      | `list`    | `[]`            | List of Keras-style callback objects |
+| `end_loss` / `end_acc`           | `float`   | `None`          | Stop training when training loss/accuracy reaches this value |
+| `end_test_loss` / `end_test_acc` | `float`   | `None`          | Stop training when validation loss/accuracy reaches this value |
 
 ---
 
