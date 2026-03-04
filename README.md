@@ -488,7 +488,6 @@ Both methods share the same core parameters. `distributed_training()` adds strat
 | `min_num_updates`            | `int` / `None`           | `None`  | Minimum updates per cycle                                                   |
 | `max_num_updates`            | `int` / `None`           | `None`  | Maximum updates per cycle                                                   |
 | `processes`                  | `int` / `None`           | `None`  | Number of processes for parallel validation                                 |
-| `parallel_test`              | `bool`                   | `False` | Enable multiprocessing for validation (when `parallel_training_and_test=False`) |
 | `jit_compile`                | `bool`                   | `True`  | Enable XLA/JIT compilation for train/test steps                             |
 | `p`                          | `int` / `None`           | `None`  | Print frequency control (~every 10% of epochs by default)                   |
 
