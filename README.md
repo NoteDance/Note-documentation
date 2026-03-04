@@ -393,52 +393,6 @@ model.train(
 )
 ```
 
-```python
-# Pool Network + Parallel HER sampling
-from Note.models.docs_example.RL.note.pool_network.DDPG_HER import DDPG
-
-model = DDPG(hidden_size=128, tau=0.1, gamma=0.98, lr=0.005, processes=7)
-model.set(
-    noise=rl.GaussianWhiteNoiseProcess(),
-    pool_size=10000,
-    batch=256,
-    trial_count=10,
-    HER=True
-)
-
-model.train(
-    train_loss=train_loss,
-    optimizer=optimizer,
-    episodes=2000,
-    pool_network=True,
-    processes=7,
-    processes_her=4
-)
-```
-
-```python
-# Pool Network + Parallel Prioritized Replay sampling
-from Note.models.docs_example.RL.note.pool_network.DQN_pr import DQN  # or keras version
-
-model = DQN(state_dim=4, hidden_size=128, action_dim=2, processes=7)
-model.set(
-    policy=rl.EpsGreedyQPolicy(eps=0.01),
-    pool_size=10000,
-    batch=64,
-    update_batches=17,
-    PR=True
-)
-
-model.train(
-    train_loss=train_loss,
-    optimizer=optimizer,
-    episodes=100,
-    pool_network=True,
-    processes=7,
-    processes_pr=4
-)
-```
-
 ## PyTorch
 
 ```python
@@ -553,33 +507,6 @@ model.train(
     episodes=100,
     pool_network=True,
     processes=7
-)
-```
-
-```python
-# Pool Network + Parallel HER sampling
-from Note.models.docs_example.RL.pytorch.pool_network.DDPG_HER import DDPG
-
-model = DDPG(hidden_size=128, tau=0.1, gamma=0.98, lr=0.005, processes=7)
-model.set(
-    noise=rl.GaussianWhiteNoiseProcess(),
-    pool_size=10000,
-    batch=256,
-    trial_count=10,
-    HER=True
-)
-
-optimizer = [
-    torch.optim.Adam(model.param[0]),
-    torch.optim.Adam(model.param[1])
-]
-
-model.train(
-    optimizer=optimizer,
-    episodes=2000,
-    pool_network=True,
-    processes=7,
-    processes_her=4
 )
 ```
 
