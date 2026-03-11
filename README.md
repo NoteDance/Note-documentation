@@ -582,6 +582,52 @@ model.train(
 - Significantly reduces memory pressure and enables saving of models too large for single-file pickling.
 - Requires `parallel_training_and_save=True`.
 
+## `build()` Method
+
+`build()` is an **optional user-defined method** implemented in subclasses. When the model needs to reconstruct itself inside a **subprocess** — for example when `parallel_training_and_test=True` or `parallel_training_and_save=True` — the framework automatically detects and calls it.
+
+### Purpose
+
+In Python multiprocessing, child processes cannot directly inherit TensorFlow variables from the parent process. The naive approach — pickling the entire model and passing it to the subprocess — incurs significant serialization overhead, especially for large models with many parameters.
+
+To avoid this, the framework uses a two-step approach:
+1. The **main process** serializes only the raw parameter values (as NumPy arrays) into shared memory (`shared_memory`), which is a low-overhead, zero-copy mechanism.
+2. The **child process** calls `build()` to reconstruct the model structure from scratch (creating all layers and an empty `self.param` list), then the framework writes the shared memory values directly into those variables.
+
+This means **only lightweight metadata is pickled** across the process boundary, while the bulk of the data (parameter tensors) is transferred via shared memory with minimal overhead.
+
+`build()` is therefore responsible for **reconstructing the model structure** (layers and parameters) inside the child process. After `build()` returns, the framework automatically writes the latest parameter values — transferred from the parent via shared memory — into those variables.
+
+### When It Is Called
+
+| Scenario | Trigger Condition |
+|----------|-------------------|
+| Parallel validation (`parallel_training_and_test=True`) | Called in the validation subprocess before each evaluation round, when `build` is detected |
+| Parallel saving (`parallel_training_and_save=True`) | Called in the saving subprocess to ensure the model structure exists before parameter sync |
+
+### How to Define It
+
+`build()` should only reinitialize the model's layers and structure. **Do not manually load parameters inside `build()`** — the framework handles parameter synchronization automatically via shared memory after `build()` returns.
+```python
+class MyModel(Model):
+    def init_weights(self):
+        self.dense1 = nn.dense(128, 784)
+        self.dense2 = nn.dense(10, 128)
+
+    # Reconstruct model structure in subprocesses
+    def build(self):
+        self.dense1 = nn.dense(128, 784)
+        self.dense2 = nn.dense(10, 128)
+
+    def __call__(self, x):
+        x = tf.nn.relu(self.dense1(x))
+        return self.dense2(x)
+```
+
+### When `build()` Is Not Defined
+
+If `build()` is not defined, the framework will skip the shared memory optimization and fall back to pickling the full model (including all parameters) when spawning subprocesses. This is functionally correct but introduces significant serialization overhead for large models. For most standard use cases, defining `build()` is strongly recommended to ensure both correctness and performance in all parallel scenarios.
+
 ## Model Attributes (Configuration)
 
 Set directly on the model instance.
