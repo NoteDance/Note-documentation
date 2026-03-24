@@ -1251,12 +1251,15 @@ model.save('model.dat')
 ```python
 # distributed training
 with strategy.scope():
+    optimizer = Optimizer()
     model = MyModel(...)
+    model.optimizer = optimizer
     model.restore('model.dat')
 ```
 or
 ```python
 model = MyModel(...)
+model.optimizer = optimizer
 model.restore('model.dat')
 ```
 
