@@ -272,6 +272,7 @@ model.save('model.dat')
 
 # Load
 model = MyModel()
+model.optimizer = optimizer
 model.restore('model.dat')
 ```
 
