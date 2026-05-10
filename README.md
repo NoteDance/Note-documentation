@@ -279,7 +279,7 @@ If `build()` is not defined, the framework will skip the shared memory optimizat
 When `parallel_store_and_training=True`, the framework places the agent's shared parameters into shared memory so that subprocesses always see the latest values written by the main process. The difference between `build()` and `build_()` lies in how subprocesses access those values:
 
 - With **`build()`**, the subprocess creates its own TensorFlow variables, and the framework then **copies** the shared memory values into them. The subprocess holds its own parameter allocation in addition to the shared memory.
-- With **`build_()`**, the subprocess receives the raw shared memory arrays and wires them **directly** into the model via `nn.replace_array()`. No separate parameter allocation is made — the subprocess reads directly from the shared memory buffer.
+- With **`build_()`**, the subprocess receives the raw shared memory arrays and wires them **directly** into the model via `nn.replace_with_array()`. No separate parameter allocation is made — the subprocess reads directly from the shared memory buffer.
 
 This makes `build_()` strictly more memory-efficient: each subprocess holds no independent copy of the parameters at all.
 
@@ -296,7 +296,7 @@ If both `build` and `build_` are defined, the framework gives priority to `build
 
 ## How to Define It
 
-`build_()` receives the shared memory arrays as its argument. You reconstruct the inference component and use `nn.replace_array()` to wire those arrays directly into it, replacing what would otherwise be freshly allocated variable buffers.
+`build_()` receives the shared memory arrays as its argument. You reconstruct the inference component and use `nn.replace_with_array()` to wire those arrays directly into it, replacing what would otherwise be freshly allocated variable buffers.
 
 ```python
 class PPO(nn.RL):
@@ -315,7 +315,7 @@ class PPO(nn.RL):
         # Reconstruct actor_old and wire shared memory arrays directly into it.
         # Subprocesses hold no independent copy of these parameters.
         self.actor_old = actor(self.state_dim, self.hidden_dim, self.action_dim)
-        nn.replace_array(self.actor_old, shared_params)
+        nn.replace_with_array(self.actor_old, shared_params)
 
     def action(self, s):
         return self.actor_old(s)
@@ -323,7 +323,7 @@ class PPO(nn.RL):
 
 The key points:
 - `self.shared_param` declares which parameters the main process exposes via shared memory.
-- `build_()` reconstructs the inference component and calls `nn.replace_array()` to replace its variable buffers with the shared memory arrays — no copy is made.
+- `build_()` reconstructs the inference component and calls `nn.replace_with_array()` to replace its variable buffers with the shared memory arrays — no copy is made.
 - Every read in the subprocess goes directly to the shared memory buffer, so it always reflects the latest values without any synchronization step.
 
 ## When `build_()` Is Not Defined
