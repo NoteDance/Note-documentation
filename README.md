@@ -519,6 +519,112 @@ model.train(
 )
 ```
 
+### Effective Sample Size (ESS)
+
+At the start of each odd epoch, the trainer computes the ESS from the current per-sample loss priorities:
+
+```
+p_i  = loss_i / sum(loss)          # normalized weight
+ESS  = 1 / sum(p_i²)
+```
+
+The actual number of prioritized-sampling update steps performed that epoch is then scaled adaptively:
+
+```
+num_updates_actual = clip(
+    scale * (ESS / ess_threshold) * num_updates,
+    min_num_updates,
+    max_num_updates
+)
+```
+
+A higher ESS (more uniform priorities) leads to fewer update steps; a lower ESS (more concentrated priorities) leads to more.
+
+### Optional Model Attributes for PER
+
+If your model subclass declares the following `tf.Variable` attributes, the trainer will automatically manage them during the PER alternation:
+
+| Attribute | Type | Purpose |
+|---|---|---|
+| `pr_flag` | `tf.Variable(bool)` | Set to `True` during odd (prioritized) epochs, `False` otherwise |
+| `ess` | `tf.Variable(float32)` | Receives the current ESS value at the start of each odd epoch |
+| `param_copy` | `list[tf.Variable]` | Snapshot of `self.param` taken at the start of each odd epoch |
+
+```python
+class Model(nn.Model):
+    def __init__(self, input_dim, n_train_samples):
+        super().__init__()
+        self.d1 = nn.dense(128, input_dim, activation='relu')
+        self.d2 = nn.dense(64,  128,       activation='relu')
+        self.d3 = nn.dense(10,  64)
+
+        self.pr_flag = tf.Variable(False, trainable=False, dtype=tf.bool)
+        self.ess     = tf.Variable(0.0,   trainable=False, dtype=tf.float32)
+        self.max_ess = tf.constant(float(n_train_samples), dtype=tf.float32)
+
+        self.param_copy = [
+            tf.Variable(tf.zeros_like(p), trainable=False)
+            for p in self.param
+        ]
+```
+
+`param_copy` is populated automatically by the trainer before each odd epoch begins, giving you a frozen reference to the parameters as they were before prioritized sampling started.
+
+### SVD-Based Regularization Penalty
+
+When `pr_flag`, `ess`, and `param_copy` are present, you can add a subspace-drift penalty to the loss via `loss_func`. This penalty measures how much the leading singular vectors of each parameter matrix have rotated relative to their snapshot in `param_copy`, weighted by how far the current ESS is from its maximum (i.e. how non-uniform the priorities are):
+
+```
+weight  = 1 - min(ESS / max_ESS, 1)
+penalty = weight × Σ_layers ‖U U^T − U_c U_c^T‖_F
+```
+
+where `U` and `U_c` are the top-`k` left singular vectors of the current parameter and its copy respectively. The Frobenius norm simplifies to:
+
+```
+‖U U^T − U_c U_c^T‖_F = sqrt(2k − 2‖U^T U_c‖_F²)
+```
+
+**Implementation:**
+
+```python
+def compute_svd_penalty(self):
+    weight  = 1.0 - tf.minimum(self.ess / self.max_ess, 1.0)
+    penalty = tf.constant(0.0, dtype=tf.float32)
+
+    for p, pc in zip(self.param, self.param_copy):
+        if len(p.shape) < 2:
+            continue
+        # reshape to 2-D
+        rows = 1
+        for d in p.shape[:-1]: rows *= d
+        cols  = p.shape[-1]
+        p_2d  = tf.reshape(tf.cast(p,  tf.float32), [rows, cols])
+        pc_2d = tf.reshape(tf.cast(pc, tf.float32), [rows, cols])
+
+        k = tf.minimum(self.svd_k, tf.minimum(rows, cols))
+
+        _, u_p, _ = tf.linalg.svd(p_2d,  full_matrices=False)
+        _, u_c, _ = tf.linalg.svd(pc_2d, full_matrices=False)
+
+        M         = tf.matmul(u_p[:, :k], u_c[:, :k], transpose_a=True)
+        k_f       = tf.cast(k, tf.float32)
+        diff_norm = tf.sqrt(tf.maximum(2.0*k_f - 2.0*tf.reduce_sum(M*M), 1e-12))
+        penalty   = penalty + diff_norm
+
+    return weight * penalty
+
+def loss_func(self, loss):
+    penalty = tf.cond(
+        self.pr_flag,
+        true_fn  = lambda: self.compute_svd_penalty(),
+        false_fn = lambda: tf.constant(0.0, dtype=tf.float32)
+    )
+    return loss + penalty
+```
+
+Set `self.svd_k` to control how many singular vectors are used (e.g. `self.svd_k = 10`). The penalty is active only during odd (prioritized) epochs thanks to `tf.cond` on `pr_flag`, adding zero overhead during standard epochs.
+
 ## Parallel Training & Validation
 
 When `parallel_training_and_test=True`, validation runs in a background process, allowing training to continue without blocking.
