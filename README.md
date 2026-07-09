@@ -542,13 +542,14 @@ A higher ESS (more uniform priorities) leads to fewer update steps; a lower ESS 
 
 ### Optional Model Attributes for PER
 
-If your model subclass declares the following `tf.Variable` attributes, the trainer will automatically manage them during the PER alternation:
+If your model subclass declares the following attributes, the trainer will automatically manage them during the PER alternation:
 
 | Attribute | Type | Purpose |
 |---|---|---|
-| `pr_flag` | `tf.Variable(bool)` | Set to `True` during odd (prioritized) epochs, `False` otherwise |
-| `ess` | `tf.Variable(float32)` | Receives the current ESS value at the start of each odd epoch |
-| `param_copy` | `list[tf.Variable]` | Snapshot of `self.param` taken at the start of each odd epoch |
+| `pr_flag` | `tf.Variable(bool)` | `True` during odd (prioritized) epochs, `False` otherwise |
+| `ess` | `tf.Variable(float32)` | Set to the current ESS at the start of each odd epoch |
+| `param_copy` | `list[tf.Variable]` | Snapshot of `self.param`, refreshed at the start of each odd epoch |
+| `svd_k` | `int` | Number of singular components to retain for the SVD penalty (plain Python int — avoids `tf.function` tracing issues) |
 
 ```python
 class Model(nn.Model):
@@ -566,26 +567,19 @@ class Model(nn.Model):
             tf.Variable(tf.zeros_like(p), trainable=False)
             for p in self.param
         ]
+        self.svd_k = 7
 ```
 
-`param_copy` is populated automatically by the trainer before each odd epoch begins, giving you a frozen reference to the parameters as they were before prioritized sampling started.
+### SVD-Based Regularization Penalty (reconstruction MSE variant)
 
-### SVD-Based Regularization Penalty
-
-When `pr_flag`, `ess`, and `param_copy` are present, you can add a subspace-drift penalty to the loss via `loss_func`. This penalty measures how much the leading singular vectors of each parameter matrix have rotated relative to their snapshot in `param_copy`, weighted by how far the current ESS is from its maximum (i.e. how non-uniform the priorities are):
+This variant of the penalty compares the **low-rank reconstructions** of each 2-D-reshapeable parameter tensor (current vs. `param_copy` snapshot), rather than comparing the rotation of the leading singular subspace directly:
 
 ```
 weight  = 1 - min(ESS / max_ESS, 1)
-penalty = weight × Σ_layers ‖U U^T − U_c U_c^T‖_F
+Â       = U_k Σ_k Vᵀ_k          (rank-k reconstruction of current param)
+Â_c     = U_{c,k} Σ_{c,k} Vᵀ_{c,k}  (rank-k reconstruction of snapshot)
+penalty = weight × Σ_layers mean((Â − Â_c)²)
 ```
-
-where `U` and `U_c` are the top-`k` left singular vectors of the current parameter and its copy respectively. The Frobenius norm simplifies to:
-
-```
-‖U U^T − U_c U_c^T‖_F = sqrt(2k − 2‖U^T U_c‖_F²)
-```
-
-**Implementation:**
 
 ```python
 def compute_svd_penalty(self):
@@ -595,7 +589,6 @@ def compute_svd_penalty(self):
     for p, pc in zip(self.param, self.param_copy):
         if len(p.shape) < 2:
             continue
-        # reshape to 2-D
         rows = 1
         for d in p.shape[:-1]: rows *= d
         cols  = p.shape[-1]
@@ -604,26 +597,20 @@ def compute_svd_penalty(self):
 
         k = tf.minimum(self.svd_k, tf.minimum(rows, cols))
 
-        _, u_p, _ = tf.linalg.svd(p_2d,  full_matrices=False)
-        _, u_c, _ = tf.linalg.svd(pc_2d, full_matrices=False)
+        s_param, u_param, v_param = tf.linalg.svd(p_2d,  full_matrices=False)
+        s_copy,  u_copy,  v_copy  = tf.linalg.svd(pc_2d, full_matrices=False)
 
-        M         = tf.matmul(u_p[:, :k], u_c[:, :k], transpose_a=True)
-        k_f       = tf.cast(k, tf.float32)
-        diff_norm = tf.sqrt(tf.maximum(2.0*k_f - 2.0*tf.reduce_sum(M*M), 1e-12))
-        penalty   = penalty + diff_norm
+        u_param, u_copy = u_param[:, :k], u_copy[:, :k]
+        s_param, s_copy = s_param[:k],    s_copy[:k]
+        v_param, v_copy = v_param[:, :k], v_copy[:, :k]
+
+        approx_param = tf.matmul(u_param, tf.matmul(tf.linalg.diag(s_param), v_param, adjoint_b=True))
+        approx_copy  = tf.matmul(u_copy,  tf.matmul(tf.linalg.diag(s_copy),  v_copy,  adjoint_b=True))
+
+        penalty = penalty + tf.reduce_mean((approx_param - approx_copy) ** 2)
 
     return weight * penalty
-
-def loss_func(self, loss):
-    penalty = tf.cond(
-        self.pr_flag,
-        true_fn  = lambda: self.compute_svd_penalty(),
-        false_fn = lambda: tf.constant(0.0, dtype=tf.float32)
-    )
-    return loss + penalty
 ```
-
-Set `self.svd_k` to control how many singular vectors are used (e.g. `self.svd_k = 10`). The penalty is active only during odd (prioritized) epochs thanks to `tf.cond` on `pr_flag`, adding zero overhead during standard epochs.
 
 ## Parallel Training & Validation
 
