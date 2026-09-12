@@ -758,6 +758,12 @@ See the [examples directory](https://github.com/NoteDance/Note/tree/Note-7.0/Not
 
 ---
 
+# Continual Learning
+
+https://github.com/NoteDance/Note/blob/Note-7.0/Note/models/docs_example/DL/model17.py
+
+---
+
 # LRFinder:
 **Usage:**
 
